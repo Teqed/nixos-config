@@ -1,18 +1,6 @@
-{
-  inputs,
-  pkgs,
-  ...
-}: let
-  yaziFlavors = pkgs.fetchFromGitHub {
-    owner = "yazi-rs";
-    repo = "flavors";
-    rev = "main";
-    sha256 = "sha256-/EUaaL08K3F0J0Rn9+XgfKm+W8tekdiWsGxkd892BO8=";
-  };
-in {
+{pkgs, ...}: {
   # List packages installed in system profile. To search, run: nix search wget
   environment.systemPackages = with pkgs; [
-    inputs.wezterm-flake.packages.${pkgs.system}.default
     # (import
     #   (builtins.fetchTarball {
     #     url = "https://github.com/NixOS/nixpkgs/archive/957d95fc8b9bf1eb60d43f8d2eba352b71bbf2be.tar.gz";
@@ -48,8 +36,6 @@ in {
         };
       };
     };
-    # Nix-Index
-    nix-index.enable = true;
     # Zsh
     zsh = {
       enable = true;
@@ -71,18 +57,6 @@ in {
       # promptInit
       # setOptions
       syntaxHighlighting.enable = true;
-    };
-    # Yazi
-    yazi = {
-      enable = true;
-      settings.theme = {
-        flavor = {
-          use = "catppuccin-mocha";
-        };
-      };
-      flavors = {
-        catppuccin-mocha = "${yaziFlavors}/catppuccin-mocha.yazi";
-      };
     };
     # fish
     fish = {
@@ -109,8 +83,6 @@ in {
       enable = true;
       binfmt = true;
     };
-    # vim
-    vim.enable = true;
     # thunderbird
     thunderbird.enable = true;
     # kdeconnect

@@ -1,9 +1,5 @@
 {...}: {
   imports = [
-    # inputs.hardware.nixosModules.common-cpu-amd
-    # inputs.hardware.nixosModules.common-gpu-amd
-    # inputs.hardware.nixosModules.common-pc
-    # inputs.hardware.nixosModules.common-pc-ssd
     ../hardware/bluetooth.nix
     ../hardware/networking.nix
     ../software/kernel_cachyos.nix

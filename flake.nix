@@ -15,6 +15,7 @@ The starlight on the Western Seas.
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     nix-flatpak.url = "github:gmodena/nix-flatpak";
+    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
   };
   outputs = {
     self,
@@ -23,6 +24,7 @@ The starlight on the Western Seas.
     alejandra,
     chaotic,
     nix-flatpak,
+    nixos-hardware,
     ...
   } @ inputs: let
     inherit (self) outputs;
@@ -69,17 +71,26 @@ The starlight on the Western Seas.
           nix-flatpak.nixosModules.nix-flatpak
           ./nixos/hosts/common.nix
           ./nixos/hosts/thoughtful.nix
+          home-manager.nixosModules.home-manager
+          {
+            home-manager.useGlobalPkgs = true;
+            home-manager.users.teq = import ./hosts/home-manager/teq/home.nix;
+          }
+          nixos-hardware.nixosModules.common-cpu-amd
+          nixos-hardware.nixosModules.common-gpu-amd
+          nixos-hardware.nixosModules.common-pc
+          nixos-hardware.nixosModules.common-pc-ssd
           chaotic.nixosModules.default
         ];
       };
     };
     homeConfigurations = {
-      # Standalone home-manager configuration entrypoint. Available through 'home-manager --flake .#teq@eris'
-      "teq@eris" = home-manager.lib.homeManagerConfiguration {
+      # Standalone home-manager configuration entrypoint. Available through 'home-manager --flake .#teq'
+      "teq" = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
         extraSpecialArgs = {inherit inputs outputs;};
         modules = [
-          ./home-manager/home.nix
+          ./home-manager/teq/home.nix
         ];
       };
     };
