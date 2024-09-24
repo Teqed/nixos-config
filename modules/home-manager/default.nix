@@ -3,6 +3,6 @@
   imports = [
     ./fonts.nix
     ./nixcfg.nix
-    ./locale_en_us_et.nix
+    ./i18n_en_us_et.nix
   ];
 }

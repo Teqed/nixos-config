@@ -13,11 +13,14 @@ in {
     ]);
 
   environment.systemPackages = mkDefault (with pkgs; [
+    nix-output-monitor # nix output monitor
     papirus-icon-theme # Allows icons to be used in the system, like the login screen
     bibata-cursors # Allows cursors to be used in the system, like the login screen
   ]);
 
   programs = {
+    git.enable = true;
+
     fzf = {
       fuzzyCompletion = mkDefault true; # NixOS-specific option
       keybindings = mkDefault true; # NixOS-specific option

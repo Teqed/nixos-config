@@ -8,11 +8,13 @@
     ./fonts.nix
     ./kernel.nix
     ./nix-ld.nix
-    ./locale_en_us_et.nix
+    ./i18n_en_us_et.nix
     ./boot.nix
     ./programs.nix
     ./services.nix
     ./users.nix
+    ./bluetooth.nix
+    ./networking.nix
   ];
   # homeManagerModules.nixcfg.enable = true;
   # options.nixosModules.locale_en_us_et.enable = true;

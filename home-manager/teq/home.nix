@@ -16,11 +16,11 @@
     # Or modules exported from other flakes (such as nix-colors):
     # inputs.nix-colors.homeManagerModules.default
 
-    # ./packages.nix
-    # ./programs.nix
+    ./packages.nix
+    ./programs.nix
   ];
-  xdg.configFile."nixpkgs/config.nix".source = ./.config/nixpkgs/config.nix;
-  xdg.configFile."nix/nix.conf".source = ./.config/nix/nix.conf;
+  # xdg.configFile."nixpkgs/config.nix".source = ./.config/nixpkgs/config.nix;
+  # xdg.configFile."nix/nix.conf".source = ./.config/nix/nix.conf;
   home = {
     preferXdgDirectories = true;
     sessionPath = ["$HOME/.local/bin"];

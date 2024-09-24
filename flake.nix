@@ -54,7 +54,7 @@ The starlight on the Western Seas.
     overlays = import ./overlays {inherit inputs;}; # Your custom packages and modifications, exported as overlays
     nixosModules = import ./modules/nixos; # Reusable nixos modules you might want to export. These are usually stuff you would upstream into nixpkgs
     homeManagerModules = import ./modules/home-manager; # Reusable home-manager modules you might want to export. These are usually stuff you would upstream into home-manager
-    commonModules = import ./modules/common; # Reusable modules that are not specific to nixos or home-manager
+    commonModules = import ./modules/nixpkgs.nix; # Reusable modules that are not specific to nixos or home-manager
     nixosConfigurations = {
       # NixOS configuration entrypoint. Available through 'nixos-rebuild --flake .#eris'
       # eris = nixpkgs.lib.nixosSystem {

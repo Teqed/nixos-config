@@ -7,7 +7,7 @@
     owner = "yazi-rs";
     repo = "flavors";
     rev = "main";
-    sha256 = "sha256-/EUaaL08K3F0J0Rn9+XgfKm+W8tekdiWsGxkd892BO8=";
+    sha256 = "sha256-W56r4LMepQj0vW1tayx0qA43ZhZEQ09ukZ8IlQMFMe0=";
   };
 in {
   services = {
@@ -101,7 +101,7 @@ in {
       };
     };
     zoxide.enable = true;
-    thunderbird.enable = true;
+    # thunderbird.enable = true; # profiles needs to be set
     java.enable = true; # Duplicated from NixOS configuration - NixOS can use binfmt
     firefox.enable = true;
     git = {
@@ -142,8 +142,8 @@ in {
         path = "$HOME/.local/share/history/zsh_history"; # "${config.xdg.dataHome}/zsh/zsh_history"
         save = 1000000;
         size = 1000000;
-        historySubstringSearch.enable = true;
       };
+      historySubstringSearch.enable = true;
       # initExtraFirst = "" # Commands that should be added to top of .zshrc.
       # initExtra = "" # Extra commands that should be added to .zshrc.
       # localVariables = {} # Extra local variables defined at the top of .zshrc.

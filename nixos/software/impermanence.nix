@@ -12,13 +12,13 @@
     device = "/dev/disk/by-label/nixos";
     fsType = "btrfs";
     neededForBoot = true;
-    options = ["subvol=@home" "compress=zstd1" "noatime"];
+    options = ["subvol=@home" "compress=zstd:1" "noatime"];
   };
   fileSystems."/nix" = {
     device = "/dev/disk/by-label/nixos";
     fsType = "btrfs";
     neededForBoot = true;
-    options = ["subvol=@nix" "compress=zstd1" "noatime"];
+    options = ["subvol=@nix" "compress=zstd:1" "noatime"];
   };
   swapDevices = [
     {
@@ -29,9 +29,7 @@
   # By default Nix stores temporary build artifacts in /tmp and since the root (/) is now a 2GB tmpfs we need to
   # configure Nix to use a different location. Otherwise, larger build will result in No enough space left on device errors.
   environment.variables.NIX_REMOTE = "daemon";
-  systemd.services.nix-daemon = {
-    environment.TMPDIR = "/nix/tmp";
-  };
+  systemd.services.nix-daemon.environment.TMPDIR = "/nix/tmp";
   systemd.tmpfiles.rules = [
     "d /nix/tmp 0755 root root 1d"
   ];

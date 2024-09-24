@@ -64,7 +64,7 @@ in {
         "https://nixpkgs-wayland.cachix.org"
         "https://nixpkgs-unfree.cachix.org"
       ];
-      trusted-users = mkDefault ["teq" "@wheel"];
+      trusted-users = mkDefault ["root" "teq" "@wheel"];
       trusted-public-keys = mkDefault [
         "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
         "teq.cachix.org-1:vzpACVksI6em8mYjeJbTWp9x+jQmZiReS7pNot65l+A="
