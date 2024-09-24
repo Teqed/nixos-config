@@ -1,8 +1,11 @@
-{...}: {
+{lib, ...}: let
+  inherit (lib) mkDefault mkForce;
+in {
   fonts = {
-    fontconfig.enable = true;
+    fontconfig.enable = mkForce true;
+
     fontconfig.defaultFonts = {
-      serif = [
+      serif = mkDefault [
         "Source Serif Pro"
         "Noto Serif"
         "Noto Serif CJK SC"
@@ -12,7 +15,8 @@
         "Noto Color Emoji"
         "Noto Emoji"
       ];
-      sansSerif = [
+
+      sansSerif = mkDefault [
         "Source Sans Pro"
         "Noto Sans"
         "Noto Sans CJK SC"
@@ -23,7 +27,8 @@
         "Noto Color Emoji"
         "Noto Emoji"
       ];
-      monospace = [
+
+      monospace = mkDefault [
         "JetBrains Mono"
         "FiraCode Nerd Font Mono"
         "Noto Sans Mono"
@@ -35,7 +40,8 @@
         "Noto Color Emoji"
         "Noto Emoji"
       ];
-      emoji = ["Noto Color Emoji" "Noto Emoji"];
+
+      emoji = mkDefault ["Noto Color Emoji" "Noto Emoji"];
     };
   };
 }

@@ -1,6 +1,13 @@
-{pkgs, ...}: {
-  programs.nix-ld.enable = true;
-  programs.nix-ld.libraries = with pkgs; [
+{
+  pkgs,
+  lib,
+  ...
+}: let
+  inherit (lib) mkDefault;
+in {
+  programs.nix-ld.enable = mkDefault true;
+
+  programs.nix-ld.libraries = mkDefault (with pkgs; [
     alsa-lib
     at-spi2-atk
     at-spi2-core
@@ -53,5 +60,5 @@
     xorg.libxkbfile
     xorg.libxshmfence
     zlib
-  ];
+  ]);
 }

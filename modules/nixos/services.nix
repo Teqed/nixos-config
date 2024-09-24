@@ -1,84 +1,91 @@
-{pkgs, ...}: {
+{
+  pkgs,
+  lib,
+  ...
+}: let
+  inherit (lib) mkDefault;
+in {
   security.sudo = {
-    enable = true;
+    enable = mkDefault true;
     package = pkgs.sudo.override {
       withInsults = true;
     };
-    extraConfig = ''
+    extraConfig = mkDefault ''
       Defaults lecture = never
     '';
   };
   services = {
     openssh = {
-      enable = true;
+      enable = mkDefault true;
       settings = {
-        X11Forwarding = true;
-        PermitRootLogin = "no"; # disable root login
-        PasswordAuthentication = false; # disable password login
-        StreamLocalBindUnlink = "yes"; # Automatically remove stale sockets
-        GatewayPorts = "clientspecified"; # Allow forwarding ports to everywhere
-        AcceptEnv = "WAYLAND_DISPLAY"; # Let WAYLAND_DISPLAY be forwarded
+        X11Forwarding = mkDefault true;
+        PermitRootLogin = mkDefault "no"; # disable root login
+        PasswordAuthentication = mkDefault false; # disable password login
+        StreamLocalBindUnlink = mkDefault "yes"; # Automatically remove stale sockets
+        GatewayPorts = mkDefault "clientspecified"; # Allow forwarding ports to everywhere
+        AcceptEnv = mkDefault "WAYLAND_DISPLAY"; # Let WAYLAND_DISPLAY be forwarded
       };
-      openFirewall = true;
+      openFirewall = mkDefault true;
     };
-    spice-vdagentd.enable = true;
-    earlyoom.enable = true;
+    spice-vdagentd.enable = mkDefault true;
+    earlyoom.enable = mkDefault true;
+
     hardware.openrgb = {
-      enable = true;
+      enable = mkDefault true;
       package = pkgs.openrgb-with-all-plugins;
     };
+
     keyd = {
       # A key remapping daemon for linux. https://github.com/rvaiya/keyd
-      enable = true;
+      enable = mkDefault true;
       keyboards.default.settings = {
         main = {
           # overloads the capslock key to function as both escape (when tapped) and capslock (when held)
-          capslock = "overload(capslock, esc)";
+          capslock = mkDefault "overload(capslock, esc)";
         };
       };
     };
+
     flatpak = {
-      enable = true;
-      # packages = [ # system # /var/lib/flatpak
-      #   { appId = "com.brave.Browser"; origin = "flathub";  }
-      #   "com.obsproject.Studio"
-      #   "im.riot.Riot"
-      # ];
+      enable = mkDefault true;
       update.auto = {
-        enable = true;
-        onCalendar = "weekly"; # Default value
+        enable = mkDefault true;
+        onCalendar = mkDefault "weekly"; # Default value
       };
       overrides = {
         global = {
-          Context.sockets = ["wayland" "!x11" "!fallback-x11"]; # Force Wayland by default
+          Context.sockets = mkDefault ["wayland" "!x11" "!fallback-x11"]; # Force Wayland by default
           Environment = {
-            XCURSOR_PATH = "/run/host/user-share/icons:/run/host/share/icons"; # Fix un-themed cursor in some Wayland apps
-            GTK_THEME = "Adwaita:dark"; # Force correct theme for some GTK apps
+            XCURSOR_PATH = mkDefault "/run/host/user-share/icons:/run/host/share/icons"; # Fix un-themed cursor in some Wayland apps
+            GTK_THEME = mkDefault "Adwaita:dark"; # Force correct theme for some GTK apps
           };
         };
         "com.visualstudio.code".Context = {
-          filesystems = [
+          filesystems = mkDefault [
             "xdg-config/git:ro" # Expose user Git config
             "/run/current-system/sw/bin:ro" # Expose NixOS managed software
           ];
-          sockets = [
+          sockets = mkDefault [
             "gpg-agent" # Expose GPG agent
             "pcsc" # Expose smart cards (i.e. YubiKey)
           ];
         };
-        "org.onlyoffice.desktopeditors".Context.sockets = ["x11"]; # No Wayland support
+        "org.onlyoffice.desktopeditors".Context.sockets = mkDefault ["x11"]; # No Wayland support
       };
     };
+
     sunshine = {
-      enable = true;
-      openFirewall = true;
-      capSysAdmin = true;
+      enable = mkDefault true;
+      openFirewall = mkDefault true;
+      capSysAdmin = mkDefault true;
     };
+
     xrdp = {
-      enable = true;
-      openFirewall = true;
+      enable = mkDefault true;
+      openFirewall = mkDefault true;
     };
   };
-  systemd.services.systemd-udev-settle.enable = false; # don't wait for udev to settle on boot
-  systemd.services.NetworkManager-wait-online.enable = false; # don't wait for network to be up on boot
+
+  systemd.services.systemd-udev-settle.enable = mkDefault false; # don't wait for udev to settle on boot
+  systemd.services.NetworkManager-wait-online.enable = mkDefault false; # don't wait for network to be up on boot
 }

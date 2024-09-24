@@ -51,9 +51,10 @@ The starlight on the Western Seas.
     packages = forAllSystems (system: import ./pkgs nixpkgs.legacyPackages.${system}); # Your custom packages accessible through 'nix build', 'nix shell', etc
     formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.alejandra); # Formatter for your nix files, available through 'nix fmt'. Other options beside 'alejandra' include 'nixpkgs-fmt'
     # formatter.x86_64-linux = alejandra.defaultPackage.x86_64-linux;
-    # overlays = import ./overlays {inherit inputs;}; # Your custom packages and modifications, exported as overlays
+    overlays = import ./overlays {inherit inputs;}; # Your custom packages and modifications, exported as overlays
     nixosModules = import ./modules/nixos; # Reusable nixos modules you might want to export. These are usually stuff you would upstream into nixpkgs
-    # homeManagerModules = import ./modules/home-manager; # Reusable home-manager modules you might want to export. These are usually stuff you would upstream into home-manager
+    homeManagerModules = import ./modules/home-manager; # Reusable home-manager modules you might want to export. These are usually stuff you would upstream into home-manager
+    commonModules = import ./modules/common; # Reusable modules that are not specific to nixos or home-manager
     nixosConfigurations = {
       # NixOS configuration entrypoint. Available through 'nixos-rebuild --flake .#eris'
       # eris = nixpkgs.lib.nixosSystem {
@@ -68,21 +69,24 @@ The starlight on the Western Seas.
         specialArgs = {inherit inputs outputs cfg;};
         modules = [
           {nixpkgs.hostPlatform = "x86_64-linux";}
-          {teq.kernel.type = "cachyos";}
+          {teq.kernel = "cachyos";}
+          self.commonModules
           self.nixosModules
           ./nixos/hosts/sedna.nix
-          # home-manager.nixosModules.home-manager
-          # {
-          # home-managerextraSpecialArgs = {inherit inputs outputs cfg;};
-          # home-manager.useGlobalPkgs = true;
-          # home-manager.users.teq = import ./home-manager/teq/home.nix;
-          # imports = [
-          #   self.homeManagerModules
-          #   nix-index-database.hmModules.nix-index
-          #   {programs.nix-index-database.comma.enable = true;} # optional to also wrap and install comma
-          #   {programs.nix-index.enable = true;} # integrate with shell's command-not-found functionality
-          # ];
-          # }
+          home-manager.nixosModules.home-manager
+          {
+            home-manager.extraSpecialArgs = {inherit inputs outputs cfg;};
+            home-manager.useGlobalPkgs = true;
+            home-manager.users.teq = {
+              imports = [self.homeManagerModules ./home-manager/teq/home.nix];
+            };
+            imports = [
+              # self.homeManagerModules
+              # nix-index-database.hmModules.nix-index
+              # {programs.nix-index-database.comma.enable = true;} # optional to also wrap and install comma
+              # {programs.nix-index.enable = true;} # integrate with shell's command-not-found functionality
+            ];
+          }
           chaotic.nixosModules.default
         ];
       };
@@ -118,6 +122,7 @@ The starlight on the Western Seas.
       #   pkgs = nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
       #   extraSpecialArgs = {inherit inputs outputs;};
       #   modules = [
+      #     self.commonModules
       #     self.homeManagerModules
       #     ./home-manager/teq/home.nix
       #     nix-index-database.hmModules.nix-index

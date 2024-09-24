@@ -2,14 +2,19 @@
   pkgs,
   lib,
   ...
-}: {
+}: let
+  inherit (lib) mkDefault;
+in {
   imports = [
     ../home-manager/fonts.nix
   ];
-  nixpkgs.config.joypixels.acceptLicense = true;
+
+  nixpkgs.config.joypixels.acceptLicense = mkDefault true;
+
   fonts = {
-    enableDefaultPackages = true; # Enable a basic set of fonts providing several styles and families and reasonable coverage of Unicode.
-    packages = with pkgs; [
+    enableDefaultPackages = mkDefault true; # Enable a basic set of fonts providing several styles and families and reasonable coverage of Unicode.
+
+    packages = mkDefault (with pkgs; [
       source-sans-pro
       source-serif-pro
       source-code-pro
@@ -46,17 +51,14 @@
       material-icons
       weather-icons
       meslo-lgs-nf
-    ];
-    fontDir.enable = lib.mkIf (!pkgs.stdenv.isDarwin) true;
+    ]);
+
+    fontDir.enable = mkDefault (!pkgs.stdenv.isDarwin);
   };
+
   services.kmscon = {
-    # https://wiki.archlinux.org/title/KMSCON
-    # Use kmscon as the virtual console instead of gettys.
-    # kmscon is a kms/dri-based userspace virtual terminal implementation.
-    # It supports a richer feature set than the standard linux console VT,
-    # including full unicode support, and when the video card supports drm should be much faster.
-    enable = true;
-    fonts = [
+    enable = mkDefault true; # Use kmscon as the virtual console instead of gettys.
+    fonts = mkDefault [
       {
         name = "JetBrains Mono";
         package = pkgs.nerdfonts.override {
@@ -66,8 +68,9 @@
         };
       }
     ];
-    extraOptions = "--term xterm-256color";
-    extraConfig = "font-size=12";
-    hwRender = true; # Whether to use 3D hardware acceleration to render the console.
+
+    extraOptions = mkDefault "--term xterm-256color";
+    extraConfig = mkDefault "font-size=12";
+    hwRender = mkDefault true; # Whether to use 3D hardware acceleration to render the console.
   };
 }

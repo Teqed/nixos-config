@@ -4,9 +4,9 @@
   pkgs,
   ...
 }: let
-  kernel_selected = config.teq.kernel.type or "default"; # Default option
+  kernel_selected = config.teq.kernel or "default"; # Default option
 in {
-  options.teq.kernel.type = lib.mkOption {
+  options.teq.kernel = lib.mkOption {
     type = lib.types.str;
     default = "default";
     description = "Select the kernel to use: 'default' or 'cachyos'.";

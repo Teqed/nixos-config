@@ -3,7 +3,7 @@
 {
   inputs,
   outputs,
-  # lib,
+  lib,
   # config,
   pkgs,
   ...
@@ -16,8 +16,8 @@
     # Or modules exported from other flakes (such as nix-colors):
     # inputs.nix-colors.homeManagerModules.default
 
-    ./packages.nix
-    ./programs.nix
+    # ./packages.nix
+    # ./programs.nix
   ];
   xdg.configFile."nixpkgs/config.nix".source = ./.config/nixpkgs/config.nix;
   xdg.configFile."nix/nix.conf".source = ./.config/nix/nix.conf;
@@ -58,33 +58,8 @@
     enable = true;
     cursorTheme.name = "Bibata-Modern-Classic";
     cursorTheme.size = 24; # Default 16
-    font = "Noto Sans,  10";
-    iconTheme = "Papirus-Dark";
-  };
-  nixpkgs = {
-    config = {
-      # allowBroken = true;
-      allowUnfree = true;
-      # allowUnsupportedSystem = true;
-    };
-    # You can add overlays here
-    overlays = [
-      # Add overlays your own flake exports (from overlays and pkgs dir):
-      outputs.overlays.additions
-      outputs.overlays.modifications
-      outputs.overlays.stable-packages
-
-      # You can also add overlays exported from other flakes:
-      # neovim-nightly-overlay.overlays.default
-      # inputs.nixpkgs-wayland.overlay # We only want to use these overlays in Wayland
-
-      # Or define it inline, for example:
-      # (final: prev: {
-      #   hi = final.hello.overrideAttrs (oldAttrs: {
-      #     patches = [ ./change-hello-to-hi.patch ];
-      #   });
-      # })
-    ];
+    # font = "Noto Sans,  10"; null or (submodule)
+    # iconTheme = "Papirus-Dark"; # null or (submodule)
   };
   systemd.user.startServices = "sd-switch"; # Nicely reload system units when changing configs
   home.stateVersion = "24.05"; # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion

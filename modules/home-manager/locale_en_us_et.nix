@@ -1,28 +1,20 @@
-{
-  config,
-  lib,
-  ...
-}: let
-  cfg = config.homeManagerModules.locale_en_us_et;
+{lib, ...}: let
   defaultLang = "en_US.UTF-8";
-  inherit (lib) mkEnableOption mkIf;
+  inherit (lib) mkDefault;
 in {
-  options.homeManagerModules.locale_en_us_et.enable = mkEnableOption "Enables localization for en_US.UTF-8.";
-  home.keyboard = mkIf cfg.enable {
-    layout = "us";
-  };
-  config.home.language = mkIf cfg.enable {
-    base = "${defaultLang}";
-    ctype = "${defaultLang}";
-    numeric = "${defaultLang}";
-    time = "${defaultLang}";
-    collate = "${defaultLang}";
-    monetary = "${defaultLang}";
-    messages = "${defaultLang}";
-    paper = "${defaultLang}";
-    name = "${defaultLang}";
-    address = "${defaultLang}";
-    telephone = "${defaultLang}";
-    measurement = "${defaultLang}";
+  home.keyboard.layout = mkDefault "us";
+  home.language = {
+    base = mkDefault "${defaultLang}";
+    ctype = mkDefault "${defaultLang}";
+    numeric = mkDefault "${defaultLang}";
+    time = mkDefault "${defaultLang}";
+    collate = mkDefault "${defaultLang}";
+    monetary = mkDefault "${defaultLang}";
+    messages = mkDefault "${defaultLang}";
+    paper = mkDefault "${defaultLang}";
+    name = mkDefault "${defaultLang}";
+    address = mkDefault "${defaultLang}";
+    telephone = mkDefault "${defaultLang}";
+    measurement = mkDefault "${defaultLang}";
   };
 }

@@ -5,48 +5,46 @@
   ...
 }:
 with lib; let
-  cfg = config.module.nixcfg;
   flakeInputs = filterAttrs (_: isType "flake") inputs;
 in {
-  options.module.nixcfg.enable = mkEnableOption "Enables the nixcfg module.";
-  config.nix = mkIf cfg.enable {
+  nix = {
     # registry.nixpkgs.flake = inputs.nixpkgs;
     registry = mapAttrs (_: flake: {inherit flake;}) flakeInputs; # Opinionated: make flake registry and nix path match flake inputs
     # nixPath = mapAttrsToList (n: _: "${n}=flake:${n}") flakeInputs;
-    nixPath = mapAttrsToList (key: value: "${key}=${value.to.path}") config.nix.registry; # Add inputs to the system's legacy channels Making legacy nix commands consistent
+    nixPath = mkDefault (mapAttrsToList (key: value: "${key}=${value.to.path}") config.nix.registry); # Add inputs to the system's legacy channels Making legacy nix commands consistent
     # channel.enable = false; # Opinionated: disable channels # Only available in NixOS
     gc = {
-      automatic = true;
-      persistent = true;
-      dates = "weekly";
-      options = "--delete-older-than 1w";
+      automatic = mkDefault true;
+      persistent = mkDefault true;
+      # dates = mkDefault "weekly"; # Not present in home-manager
+      options = mkDefault "--delete-older-than 1w";
     };
     # Free up to 1GiB whenever there is less than 100MiB left.
-    extraOptions = ''
+    extraOptions = mkDefault ''
       min-free = ${toString (100 * 1024 * 1024)}
       max-free = ${toString (1024 * 1024 * 1024)}
     '';
     settings = {
       # nix-path = mkForce "nixpkgs=/etc/nix/inputs/nixpkgs";
-      nix-path = config.nix.nixPath; # Workaround for https://github.com/NixOS/nix/issues/9574
-      auto-optimise-store = true;
-      bash-prompt-prefix = "(nix:$name)\040";
-      experimental-features = ["nix-command" "flakes" "ca-derivations" "recursive-nix" "repl-flake" "auto-allocate-uids"];
-      accept-flake-config = true; # Whether to accept nix configuration from a flake without prompting.
-      allow-dirty = true; # Whether to allow dirty Git/Mercurial trees.
-      allow-symlinked-store = true; # Nix will stop complaining if the store directory (typically /nix/store) contains symlink components.
-      hashedMirrors = ["https://tarballs.nixos.org"];
-      auto-allocate-uids = true; # Whether to select UIDs for builds automatically, instead of using the users in build-users-group.
-      use-xdg-base-directories = true; # Nix will conform to the XDG Base Directory Specification for files in $HOME.
-      system-features = [
+      nix-path = mkDefault config.nix.nixPath; # Workaround for https://github.com/NixOS/nix/issues/9574
+      auto-optimise-store = mkDefault true;
+      bash-prompt-prefix = mkDefault "(nix:$name)\040";
+      experimental-features = mkDefault ["nix-command" "flakes" "ca-derivations" "recursive-nix" "repl-flake" "auto-allocate-uids"];
+      accept-flake-config = mkDefault true; # Whether to accept nix configuration from a flake without prompting.
+      allow-dirty = mkDefault true; # Whether to allow dirty Git/Mercurial trees.
+      allow-symlinked-store = mkDefault true; # Nix will stop complaining if the store directory (typically /nix/store) contains symlink components.
+      # hashedMirrors = mkDefault ["https://tarballs.nixos.org"];
+      auto-allocate-uids = mkDefault true; # Whether to select UIDs for builds automatically, instead of using the users in build-users-group.
+      use-xdg-base-directories = mkDefault true; # Nix will conform to the XDG Base Directory Specification for files in $HOME.
+      system-features = mkDefault [
         "kvm" # use default instead?
         "big-parallel"
         "nixos-test"
         "benchmark"
       ];
-      max-jobs = "auto"; # default
-      builders-use-substitutes = true;
-      substituters = [
+      max-jobs = mkDefault "auto"; # default
+      builders-use-substitutes = mkDefault true;
+      substituters = mkDefault [
         "https://cache.nixos.org/"
         "https://nix-community.cachix.org/"
         "https://teq.cachix.org"
@@ -66,8 +64,8 @@ in {
         "https://nixpkgs-wayland.cachix.org"
         "https://nixpkgs-unfree.cachix.org"
       ];
-      trusted-users = ["teq" "@wheel"];
-      trusted-public-keys = [
+      trusted-users = mkDefault ["teq" "@wheel"];
+      trusted-public-keys = mkDefault [
         "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
         "teq.cachix.org-1:vzpACVksI6em8mYjeJbTWp9x+jQmZiReS7pNot65l+A="
         "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
