@@ -5,7 +5,6 @@
 }: {
   imports = [
     ../hardware/vm.nix
-    ../hardware/networking.nix
     ../software/impermanence.nix
     ../software/desktop.nix
     inputs.nixos-hardware.nixosModules.common-cpu-amd

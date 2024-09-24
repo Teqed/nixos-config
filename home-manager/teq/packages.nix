@@ -130,7 +130,6 @@
     util-linux
     which
     zstd
-    config.programs.ssh.package
 
     # defaultPackageNames =
     perl
