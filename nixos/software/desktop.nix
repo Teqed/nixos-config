@@ -36,15 +36,14 @@
     support32Bit = true; # Enable 32-bit support for PulseAudio, if being used.
   };
   security.rtkit.enable = true; # Whether to enable the RealtimeKit system service, which hands out realtime scheduling priority to user processes on demand. The PulseAudio server uses this to acquire realtime priority.
-  hardware.graphics.enable32Bit = true; # On 64-bit systems, whether to also install 32-bit drivers for 32-bit applications (such as Wine).
-  hardware.opengl.driSupport32Bit = true; # On 64-bit systems, whether to support Direct Rendering for 32-bit applications (such as Wine). This is currently only supported for the nvidia and ati_unfree drivers, as well as Mesa.
-  hardware.opengl.extraPackages = with pkgs; [
+  hardware.graphics.enable32Bit = true; # On 64-bit systems, whether to support Direct Rendering for 32-bit applications (such as Wine). This is currently only supported for the nvidia and ati_unfree drivers, as well as Mesa.
+  hardware.graphics.extraPackages = with pkgs; [
     rocmPackages.clr.icd
     amdvlk # Modern AMD Graphics Core Next (GCN) GPUs are supported through either radv, which is part of mesa, or the amdvlk package. Adding the amdvlk package to hardware.opengl.extraPackages makes both drivers available for applications and lets them choose.
     rocm-opencl-icd # Modern AMD Graphics Core Next (GCN) GPUs are supported through the rocm-opencl-icd package.
-    rocm-runtime-ext # OpenCL Image support is provided through the non-free rocm-runtime-ext package.
+    rocmPackages.rocm-runtime # OpenCL Image support is provided through the non-free rocm-runtime package.
   ];
-  hardware.opengl.extraPackages32 = with pkgs; [
+  hardware.graphics.extraPackages32 = with pkgs; [
     driversi686Linux.amdvlk # The 32-bit AMDVLK drivers can be used in addition to the Mesa RADV drivers.
   ];
   hardware.enableRedistributableFirmware = true; # Whether to enable firmware with a license allowing redistribution.

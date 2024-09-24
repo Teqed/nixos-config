@@ -1,7 +1,7 @@
 # This is your home-manager configuration file
 # Use this to configure your home environment (it replaces ~/.config/nixpkgs/home.nix)
 {
-  # inputs,
+  inputs,
   outputs,
   # lib,
   # config,
@@ -16,20 +16,12 @@
     # Or modules exported from other flakes (such as nix-colors):
     # inputs.nix-colors.homeManagerModules.default
 
-    ./software/fonts.nix
     ./packages.nix
     ./programs.nix
-    ../../nixos/software/nixpkgs.nix
   ];
+  xdg.configFile."nixpkgs/config.nix".source = ./.config/nixpkgs/config.nix;
+  xdg.configFile."nix/nix.conf".source = ./.config/nix/nix.conf;
   home = {
-    nixpkgs.config = {
-      # allowBroken = true;
-      allowUnfree = true;
-      # allowUnsupportedSystem = true;
-    };
-    # nixpkgs.overlays = [inputs.nixpkgs-wayland.overlay]; # We only want to use these overlays in Wayland
-    xdg.configFile."nixpkgs/config.nix".source = ./.config/nixpkgs/config.nix;
-    xdg.configFile."nix/nix.conf".source = ./.config/nix/nix.conf;
     preferXdgDirectories = true;
     sessionPath = ["$HOME/.local/bin"];
     # username = "teq"; # "$USER" by default
@@ -70,6 +62,11 @@
     iconTheme = "Papirus-Dark";
   };
   nixpkgs = {
+    config = {
+      # allowBroken = true;
+      allowUnfree = true;
+      # allowUnsupportedSystem = true;
+    };
     # You can add overlays here
     overlays = [
       # Add overlays your own flake exports (from overlays and pkgs dir):
@@ -79,6 +76,7 @@
 
       # You can also add overlays exported from other flakes:
       # neovim-nightly-overlay.overlays.default
+      # inputs.nixpkgs-wayland.overlay # We only want to use these overlays in Wayland
 
       # Or define it inline, for example:
       # (final: prev: {

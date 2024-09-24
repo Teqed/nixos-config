@@ -10,6 +10,10 @@
     sha256 = "sha256-/EUaaL08K3F0J0Rn9+XgfKm+W8tekdiWsGxkd892BO8=";
   };
 in {
+  services = {
+    kdeconnect.enable = true;
+    remmina.enable = true;
+  };
   programs = {
     home-manager.enable = true;
     direnv = {
@@ -43,7 +47,6 @@ in {
     gh.enable = true; # / GitHub Desktop
     hstr.enable = true;
     jq.enable = true;
-    remmina.enable = true;
     # ssh.enable = true;
     # dircolors.enable = true;
     foot = {
@@ -99,7 +102,6 @@ in {
     };
     zoxide.enable = true;
     thunderbird.enable = true;
-    kdeconnect.enable = true;
     java.enable = true; # Duplicated from NixOS configuration - NixOS can use binfmt
     firefox.enable = true;
     git = {
@@ -121,7 +123,7 @@ in {
     };
     zsh = {
       enable = true;
-      autosuggestions.enable = true;
+      autosuggestion.enable = true;
       # Add to your system configuration to get completion for system packages (e.g. systemd).
       # environment.pathsToLink = [ "/share/zsh" ];
       enableVteIntegration = true;
@@ -160,9 +162,6 @@ in {
       # zsh-abbr.enable = true; # zsh manager for auto-expanding abbreviations.
 
       # Use XDG
-      # histFile = "$HOME/.local/share/zsh/history";
-      histFile = "$HOME/.local/share/history/zsh_history";
-      hiseSize = 100000;
       # interactiveShellInit = ''
       #   export HISTFILE=$HOME/.local/share/history/zsh_history
       #   export HISTSIZE=100000

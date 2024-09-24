@@ -1,6 +1,5 @@
 {
-  mkMerge,
-  forEach,
+  lib,
   cfg,
   ...
 }: {
@@ -37,9 +36,9 @@
     "d /nix/tmp 0755 root root 1d"
   ];
   users.mutableUsers = false;
-  users.users = mkMerge (
+  users.users = lib.mkMerge (
     [{root.hashedPasswordFile = "/nix/persist/etc/auth/root";}]
-    ++ forEach cfg.users (
+    ++ lib.forEach cfg.users (
       u: {"${u}".hashedPasswordFile = "/nix/persist/etc/auth/${u}";}
     )
   );

@@ -6,6 +6,7 @@
   imports = [
     ../home-manager/fonts.nix
   ];
+  nixpkgs.config.joypixels.acceptLicense = true;
   fonts = {
     enableDefaultPackages = true; # Enable a basic set of fonts providing several styles and families and reasonable coverage of Unicode.
     packages = with pkgs; [
@@ -39,12 +40,12 @@
       font-awesome
       twemoji-color-font
       joypixels
-      whatsapp-emoji-linux
+      whatsapp-emoji-font
       powerline-symbols
       symbola
       material-icons
       weather-icons
-      meslo-lgs-nf-unstable
+      meslo-lgs-nf
     ];
     fontDir.enable = lib.mkIf (!pkgs.stdenv.isDarwin) true;
   };

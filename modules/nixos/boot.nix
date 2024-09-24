@@ -3,7 +3,7 @@
     plymouth = {
       enable = true;
       theme = "hud_3";
-      themePackages = [pkgs.adi1090x-plymouth-themes.override {selected_themes = ["hud_3"];}];
+      themePackages = [(pkgs.adi1090x-plymouth-themes.override {selected_themes = ["hud_3"];})];
     };
     kernelParams = [
       "boot.shell_on_fail" # Drop to root shell on boot failure
