@@ -1,11 +1,9 @@
 {modulesPath, ...}: {
   imports = [
-    ./hardware/vm.nix
-    ./hardware/networking.nix
-    ./software/kernel_cachyos.nix
-    ./software/locale_en_us_et.nix
-    ./software/impermanence.nix
-    ./software/desktop.nix
+    ../hardware/vm.nix
+    ../hardware/networking.nix
+    ../software/impermanence.nix
+    ../software/desktop.nix
     (modulesPath + "/profiles/qemu-guest.nix")
   ];
   networking.hostName = "sedna"; # U+2BF2 ⯲ SEDNA
@@ -20,5 +18,4 @@
       efi.canTouchEfiVariables = true;
     };
   };
-  system.stateVersion = "24.05"; # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
 }

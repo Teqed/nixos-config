@@ -14,8 +14,14 @@ The starlight on the Western Seas.
     wezterm-flake.inputs.nixpkgs.follows = "nixpkgs";
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
-    nix-flatpak.url = "github:gmodena/nix-flatpak";
-    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
+    # nix-flatpak.url = "github:gmodena/nix-flatpak";
+    # nixos-hardware.url = "github:NixOS/nixos-hardware/master";
+    # impermanence.url = "github:nix-community/impermanence";
+    # nixpkgs-wayland.url = "github:nix-community/nixpkgs-wayland";
+    # nixpkgs-unfree.url = "github:numtide/nixpkgs-unfree";
+    # nixpkgs-unfree.inputs.nixpkgs.follows = "nixpkgs";
+    # nix-index-database.url = "github:nix-community/nix-index-database";
+    # nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
   };
   outputs = {
     self,
@@ -23,13 +29,15 @@ The starlight on the Western Seas.
     home-manager,
     alejandra,
     chaotic,
-    nix-flatpak,
-    nixos-hardware,
+    # nix-flatpak,
+    # nixos-hardware,
+    # impermanence,
+    # nixpkgs-unfree,
+    # nix-index-database,
     ...
   } @ inputs: let
     inherit (self) outputs;
     systems = [
-      # Supported systems for your flake packages, shell, etc.
       "aarch64-linux"
       "i686-linux"
       "x86_64-linux"
@@ -44,55 +52,83 @@ The starlight on the Western Seas.
     overlays = import ./overlays {inherit inputs;}; # Your custom packages and modifications, exported as overlays
     nixosModules = import ./modules/nixos; # Reusable nixos modules you might want to export. These are usually stuff you would upstream into nixpkgs
     homeManagerModules = import ./modules/home-manager; # Reusable home-manager modules you might want to export. These are usually stuff you would upstream into home-manager
+    # common = import ./nixos/common; # Common configuration shared between all systems
     nixosConfigurations = {
       # NixOS configuration entrypoint. Available through 'nixos-rebuild --flake .#eris'
-      eris = nixpkgs.lib.nixosSystem {
-        specialArgs = {inherit inputs outputs;};
-        modules = [
-          nix-flatpak.nixosModules.nix-flatpak
-          ./nixos/hosts/common.nix
-          ./nixos/hosts/eris.nix
-          chaotic.nixosModules.default
-        ];
-      };
+      # eris = nixpkgs.lib.nixosSystem {
+      #   specialArgs = {inherit inputs outputs;};
+      #   modules = [
+      #     nix-flatpak.nixosModules.nix-flatpak
+      #     ./nixos/hosts/eris.nix
+      #     chaotic.nixosModules.default
+      #   ];
+      # };
       sedna = nixpkgs.lib.nixosSystem {
         specialArgs = {inherit inputs outputs;};
         modules = [
-          nix-flatpak.nixosModules.nix-flatpak
-          ./nixos/hosts/common.nix
-          ./nixos/hosts/sedna.nix
-          chaotic.nixosModules.default
-        ];
-      };
-      thoughtful = nixpkgs.lib.nixosSystem {
-        # sudo nixos-rebuild --flake .#thoughtful switch |& nom
-        specialArgs = {inherit inputs outputs;};
-        modules = [
-          nix-flatpak.nixosModules.nix-flatpak
-          ./nixos/hosts/common.nix
-          ./nixos/hosts/thoughtful.nix
-          home-manager.nixosModules.home-manager
+          # self.common.default
+          # self.nixosModules
+          # impermanence.nixosModules.impermanence
+          # nix-flatpak.nixosModules.nix-flatpak
+          # ./nixos/hosts/sedna.nix
+          ./nixos/common/default.nix
+          # home-manager.nixosModules.home-manager
           {
-            home-manager.useGlobalPkgs = true;
-            home-manager.users.teq = import ./hosts/home-manager/teq/home.nix;
+            # home-manager.useGlobalPkgs = true;
+            # home-manager.users.teq = [
+            #   ./hosts/home-manager/teq/home.nix
+            #   self.homeManagerModules
+            #   nix-index-database.hmModules.nix-index
+            #   {programs.nix-index-database.comma.enable = true;} # optional to also wrap and install comma
+            #   {programs.nix-index.enable = true;} # integrate with shell's command-not-found functionality
+            # ];
           }
-          nixos-hardware.nixosModules.common-cpu-amd
-          nixos-hardware.nixosModules.common-gpu-amd
-          nixos-hardware.nixosModules.common-pc
-          nixos-hardware.nixosModules.common-pc-ssd
-          chaotic.nixosModules.default
+          # nixos-hardware.nixosModules.common-cpu-amd
+          # nixos-hardware.nixosModules.common-gpu-amd
+          # nixos-hardware.nixosModules.common-pc
+          # nixos-hardware.nixosModules.common-pc-ssd
+          # chaotic.nixosModules.default
         ];
       };
+      # thoughtful = nixpkgs.lib.nixosSystem {
+      #   # sudo nixos-rebuild --flake .#thoughtful switch |& nom
+      #   specialArgs = {inherit inputs outputs;};
+      #   modules = [
+      #     # nixosModules.nixcfg # automatically applied?
+      #     impermanence.nixosModules.impermanence
+      #     nix-flatpak.nixosModules.nix-flatpak
+      #     ./nixos/hosts/thoughtful.nix
+      #     home-manager.nixosModules.home-manager
+      #     {
+      #       home-manager.useGlobalPkgs = true;
+      #       home-manager.users.teq = import ./hosts/home-manager/teq/home.nix;
+      #       # modules = [
+      #       #   nix-index-database.hmModules.nix-index
+      #       #   {programs.nix-index-database.comma.enable = true;} # optional to also wrap and install comma
+      #       #   {programs.nix-index.enable = true;} # integrate with shell's command-not-found functionality
+      #       # ];
+      #     }
+      #     nixos-hardware.nixosModules.common-cpu-amd
+      #     nixos-hardware.nixosModules.common-gpu-amd
+      #     nixos-hardware.nixosModules.common-pc
+      #     nixos-hardware.nixosModules.common-pc-ssd
+      #     chaotic.nixosModules.default
+      #   ];
+      # };
     };
     homeConfigurations = {
-      # Standalone home-manager configuration entrypoint. Available through 'home-manager --flake .#teq'
-      "teq" = home-manager.lib.homeManagerConfiguration {
-        pkgs = nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
-        extraSpecialArgs = {inherit inputs outputs;};
-        modules = [
-          ./home-manager/teq/home.nix
-        ];
-      };
+      # Standalone home-manager configuration entrypoint. Available through 'home-manager --flake .#teq@somewhere'
+      # "teq@somewhere" = home-manager.lib.homeManagerConfiguration {
+      #   pkgs = nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
+      #   extraSpecialArgs = {inherit inputs outputs;};
+      #   modules = [
+      #     self.homeManagerModules
+      #     ./home-manager/teq/home.nix
+      #     nix-index-database.hmModules.nix-index
+      #     {programs.nix-index-database.comma.enable = true;} # optional to also wrap and install comma
+      #     {programs.nix-index.enable = true;} # integrate with shell's command-not-found functionality
+      #   ];
+      # };
     };
   };
 }

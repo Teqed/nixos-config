@@ -1,5 +1,38 @@
-{pkgs, ...}: {
+{
+  pkgs,
+  lib,
+  ...
+}: {
+  nixpkgs.config.allowUnfreePredicate = pkg:
+    builtins.elem (lib.getName pkg) [
+      # Add additional package names here
+    ];
   home.packages = with pkgs; [
+    source-sans-pro
+    source-serif-pro
+    source-code-pro
+    dejavu_fonts
+    (nerdfonts.override {
+      fonts = [
+        "NerdFontsSymbolsOnly"
+        "JetBrainsMono"
+      ];
+    })
+    noto-fonts-lgc-plus
+    noto-fonts-cjk-sans
+    noto-fonts-cjk-serif
+    noto-fonts-monochrome-emoji
+    noto-fonts-color-emoji
+    liberation_ttf
+
+    bibata-cursors
+    papirus-icon-theme
+    # ^^ Duplicated from NixOS configuration
+    curl
+    micro
+    wget
+    nix-output-monitor
+    nil
     kdePackages.kate
     bash-language-server
     bat
@@ -8,7 +41,8 @@
     obsidian
     sshfs # programs.sftpman ?
     solaar
-    blender
+    blender-hip # blender with hardware accelerated rendering
+    clinfo # For confirming OpenCL support
     ungoogled-chromium # Chrome / Chromium / UngoogledChromium # programs.chromium + extensions
     godot_4-mono
     prismlauncher

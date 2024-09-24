@@ -2,12 +2,11 @@
   imports = [
     ../hardware/bluetooth.nix
     ../hardware/networking.nix
-    ../software/kernel_cachyos.nix
-    ../software/locale_en_us_et.nix
     ../software/impermanence.nix
     ../software/desktop.nix
   ];
   networking.hostName = "thoughtful";
+  nixosModules.kernel = "cachyos";
   fileSystems."/boot" = {
     device = "/dev/disk/by-label/BOOT";
     fsType = "vfat";
@@ -15,9 +14,12 @@
   };
   boot.loader = {
     systemd-boot.enable = true;
+    systemd-boot.configurationLimit = 10;
     efi.canTouchEfiVariables = true;
   };
+  services.xserver.videoDrivers = ["amdgpu"]; # Use the amdgpu driver for AMD GPUs
   boot = {
+    initrd.kernelModules = ["amdgpu"]; # Make the kernel use the correct driver early
     # Hardware configuration -------------------
     # initrd.availableKernelModules = ["ahci" "xhci_pci" "virtio_pci" "sr_mod" "virtio_blk"];
     # initrd.kernelModules = [];
@@ -34,5 +36,4 @@
     ];
   };
   # xdg.portal.wlr.settings.screencast.output_name = "HDMI-A-1";
-  system.stateVersion = "24.05"; # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
 }
