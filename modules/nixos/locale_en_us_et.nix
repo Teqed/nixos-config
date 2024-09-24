@@ -8,10 +8,13 @@
   inherit (lib) mkEnableOption mkIf;
 in {
   options.nixosModules.locale_en_us_et.enable = mkEnableOption "Enables localization for en_US.UTF-8.";
-  config = mkIf cfg.enable {
-    time.timeZone = "America/New_York"; # Set your time zone.
-    i18n.defaultLocale = "${defaultLang}"; # Select internationalisation properties.
-    i18n.extraLocaleSettings = {
+  # time.timeZone = "America/New_York"; # Set your time zone.
+  config.time = mkIf cfg.enable {
+    timeZone = "America/New_York";
+  };
+  config.i18n = mkIf cfg.enable {
+    defaultLocale = "${defaultLang}"; # Select internationalisation properties.
+    extraLocaleSettings = {
       LC_ADDRESS = "${defaultLang}";
       LC_IDENTIFICATION = "${defaultLang}";
       LC_MEASUREMENT = "${defaultLang}";

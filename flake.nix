@@ -14,14 +14,14 @@ The starlight on the Western Seas.
     wezterm-flake.inputs.nixpkgs.follows = "nixpkgs";
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
-    # nix-flatpak.url = "github:gmodena/nix-flatpak";
-    # nixos-hardware.url = "github:NixOS/nixos-hardware/master";
-    # impermanence.url = "github:nix-community/impermanence";
-    # nixpkgs-wayland.url = "github:nix-community/nixpkgs-wayland";
-    # nixpkgs-unfree.url = "github:numtide/nixpkgs-unfree";
-    # nixpkgs-unfree.inputs.nixpkgs.follows = "nixpkgs";
-    # nix-index-database.url = "github:nix-community/nix-index-database";
-    # nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
+    nix-flatpak.url = "github:gmodena/nix-flatpak";
+    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
+    impermanence.url = "github:nix-community/impermanence";
+    nixpkgs-wayland.url = "github:nix-community/nixpkgs-wayland";
+    nixpkgs-unfree.url = "github:numtide/nixpkgs-unfree";
+    nixpkgs-unfree.inputs.nixpkgs.follows = "nixpkgs";
+    nix-index-database.url = "github:nix-community/nix-index-database";
+    nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
   };
   outputs = {
     self,
@@ -29,11 +29,11 @@ The starlight on the Western Seas.
     home-manager,
     alejandra,
     chaotic,
-    # nix-flatpak,
-    # nixos-hardware,
-    # impermanence,
-    # nixpkgs-unfree,
-    # nix-index-database,
+    nix-flatpak,
+    nixos-hardware,
+    impermanence,
+    nixpkgs-unfree,
+    nix-index-database,
     ...
   } @ inputs: let
     inherit (self) outputs;
@@ -52,7 +52,7 @@ The starlight on the Western Seas.
     overlays = import ./overlays {inherit inputs;}; # Your custom packages and modifications, exported as overlays
     nixosModules = import ./modules/nixos; # Reusable nixos modules you might want to export. These are usually stuff you would upstream into nixpkgs
     homeManagerModules = import ./modules/home-manager; # Reusable home-manager modules you might want to export. These are usually stuff you would upstream into home-manager
-    # common = import ./nixos/common; # Common configuration shared between all systems
+    common = import ./nixos/common; # Common configuration shared between all systems
     nixosConfigurations = {
       # NixOS configuration entrypoint. Available through 'nixos-rebuild --flake .#eris'
       # eris = nixpkgs.lib.nixosSystem {
@@ -66,12 +66,12 @@ The starlight on the Western Seas.
       sedna = nixpkgs.lib.nixosSystem {
         specialArgs = {inherit inputs outputs;};
         modules = [
-          # self.common.default
-          # self.nixosModules
+          self.common
+          self.nixosModules
           # impermanence.nixosModules.impermanence
           # nix-flatpak.nixosModules.nix-flatpak
-          # ./nixos/hosts/sedna.nix
-          ./nixos/common/default.nix
+          ./nixos/hosts/sedna.nix
+          # ./nixos/common/default.nix
           # home-manager.nixosModules.home-manager
           {
             # home-manager.useGlobalPkgs = true;
