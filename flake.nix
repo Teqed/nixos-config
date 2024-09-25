@@ -15,9 +15,13 @@ The starlight on the Western Seas.
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     nix-flatpak.url = "github:gmodena/nix-flatpak";
+    nix-flatpak.inputs.nixpkgs.follows = "nixpkgs"; #
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
+    # nixos-hardware.inputs.nixpkgs.follows = "nixpkgs"; #
     impermanence.url = "github:nix-community/impermanence?rev=63f4d0443e32b0dd7189001ee1894066765d18a5";
+    # impermanence.inputs.nixpkgs.follows = "nixpkgs"; #
     nixpkgs-wayland.url = "github:nix-community/nixpkgs-wayland";
+    nixpkgs-wayland.inputs.nixpkgs.follows = "nixpkgs"; #
     nixpkgs-unfree.url = "github:numtide/nixpkgs-unfree";
     nixpkgs-unfree.inputs.nixpkgs.follows = "nixpkgs";
     nix-index-database.url = "github:nix-community/nix-index-database";
@@ -25,6 +29,7 @@ The starlight on the Western Seas.
   };
   outputs = {
     self,
+    lib,
     nixpkgs,
     home-manager,
     alejandra,
@@ -45,7 +50,7 @@ The starlight on the Western Seas.
       "aarch64-darwin"
       "x86_64-darwin"
     ];
-    cfg.users = ["teq"];
+    userinfo.users = ["teq"];
     forAllSystems = nixpkgs.lib.genAttrs systems; # This is a function that generates an attribute by calling a function you pass to it, with each system as an argument
   in {
     packages = forAllSystems (system: import ./pkgs nixpkgs.legacyPackages.${system}); # Your custom packages accessible through 'nix build', 'nix shell', etc
@@ -66,28 +71,30 @@ The starlight on the Western Seas.
       #   ];
       # };
       sedna = nixpkgs.lib.nixosSystem {
-        specialArgs = {inherit inputs outputs cfg;};
+        specialArgs = {inherit inputs outputs userinfo;};
         modules = [
-          {nixpkgs.hostPlatform = "x86_64-linux";}
-          {teq.kernel = "cachyos";}
+          ./nixos/hosts/sedna.nix
           self.commonModules
           self.nixosModules
-          ./nixos/hosts/sedna.nix
+          chaotic.nixosModules.default
           home-manager.nixosModules.home-manager
           {
-            home-manager.extraSpecialArgs = {inherit inputs outputs cfg;};
+            teq.nixos.all = true; # Enable all of Teq's NixOS configuration defaults.
+            teq.nixos.impermanence = true; # Enable impermanence on BTRFS partition labeled "nixos"
+            teq.nixos.desktop = true; #
+            teq.nixpkgs = true; # Enable Teq's Nixpkgs configuration defaults.
+            home-manager.backupFileExtension = "hm-backup";
             home-manager.useGlobalPkgs = true;
-            home-manager.users.teq = {
-              imports = [self.homeManagerModules ./home-manager/teq/home.nix];
-            };
-            imports = [
-              # self.homeManagerModules
-              # nix-index-database.hmModules.nix-index
-              # {programs.nix-index-database.comma.enable = true;} # optional to also wrap and install comma
-              # {programs.nix-index.enable = true;} # integrate with shell's command-not-found functionality
+
+            home-manager.extraSpecialArgs = {inherit inputs outputs userinfo;};
+            home-manager.sharedModules = [
+              self.homeManagerModules
+              nix-index-database.hmModules.nix-index
             ];
+            home-manager.users = lib.forEach userinfo.users (u: {
+              "${u}" = import "./hosts/home-manager/${u}/home.nix";
+            });
           }
-          chaotic.nixosModules.default
         ];
       };
       # thoughtful = nixpkgs.lib.nixosSystem {

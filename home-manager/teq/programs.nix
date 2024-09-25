@@ -1,6 +1,7 @@
 {
   inputs,
   pkgs,
+  lib,
   ...
 }: let
   yaziFlavors = pkgs.fetchFromGitHub {
@@ -11,10 +12,12 @@
   };
 in {
   services = {
-    kdeconnect.enable = true;
-    remmina.enable = true;
+    kdeconnect.enable = true; # 1GB / 23MB
+    # remmina.enable = true; # 900MB / 15MB (freerdp 700MB, spice-gtk 600MB)
   };
   programs = {
+    nix-index-database.comma.enable = true; # optional to also wrap and install comma
+    nix-index.enable = true; # integrate with shell's command-not-found functionality
     home-manager.enable = true;
     direnv = {
       enable = true;
@@ -22,22 +25,49 @@ in {
         enable = true;
       };
     };
+    atuin = {
+      enable = true;
+      # settings = { };
+    };
+    bat = {
+      enable = true;
+      # config = { };
+    };
+    bash = {
+      enable = true;
+      enableVteIntegration = true;
+      # historyControl = # one of "erasedups", "ignoredups", "ignorespace", "ignoreboth"
+      historyFile = "$HOME/.local/share/history/bash_history"; # "${config.xdg.dataHome}/zsh/zsh_history"
+      historyFileSize = 1000000;
+      historySize = 1000000;
+      historyIgnore = ["rm *" "pkill *" "ls" "cd" "exit"];
+      # blesh, a full-featured line editor written in pure Bash
+      initExtra = lib.mkBefore ''
+        source ${pkgs.blesh}/share/blesh/ble.sh
+      '';
+      # interactiveShellInit = "";
+      # loginShellInit = "";
+      # shellInit = "";
+      # shellAliases = { };
+      # functions = { };
+      # plugins = [ ];
+    };
     # programs.tmux = {
     #   enable = true;
     #   extraConfig = builtins.readFile (./. + "/tmux.conf");
     # };
     vscode = {
-      enable = true;
+      enable = true; # 1.44GB / 400MB (mesa 800MB)
       enableUpdateCheck = false;
       enableExtensionUpdateCheck = false;
       # extensions = with pkgs; [];
     };
     lesspipe.enable = true;
     fastfetch = {
-      enable = true;
+      enable = true; # 700MB / 10MB (xfconf 400MB, imagemagick 300MB, python3 200MB)
       # settings = { };
     };
-    obs-studio.enable = true;
+    # obs-studio.enable = true; # 3.53GB
     btop = {
       enable = true;
       # settings = { };
@@ -45,7 +75,6 @@ in {
     };
     fd.enable = true;
     gh.enable = true; # / GitHub Desktop
-    hstr.enable = true;
     jq.enable = true;
     # ssh.enable = true;
     # dircolors.enable = true;
@@ -54,18 +83,17 @@ in {
       # settings = { };
     };
     go = {
-      enable = true;
+      enable = true; # 200MB / 200MB
       # packages = { };
     };
     helix = {
-      enable = true;
+      enable = true; # 400MB / 200MB (marksman 200MB / 20MB)
       extraPackages = [pkgs.marksman];
     };
     micro = {
       enable = true;
       # settings = { };
     };
-    nix-index.enable = true;
     nushell.enable = true;
     pyenv.enable = true;
     pylint.enable = true;
@@ -82,15 +110,15 @@ in {
       # mounts = { };
     };
     # starship.enable = true; # Prompt
-    vim.enable = true;
+    vim.enable = true; # 570MB / 75MB (vim-full 570MB / 90KB)
     wezterm = {
-      enable = true;
+      enable = true; # 230MB / 160MB
       package = inputs.wezterm-flake.packages.${pkgs.system}.default;
       # colorSchemes = { };
       # extraConfig = " ";
     };
     yazi = {
-      enable = true;
+      enable = true; # 426MB / 20MB (imagemagick, ffmegthumbnailer)
       settings.theme = {
         flavor = {
           use = "catppuccin-mocha";
@@ -102,10 +130,10 @@ in {
     };
     zoxide.enable = true;
     # thunderbird.enable = true; # profiles needs to be set
-    java.enable = true; # Duplicated from NixOS configuration - NixOS can use binfmt
-    firefox.enable = true;
+    java.enable = true; # Duplicated from NixOS configuration - NixOS can use binfmt # 900 MB / 600 MB
+    firefox.enable = true; # 1.6GB / 300MB
     git = {
-      enable = true;
+      enable = true; # 300MB / 70MB (python3 200MB, perl 100MB)
       # prompt = true; # NixOS-specific option
       extraConfig = {
         init = {

@@ -4,9 +4,6 @@
   ...
 }: {
   imports = [
-    ../hardware/vm.nix
-    ../software/impermanence.nix
-    ../software/desktop.nix
     inputs.nixos-hardware.nixosModules.common-cpu-amd
     inputs.nixos-hardware.nixosModules.common-gpu-amd
     inputs.nixos-hardware.nixosModules.common-pc
@@ -26,5 +23,22 @@
       systemd-boot.enable = true;
       efi.canTouchEfiVariables = true;
     };
+    initrd.availableKernelModules = [
+      "ahci"
+      "xhci_pci"
+      "virtio_pci"
+      "sr_mod"
+      "virtio_blk"
+      "virtio_net"
+      "virtio_mmio"
+      "virtio_scsi"
+    ];
+    initrd.kernelModules = [
+      "virtio_balloon"
+      "virtio_console"
+      "virtio_rng"
+    ];
+    kernelModules = ["kvm-amd"];
+    extraModulePackages = [];
   };
 }

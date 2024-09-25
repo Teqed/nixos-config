@@ -8,67 +8,73 @@
       # Add additional package names here
     ];
   home.packages = with pkgs; [
-    source-sans-pro
-    source-serif-pro
-    source-code-pro
-    dejavu_fonts
+    source-sans-pro # 6MB
+    source-serif-pro # 5MB
+    source-code-pro # 2MB
+    dejavu_fonts # 10MB
     (nerdfonts.override {
       fonts = [
         "NerdFontsSymbolsOnly"
         "JetBrainsMono"
       ];
     })
-    noto-fonts-lgc-plus
-    noto-fonts-cjk-sans
-    noto-fonts-cjk-serif
-    noto-fonts-monochrome-emoji
-    noto-fonts-color-emoji
-    liberation_ttf
+    noto-fonts-lgc-plus # 11MB
+    noto-fonts-cjk-sans # 62MB
+    noto-fonts-cjk-serif # 54MB
+    noto-fonts-monochrome-emoji # 2MB
+    noto-fonts-color-emoji # 10MB
+    liberation_ttf # 4MB
 
-    bibata-cursors
-    papirus-icon-theme
+    bibata-cursors # 160MB
+    papirus-icon-theme # 200MB / 130MB
     # ^^ Duplicated from NixOS configuration
-    notcurses
-    curl
+
+    # Especially large programs:
+
+    # blender-hip # blender with hardware accelerated rendering # 6.2GB / 1 GB
+    # godot_4-mono # 2.9GB / 1.3 GB
+    # prismlauncher # 2.8GB / 700 MB
+    ungoogled-chromium # Chrome / Chromium / UngoogledChromium # programs.chromium + extensions # 2GB / 600 MB
+    obsidian # 1.8GB / 20MB
+    vesktop # 1.8GB / 8MB
+    # ( electron 1.8GB / 400MB )
+    plex-media-player # 1.7GB / 300MB
+    handbrake # 1.5GB / 64MB (ffmpeg 1.3GB / 35MB)
+    kdePackages.kate # 1.4GB / 40MB (ktexteditor)
+    # discord # discocss
+    discord-krisp # 1.3GB / 300MB (mesa 800MB)
+    lan-mouse_git # 900MB / 10MB (libadwaita 900MB)
+    mgba # 800MB / 10MB (ffmpeg)
+    notcurses # 700MB / 10MB (ffmpeg)
+    solaar # 600MB / 30MB (gtk+3 600MB)
+    discover-overlay # 600MB / 15MB (gtk+3, gtk-layer-shell)
+    bash-language-server # 300MB / 200MB (nodejs 200MB)
+    zed-editor_git # 230MB / 160MB
+    python3 # 165MB / 108MB (gcc 40MB, openssl 40MB, readline 40MB, ncurses 30MB, sqlite 30MB, bash 30MB, etc.)
+    aseprite # 117MB / 20MB (harfbuzz 70MB / 3MB)
+
+    # ;
+    curl # 55MB / 200KB (openssl)
     micro
     wget
     nix-output-monitor
+    nix-tree
     nil
-    kdePackages.kate
-    bash-language-server
-    bat
+    nixd # Nix language server, based on nix libraries https://github.com/nix-community/nixd
     grc
     # atool
-    obsidian
     sshfs # programs.sftpman ?
-    solaar
-    blender-hip # blender with hardware accelerated rendering
     clinfo # For confirming OpenCL support
-    ungoogled-chromium # Chrome / Chromium / UngoogledChromium # programs.chromium + extensions
-    godot_4-mono
-    prismlauncher
-    # discord # discocss
-    discord-krisp
-    vesktop
     lynx
     w3m-nox
-    mgba
-    handbrake
-    python3
-    discover-overlay
     most
-    plex-media-player
     radeontop
     trash-cli
-    zed-editor_git
     rustup # cargo
     catimg
     chafa
     colordiff
     hyperfine
-    notcurses
-    aseprite
-    lan-mouse_git
     #
     # flatseal
     # build-essential
@@ -88,7 +94,7 @@
     # Homestuck Collection
     # Ash
     # Autoconf
-    # Golang-go
+    # Golang-go # exists
     # Lua
     # Wine
     #  wget
@@ -102,7 +108,7 @@
     # requiredPackages = map (pkg: lib.setPrio ((pkg.meta.priority or lib.meta.defaultPriority) + 3) pkg)
     acl
     attr
-    bashInteractive # bash with ncurses support
+    # bashInteractive # bash with ncurses support
     bzip2
     coreutils-full
     cpio
@@ -132,7 +138,7 @@
     zstd
 
     # defaultPackageNames =
-    perl
+    perl # 100MB / 55MB
     rsync
     strace
   ];

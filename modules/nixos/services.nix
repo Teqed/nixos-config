@@ -1,91 +1,98 @@
 {
   pkgs,
   lib,
+  config,
   ...
 }: let
+  cfg = config.teq.nixos;
   inherit (lib) mkDefault;
 in {
-  security.sudo = {
-    enable = mkDefault true;
-    package = pkgs.sudo.override {
-      withInsults = true;
-    };
-    extraConfig = mkDefault ''
-      Defaults lecture = never
-    '';
+  options.teq.nixos = {
+    services = lib.mkEnableOption "Teq's NixOS Services configuration defaults.";
   };
-  services = {
-    openssh = {
+  config = lib.mkIf cfg.services {
+    security.sudo = {
       enable = mkDefault true;
-      settings = {
-        X11Forwarding = mkDefault true;
-        PermitRootLogin = mkDefault "no"; # disable root login
-        PasswordAuthentication = mkDefault false; # disable password login
-        StreamLocalBindUnlink = mkDefault "yes"; # Automatically remove stale sockets
-        GatewayPorts = mkDefault "clientspecified"; # Allow forwarding ports to everywhere
-        AcceptEnv = mkDefault "WAYLAND_DISPLAY"; # Let WAYLAND_DISPLAY be forwarded
+      package = pkgs.sudo.override {
+        withInsults = true;
       };
-      openFirewall = mkDefault true;
+      extraConfig = mkDefault ''
+        Defaults lecture = never
+      '';
     };
-    spice-vdagentd.enable = mkDefault true;
-    earlyoom.enable = mkDefault true;
-
-    hardware.openrgb = {
-      enable = mkDefault true;
-      package = pkgs.openrgb-with-all-plugins;
-    };
-
-    keyd = {
-      # A key remapping daemon for linux. https://github.com/rvaiya/keyd
-      enable = mkDefault true;
-      keyboards.default.settings = {
-        main = {
-          # overloads the capslock key to function as both escape (when tapped) and capslock (when held)
-          capslock = mkDefault "overload(capslock, esc)";
-        };
-      };
-    };
-
-    flatpak = {
-      enable = mkDefault true;
-      update.auto = {
+    services = {
+      openssh = {
         enable = mkDefault true;
-        onCalendar = mkDefault "weekly"; # Default value
+        settings = {
+          X11Forwarding = mkDefault true;
+          PermitRootLogin = mkDefault "no"; # disable root login
+          PasswordAuthentication = mkDefault false; # disable password login
+          StreamLocalBindUnlink = mkDefault "yes"; # Automatically remove stale sockets
+          GatewayPorts = mkDefault "clientspecified"; # Allow forwarding ports to everywhere
+          AcceptEnv = mkDefault "WAYLAND_DISPLAY"; # Let WAYLAND_DISPLAY be forwarded
+        };
+        openFirewall = mkDefault true;
       };
-      overrides = {
-        global = {
-          Context.sockets = mkDefault ["wayland" "!x11" "!fallback-x11"]; # Force Wayland by default
-          Environment = {
-            XCURSOR_PATH = mkDefault "/run/host/user-share/icons:/run/host/share/icons"; # Fix un-themed cursor in some Wayland apps
-            GTK_THEME = mkDefault "Adwaita:dark"; # Force correct theme for some GTK apps
+      spice-vdagentd.enable = mkDefault true;
+      earlyoom.enable = mkDefault true;
+
+      hardware.openrgb = {
+        enable = mkDefault true;
+        package = pkgs.openrgb-with-all-plugins;
+      };
+
+      keyd = {
+        # A key remapping daemon for linux. https://github.com/rvaiya/keyd
+        enable = mkDefault true;
+        keyboards.default.settings = {
+          main = {
+            # overloads the capslock key to function as both escape (when tapped) and capslock (when held)
+            capslock = mkDefault "overload(capslock, esc)";
           };
         };
-        "com.visualstudio.code".Context = {
-          filesystems = mkDefault [
-            "xdg-config/git:ro" # Expose user Git config
-            "/run/current-system/sw/bin:ro" # Expose NixOS managed software
-          ];
-          sockets = mkDefault [
-            "gpg-agent" # Expose GPG agent
-            "pcsc" # Expose smart cards (i.e. YubiKey)
-          ];
+      };
+
+      flatpak = {
+        enable = mkDefault true;
+        update.auto = {
+          enable = mkDefault true;
+          onCalendar = mkDefault "weekly"; # Default value
         };
-        "org.onlyoffice.desktopeditors".Context.sockets = mkDefault ["x11"]; # No Wayland support
+        overrides = {
+          global = {
+            Context.sockets = mkDefault ["wayland" "!x11" "!fallback-x11"]; # Force Wayland by default
+            Environment = {
+              XCURSOR_PATH = mkDefault "/run/host/user-share/icons:/run/host/share/icons"; # Fix un-themed cursor in some Wayland apps
+              GTK_THEME = mkDefault "Adwaita:dark"; # Force correct theme for some GTK apps
+            };
+          };
+          "com.visualstudio.code".Context = {
+            filesystems = mkDefault [
+              "xdg-config/git:ro" # Expose user Git config
+              "/run/current-system/sw/bin:ro" # Expose NixOS managed software
+            ];
+            sockets = mkDefault [
+              "gpg-agent" # Expose GPG agent
+              "pcsc" # Expose smart cards (i.e. YubiKey)
+            ];
+          };
+          "org.onlyoffice.desktopeditors".Context.sockets = mkDefault ["x11"]; # No Wayland support
+        };
+      };
+
+      sunshine = {
+        enable = mkDefault true;
+        openFirewall = mkDefault true;
+        capSysAdmin = mkDefault true;
+      };
+
+      xrdp = {
+        enable = mkDefault true;
+        openFirewall = mkDefault true;
       };
     };
 
-    sunshine = {
-      enable = mkDefault true;
-      openFirewall = mkDefault true;
-      capSysAdmin = mkDefault true;
-    };
-
-    xrdp = {
-      enable = mkDefault true;
-      openFirewall = mkDefault true;
-    };
+    systemd.services.systemd-udev-settle.enable = mkDefault false; # don't wait for udev to settle on boot
+    systemd.services.NetworkManager-wait-online.enable = mkDefault false; # don't wait for network to be up on boot
   };
-
-  systemd.services.systemd-udev-settle.enable = mkDefault false; # don't wait for udev to settle on boot
-  systemd.services.NetworkManager-wait-online.enable = mkDefault false; # don't wait for network to be up on boot
 }

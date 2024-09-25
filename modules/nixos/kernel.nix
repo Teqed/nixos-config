@@ -4,33 +4,26 @@
   pkgs,
   ...
 }: let
-  kernel_selected = config.teq.kernel or "default"; # Default option
+  cfg = config.teq.nixos.kernel;
 in {
-  options.teq.kernel = lib.mkOption {
-    type = lib.types.str;
-    default = "default";
-    description = "Select the kernel to use: 'default' or 'cachyos'.";
+  options.teq.nixos.kernel = {
+    enable = lib.mkEnableOption "Teq's NixOS Kernel configuration defaults.";
+    cachyos = lib.mkEnableOption "Enable CachyOS kernel.";
   };
-
-  config = {
-    # Set the host platform
+  config = lib.mkIf cfg.enable {
     nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
-
-    # Configure boot settings based on the selected kernel
     boot.kernelPackages =
-      if kernel_selected == "cachyos"
+      if cfg.cachyos
       then pkgs.linuxPackages_cachyos # Use the CachyOS kernel
-      else pkgs.linuxPackages; # Use the default kernel
-
+      else pkgs.linuxPackages; # Use the default kernel # linux-6.11 500MB
     boot.kernel.sysctl = {
       "vm.max_map_count" = 2147483642; # Required for some games
     };
-
-    # Additional configurations for CachyOS
-    chaotic.scx.enable = kernel_selected == "cachyos";
-    chaotic.scx.scheduler =
-      if kernel_selected == "cachyos"
-      then "scx_rusty"
-      else null;
+    chaotic = lib.mkIf cfg.cachyos {
+      scx = {
+        enable = true; # Additional configurations for scheduler
+        scheduler = "scx_rusty";
+      };
+    };
   };
 }

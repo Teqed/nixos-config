@@ -1,14 +1,5 @@
-# This is your home-manager configuration file
-# Use this to configure your home environment (it replaces ~/.config/nixpkgs/home.nix)
-{
-  inputs,
-  outputs,
-  lib,
-  # config,
-  pkgs,
-  ...
-}: {
-  # You can import other home-manager modules here
+# home-manager configuration file (replaces ~/.config/nixpkgs/home.nix)
+{pkgs, ...}: {
   imports = [
     # If you want to use modules your own flake exports (from modules/home-manager):
     # outputs.homeManagerModules.example
@@ -21,6 +12,7 @@
   ];
   # xdg.configFile."nixpkgs/config.nix".source = ./.config/nixpkgs/config.nix;
   # xdg.configFile."nix/nix.conf".source = ./.config/nix/nix.conf;
+  teq.home-manager.all = true; # Enable all of Teq's Home-Manager configuration defaults.
   home = {
     preferXdgDirectories = true;
     sessionPath = ["$HOME/.local/bin"];
