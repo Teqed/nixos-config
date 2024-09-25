@@ -59,7 +59,6 @@ The starlight on the Western Seas.
     nixosModules = import ./modules/nixos; # Reusable nixos modules you might want to export. These are usually stuff you would upstream into nixpkgs
     homeManagerModules = import ./modules/home-manager; # Reusable home-manager modules you might want to export. These are usually stuff you would upstream into home-manager
     commonModules = import ./modules/nixpkgs.nix; # Reusable modules that are not specific to nixos or home-manager
-    homeManagerConfig = import ./home-manager/each/default.nix; # Home-manager configuration entrypoint
     nixosConfigurations = {
       # NixOS configuration entrypoint. Available through 'nixos-rebuild --flake .#eris'
       # eris = nixpkgs.lib.nixosSystem {
@@ -92,9 +91,10 @@ The starlight on the Western Seas.
               self.homeManagerModules
               nix-index-database.hmModules.nix-index
             ];
-            home-manager.users = nixpkgs.lib.forEach userinfo.users (u: {
-              "${u}" = self.homeManagerConfig;
-            });
+            home-manager.users.teq = import ./home-manager/home.nix;
+            # home-manager.users = nixpkgs.lib.forEach userinfo.users (u: {
+            # "${u}" = self.homeManagerConfig;
+            # });
           }
         ];
       };
