@@ -5,16 +5,16 @@
   pkgs,
   ...
 }: let
-  cfg = config.teq.nixos;
+  cfg = config.teq.nixos.desktop;
 in {
-  options.teq.nixos = {
-    desktop = lib.mkEnableOption "Teq's NixOS Desktop configuration defaults.";
+  options.teq.nixos.desktop = {
+    enable = lib.mkEnableOption "Teq's NixOS Desktop configuration defaults.";
   };
-  config = lib.mkIf cfg.desktop {
-    imports = [
-      ./steam.nix
-      ./pipewire.nix
-    ];
+  imports = [
+    ./steam.nix
+    ./pipewire.nix
+  ];
+  config = lib.mkIf cfg.enable {
     teq.nixos.desktop.audio.enable = lib.mkDefault true; # Enable audio defaults.
     teq.nixos.desktop.steam.enable = lib.mkDefault true; # Enable Steam defaults.
     services = {

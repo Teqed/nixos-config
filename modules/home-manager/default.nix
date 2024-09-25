@@ -10,12 +10,12 @@ in {
   options.teq.home-manager = {
     all = lib.mkEnableOption "Enable all of Teq's Home-Manager configuration defaults.";
   };
+  imports = [
+    ./fonts.nix
+    ./nixcfg.nix
+    ./i18n_en_us_et.nix
+  ];
   config = {
-    imports = [
-      ./fonts.nix
-      ./nixcfg.nix
-      ./i18n_en_us_et.nix
-    ];
     teq.home-manager = lib.mkIf cfg.all {
       fonts = lib.mkDefault true;
       nixcfg = lib.mkDefault true;

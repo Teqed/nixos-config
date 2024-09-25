@@ -29,7 +29,6 @@ The starlight on the Western Seas.
   };
   outputs = {
     self,
-    lib,
     nixpkgs,
     home-manager,
     alejandra,
@@ -60,6 +59,7 @@ The starlight on the Western Seas.
     nixosModules = import ./modules/nixos; # Reusable nixos modules you might want to export. These are usually stuff you would upstream into nixpkgs
     homeManagerModules = import ./modules/home-manager; # Reusable home-manager modules you might want to export. These are usually stuff you would upstream into home-manager
     commonModules = import ./modules/nixpkgs.nix; # Reusable modules that are not specific to nixos or home-manager
+    homeManagerConfig = import ./home-manager/each/default.nix; # Home-manager configuration entrypoint
     nixosConfigurations = {
       # NixOS configuration entrypoint. Available through 'nixos-rebuild --flake .#eris'
       # eris = nixpkgs.lib.nixosSystem {
@@ -79,9 +79,10 @@ The starlight on the Western Seas.
           chaotic.nixosModules.default
           home-manager.nixosModules.home-manager
           {
+            nixpkgs.hostPlatform = nixpkgs.lib.mkDefault "x86_64-linux";
             teq.nixos.all = true; # Enable all of Teq's NixOS configuration defaults.
             teq.nixos.impermanence = true; # Enable impermanence on BTRFS partition labeled "nixos"
-            teq.nixos.desktop = true; #
+            teq.nixos.desktop.enable = true; #
             teq.nixpkgs = true; # Enable Teq's Nixpkgs configuration defaults.
             home-manager.backupFileExtension = "hm-backup";
             home-manager.useGlobalPkgs = true;
@@ -91,8 +92,8 @@ The starlight on the Western Seas.
               self.homeManagerModules
               nix-index-database.hmModules.nix-index
             ];
-            home-manager.users = lib.forEach userinfo.users (u: {
-              "${u}" = import "./hosts/home-manager/${u}/home.nix";
+            home-manager.users = nixpkgs.lib.forEach userinfo.users (u: {
+              "${u}" = self.homeManagerConfig;
             });
           }
         ];
