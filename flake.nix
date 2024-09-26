@@ -52,28 +52,30 @@ The starlight on the Western Seas.
     userinfo.users = ["teq"];
     forAllSystems = nixpkgs.lib.genAttrs systems; # This is a function that generates an attribute by calling a function you pass to it, with each system as an argument
   in {
-    packages = forAllSystems (system: import ./pkgs nixpkgs.legacyPackages.${system}); # Your custom packages accessible through 'nix build', 'nix shell', etc
-    formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.alejandra); # Formatter for your nix files, available through 'nix fmt'. Other options beside 'alejandra' include 'nixpkgs-fmt'
-    # formatter.x86_64-linux = alejandra.defaultPackage.x86_64-linux;
-    overlays = import ./overlays {inherit inputs;}; # Your custom packages and modifications, exported as overlays
-    nixosModules = import ./modules/nixos; # Reusable nixos modules you might want to export. These are usually stuff you would upstream into nixpkgs
-    homeManagerModules = import ./modules/home-manager; # Reusable home-manager modules you might want to export. These are usually stuff you would upstream into home-manager
-    commonModules = import ./modules/nixpkgs.nix; # Reusable modules that are not specific to nixos or home-manager
+    packages = forAllSystems (system: import ./pkgs nixpkgs.legacyPackages.${system}); # Custom packages accessible through 'nix build', 'nix shell', etc
+    formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.alejandra); # Formatter for your nix files, available through 'nix fmt'.
+    overlays = import ./overlays {inherit inputs;}; # Custom packages and modifications, exported as overlays.
+    nixosModules = import ./modules/nixos; # Reusable nixos modules.
+    homeManagerModules = import ./modules/home-manager; # Reusable home-manager modules.
+    commonModules = import ./modules/nixpkgs.nix; # Reusable modules that are not specific to nixos or home-manager.
     nixosConfigurations = {
       # NixOS configuration entrypoint. Available through 'nixos-rebuild --flake .#sedna'
       sedna = nixpkgs.lib.nixosSystem {
         specialArgs = {inherit inputs outputs userinfo;};
         modules = [
-          ./nixos/sedna.nix
+          ./hosts/sedna.nix
           self.commonModules
           self.nixosModules
           chaotic.nixosModules.default
           home-manager.nixosModules.home-manager
-        ];
-        home-manager.sharedModules = [
-          self.homeManagerModules
-          {teq.home-manager.all = true;} # Enable all of Teq's Home-Manager configuration defaults.
-          nix-index-database.hmModules.nix-index
+          {
+            nixpkgs.hostPlatform = nixpkgs.lib.mkDefault "x86_64-linux";
+            home-manager.sharedModules = [
+              self.homeManagerModules
+              {teq.home-manager.all = true;}
+              nix-index-database.hmModules.nix-index
+            ];
+          }
         ];
       };
       # sudo nixos-rebuild --flake .#thoughtful switch |& nom
@@ -85,16 +87,19 @@ The starlight on the Western Seas.
           self.nixosModules
           chaotic.nixosModules.default
           home-manager.nixosModules.home-manager
-        ];
-        home-manager.sharedModules = [
-          self.homeManagerModules
-          {teq.home-manager.all = true;} # Enable all of Teq's Home-Manager configuration defaults.
-          nix-index-database.hmModules.nix-index
+          {
+            nixpkgs.hostPlatform = nixpkgs.lib.mkDefault "x86_64-linux";
+            home-manager.sharedModules = [
+              self.homeManagerModules
+              {teq.home-manager.all = true;}
+              nix-index-database.hmModules.nix-index
+            ];
+          }
         ];
       };
     };
     homeConfigurations = {
-      # Standalone home-manager configuration entrypoint. Available through 'home-manager --flake .#teq@somewhere'
+      # home-manager --flake .#teq@somewhere
       "teq@somewhere" = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
         extraSpecialArgs = {inherit inputs outputs;};
@@ -102,7 +107,7 @@ The starlight on the Western Seas.
           self.commonModules
           self.homeManagerModules
           {
-            teq.home-manager.all = true; # Enable Teq's Nixpkgs configuration defaults.
+            teq.home-manager.all = true;
             teq.nixpkgs = true;
           }
           nix-index-database.hmModules.nix-index

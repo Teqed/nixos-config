@@ -1,8 +1,4 @@
-{
-  inputs,
-  nixpkgs,
-  ...
-}: {
+{inputs, ...}: {
   imports = [
     inputs.nixos-hardware.nixosModules.common-cpu-amd
     inputs.nixos-hardware.nixosModules.common-gpu-amd
@@ -41,9 +37,8 @@
     ];
   };
   # xdg.portal.wlr.settings.screencast.output_name = "HDMI-A-1";
-  nixpkgs.hostPlatform = nixpkgs.lib.mkDefault "x86_64-linux";
-  teq.nixos.all = true; # Enable all of Teq's NixOS configuration defaults.
+  teq.nixos.all = true;
   teq.nixos.impermanence = true; # Enable impermanence on BTRFS partition labeled "nixos"
-  teq.nixos.desktop.enable = true; #
-  teq.nixpkgs = true; # Enable Teq's Nixpkgs configuration defaults.
+  teq.nixos.desktop.enable = true;
+  teq.nixpkgs = true;
 }
