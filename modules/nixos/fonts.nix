@@ -61,22 +61,17 @@ in {
       fontDir.enable = mkDefault (!pkgs.stdenv.isDarwin);
     };
 
-    # services.kmscon = {
-    #   enable = mkDefault true; # Use kmscon as the virtual console instead of gettys.
-    #   fonts = mkDefault [
-    #     {
-    #       name = "JetBrains Mono";
-    #       package = pkgs.nerdfonts.override {
-    #         fonts = [
-    #           "JetBrainsMono"
-    #         ];
-    #       };
-    #     }
-    #   ];
-
-    #   extraOptions = mkDefault "--term xterm-256color";
-    #   extraConfig = mkDefault "font-size=12";
-    #   hwRender = mkDefault true; # Whether to use 3D hardware acceleration to render the console.
-    # };
+    services.kmscon = {
+      enable = mkDefault true; # Use kmscon as the virtual console instead of gettys.
+      fonts = mkDefault [
+        {
+          name = "Source Code Pro";
+          package = pkgs.source-code-pro;
+        }
+      ];
+      extraOptions = mkDefault "--term xterm-256color";
+      extraConfig = mkDefault "font-size=12";
+      # hwRender = mkDefault true; # Whether to use 3D hardware acceleration to render the console.
+    };
   };
 }

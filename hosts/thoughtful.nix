@@ -1,12 +1,17 @@
-{...}: {
+{
+  inputs,
+  nixpkgs,
+  ...
+}: {
   imports = [
-    ../hardware/bluetooth.nix
-    ../hardware/networking.nix
-    ../software/impermanence.nix
-    ../software/desktop.nix
+    inputs.nixos-hardware.nixosModules.common-cpu-amd
+    inputs.nixos-hardware.nixosModules.common-gpu-amd
+    inputs.nixos-hardware.nixosModules.common-pc
+    inputs.nixos-hardware.nixosModules.common-pc-ssd
+    inputs.impermanence.nixosModules.impermanence
+    inputs.nix-flatpak.nixosModules.nix-flatpak
   ];
   networking.hostName = "thoughtful";
-  nixosModules.kernel = "cachyos";
   fileSystems."/boot" = {
     device = "/dev/disk/by-label/BOOT";
     fsType = "vfat";
@@ -36,4 +41,9 @@
     ];
   };
   # xdg.portal.wlr.settings.screencast.output_name = "HDMI-A-1";
+  nixpkgs.hostPlatform = nixpkgs.lib.mkDefault "x86_64-linux";
+  teq.nixos.all = true; # Enable all of Teq's NixOS configuration defaults.
+  teq.nixos.impermanence = true; # Enable impermanence on BTRFS partition labeled "nixos"
+  teq.nixos.desktop.enable = true; #
+  teq.nixpkgs = true; # Enable Teq's Nixpkgs configuration defaults.
 }

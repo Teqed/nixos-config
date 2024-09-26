@@ -15,7 +15,7 @@ The starlight on the Western Seas.
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     nix-flatpak.url = "github:gmodena/nix-flatpak";
-    nix-flatpak.inputs.nixpkgs.follows = "nixpkgs"; #
+    # nix-flatpak.inputs.nixpkgs.follows = "nixpkgs"; #
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     # nixos-hardware.inputs.nixpkgs.follows = "nixpkgs"; #
     impermanence.url = "github:nix-community/impermanence?rev=63f4d0443e32b0dd7189001ee1894066765d18a5";
@@ -60,84 +60,54 @@ The starlight on the Western Seas.
     homeManagerModules = import ./modules/home-manager; # Reusable home-manager modules you might want to export. These are usually stuff you would upstream into home-manager
     commonModules = import ./modules/nixpkgs.nix; # Reusable modules that are not specific to nixos or home-manager
     nixosConfigurations = {
-      # NixOS configuration entrypoint. Available through 'nixos-rebuild --flake .#eris'
-      # eris = nixpkgs.lib.nixosSystem {
-      #   specialArgs = {inherit inputs outputs;};
-      #   modules = [
-      #     nix-flatpak.nixosModules.nix-flatpak
-      #     ./nixos/hosts/eris.nix
-      #     chaotic.nixosModules.default
-      #   ];
-      # };
+      # NixOS configuration entrypoint. Available through 'nixos-rebuild --flake .#sedna'
       sedna = nixpkgs.lib.nixosSystem {
         specialArgs = {inherit inputs outputs userinfo;};
         modules = [
-          ./nixos/hosts/sedna.nix
+          ./nixos/sedna.nix
           self.commonModules
           self.nixosModules
           chaotic.nixosModules.default
           home-manager.nixosModules.home-manager
-          {
-            nixpkgs.hostPlatform = nixpkgs.lib.mkDefault "x86_64-linux";
-            teq.nixos.all = true; # Enable all of Teq's NixOS configuration defaults.
-            teq.nixos.impermanence = true; # Enable impermanence on BTRFS partition labeled "nixos"
-            teq.nixos.desktop.enable = true; #
-            teq.nixpkgs = true; # Enable Teq's Nixpkgs configuration defaults.
-            home-manager.backupFileExtension = "hm-backup";
-            home-manager.useGlobalPkgs = true;
-
-            home-manager.extraSpecialArgs = {inherit inputs outputs userinfo;};
-            home-manager.sharedModules = [
-              self.homeManagerModules
-              nix-index-database.hmModules.nix-index
-            ];
-            home-manager.users.teq = import ./home-manager/home.nix;
-            # home-manager.users = nixpkgs.lib.forEach userinfo.users (u: {
-            # "${u}" = self.homeManagerConfig;
-            # });
-          }
+        ];
+        home-manager.sharedModules = [
+          self.homeManagerModules
+          {teq.home-manager.all = true;} # Enable all of Teq's Home-Manager configuration defaults.
+          nix-index-database.hmModules.nix-index
         ];
       };
-      # thoughtful = nixpkgs.lib.nixosSystem {
-      #   # sudo nixos-rebuild --flake .#thoughtful switch |& nom
-      #   specialArgs = {inherit inputs outputs;};
-      #   modules = [
-      #     # nixosModules.nixcfg # automatically applied?
-      #     impermanence.nixosModules.impermanence
-      #     nix-flatpak.nixosModules.nix-flatpak
-      #     ./nixos/hosts/thoughtful.nix
-      #     home-manager.nixosModules.home-manager
-      #     {
-      #       home-manager.useGlobalPkgs = true;
-      #       home-manager.users.teq = import ./hosts/home-manager/teq/home.nix;
-      #       # modules = [
-      #       #   nix-index-database.hmModules.nix-index
-      #       #   {programs.nix-index-database.comma.enable = true;} # optional to also wrap and install comma
-      #       #   {programs.nix-index.enable = true;} # integrate with shell's command-not-found functionality
-      #       # ];
-      #     }
-      #     nixos-hardware.nixosModules.common-cpu-amd
-      #     nixos-hardware.nixosModules.common-gpu-amd
-      #     nixos-hardware.nixosModules.common-pc
-      #     nixos-hardware.nixosModules.common-pc-ssd
-      #     chaotic.nixosModules.default
-      #   ];
-      # };
+      # sudo nixos-rebuild --flake .#thoughtful switch |& nom
+      thoughtful = nixpkgs.lib.nixosSystem {
+        specialArgs = {inherit inputs outputs userinfo;};
+        modules = [
+          ./nixos/thoughtful.nix
+          self.commonModules
+          self.nixosModules
+          chaotic.nixosModules.default
+          home-manager.nixosModules.home-manager
+        ];
+        home-manager.sharedModules = [
+          self.homeManagerModules
+          {teq.home-manager.all = true;} # Enable all of Teq's Home-Manager configuration defaults.
+          nix-index-database.hmModules.nix-index
+        ];
+      };
     };
     homeConfigurations = {
       # Standalone home-manager configuration entrypoint. Available through 'home-manager --flake .#teq@somewhere'
-      # "teq@somewhere" = home-manager.lib.homeManagerConfiguration {
-      #   pkgs = nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
-      #   extraSpecialArgs = {inherit inputs outputs;};
-      #   modules = [
-      #     self.commonModules
-      #     self.homeManagerModules
-      #     ./home-manager/teq/home.nix
-      #     nix-index-database.hmModules.nix-index
-      #     {programs.nix-index-database.comma.enable = true;} # optional to also wrap and install comma
-      #     {programs.nix-index.enable = true;} # integrate with shell's command-not-found functionality
-      #   ];
-      # };
+      "teq@somewhere" = home-manager.lib.homeManagerConfiguration {
+        pkgs = nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
+        extraSpecialArgs = {inherit inputs outputs;};
+        modules = [
+          self.commonModules
+          self.homeManagerModules
+          {
+            teq.home-manager.all = true; # Enable Teq's Nixpkgs configuration defaults.
+            teq.nixpkgs = true;
+          }
+          nix-index-database.hmModules.nix-index
+        ];
+      };
     };
   };
 }

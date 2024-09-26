@@ -13,7 +13,7 @@ in {
     fileSystems."/" = {
       device = "none";
       fsType = "tmpfs";
-      options = ["noatime" "mode=755" "uid=0" "gid=0" "size=2G"];
+      options = ["noatime" "mode=755" "uid=0" "gid=0" "size=25%"];
     };
     fileSystems."/home" = {
       device = "/dev/disk/by-label/nixos";

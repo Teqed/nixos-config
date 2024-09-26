@@ -1,6 +1,7 @@
 {
   inputs,
   modulesPath,
+  nixpkgs,
   ...
 }: {
   imports = [
@@ -41,4 +42,9 @@
     kernelModules = ["kvm-amd"];
     extraModulePackages = [];
   };
+  nixpkgs.hostPlatform = nixpkgs.lib.mkDefault "x86_64-linux";
+  teq.nixos.all = true; # Enable all of Teq's NixOS configuration defaults.
+  teq.nixos.impermanence = true; # Enable impermanence on BTRFS partition labeled "nixos"
+  teq.nixos.desktop.enable = true; #
+  teq.nixpkgs = true; # Enable Teq's Nixpkgs configuration defaults.
 }
