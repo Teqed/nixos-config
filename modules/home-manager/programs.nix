@@ -32,6 +32,15 @@ in {
           enable = lib.mkDefault true;
         };
       };
+      eza = {
+        enable = lib.mkDefault true;
+        extraOptions = [
+          "--group-directories-first"
+          "--header"
+        ];
+        git = lib.mkDefault true;
+        icons = lib.mkDefault true;
+      };
       atuin = {
         enable = lib.mkDefault true;
         # settings = { };
@@ -65,9 +74,17 @@ in {
       # };
       vscode = {
         enable = lib.mkDefault true; # 1.44GB / 400MB (mesa 800MB)
-        enableUpdateCheck = lib.mkDefault false;
-        enableExtensionUpdateCheck = lib.mkDefault false;
-        # extensions = with pkgs; [];
+        package = lib.mkDefault pkgs.vscodium;
+        # enableUpdateCheck = lib.mkDefault false;
+        # enableExtensionUpdateCheck = lib.mkDefault false;
+        userSettings = {
+          "window.dialogStyle" = "custom";
+          "window.customTitleBarVisibility" = "auto";
+          "window.titleBarStyle" = "custom";
+          "nix.enableLanguageServer" = false;
+          "nix.serverPath" = "nixd";
+        };
+        extensions = with pkgs; [vscode-extension-jnoortheen-nix-ide];
       };
       lesspipe.enable = lib.mkDefault true;
       fastfetch = {

@@ -24,6 +24,8 @@ in {
     ./paths.nix
     ./theming.nix
     ./home-manager.nix
+    ./mime-apps.nix
+    ./persistence.nix
   ];
   config = {
     teq.home-manager = lib.mkIf cfg.all {
@@ -35,6 +37,8 @@ in {
       paths = lib.mkDefault true;
       theming = lib.mkDefault true;
       home-manager = lib.mkDefault true;
+      mime-apps = lib.mkDefault true;
+      persistence = lib.mkDefault true;
     };
   };
 }

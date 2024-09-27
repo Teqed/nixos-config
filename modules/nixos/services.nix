@@ -21,6 +21,20 @@ in {
       '';
     };
     services = {
+      samba = {
+        enable = mkDefault true; # Samba, the SMB/CIFS protocol.
+        openFirewall = mkDefault true;
+        nsswins = mkDefault true; # nss_wins, allows applications to resolve WINS/NetBIOS names (a.k.a. Windows machine names) by transparently querying the winbindd daemon .
+        nmbd.enable = mkDefault true; # nmbd, which replies to NetBIOS over IP name service requests. It also participates in the browsing protocols which make up the Windows “Network Neighborhood” view.
+      };
+      samba-wsdd = {
+        enable = mkDefault true; # WSDD, a Web Services Dynamic Discovery host daemon. Enables (Samba) hosts, like your local NAS device, to be found by Web Service Discovery Clients like Windows .
+        openFirewall = mkDefault true;
+        discovery = mkDefault true; # Enable discovery operation mode.
+      };
+      printing.enable = mkDefault true; # Enable CUPS to print documents.
+      hardware.bolt.enable = mkDefault true; # Thunderbolt 3 device manager
+      colord.enable = mkDefault true; # color management daemon
       openssh = {
         enable = mkDefault true;
         settings = {

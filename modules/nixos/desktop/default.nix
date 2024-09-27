@@ -30,7 +30,6 @@ in {
       # Enable the KDE Plasma Desktop Environment.
       displayManager.sddm.enable = true;
       desktopManager.plasma6.enable = true;
-      printing.enable = true; # Enable CUPS to print documents.
     };
     nixpkgs.overlays = [inputs.nixpkgs-wayland.overlay]; # Automated, pre-built, (potentially) pre-release packages for Wayland (sway/wlroots) tools for NixOS.
     hardware.graphics.enable32Bit = true; # On 64-bit systems, whether to support Direct Rendering for 32-bit applications (such as Wine). This is currently only supported for the nvidia and ati_unfree drivers, as well as Mesa.

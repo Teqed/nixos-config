@@ -22,7 +22,7 @@ in {
     gtk = {
       enable = lib.mkDefault true;
       cursorTheme.name = lib.mkDefault "Bibata-Modern-Classic";
-      cursorTheme.size = lib.mkDefault 24; # Default 16
+      # cursorTheme.size = lib.mkDefault 24; # Default 16
       # font = "Noto Sans,  10"; null or (submodule)
       # iconTheme = "Papirus-Dark"; # null or (submodule)
     };

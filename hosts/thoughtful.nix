@@ -9,7 +9,7 @@
   ];
   networking.hostName = "thoughtful";
   fileSystems."/boot" = {
-    device = "/dev/disk/by-label/BOOT";
+    device = "/dev/disk/by-label/BOOT"; # /dev/disk/by-partuuid/032b15fe-6dc7-473e-b1a5-d51f4df7ffd6
     fsType = "vfat";
     options = ["fmask=0022" "dmask=0022" "noatime"];
   };
