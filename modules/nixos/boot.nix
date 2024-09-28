@@ -12,6 +12,19 @@ in {
   };
   config = lib.mkIf cfg.boot {
     boot = {
+      initrd = {
+        systemd = {
+          enable = mkDefault true;
+        };
+        network = {
+          flushBeforeStage2 = mkDefault true;
+          enable = mkDefault true;
+          ssh.enable = mkDefault false; # Optional SSH in the initrd
+          ssh.ignoreEmptyHostKeys = mkDefault true;
+        };
+        verbose = mkDefault false; # Remove extra NixOS logging from the initrd
+      };
+
       plymouth = {
         enable = mkDefault true;
         theme = mkDefault "hud_3";
@@ -29,10 +42,9 @@ in {
         "boot.shell_on_fail" # If booting fails drop us into a shell where we can investigate
         "splash" # Show a splash screen
         "bgrt_disable" # Don't display the OEM logo after loading the ACPI tables
+        "plymouth.use-simpledrm" # Use simple DRM backend for Plymouth
       ];
-
       consoleLogLevel = mkDefault 3; # Silence dmesg
-      initrd.verbose = mkDefault false; # Remove extra NixOS logging from the initrd
     };
   };
 }

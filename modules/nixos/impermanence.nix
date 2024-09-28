@@ -45,39 +45,6 @@ in {
         "noatime"
       ];
     };
-    boot.initrd.postDeviceCommands = lib.mkAfter ''
-      mkdir -p {/mnt,/mnt/nixos,/mnt/nixos/root}
-      mount -t btrfs -L nixos /mnt/nixos/root
-      if [[ -e /mnt/nixos/root/@snapshots ]]; then
-        mkdir -p /mnt/nixos/@snapshots
-        mount -t btrfs -o noatime,compress-force=zstd:1,subvol=@snapshots -L nixos /mnt/nixos/@snapshots;
-        if [[ -e /mnt/nixos/root/@home ]]; then
-            mkdir -p /mnt/nixos/@snapshots/@home
-            timestamp=$(date --date="@$(stat -c %Y /mnt/nixos/root/@home)" "+%Y-%m-%-d_%H:%M:%S")
-            mv /mnt/nixos/root/@home "/mnt/nixos/@snapshots/@home/$timestamp"
-            btrfs subvolume create /mnt/nixos/root/@home
-        fi
-        if [[ -e /mnt/nixos/root/@persist ]]; then
-            mkdir -p /mnt/nixos/@snapshots/@persist
-            timestamp=$(date --date="@$(stat -c %Y /mnt/nixos/root/@persist)" "+%Y-%m-%-d_%H:%M:%S")
-            btrfs subvolume snapshot /mnt/nixos/root/@persist /mnt/nixos/@snapshots/@persist/$timestamp
-        fi
-        delete_subvolume_recursively() {
-            IFS=$'\n'
-            for i in $(btrfs subvolume list -o "$1" | cut -f 9- -d ' '); do
-                delete_subvolume_recursively "/mnt/nixos/@snapshots/$i"
-            done
-            btrfs subvolume delete "$1"
-        }
-        for snapshot in $(find /mnt/nixos/@snapshots/@home/ -maxdepth 1 -mtime +30); do
-            delete_subvolume_recursively "$snapshot"
-        done
-        for snapshot in $(find /mnt/nixos/@snapshots/@persist -maxdepth 1 -type d -mtime +30); do
-            btrfs subvolume delete "$snapshot"
-        done
-        umount /mnt/nixos/{root,@snapshots}
-      fi
-    '';
     swapDevices = [
       {
         label = "swap";
@@ -96,6 +63,55 @@ in {
         u: {"${u}".hashedPasswordFile = "/persist/etc/auth/${u}";}
       )
     );
+    boot.initrd.systemd.enable = lib.mkForce true;
+    boot.initrd.systemd.services.rollback = {
+      description = "Rollback BTRFS root subvolume to a pristine state";
+      wantedBy = ["initrd.target"];
+      requires = ["dev-disk-by\\x2dlabel-nixos.device"];
+      wants = ["dev-disk-by\\x2dlabel-nixos.device"];
+      after = [
+        "dev-disk-by\\x2dlabel-nixos.device"
+        # "systemd-cryptsetup@enc.service" # LUKS/TPM process
+      ];
+      before = [
+        "sysroot.mount"
+      ];
+      unitConfig.DefaultDependencies = "no";
+      serviceConfig.Type = "oneshot";
+      script = ''
+        mkdir -p {/mnt,/mnt/nixos,/mnt/nixos/root}
+        mount -t btrfs -L nixos /mnt/nixos/root
+        if [[ -e /mnt/nixos/root/@snapshots ]]; then
+          mkdir -p /mnt/nixos/@snapshots
+          mount -t btrfs -o noatime,compress-force=zstd:1,subvol=@snapshots -L nixos /mnt/nixos/@snapshots;
+          if [[ -e /mnt/nixos/root/@home ]]; then
+              mkdir -p /mnt/nixos/@snapshots/@home
+              timestamp=$(date --date="@$(stat -c %Y /mnt/nixos/root/@home)" "+%Y-%m-%-d_%H:%M:%S")
+              mv /mnt/nixos/root/@home "/mnt/nixos/@snapshots/@home/$timestamp"
+              btrfs subvolume create /mnt/nixos/root/@home
+          fi
+          if [[ -e /mnt/nixos/root/@persist ]]; then
+              mkdir -p /mnt/nixos/@snapshots/@persist
+              timestamp=$(date --date="@$(stat -c %Y /mnt/nixos/root/@persist)" "+%Y-%m-%-d_%H:%M:%S")
+              btrfs subvolume snapshot /mnt/nixos/root/@persist /mnt/nixos/@snapshots/@persist/$timestamp
+          fi
+          delete_subvolume_recursively() {
+              IFS=$'\n'
+              for i in $(btrfs subvolume list -o "$1" | cut -f 9- -d ' '); do
+                  delete_subvolume_recursively "/mnt/nixos/@snapshots/$i"
+              done
+              btrfs subvolume delete "$1"
+          }
+          for snapshot in $(find /mnt/nixos/@snapshots/@home/ -maxdepth 1 -mtime +30); do
+              delete_subvolume_recursively "$snapshot"
+          done
+          for snapshot in $(find /mnt/nixos/@snapshots/@persist -maxdepth 1 -type d -mtime +30); do
+              btrfs subvolume delete "$snapshot"
+          done
+          umount /mnt/nixos/{root,@snapshots}
+        fi
+      '';
+    };
     environment.persistence."/persist" = {
       enable = true; # Defaults to true
       # hideMounts = true; # If enabled, it sets the mount option x-gvfs-hide on all the bind mounts.
