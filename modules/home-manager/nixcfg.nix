@@ -1,22 +1,23 @@
 {
-  inputs,
+  # inputs,
   lib,
   config,
   ...
 }:
 with lib; let
   cfg = config.teq.home-manager;
-  flakeInputs = filterAttrs (_: isType "flake") inputs;
+  # flakeInputs = filterAttrs (_: isType "flake") inputs;
 in {
   options.teq.home-manager = {
     nixcfg = lib.mkEnableOption "Teq's Home-Manager Nixcfg configuration defaults.";
   };
   config = lib.mkIf cfg.nixcfg {
     nix = {
+      # registry = mapAttrs (_: flake: {inherit flake;}) flakeInputs; # Opinionated: make flake registry and nix path match flake inputs
+      # nixPath = mkDefault (mapAttrsToList (key: value: "${key}=${value.to.path}") config.nix.registry); # Add inputs to the system's legacy channels Making legacy nix commands consistent
+
       # registry.nixpkgs.flake = inputs.nixpkgs;
-      registry = mapAttrs (_: flake: {inherit flake;}) flakeInputs; # Opinionated: make flake registry and nix path match flake inputs
       # nixPath = mapAttrsToList (n: _: "${n}=flake:${n}") flakeInputs;
-      nixPath = mkDefault (mapAttrsToList (key: value: "${key}=${value.to.path}") config.nix.registry); # Add inputs to the system's legacy channels Making legacy nix commands consistent
       # channel.enable = false; # Opinionated: disable channels # Only available in NixOS
       gc = {
         automatic = mkDefault true;

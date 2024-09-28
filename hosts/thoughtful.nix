@@ -1,11 +1,16 @@
-{inputs, ...}: {
+{
+  nixos-hardware,
+  impermanence,
+  nix-flatpak,
+  ...
+}: {
   imports = [
-    inputs.nixos-hardware.nixosModules.common-cpu-amd
-    inputs.nixos-hardware.nixosModules.common-gpu-amd
-    inputs.nixos-hardware.nixosModules.common-pc
-    inputs.nixos-hardware.nixosModules.common-pc-ssd
-    inputs.impermanence.nixosModules.impermanence
-    inputs.nix-flatpak.nixosModules.nix-flatpak
+    nixos-hardware.nixosModules.common-cpu-amd
+    nixos-hardware.nixosModules.common-gpu-amd
+    nixos-hardware.nixosModules.common-pc
+    nixos-hardware.nixosModules.common-pc-ssd
+    impermanence.nixosModules.impermanence
+    nix-flatpak.nixosModules.nix-flatpak
   ];
   networking.hostName = "thoughtful";
   fileSystems."/boot" = {

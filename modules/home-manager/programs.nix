@@ -1,11 +1,10 @@
 {
-  inputs,
   pkgs,
   lib,
   config,
   ...
 }: let
-  cfg = config.teq.home-manager.programs;
+  cfg = config.teq.home-manager;
   yaziFlavors = pkgs.fetchFromGitHub {
     owner = "yazi-rs";
     repo = "flavors";
@@ -13,7 +12,7 @@
     sha256 = "sha256-W56r4LMepQj0vW1tayx0qA43ZhZEQ09ukZ8IlQMFMe0=";
   };
 in {
-  options.teq.nixos = {
+  options.teq.home-manager = {
     programs = lib.mkEnableOption "Teq's Home-Manager Programs configuration defaults.";
   };
   config = lib.mkIf cfg.programs {
@@ -84,7 +83,7 @@ in {
           "nix.enableLanguageServer" = false;
           "nix.serverPath" = "nixd";
         };
-        extensions = with pkgs; [vscode-extension-jnoortheen-nix-ide];
+        # extensions = with pkgs; [vscode-extension-jnoortheen-nix-ide];
       };
       lesspipe.enable = lib.mkDefault true;
       fastfetch = {
@@ -135,12 +134,12 @@ in {
       };
       # starship.enable = true; # Prompt
       vim.enable = lib.mkDefault true; # 570MB / 75MB (vim-full 570MB / 90KB)
-      wezterm = {
-        enable = lib.mkDefault true; # 230MB / 160MB
-        package = lib.mkDefault inputs.wezterm-flake.packages.${pkgs.system}.default;
-        # colorSchemes = { };
-        # extraConfig = " ";
-      };
+      # wezterm = {
+      #   enable = lib.mkDefault true; # 230MB / 160MB
+      #   package = lib.mkDefault wezterm-flake.packages.${pkgs.system}.default;
+      #   # colorSchemes = { };
+      #   # extraConfig = " ";
+      # };
       yazi = {
         enable = lib.mkDefault true; # 426MB / 20MB (imagemagick, ffmegthumbnailer)
         settings.theme = {

@@ -39,6 +39,7 @@ The starlight on the Western Seas.
     nixpkgs-wayland,
     nixpkgs-unfree,
     nix-index-database,
+    wezterm-flake,
     ...
   } @ inputs: let
     inherit (self) outputs;
@@ -61,7 +62,18 @@ The starlight on the Western Seas.
     nixosConfigurations = {
       # NixOS configuration entrypoint. Available through 'nixos-rebuild --flake .#sedna'
       sedna = nixpkgs.lib.nixosSystem {
-        specialArgs = {inherit inputs outputs userinfo;};
+        specialArgs = {
+          inherit
+            inputs
+            outputs
+            userinfo
+            nixos-hardware
+            impermanence
+            nix-flatpak
+            wezterm-flake
+            nixpkgs-wayland
+            ;
+        };
         modules = [
           ./hosts/sedna.nix
           self.commonModules
@@ -72,7 +84,7 @@ The starlight on the Western Seas.
             nixpkgs.hostPlatform = nixpkgs.lib.mkDefault "x86_64-linux";
             home-manager.sharedModules = [
               self.homeManagerModules
-              {teq.home-manager.all = true;}
+              {teq.home-manager.enable = true;}
               nix-index-database.hmModules.nix-index
             ];
           }

@@ -1,15 +1,17 @@
 {
-  inputs,
   modulesPath,
+  nixos-hardware,
+  impermanence,
+  nix-flatpak,
   ...
 }: {
   imports = [
-    inputs.nixos-hardware.nixosModules.common-cpu-amd
-    inputs.nixos-hardware.nixosModules.common-gpu-amd
-    inputs.nixos-hardware.nixosModules.common-pc
-    inputs.nixos-hardware.nixosModules.common-pc-ssd
-    inputs.impermanence.nixosModules.impermanence
-    inputs.nix-flatpak.nixosModules.nix-flatpak
+    nixos-hardware.nixosModules.common-cpu-amd
+    nixos-hardware.nixosModules.common-gpu-amd
+    nixos-hardware.nixosModules.common-pc
+    nixos-hardware.nixosModules.common-pc-ssd
+    impermanence.nixosModules.impermanence
+    nix-flatpak.nixosModules.nix-flatpak
     (modulesPath + "/profiles/qemu-guest.nix")
   ];
   networking.hostName = "sedna"; # U+2BF2 ⯲ SEDNA
@@ -41,7 +43,11 @@
     kernelModules = ["kvm-amd"];
     extraModulePackages = [];
   };
-  teq.nixos.all = true;
+  home-manager.users.teq = {};
+  # home-manager.users = lib.forEach userinfo.users (u: {
+  #   "${u}" = {};
+  # });
+  teq.nixos.enable = true;
   teq.nixos.impermanence = true; # Enable impermanence on BTRFS partition labeled "nixos"
   teq.nixos.desktop.enable = true;
   teq.nixpkgs = true;

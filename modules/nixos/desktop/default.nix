@@ -1,8 +1,8 @@
 {
   lib,
   config,
-  inputs,
   pkgs,
+  # nixpkgs-wayland,
   ...
 }: let
   cfg = config.teq.nixos.desktop;
@@ -31,7 +31,7 @@ in {
       displayManager.sddm.enable = true;
       desktopManager.plasma6.enable = true;
     };
-    nixpkgs.overlays = [inputs.nixpkgs-wayland.overlay]; # Automated, pre-built, (potentially) pre-release packages for Wayland (sway/wlroots) tools for NixOS.
+    # nixpkgs.overlays = [nixpkgs-wayland.overlay]; # Automated, pre-built, (potentially) pre-release packages for Wayland (sway/wlroots) tools for NixOS.
     hardware.graphics.enable32Bit = true; # On 64-bit systems, whether to support Direct Rendering for 32-bit applications (such as Wine). This is currently only supported for the nvidia and ati_unfree drivers, as well as Mesa.
     hardware.graphics.extraPackages = with pkgs; [
       rocmPackages.clr.icd

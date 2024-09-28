@@ -7,7 +7,7 @@
   # Add your reusable NixOS modules to this directory, on their own file (https://nixos.wiki/wiki/Module).
 in {
   options.teq.nixos = {
-    all = lib.mkEnableOption "Enable all of Teq's NixOS configuration defaults.";
+    enable = lib.mkEnableOption "Enable all of Teq's NixOS configuration defaults.";
   };
   imports = [
     # If you want to use modules your own flake exports (from modules/nixos):
@@ -26,8 +26,10 @@ in {
     ./bluetooth.nix
     ./desktop
   ];
-  config = {
-    teq.nixos = lib.mkIf cfg.all {
+  config = lib.mkIf cfg.enable {
+    home-manager.backupFileExtension = lib.mkDefault "hm-backup";
+    home-manager.useGlobalPkgs = lib.mkDefault true;
+    teq.nixos = {
       bluetooth = lib.mkDefault true;
       boot = lib.mkDefault true;
       fonts = lib.mkDefault true;

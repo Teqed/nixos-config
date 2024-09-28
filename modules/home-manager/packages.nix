@@ -4,9 +4,9 @@
   config,
   ...
 }: let
-  cfg = config.teq.home-manager.packages;
+  cfg = config.teq.home-manager;
 in {
-  options.teq.nixos = {
+  options.teq.home-manager = {
     packages = lib.mkEnableOption "Teq's Home-Manager Packages configuration defaults.";
   };
   config = lib.mkIf cfg.packages {

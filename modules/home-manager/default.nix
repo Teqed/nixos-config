@@ -1,5 +1,7 @@
 # Add your reusable home-manager modules to this directory, on their own file (https://nixos.wiki/wiki/Module).
 {
+  # nixpkgs-wayland,
+  # wezterm-flake,
   lib,
   config,
   ...
@@ -8,7 +10,7 @@
   # Add your reusable NixOS modules to this directory, on their own file (https://nixos.wiki/wiki/Module).
 in {
   options.teq.home-manager = {
-    all = lib.mkEnableOption "Enable all of Teq's Home-Manager configuration defaults.";
+    enable = lib.mkEnableOption "Enable Teq's Home-Manager configuration defaults.";
   };
   imports = [
     # If you want to use modules your own flake exports (from modules/home-manager):
@@ -21,24 +23,26 @@ in {
     ./i18n_en_us_et.nix
     ./packages.nix
     ./programs.nix
-    ./paths.nix
+    # ./paths.nix
     ./theming.nix
-    ./home-manager.nix
-    ./mime-apps.nix
-    ./persistence.nix
+    # ./mime-apps.nix
   ];
-  config = {
-    teq.home-manager = lib.mkIf cfg.all {
+  config = lib.mkIf cfg.enable {
+    home.stateVersion = lib.mkDefault "24.05"; # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
+    # home-manager.extraSpecialArgs = lib.mkDefault {
+    #   inherit
+    #     # nixpkgs-wayland
+    #     # wezterm-flake
+    # };
+    teq.home-manager = {
       fonts = lib.mkDefault true;
       nixcfg = lib.mkDefault true;
       locale = lib.mkDefault true;
       packages = lib.mkDefault true;
       programs = lib.mkDefault true;
-      paths = lib.mkDefault true;
+      # paths = lib.mkDefault true;
       theming = lib.mkDefault true;
-      home-manager = lib.mkDefault true;
-      mime-apps = lib.mkDefault true;
-      persistence = lib.mkDefault true;
+      # mime-apps.enable = lib.mkDefault true;
     };
   };
 }
