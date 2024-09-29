@@ -26,6 +26,11 @@ The starlight on the Western Seas.
     nixpkgs-unfree.inputs.nixpkgs.follows = "nixpkgs";
     nix-index-database.url = "github:nix-community/nix-index-database";
     nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
+    plasma-manager = {
+      url = "github:nix-community/plasma-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.home-manager.follows = "home-manager";
+    };
   };
   outputs = {
     self,
@@ -40,6 +45,7 @@ The starlight on the Western Seas.
     nixpkgs-unfree,
     nix-index-database,
     wezterm-flake,
+    plasma-manager,
     ...
   } @ inputs: let
     inherit (self) outputs;
@@ -84,6 +90,7 @@ The starlight on the Western Seas.
             nixpkgs.hostPlatform = nixpkgs.lib.mkDefault "x86_64-linux";
             home-manager.sharedModules = [
               self.homeManagerModules
+              plasma-manager.homeManagerModules.plasma-manager
               {teq.home-manager.enable = true;}
               nix-index-database.hmModules.nix-index
             ];
@@ -103,6 +110,7 @@ The starlight on the Western Seas.
             nixpkgs.hostPlatform = nixpkgs.lib.mkDefault "x86_64-linux";
             home-manager.sharedModules = [
               self.homeManagerModules
+              plasma-manager.homeManagerModules.plasma-manager
               {teq.home-manager.all = true;}
               nix-index-database.hmModules.nix-index
             ];
@@ -118,6 +126,7 @@ The starlight on the Western Seas.
         modules = [
           self.commonModules
           self.homeManagerModules
+          plasma-manager.homeManagerModules.plasma-manager
           {
             teq.home-manager.all = true;
             teq.nixpkgs = true;
