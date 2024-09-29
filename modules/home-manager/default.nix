@@ -23,7 +23,7 @@ in {
     ./i18n_en_us_et.nix
     ./packages.nix
     ./programs.nix
-    # ./paths.nix
+    ./paths.nix
     ./theming.nix
     # ./mime-apps.nix
   ];
@@ -40,7 +40,7 @@ in {
       locale = lib.mkDefault true;
       packages = lib.mkDefault true;
       programs = lib.mkDefault true;
-      # paths = lib.mkDefault true;
+      paths = lib.mkDefault true;
       theming = lib.mkDefault true;
       # mime-apps.enable = lib.mkDefault true;
     };

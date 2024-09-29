@@ -80,7 +80,7 @@ in {
           "window.dialogStyle" = "custom";
           "window.customTitleBarVisibility" = "auto";
           "window.titleBarStyle" = "custom";
-          "nix.enableLanguageServer" = false;
+          "nix.enableLanguageServer" = true;
           "nix.serverPath" = "nixd";
         };
         # extensions = with pkgs; [vscode-extension-jnoortheen-nix-ide];
