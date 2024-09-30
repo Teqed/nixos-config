@@ -54,73 +54,56 @@ The starlight on the Western Seas.
     ];
     userinfo.users = ["teq"];
     forAllSystems = nixpkgs.lib.genAttrs systems; # This is a function that generates an attribute by calling a function you pass to it, with each system as an argument
+    inheritSpecialArgs = {
+      inherit
+        inputs
+        outputs
+        userinfo
+        nixos-hardware
+        impermanence
+        nix-flatpak
+        wezterm-flake
+        nixpkgs-wayland
+        ;
+    };
   in {
     packages = forAllSystems (system: import ./pkgs nixpkgs.legacyPackages.${system}); # Custom packages accessible through 'nix build', 'nix shell', etc
     formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.alejandra); # Formatter for your nix files, available through 'nix fmt'.
     nixosModules = import ./modules/nixos; # Reusable nixos modules.
     homeManagerModules = import ./modules/home-manager; # Reusable home-manager modules.
+    homeManagerConfig = {
+      nixpkgs.hostPlatform = nixpkgs.lib.mkDefault "x86_64-linux";
+      home-manager.sharedModules = [
+        self.homeManagerModules
+        nix-index-database.hmModules.nix-index
+        plasma-manager.homeManagerModules.plasma-manager
+        {teq.home-manager.enable = true;}
+      ];
+    };
     commonModules = import ./modules/nixpkgs.nix; # Reusable modules that are not specific to nixos or home-manager.
     nixosConfigurations = {
       # NixOS configuration entrypoint. Available through 'nixos-rebuild --flake .#sedna'
       sedna = nixpkgs.lib.nixosSystem {
-        specialArgs = {
-          inherit
-            inputs
-            outputs
-            userinfo
-            nixos-hardware
-            impermanence
-            nix-flatpak
-            wezterm-flake
-            nixpkgs-wayland
-            ;
-        };
+        specialArgs = inheritSpecialArgs;
         modules = [
           ./hosts/sedna.nix
           self.commonModules
           self.nixosModules
           chaotic.nixosModules.default
           home-manager.nixosModules.home-manager
-          {
-            nixpkgs.hostPlatform = nixpkgs.lib.mkDefault "x86_64-linux";
-            home-manager.sharedModules = [
-              self.homeManagerModules
-              nix-index-database.hmModules.nix-index
-              plasma-manager.homeManagerModules.plasma-manager
-              {teq.home-manager.enable = true;}
-            ];
-          }
+          self.homeManagerConfig
         ];
       };
       # sudo nixos-rebuild --flake .#thoughtful switch |& nom
       thoughtful = nixpkgs.lib.nixosSystem {
-        specialArgs = {
-          inherit
-            inputs
-            outputs
-            userinfo
-            nixos-hardware
-            impermanence
-            nix-flatpak
-            wezterm-flake
-            nixpkgs-wayland
-            ;
-        };
+        specialArgs = inheritSpecialArgs;
         modules = [
           ./nixos/thoughtful.nix
           self.commonModules
           self.nixosModules
           chaotic.nixosModules.default
           home-manager.nixosModules.home-manager
-          {
-            nixpkgs.hostPlatform = nixpkgs.lib.mkDefault "x86_64-linux";
-            home-manager.sharedModules = [
-              self.homeManagerModules
-              nix-index-database.hmModules.nix-index
-              plasma-manager.homeManagerModules.plasma-manager
-              {teq.home-manager.enable = true;}
-            ];
-          }
+          self.homeManagerConfig
         ];
       };
     };
