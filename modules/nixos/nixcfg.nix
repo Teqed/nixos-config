@@ -1,12 +1,12 @@
 {
-  # inputs,
+  inputs,
   lib,
   config,
   ...
 }:
 with lib; let
-  cfg = config.teq.home-manager;
-  # flakeInputs = filterAttrs (_: isType "flake") inputs;
+  cfg = config.teq.nixos;
+  flakeInputs = filterAttrs (_: isType "flake") inputs;
   substituter_list = [
     "https://cache.nixos.org/"
     "https://nix-community.cachix.org/"
@@ -28,13 +28,13 @@ with lib; let
     "https://nixpkgs-unfree.cachix.org"
   ];
 in {
-  options.teq.home-manager = {
-    nixcfg = lib.mkEnableOption "Teq's Home-Manager Nixcfg configuration defaults.";
+  options.teq.nixos = {
+    nixcfg = lib.mkEnableOption "Teq's NixOS Nixcfg configuration defaults.";
   };
   config = lib.mkIf cfg.nixcfg {
     nix = {
-      # registry = mapAttrs (_: flake: {inherit flake;}) flakeInputs; # Opinionated: make flake registry and nix path match flake inputs
-      # nixPath = mkDefault (mapAttrsToList (key: value: "${key}=${value.to.path}") config.nix.registry); # Add inputs to the system's legacy channels Making legacy nix commands consistent
+      registry = mapAttrs (_: flake: {inherit flake;}) flakeInputs; # Opinionated: make flake registry and nix path match flake inputs
+      nixPath = mkDefault (mapAttrsToList (key: value: "${key}=${value.to.path}") config.nix.registry); # Add inputs to the system's legacy channels Making legacy nix commands consistent
 
       # registry.nixpkgs.flake = inputs.nixpkgs;
       # nixPath = mapAttrsToList (n: _: "${n}=flake:${n}") flakeInputs;
@@ -42,7 +42,7 @@ in {
       gc = {
         automatic = mkDefault true;
         persistent = mkDefault true;
-        # dates = mkDefault "weekly"; # Not present in home-manager
+        dates = mkDefault "weekly"; # Not present in home-manager
         options = mkDefault "--delete-older-than 1w";
       };
       # Free up to 1GiB whenever there is less than 100MiB left.

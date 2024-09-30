@@ -25,6 +25,7 @@ in {
     ./impermanence.nix
     ./bluetooth.nix
     ./desktop
+    ./nixcfg.nix
   ];
   config = lib.mkIf cfg.enable {
     home-manager.backupFileExtension = lib.mkDefault "hm-backup";
@@ -44,6 +45,7 @@ in {
       users = lib.mkDefault true;
       # impermanence = lib.mkDefault false; # Requires a BTRFS partition labeled "nixos".
       # desktop = lib.mkDefault true; # Optional for headless servers.
+      nixcfg = lib.mkDefault true;
     };
   };
 }

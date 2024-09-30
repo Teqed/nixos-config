@@ -6,7 +6,6 @@ The starlight on the Western Seas.
 ";
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-24.05";
     chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
     alejandra.url = "github:kamadorueda/alejandra/3.0.0";
     alejandra.inputs.nixpkgs.follows = "nixpkgs";
@@ -22,8 +21,6 @@ The starlight on the Western Seas.
     # impermanence.inputs.nixpkgs.follows = "nixpkgs"; #
     nixpkgs-wayland.url = "github:nix-community/nixpkgs-wayland";
     nixpkgs-wayland.inputs.nixpkgs.follows = "nixpkgs"; #
-    nixpkgs-unfree.url = "github:numtide/nixpkgs-unfree";
-    nixpkgs-unfree.inputs.nixpkgs.follows = "nixpkgs";
     nix-index-database.url = "github:nix-community/nix-index-database";
     nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
     plasma-manager = {
@@ -42,7 +39,6 @@ The starlight on the Western Seas.
     nixos-hardware,
     impermanence,
     nixpkgs-wayland,
-    nixpkgs-unfree,
     nix-index-database,
     wezterm-flake,
     plasma-manager,
@@ -61,7 +57,6 @@ The starlight on the Western Seas.
   in {
     packages = forAllSystems (system: import ./pkgs nixpkgs.legacyPackages.${system}); # Custom packages accessible through 'nix build', 'nix shell', etc
     formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.alejandra); # Formatter for your nix files, available through 'nix fmt'.
-    overlays = import ./overlays {inherit inputs;}; # Custom packages and modifications, exported as overlays.
     nixosModules = import ./modules/nixos; # Reusable nixos modules.
     homeManagerModules = import ./modules/home-manager; # Reusable home-manager modules.
     commonModules = import ./modules/nixpkgs.nix; # Reusable modules that are not specific to nixos or home-manager.
@@ -90,16 +85,27 @@ The starlight on the Western Seas.
             nixpkgs.hostPlatform = nixpkgs.lib.mkDefault "x86_64-linux";
             home-manager.sharedModules = [
               self.homeManagerModules
+              nix-index-database.hmModules.nix-index
               plasma-manager.homeManagerModules.plasma-manager
               {teq.home-manager.enable = true;}
-              nix-index-database.hmModules.nix-index
             ];
           }
         ];
       };
       # sudo nixos-rebuild --flake .#thoughtful switch |& nom
       thoughtful = nixpkgs.lib.nixosSystem {
-        specialArgs = {inherit inputs outputs userinfo;};
+        specialArgs = {
+          inherit
+            inputs
+            outputs
+            userinfo
+            nixos-hardware
+            impermanence
+            nix-flatpak
+            wezterm-flake
+            nixpkgs-wayland
+            ;
+        };
         modules = [
           ./nixos/thoughtful.nix
           self.commonModules
@@ -110,9 +116,9 @@ The starlight on the Western Seas.
             nixpkgs.hostPlatform = nixpkgs.lib.mkDefault "x86_64-linux";
             home-manager.sharedModules = [
               self.homeManagerModules
-              plasma-manager.homeManagerModules.plasma-manager
-              {teq.home-manager.all = true;}
               nix-index-database.hmModules.nix-index
+              plasma-manager.homeManagerModules.plasma-manager
+              {teq.home-manager.enable = true;}
             ];
           }
         ];
@@ -126,12 +132,12 @@ The starlight on the Western Seas.
         modules = [
           self.commonModules
           self.homeManagerModules
+          nix-index-database.hmModules.nix-index
           plasma-manager.homeManagerModules.plasma-manager
           {
-            teq.home-manager.all = true;
+            teq.home-manager.enable = true;
             teq.nixpkgs = true;
           }
-          nix-index-database.hmModules.nix-index
         ];
       };
     };

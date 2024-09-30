@@ -42,7 +42,7 @@
     ];
   };
   # xdg.portal.wlr.settings.screencast.output_name = "HDMI-A-1";
-  teq.nixos.all = true;
+  teq.nixos.enable = true;
   teq.nixos.impermanence = true; # Enable impermanence on BTRFS partition labeled "nixos"
   teq.nixos.desktop.enable = true;
   teq.nixpkgs = true;

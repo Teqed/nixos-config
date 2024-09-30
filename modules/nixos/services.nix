@@ -105,8 +105,5 @@ in {
         openFirewall = mkDefault true;
       };
     };
-
-    systemd.services.systemd-udev-settle.enable = mkDefault false; # don't wait for udev to settle on boot
-    systemd.services.NetworkManager-wait-online.enable = mkDefault false; # don't wait for network to be up on boot
   };
 }
