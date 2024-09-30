@@ -2,6 +2,7 @@
   lib,
   config,
   userinfo,
+  pkgs,
   ...
 }: let
   cfg = config.teq.nixos;
@@ -78,7 +79,7 @@ in {
       ];
       unitConfig.DefaultDependencies = "no";
       serviceConfig.Type = "oneshot";
-      script = import ./impermanence_rollback.sh;
+      script = "${pkgs.scripts}/bin/impermanence_rollback.sh";
     };
     environment.persistence."/persist" = {
       enable = true; # Defaults to true
