@@ -29,8 +29,74 @@ in {
 
     programs.plasma = {
       enable = true;
-      overrideConfig = true; # TODO: Capture taskbar and panel settings;
-
+      overrideConfig = true;
+      panels = [
+        {
+          location = "bottom";
+          height = 40;
+          floating = true;
+          widgets = [
+            {
+              kickoff = {
+                icon = "nix-snowflake";
+                showButtonsFor = "powerAndSession";
+                showActionButtonCaptions = false;
+                compactDisplayStyle = true;
+                favoritesDisplayMode = "list";
+                applicationsDisplayMode = "list";
+              };
+            }
+            "org.kde.plasma.marginsseparator"
+            {
+              iconTasks = {
+                appearance = {
+                  showTooltips = false; # Whether to show tooltips when hovering task buttons.
+                };
+                behavior = {
+                  grouping.clickAction = "showTextualList"; # What happens when clicking on a grouped task.
+                  middleClickAction = "toggleGrouping"; # What to do on middle-mouse click on a task button.
+                  showTasks.onlyInCurrentScreen = true; # Whether to show only window tasks that are on the same screen as the widget.
+                };
+                launchers = let
+                  # Auto switch terminal application desktop file
+                  terminal =
+                    if builtins.hasAttr "TERMINAL" config.home.sessionVariables # TODO: Properly set
+                    then "${config.home.sessionVariables.TERMINAL}"
+                    else "org.kde.konsole";
+                in [
+                  "applications:${terminal}.desktop"
+                  "preferred://filemanager"
+                  # "applications:krita.desktop" # TODO: Properly set
+                  "preferred://browser" # TODO: Properly set
+                  # "applications:emacsclient.desktop"
+                  # "applications:writer.desktop"
+                ];
+              };
+            }
+            "org.kde.plasma.marginsseparator"
+            "org.kde.plasma.pager"
+            {
+              systemTray = {
+                items = {
+                  hidden = [
+                    # "sunshine" # TODO: Properly set
+                    "org.kde.plasma.networkmanagement"
+                    "org.kde.plasma.devicenotifier"
+                  ];
+                };
+              };
+            }
+            {
+              digitalClock = {
+                date = {
+                  enable = true;
+                };
+              };
+            }
+            "org.kde.plasma.showdesktop"
+          ];
+        }
+      ];
       #
       # Some high-level settings:
       #
