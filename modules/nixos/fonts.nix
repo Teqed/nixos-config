@@ -23,19 +23,19 @@ in {
         source-sans-pro
         source-serif-pro
         source-code-pro
-        ibm-plex
+        # ibm-plex
         dejavu_fonts
         (nerdfonts.override {
           fonts = [
             "NerdFontsSymbolsOnly"
-            "IBMPlexMono"
-            "CascadiaCode"
-            "CascadiaMono"
-            "FiraCode"
-            "FiraMono"
-            "DroidSansMono"
-            "LiberationMono"
-            "DejaVuSansMono"
+            # "IBMPlexMono"
+            # "CascadiaCode"
+            # "CascadiaMono"
+            # "FiraCode"
+            # "FiraMono"
+            # "DroidSansMono"
+            # "LiberationMono"
+            # "DejaVuSansMono"
             "JetBrainsMono"
           ]; # 208MB
         })
@@ -45,17 +45,17 @@ in {
         noto-fonts-monochrome-emoji
         noto-fonts-color-emoji
         liberation_ttf
-        mplus-outline-fonts.githubRelease
-        jigmo
-        font-awesome
-        twemoji-color-font
-        joypixels
-        whatsapp-emoji-font
-        powerline-symbols
-        symbola
-        material-icons
-        weather-icons
-        meslo-lgs-nf
+        # mplus-outline-fonts.githubRelease
+        # jigmo
+        # font-awesome
+        # twemoji-color-font
+        # joypixels
+        # whatsapp-emoji-font
+        # powerline-symbols
+        # symbola
+        # material-icons
+        # weather-icons
+        # meslo-lgs-nf
       ]);
 
       fontDir.enable = mkDefault (!pkgs.stdenv.isDarwin);

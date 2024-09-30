@@ -29,7 +29,7 @@ in {
 
     programs.plasma = {
       enable = true;
-      # overrideConfig = false; # TODO: Capture taskbar and panel settings;
+      overrideConfig = true; # TODO: Capture taskbar and panel settings;
 
       #
       # Some high-level settings:
