@@ -29,10 +29,10 @@ in {
       };
       # Enable the KDE Plasma Desktop Environment.
       displayManager.sddm.enable = true;
-      displayManager.sddm.theme = "${pkgs.sddm-sugar-candy}"; # <-- it's string interpolation
-      displayManager.sddm.extraPackages = with pkgs; [
-        libsForQt5.qt5.qtgraphicaleffects # <-- if suddenly sugar-candy does not find dependencies
-      ];
+      # displayManager.sddm.theme = "${pkgs.sddm-sugar-candy}";
+      # displayManager.sddm.extraPackages = with pkgs; [
+      #   libsForQt5.qt5.qtgraphicaleffects # <-- if suddenly sugar-candy does not find dependencies
+      # ];
       desktopManager.plasma6.enable = true;
     };
     # nixpkgs.overlays = [nixpkgs-wayland.overlay]; # Automated, pre-built, (potentially) pre-release packages for Wayland (sway/wlroots) tools for NixOS.

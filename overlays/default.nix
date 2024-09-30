@@ -1,9 +1,5 @@
 # This file defines overlays
-{
-  inputs,
-  system,
-  ...
-}: {
+{...}: {
   # This one brings our custom packages from the 'pkgs' directory
   additions = final: _prev: import ../pkgs final.pkgs;
 
@@ -14,6 +10,5 @@
     # example = prev.example.overrideAttrs (oldAttrs: rec {
     # ...
     # });
-    sddm-sugar-candy = inputs.sddmSugarCandy4Nix.packages."${system}".sddm-sugar-candy;
   };
 }
