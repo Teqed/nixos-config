@@ -28,6 +28,10 @@ The starlight on the Western Seas.
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.home-manager.follows = "home-manager";
     };
+    sddmSugarCandy4Nix = {
+      url = "github:MOIS3Y/sddmSugarCandy4Nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
   outputs = {
     self,
@@ -45,36 +49,39 @@ The starlight on the Western Seas.
     ...
   } @ inputs: let
     inherit (self) outputs;
+    lib = nixpkgs.lib;
+    specialArgs = {
+      inherit
+        inputs
+        outputs
+        userinfo
+        nixos-hardware
+        impermanence
+        nix-flatpak
+        wezterm-flake
+        nixpkgs-wayland
+        ;
+    };
     systems = [
-      "aarch64-linux"
-      "i686-linux"
+      # "aarch64-linux"
+      # "i686-linux"
       "x86_64-linux"
-      "aarch64-darwin"
-      "x86_64-darwin"
+      # "aarch64-darwin"
+      # "x86_64-darwin"
     ];
     userinfo.users = ["teq"];
     forAllSystems = nixpkgs.lib.genAttrs systems; # This is a function that generates an attribute by calling a function you pass to it, with each system as an argument
   in {
     packages = forAllSystems (system: import ./pkgs nixpkgs.legacyPackages.${system}); # Custom packages accessible through 'nix build', 'nix shell', etc
     formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.alejandra); # Formatter for your nix files, available through 'nix fmt'.
+    overlays = forAllSystems (system: import ./overlays {inherit inputs system;}); # Custom packages and modifications, exported as overlays.
     nixosModules = import ./modules/nixos; # Reusable nixos modules.
     homeManagerModules = import ./modules/home-manager; # Reusable home-manager modules.
     commonModules = import ./modules/nixpkgs.nix; # Reusable modules that are not specific to nixos or home-manager.
     nixosConfigurations = {
       # NixOS configuration entrypoint. Available through 'nixos-rebuild --flake .#sedna'
       sedna = nixpkgs.lib.nixosSystem {
-        specialArgs = {
-          inherit
-            inputs
-            outputs
-            userinfo
-            nixos-hardware
-            impermanence
-            nix-flatpak
-            wezterm-flake
-            nixpkgs-wayland
-            ;
-        };
+        inherit specialArgs;
         modules = [
           ./hosts/sedna.nix
           self.commonModules
