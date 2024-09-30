@@ -28,6 +28,10 @@ The starlight on the Western Seas.
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.home-manager.follows = "home-manager";
     };
+    sddmSugarCandy4Nix = {
+      url = "github:MOIS3Y/sddmSugarCandy4Nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
   outputs = {
     self,
@@ -57,7 +61,7 @@ The starlight on the Western Seas.
   in {
     packages = forAllSystems (system: import ./pkgs nixpkgs.legacyPackages.${system}); # Custom packages accessible through 'nix build', 'nix shell', etc
     formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.alejandra); # Formatter for your nix files, available through 'nix fmt'.
-    # overlays = forAllSystems (system: import ./overlays {inherit inputs;}); # Custom packages and modifications, exported as overlays.
+    overlays = forAllSystems (system: import ./overlays {inherit inputs;}); # Custom packages and modifications, exported as overlays.
     nixosModules = import ./modules/nixos; # Reusable nixos modules.
     homeManagerModules = import ./modules/home-manager; # Reusable home-manager modules.
     commonModules = import ./modules/nixpkgs.nix; # Reusable modules that are not specific to nixos or home-manager.
