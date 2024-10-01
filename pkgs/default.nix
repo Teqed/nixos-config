@@ -3,4 +3,5 @@
 pkgs: {
   # example = pkgs.callPackage ./example { };
   scripts = pkgs.callPackage ./scripts {};
+  kando = pkgs.callPackage ./by-name/ka/kando/package.nix {};
 }

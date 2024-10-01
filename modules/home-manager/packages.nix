@@ -82,6 +82,7 @@ in {
       chafa
       colordiff
       hyperfine
+      kdePackages.filelight # Disk usage analyzer
       #
       # flatseal
       # build-essential

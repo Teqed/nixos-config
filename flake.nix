@@ -28,6 +28,10 @@ The starlight on the Western Seas.
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.home-manager.follows = "home-manager";
     };
+    sddmSugarCandy4Nix = {
+      url = "github:MOIS3Y/sddmSugarCandy4Nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
   outputs = {
     self,

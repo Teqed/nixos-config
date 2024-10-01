@@ -11,7 +11,7 @@ with pkgs;
     version = "1";
     src = ./src; # Folder src inside current folder that contains the script
     dontBuild = true; # No build required
-    nativeBuildInputs = [makeWrapper];
+    nativeBuildInputs = [makeWrapper coreutils];
     # buildInputs = [ <your dependencies> ];
     installPhase = ''
       # Create output directory in /nix/store

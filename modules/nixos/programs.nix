@@ -31,7 +31,6 @@ in {
       wezterm-flake.packages.${pkgs.system}.default # Wezterm flake
       nix-output-monitor # nix output monitor
       papirus-icon-theme # Allows icons to be used in the system, like the login screen
-      bibata-cursors # Allows cursors to be used in the system, like the login screen
     ]);
 
     programs = {

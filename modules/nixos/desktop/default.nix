@@ -1,4 +1,5 @@
 {
+  inputs,
   lib,
   config,
   pkgs,
@@ -6,6 +7,11 @@
   ...
 }: let
   cfg = config.teq.nixos.desktop;
+  hostname = config.networking.hostName;
+  # walls_repo = builtins.fetchGit {
+  #   url = "https://github.com/dharmx/walls";
+  #   rev = "6bf4d733ebf2b484a37c17d742eb47e5139e6a14";
+  # };
 in {
   options.teq.nixos.desktop = {
     enable = lib.mkEnableOption "Teq's NixOS Desktop configuration defaults.";
@@ -13,10 +19,20 @@ in {
   imports = [
     ./steam.nix
     ./pipewire.nix
+    {
+      nixpkgs = {
+        overlays = [
+          (final: prev: {
+            sddm-sugar-candy = inputs.sddmSugarCandy4Nix.packages.${pkgs.stdenv.hostPlatform.system}.sddm-sugar-candy;
+          })
+        ];
+      };
+    }
   ];
   config = lib.mkIf cfg.enable {
     teq.nixos.desktop.audio.enable = lib.mkDefault true; # Enable audio defaults.
     teq.nixos.desktop.steam.enable = lib.mkDefault true; # Enable Steam defaults.
+    environment.systemPackages = [pkgs.bibata-cursors]; # Allows cursors to be used in the system, like the login screen
     services = {
       xserver = {
         enable = true; # You can disable the X11 windowing system if you're only using the Wayland session.
@@ -28,7 +44,74 @@ in {
         # libinput.enable = true; # Enable touchpad support (enabled default in most desktopManager).
       };
       # Enable the KDE Plasma Desktop Environment.
-      displayManager.sddm.enable = true;
+      displayManager.sddm = {
+        enable = true;
+        wayland.enable = true;
+        wayland.compositor = "kwin";
+        theme = ''${ # <-- string interpolation and nix expression inside {}
+            pkgs.sddm-sugar-candy.override {
+              settings = {
+                # Background = "${walls_repo}/cold/a_mountain_with_clouds_in_the_sky.jpg";
+                DimBackgroundImage = "0.0";
+                ScaleImageCropped = true;
+                ScreenWidth = "1440";
+                ScreenHeight = "900";
+                FullBlur = false;
+                PartialBlur = true;
+                BlurRadius = "100";
+                HaveFormBackground = false;
+                FormPosition = "left";
+                BackgroundImageHAlignment = "center";
+                BackgroundImageVAlignment = "center";
+                MainColor = "white";
+                AccentColor = "#fb884f";
+                BackgroundColor = "#444";
+                OverrideLoginButtonTextColor = "";
+                InterfaceShadowSize = "6";
+                InterfaceShadowOpacity = "0.6";
+                RoundCorners = "20";
+                ScreenPadding = "0";
+                Font = "Source Sans Pro";
+                FontSize = "";
+                ForceRightToLeft = false;
+                ForceLastUser = true;
+                ForcePasswordFocus = true;
+                ForceHideCompletePassword = true;
+                ForceHideVirtualKeyboardButton = false;
+                ForceHideSystemButtons = false;
+                AllowEmptyPassword = false;
+                AllowBadUsernames = false;
+                Locale = "";
+                HourFormat = "HH:mm";
+                DateFormat = "dddd, d of MMMM";
+                HeaderText = "${hostname}";
+                TranslatePlaceholderUsername = "";
+                TranslatePlaceholderPassword = "";
+                TranslateShowPassword = "";
+                TranslateLogin = "";
+                TranslateLoginFailedWarning = "";
+                TranslateCapslockWarning = "";
+                TranslateSession = "";
+                TranslateSuspend = "";
+                TranslateHibernate = "";
+                TranslateReboot = "";
+                TranslateShutdown = "";
+                TranslateVirtualKeyboardButton = "";
+              };
+            }
+          }'';
+        package = lib.mkForce pkgs.libsForQt5.sddm;
+        extraPackages = with pkgs;
+          lib.mkForce [
+            libsForQt5.qt5.qtgraphicaleffects
+          ];
+        settings = {
+          Theme = {
+            CursorTheme = "Bibata-Modern-Classic";
+            # CursorSize = 29;
+          };
+        };
+      };
       desktopManager.plasma6.enable = true;
     };
     # nixpkgs.overlays = [nixpkgs-wayland.overlay]; # Automated, pre-built, (potentially) pre-release packages for Wayland (sway/wlroots) tools for NixOS.
