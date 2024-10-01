@@ -1,0 +1,201 @@
+# ~/.inputrc -- readline(3)
+$include /etc/inputrc
+
+# audible - Beep for bell
+# visible - Show a visible bell
+# none - Don't beep (e.g. when backspacing on empty input or on tab-completion)
+# set bell-style audible
+
+set meta-flag on
+# Allow UTF-8 input and output, instead of showing $'\0123\0456'
+set input-meta on
+set convert-meta off
+set output-meta on
+
+set show-all-if-ambiguous on
+set visible-stats on
+set page-completions off
+set colored-stats on
+set colored-completion-prefix
+
+# Immediately add a trailing slash when autocompleting symlinks to directories
+set mark-symlinked-directories on
+
+# Do not autocomplete hidden files unless the pattern explicitly begins with a dot
+set match-hidden-files off
+
+$if mode=emacs
+# for linux console and RH/Debian xterm
+"\e[1~": beginning-of-line
+"\e[4~": end-of-line
+"\e[5~": beginning-of-history
+"\e[6~": end-of-history
+"\e[7~": beginning-of-line
+"\e[3~": delete-char
+"\e[2~": quoted-insert
+"\e[5C": forward-word
+"\e[5D": backward-word
+"\e\e[C": forward-word
+"\e\e[D": backward-word
+"\e[1;5C": forward-word
+"\e[1;5D": backward-word
+# for rxvt
+"\e[8~": end-of-line
+# for non RH/Debian xterm, can't hurt for RH/DEbian xterm
+"\eOH": beginning-of-line
+"\eOF": end-of-line
+# for freebsd console
+"\e[H": beginning-of-line
+"\e[F": end-of-line
+$endif
+
+# Regain ability to paste multiple commands into some programs.
+$if Python
+set enable-bracketed-paste off
+$endif
+$if kadmin
+set enable-bracketed-paste off
+$endif
+
+# Don't modify history in-place, but remember as a new command
+set revert-all-at-newline on
+
+# Show tab-completion offers immediately, instead of beeping on the 1st Tab press
+set show-all-if-ambiguous on
+
+# Don't duplicate text when completing e.g. "Dr|opbox"
+set skip-completed-text on
+
+# Case-insensitive completion
+set completion-ignore-case on
+
+# Completion treats - and _ as equal
+set completion-map-case on
+
+# Ask for confirmation before listing too many options
+set completion-query-items 200
+
+set visible-stats on
+set colored-stats on
+set colored-completion-prefix on
+
+# Correct typos
+$if Bash
+#"`/": "~/"
+$endif
+
+# Reduce timeout for the above ` macro
+$if Bash
+set keyseq-timeout 200
+$endif
+
+# Use Alt/Meta + Delete to delete the preceding word
+"\e[3;3~": kill-word
+
+# Arrows use the text that has already been typed as the prefix for searching
+"\e[A": history-search-backward
+"\e[B": history-search-forward
+
+# Ctrl-arrows
+"\e[1;5C": forward-word
+"\e[1;5D": backward-word
+# "\eOC": forward-word
+# "\eOD": backward-word
+
+# Insert
+"\e[2~": overwrite-mode
+
+# Page Up/Down
+"\e[5~": ""
+"\e[6~": ""
+
+# Shift-Tab
+# "\e[Z": complete-into-braces
+#"\e[Z": dynamic-complete-history
+
+# unbind accidental Alt-P, Alt-N, Alt-numbers
+"\ep": ""
+"\en": ""
+"\e1": ""
+"\e2": ""
+"\e3": ""
+"\e4": ""
+"\e5": ""
+"\e6": ""
+"\e7": ""
+"\e8": ""
+"\e9": ""
+"\e0": ""
+"\e-": ""
+
+# UTF-8 prefixes – insert Alt+characters (e.g. Alt+ą) literally, instead of
+# eating the first byte and inserting the rest as garbage. (I would prefer if
+# bash could discard the entire character, but it doesn't know how to do that.)
+
+# two-byte prefixes
+"\e\xc0": self-insert
+"\e\xc1": self-insert
+"\e\xc2": self-insert
+"\e\xc3": self-insert
+"\e\xc4": self-insert
+"\e\xc5": self-insert
+"\e\xc6": self-insert
+"\e\xc7": self-insert
+"\e\xc8": self-insert
+"\e\xc9": self-insert
+"\e\xca": self-insert
+"\e\xcb": self-insert
+"\e\xcc": self-insert
+"\e\xcd": self-insert
+"\e\xce": self-insert
+"\e\xcf": self-insert
+"\e\xd0": self-insert
+"\e\xd1": self-insert
+"\e\xd2": self-insert
+"\e\xd3": self-insert
+"\e\xd4": self-insert
+"\e\xd5": self-insert
+"\e\xd6": self-insert
+"\e\xd7": self-insert
+"\e\xd8": self-insert
+"\e\xd9": self-insert
+"\e\xda": self-insert
+"\e\xdb": self-insert
+"\e\xdc": self-insert
+"\e\xdd": self-insert
+"\e\xde": self-insert
+"\e\xdf": self-insert
+# three-byte prefixes
+"\e\xe0": self-insert
+"\e\xe1": self-insert
+"\e\xe2": self-insert
+"\e\xe3": self-insert
+"\e\xe4": self-insert
+"\e\xe5": self-insert
+"\e\xe6": self-insert
+"\e\xe7": self-insert
+"\e\xe8": self-insert
+"\e\xe9": self-insert
+"\e\xea": self-insert
+"\e\xeb": self-insert
+"\e\xec": self-insert
+"\e\xed": self-insert
+"\e\xee": self-insert
+"\e\xef": self-insert
+# four-byte prefixes
+"\e\xf0": self-insert
+"\e\xf1": self-insert
+"\e\xf2": self-insert
+"\e\xf3": self-insert
+"\e\xf4": self-insert
+"\e\xf5": self-insert
+"\e\xf6": self-insert
+"\e\xf7": self-insert
+# five-byte prefixes
+"\e\xf8": self-insert
+"\e\xf9": self-insert
+"\e\xfa": self-insert
+"\e\xfb": self-insert
+# six-byte prefixes
+"\e\xfc": self-insert
+"\e\xfd": self-insert

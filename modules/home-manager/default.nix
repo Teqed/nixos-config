@@ -26,6 +26,7 @@ in {
     ./paths.nix
     ./theming.nix
     # ./mime-apps.nix
+    ./files.nix
   ];
   config = lib.mkIf cfg.enable {
     home.stateVersion = lib.mkDefault "24.05"; # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
@@ -43,6 +44,7 @@ in {
       paths = lib.mkDefault true;
       theming = lib.mkDefault true;
       # mime-apps.enable = lib.mkDefault true;
+      files = lib.mkDefault true;
     };
   };
 }

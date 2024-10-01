@@ -59,6 +59,7 @@
     AWS_SHARED_CREDENTIALS_FILE = "${XDG_CONFIG_HOME}/aws/credentials"; # ~/.aws/credentials
     AWS_CONFIG_FILE = "${XDG_CONFIG_HOME}/aws/config"; # ~/.aws/config
     ANSIBLE_HOME = "${XDG_CONFIG_HOME}/ansible"; # ~/.ansible
+    # ZDOTDIR = "${XDG_CONFIG_HOME}/zsh"; # ~/.zsh
     # Cache
     XCOMPOSECACHE = "${XDG_CACHE_HOME}/X11/XCompose"; # ~/.XCompose
     LESSHISTFILE = "${XDG_CACHE_HOME}/less/history";
@@ -84,6 +85,7 @@
     _JAVA_OPTIONS = "-Djava.util.prefs.userRoot=${XDG_CONFIG_HOME}/java";
     CARGO_HOME = "${XDG_DATA_HOME}/cargo"; # Rust
     RUSTUP_HOME = "${XDG_DATA_HOME}/rustup"; # Rust
+    RBENV_ROOT = "${XDG_DATA_HOME}/rbenv"; # Ruby
     ## npm/node
     NODE_REPL_HISTORY = "${XDG_DATA_HOME}/node_repl_history";
     NPM_CONFIG_USERCONFIG = "${XDG_CONFIG_HOME}/npm/npmrc";

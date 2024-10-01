@@ -2,8 +2,6 @@
   lib,
   config,
   userinfo,
-  pkgs,
-  packages,
   ...
 }: let
   cfg = config.teq.nixos;
@@ -132,10 +130,10 @@ in {
       ];
       files = [
         "/etc/machine-id" # machine-id is used by systemd for the journal
-        # "/etc/ssh/ssh_host_rsa_key"
-        # "/etc/ssh/ssh_host_rsa_key.pub"
-        # "/etc/ssh/ssh_host_ed25519_key"
-        # "/etc/ssh/ssh_host_ed25519_key.pub"
+        "/etc/ssh/ssh_host_rsa_key"
+        "/etc/ssh/ssh_host_rsa_key.pub"
+        "/etc/ssh/ssh_host_ed25519_key"
+        "/etc/ssh/ssh_host_ed25519_key.pub"
         "/etc/adjtime" # Contains descriptive information about the hardware mode clock setting and clock drift factor. The file is read and write by hwclock.
         {
           file = "/var/keys/secret_file";
@@ -145,36 +143,40 @@ in {
       users.teq = {
         # hideMounts = true;
         directories = [
-          # ".local"
-          ".local/user-dirs"
-          ".local/bin"
-          ".local/lib"
-          ".local/share"
-          ".local/opt"
-          ".local/games"
-          # ".local/state"
-          # ".config"
-          # ".cache"
-          # "VirtualBox VMs"
+          ".cache"
+          ".config"
           {
             directory = ".gnupg";
             mode = "0700";
           }
-          {
-            directory = ".ssh";
-            mode = "0700";
-          }
-          {
-            directory = ".nixops";
-            mode = "0700";
-          }
+          # ".local"
+          ".local/bin"
+          ".local/games"
+          ".local/lib"
+          ".local/opt"
+          ".local/share"
+          ".local/share/direnv"
           {
             directory = ".local/share/keyrings";
             mode = "0700";
           }
-          ".local/share/direnv"
+          ".local/state"
+          ".local/user-dirs"
+          ".mozilla"
+          {
+            directory = ".nixops";
+            mode = "0700";
+          }
+          # ".pki" # ?
+          # ".rbenv" # ? Move
+          {
+            directory = ".ssh";
+            mode = "0700";
+          }
+          # "VirtualBox VMs"
         ];
         files = [
+          ".gtkrc-2.0"
           ".screenrc"
         ];
         # allowOther = true;
