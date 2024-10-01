@@ -84,7 +84,7 @@ in {
         mkdir -p {/mnt,/mnt/nixos,$root_dir}
         mount -t btrfs -L nixos $root_dir
         if [[ -e $root_dir/@snapshots ]]; then
-            timestamp=$(date "+%Y-%m-%-d_%H:%M:%S")
+            timestamp=$(date "+%Y-%m-%d--%H-%M-%S")
             mkdir -p $snapshot_dir
             mount -t btrfs -o noatime,compress-force=zstd:1,subvol=@snapshots -L nixos $snapshot_dir;
             if [[ -e $root_dir/@home ]]; then
