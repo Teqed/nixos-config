@@ -306,7 +306,7 @@ bleopt exec_errexit_mark=
 
 #bleopt exec_exit_mark=$'\e[94m[ble: exit]\e[m'
 # bleopt exec_exit_mark= # Disable exit marker like "[ble: exit]"
-bleopt exec_exit_mark=$'\033[31m°º¤ø, \033[33m¸¸, \033[32mø¤º°\033[34m`°º¤ø, \033[35m¸, \033[36mø¤°º¤ø, \033[31m¸¸, \033[33mø¤º°\033[34m`°º¤ø, \033[35m¸\033[0m'
+# bleopt exec_exit_mark=$'\033[31m°º¤ø, \033[33m¸¸, \033[32mø¤º°\033[34m`°º¤ø, \033[35m¸, \033[36mø¤°º¤ø, \033[31m¸¸, \033[33mø¤º°\033[34m`°º¤ø, \033[35m¸\033[0m'
 
 
 ## The following setting controls the exit when jobs are remaining. When an
