@@ -9,8 +9,6 @@ The starlight on the Western Seas.
     chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
     alejandra.url = "github:kamadorueda/alejandra/3.0.0";
     alejandra.inputs.nixpkgs.follows = "nixpkgs";
-    wezterm-flake.url = "github:wez/wezterm/main?dir=nix";
-    wezterm-flake.inputs.nixpkgs.follows = "nixpkgs";
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     nix-flatpak.url = "github:gmodena/nix-flatpak";
@@ -44,7 +42,6 @@ The starlight on the Western Seas.
     impermanence,
     nixpkgs-wayland,
     nix-index-database,
-    wezterm-flake,
     plasma-manager,
     ...
   } @ inputs: let
@@ -66,7 +63,6 @@ The starlight on the Western Seas.
         nixos-hardware
         impermanence
         nix-flatpak
-        wezterm-flake
         nixpkgs-wayland
         ;
     };

@@ -16,7 +16,7 @@ in {
         # Add additional package names here
       ];
     home.packages = with pkgs; [
-      inputs.wezterm-flake.packages.${pkgs.system}.default # Wezterm flake
+      wezterm
 
       source-sans-pro # 6MB
       source-serif-pro # 5MB

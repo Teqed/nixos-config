@@ -108,7 +108,13 @@ in {
           # size = 32;
         };
         iconTheme = "Papirus-Dark";
-        wallpaper = "${pkgs.kdePackages.plasma-workspace-wallpapers}/share/wallpapers/MilkyWay/contents/images/5120x2880.png";
+        wallpaperPictureOfTheDay.provider = "apod";
+        # wallpaper = "${pkgs.kdePackages.plasma-workspace-wallpapers}/share/wallpapers/MilkyWay/contents/images/5120x2880.png";
+      };
+      kscreenlocker.appearance = {
+        # alwaysShowClock = false;
+        # showMediaControls = false;
+        wallpaperPictureOfTheDay.provider = "bing";
       };
 
       # hotkeys.commands."launch-konsole" = {

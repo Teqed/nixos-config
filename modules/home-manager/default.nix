@@ -1,7 +1,5 @@
 # Add your reusable home-manager modules to this directory, on their own file (https://nixos.wiki/wiki/Module).
 {
-  # nixpkgs-wayland,
-  # wezterm-flake,
   lib,
   config,
   ...
@@ -30,11 +28,6 @@ in {
   ];
   config = lib.mkIf cfg.enable {
     home.stateVersion = lib.mkDefault "24.05"; # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
-    # home-manager.extraSpecialArgs = lib.mkDefault {
-    #   inherit
-    #     # nixpkgs-wayland
-    #     # wezterm-flake
-    # };
     teq.home-manager = {
       fonts = lib.mkDefault true;
       nixcfg = lib.mkDefault true;
