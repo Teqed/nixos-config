@@ -77,6 +77,7 @@ The starlight on the Western Seas.
     homeManagerModules = import ./modules/home-manager; # Reusable home-manager modules.
     homeManagerConfig = {
       nixpkgs.hostPlatform = nixpkgs.lib.mkDefault "x86_64-linux";
+      home-manager.extraSpecialArgs = inheritSpecialArgs;
       home-manager.sharedModules = [
         self.homeManagerModules
         nix-index-database.hmModules.nix-index

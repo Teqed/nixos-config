@@ -134,12 +134,6 @@ in {
       };
       # starship.enable = true; # Prompt
       vim.enable = lib.mkDefault true; # 570MB / 75MB (vim-full 570MB / 90KB)
-      # wezterm = {
-      #   enable = lib.mkDefault true; # 230MB / 160MB
-      #   package = lib.mkDefault wezterm-flake.packages.${pkgs.system}.default;
-      #   # colorSchemes = { };
-      #   # extraConfig = " ";
-      # };
       yazi = {
         enable = lib.mkDefault true; # 426MB / 20MB (imagemagick, ffmegthumbnailer)
         settings.theme = {

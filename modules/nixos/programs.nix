@@ -3,7 +3,6 @@
   pkgs,
   lib,
   config,
-  wezterm-flake,
   ...
 }: let
   cfg = config.teq.nixos;
@@ -28,7 +27,6 @@ in {
       ]);
 
     environment.systemPackages = mkDefault (with pkgs; [
-      wezterm-flake.packages.${pkgs.system}.default # Wezterm flake
       nix-output-monitor # nix output monitor
       papirus-icon-theme # Allows icons to be used in the system, like the login screen
     ]);

@@ -2,6 +2,7 @@
   pkgs,
   lib,
   config,
+  inputs,
   ...
 }: let
   cfg = config.teq.home-manager;
@@ -15,6 +16,8 @@ in {
         # Add additional package names here
       ];
     home.packages = with pkgs; [
+      inputs.wezterm-flake.packages.${pkgs.system}.default # Wezterm flake
+
       source-sans-pro # 6MB
       source-serif-pro # 5MB
       source-code-pro # 2MB
