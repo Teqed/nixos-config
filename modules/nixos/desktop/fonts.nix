@@ -11,7 +11,7 @@ in {
     fonts = lib.mkEnableOption "Teq's NixOS Font configuration defaults.";
   };
   imports = [
-    ../home-manager/fonts.nix
+    ../../home-manager/fonts.nix
   ];
   config = lib.mkIf cfg.fonts {
     nixpkgs.config.joypixels.acceptLicense = mkDefault true;

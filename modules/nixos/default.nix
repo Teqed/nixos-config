@@ -13,7 +13,6 @@ in {
     # If you want to use modules your own flake exports (from modules/nixos):
     # outputs.nixosModules.example
     # Organized configuration files:
-    ./fonts.nix
     ./kernel.nix
     ./nix-ld.nix
     ./i18n_en_us_et.nix
@@ -23,7 +22,6 @@ in {
     ./users.nix
     ./networking.nix
     ./impermanence.nix
-    ./bluetooth.nix
     ./desktop
     ./nixcfg.nix
   ];
@@ -31,9 +29,7 @@ in {
     home-manager.backupFileExtension = lib.mkDefault "hm-backup";
     home-manager.useGlobalPkgs = lib.mkDefault true;
     teq.nixos = {
-      bluetooth = lib.mkDefault true;
       boot = lib.mkDefault true;
-      fonts = lib.mkDefault true;
       locale = lib.mkDefault true;
       kernel.enable = lib.mkDefault true;
       kernel.cachyos = lib.mkDefault true;
