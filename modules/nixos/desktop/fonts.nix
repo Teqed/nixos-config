@@ -71,7 +71,7 @@ in {
         }
       ];
       extraOptions = mkDefault "--term xterm-256color";
-      extraConfig = mkDefault "font-size=12";
+      extraConfig = mkDefault "font-size=10";
       # hwRender = mkDefault true; # Whether to use 3D hardware acceleration to render the console.
     };
   };

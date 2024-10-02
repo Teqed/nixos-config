@@ -15,7 +15,6 @@ in {
 
       fontconfig.defaultFonts = {
         serif = mkDefault [
-          "Source Serif Pro"
           "Noto Serif"
           "Noto Serif CJK SC"
           "Noto Serif CJK TC"
@@ -26,7 +25,6 @@ in {
         ];
 
         sansSerif = mkDefault [
-          "Source Sans Pro"
           "Noto Sans"
           "Noto Sans CJK SC"
           "Noto Sans CJK TC"
@@ -38,8 +36,7 @@ in {
         ];
 
         monospace = mkDefault [
-          "JetBrains Mono"
-          "FiraCode Nerd Font Mono"
+          # "JetBrainsMono Nerd Font"
           "Noto Sans Mono"
           "Noto Sans Mono CJK SC"
           "Noto Sans Mono CJK TC"

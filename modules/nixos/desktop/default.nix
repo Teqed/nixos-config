@@ -12,10 +12,10 @@
   #   url = "https://github.com/dharmx/walls";
   #   rev = "6bf4d733ebf2b484a37c17d742eb47e5139e6a14";
   # };
-  image_mountains = pkgs.fetchurl {
-    url = "https://github.com/dharmx/walls/blob/6bf4d733ebf2b484a37c17d742eb47e5139e6a14/cold/a_mountain_with_clouds_in_the_sky.jpg";
-    hash = "sha256-QGE8aXulkm7ergxbYrLTeLoLZaMCITutLM4a+s8x1pc=";
-  };
+  # image_mountains = pkgs.fetchurl {
+  #   url = "https://github.com/dharmx/walls/blob/6bf4d733ebf2b484a37c17d742eb47e5139e6a14/cold/a_mountain_with_clouds_in_the_sky.jpg";
+  #   hash = "sha256-QGE8aXulkm7ergxbYrLTeLoLZaMCITutLM4a+s8x1pc=";
+  # };
 in {
   options.teq.nixos.desktop = {
     enable = lib.mkEnableOption "Teq's NixOS Desktop configuration defaults.";
@@ -79,7 +79,7 @@ in {
                 InterfaceShadowOpacity = "0.6";
                 RoundCorners = "20";
                 ScreenPadding = "0";
-                Font = "Noto Sans";
+                # Font = "Noto Sans";
                 FontSize = "";
                 ForceRightToLeft = false;
                 ForceLastUser = true;
