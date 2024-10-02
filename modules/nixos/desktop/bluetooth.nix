@@ -3,9 +3,9 @@
   config,
   ...
 }: let
-  cfg = config.teq.nixos;
+  cfg = config.teq.nixos.desktop;
 in {
-  options.teq.nixos = {
+  options.teq.nixos.desktop = {
     bluetooth = lib.mkEnableOption "Teq's NixOS Bluetooth configuration defaults.";
   };
   config = lib.mkIf cfg.bluetooth {

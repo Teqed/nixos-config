@@ -29,7 +29,21 @@ in {
 
     programs.plasma = {
       enable = true;
-      overrideConfig = true;
+      # overrideConfig = true;
+      #
+      # Some high-level settings:
+      #
+      workspace = {
+        # clickItemTo = "open"; # If you liked the click-to-open default from plasma 5
+        lookAndFeel = "org.kde.breezedark.desktop";
+        cursor = {
+          theme = "Bibata-Modern-Classic";
+          # size = 32;
+        };
+        iconTheme = "Papirus-Dark";
+        # wallpaperPictureOfTheDay.provider = "bing";
+        wallpaper = "${pkgs.kdePackages.plasma-workspace-wallpapers}/share/wallpapers/MilkyWay/contents/images/5120x2880.png";
+      };
       panels = [
         {
           location = "bottom";
@@ -97,20 +111,6 @@ in {
           ];
         }
       ];
-      #
-      # Some high-level settings:
-      #
-      workspace = {
-        # clickItemTo = "open"; # If you liked the click-to-open default from plasma 5
-        lookAndFeel = "org.kde.breezedark.desktop";
-        cursor = {
-          theme = "Bibata-Modern-Classic";
-          # size = 32;
-        };
-        iconTheme = "Papirus-Dark";
-        wallpaperPictureOfTheDay.provider = "apod";
-        # wallpaper = "${pkgs.kdePackages.plasma-workspace-wallpapers}/share/wallpapers/MilkyWay/contents/images/5120x2880.png";
-      };
       kscreenlocker.appearance = {
         # alwaysShowClock = false;
         # showMediaControls = false;

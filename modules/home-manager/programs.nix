@@ -71,6 +71,37 @@ in {
       #   enable = true;
       #   extraConfig = builtins.readFile (./. + "/tmux.conf");
       # };
+      chromium = {
+        enable = true;
+        package = pkgs.brave;
+        dictionaries = [pkgs.hunspellDictsChromium.en_US];
+        extensions = [
+          {id = "cjpalhdlnbpafiamejdnhcphjbkeiagm";} # ublock-origin
+          {id = "ejddcgojdblidajhngkogefpkknnebdh";} # autoplaystopper
+          {id = "mnjggcdmjocbbbhaepdhchncahnbgone";} # sponsorblock-for-youtube
+          {id = "eimadpbcbfnmbkopoojfekhnkhdbieeh";} # dark reader
+          {id = "enamippconapkdmgfgjchkhakpfinmaj";} # DeArrow
+          {id = "amefmmaoenlhckgaoppgnmhlcolehkho";} # github-vscode-icons-updated
+          {id = "lpnakhpaodhdkleejaehlapdhbgjbddp";} # Hide Files on GitHub
+          # {id = "fihnjjcciajhdojfnbdddfaoknhalnja";} # I don't care about cookies
+          {id = "dneaehbmnbhcippjikoajpoabadpodje";} # old reddit redirect
+          {id = "jmpmfcjnflbcoidlgapblgpgbilinlem";} # PixelBlock
+          {id = "pkehgijcmpdhfbdbbnkijodmdjhbjlgp";} # Privacy Badger
+          # {id = "einpaelgookohagofgnnkcfjbkkgepnp";} # Random User-Agent (Switcher)
+          {id = "kbmfpngjjgdllneeigpgjifpgocmfgmb";} # Reddit Enhancement Suite
+          {id = "hlepfoohegkhhmjieoechaddaejaokhf";} # Refined GitHub
+          # {id = "oiigbmnaadbkfbmpbfijlflahbdbdgdf";} # ScriptSafe
+          {id = "mnjggcdmjocbbbhaepdhchncahnbgone";} # SponsorBlock
+          {id = "cheogdcgfjpolnpnjijnjccjljjclplg";} # Showdown Randbats Tooltip
+          {id = "dabpnahpcemkfbgfbmegmncjllieilai";} # Showdex
+          {id = "oedncfcpfcmehalbpdnekgaaldefpaef";} # Substitoot
+          {id = "fpnmgdkabkmnadcjpehmlllkndpkmiak";} # Wayback Machine
+          {id = "cimiefiiaegbelhefglklhhakcgmhkai";} # Plasma Integration
+        ];
+        commandLineArgs = [
+          "--disable-features=WebRtcAllowInputVolumeAdjustment"
+        ];
+      };
       vscode = {
         enable = lib.mkDefault true; # 1.44GB / 400MB (mesa 800MB)
         package = lib.mkDefault pkgs.vscodium;

@@ -12,11 +12,17 @@
   #   url = "https://github.com/dharmx/walls";
   #   rev = "6bf4d733ebf2b484a37c17d742eb47e5139e6a14";
   # };
+  image_mountains = pkgs.fetchurl {
+    url = "https://github.com/dharmx/walls/blob/6bf4d733ebf2b484a37c17d742eb47e5139e6a14/cold/a_mountain_with_clouds_in_the_sky.jpg";
+    hash = "sha256-QGE8aXulkm7ergxbYrLTeLoLZaMCITutLM4a+s8x1pc=";
+  };
 in {
   options.teq.nixos.desktop = {
     enable = lib.mkEnableOption "Teq's NixOS Desktop configuration defaults.";
   };
   imports = [
+    ./bluetooth.nix
+    ./fonts.nix
     ./steam.nix
     ./pipewire.nix
     {
@@ -30,6 +36,8 @@ in {
     }
   ];
   config = lib.mkIf cfg.enable {
+    teq.nixos.desktop.bluetooth = lib.mkDefault true;
+    teq.nixos.desktop.fonts = lib.mkDefault true;
     teq.nixos.desktop.audio.enable = lib.mkDefault true; # Enable audio defaults.
     teq.nixos.desktop.steam.enable = lib.mkDefault true; # Enable Steam defaults.
     environment.systemPackages = [pkgs.bibata-cursors]; # Allows cursors to be used in the system, like the login screen
@@ -51,16 +59,16 @@ in {
         theme = ''${ # <-- string interpolation and nix expression inside {}
             pkgs.sddm-sugar-candy.override {
               settings = {
-                # Background = "${walls_repo}/cold/a_mountain_with_clouds_in_the_sky.jpg";
+                # Background = image_mountains;
                 DimBackgroundImage = "0.0";
                 ScaleImageCropped = true;
-                ScreenWidth = "1440";
-                ScreenHeight = "900";
+                ScreenWidth = "1920";
+                ScreenHeight = "1080";
                 FullBlur = false;
                 PartialBlur = true;
                 BlurRadius = "100";
                 HaveFormBackground = false;
-                FormPosition = "left";
+                FormPosition = "center";
                 BackgroundImageHAlignment = "center";
                 BackgroundImageVAlignment = "center";
                 MainColor = "white";
@@ -71,7 +79,7 @@ in {
                 InterfaceShadowOpacity = "0.6";
                 RoundCorners = "20";
                 ScreenPadding = "0";
-                Font = "Source Sans Pro";
+                Font = "Noto Sans";
                 FontSize = "";
                 ForceRightToLeft = false;
                 ForceLastUser = true;

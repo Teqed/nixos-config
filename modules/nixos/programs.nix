@@ -12,6 +12,14 @@ in {
     programs = lib.mkEnableOption "Teq's NixOS Programs configuration defaults.";
   };
   config = lib.mkIf cfg.programs {
+    environment.etc."brave/policies/managed/DisableBraveRewardsWalletAI.json".text = ''
+      {
+        "BraveRewardsDisabled": true,
+        "BraveWalletDisabled": true,
+        "BraveVPNDisabled": true,
+        "BraveAIChatEnabled": false
+      }
+    '';
     environment.sessionVariables.NIXOS_OZONE_WL = "1"; # Use the Ozone Wayland support in several Electron apps
     # documentation.man.enable = false; # Whether to install manual pages. This also includes man outputs.
     documentation.man.generateCaches = false; # Whether to generate the manual page index caches. This allows searching for a page or keyword using utilities like apropos(1) and the -k option of man(1).

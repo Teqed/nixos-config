@@ -44,7 +44,7 @@ in {
       # blender-hip # blender with hardware accelerated rendering # 6.2GB / 1 GB
       # godot_4-mono # 2.9GB / 1.3 GB
       # prismlauncher # 2.8GB / 700 MB
-      ungoogled-chromium # Chrome / Chromium / UngoogledChromium # programs.chromium + extensions # 2GB / 600 MB
+      # ungoogled-chromium # Chrome / Chromium / UngoogledChromium # programs.chromium + extensions # 2GB / 600 MB
       obsidian # 1.8GB / 20MB
       vesktop # 1.8GB / 8MB
       # ( electron 1.8GB / 400MB )

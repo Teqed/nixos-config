@@ -4,10 +4,10 @@
   config,
   ...
 }: let
-  cfg = config.teq.nixos;
+  cfg = config.teq.nixos.desktop;
   inherit (lib) mkDefault;
 in {
-  options.teq.nixos = {
+  options.teq.nixos.desktop = {
     fonts = lib.mkEnableOption "Teq's NixOS Font configuration defaults.";
   };
   imports = [
@@ -20,10 +20,11 @@ in {
       enableDefaultPackages = mkDefault true; # Enable a basic set of fonts providing several styles and families and reasonable coverage of Unicode.
 
       packages = mkDefault (with pkgs; [
-        source-sans-pro
-        source-serif-pro
+        inter
+        # source-sans-pro
+        # source-serif-pro
         source-code-pro
-        # ibm-plex
+        ibm-plex
         dejavu_fonts
         (nerdfonts.override {
           fonts = [
