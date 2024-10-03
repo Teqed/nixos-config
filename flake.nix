@@ -53,23 +53,105 @@ The starlight on the Western Seas.
       # "aarch64-darwin"
       # "x86_64-darwin"
     ];
-    userinfo.users = ["teq"];
     forAllSystems = nixpkgs.lib.genAttrs systems; # This is a function that generates an attribute by calling a function you pass to it, with each system as an argument
     inheritSpecialArgs = {
       inherit
         inputs
         outputs
-        userinfo
         nixos-hardware
         impermanence
         nix-flatpak
         nixpkgs-wayland
         ;
     };
+    # <system> is something like "x86_64-linux", "aarch64-linux", "i686-linux", "x86_64-darwin"
+    # <name> is an attribute name like "hello".
+    # <flake> is a flake name like "nixpkgs".
+    # <store-path> is a /nix/store.. path
   in {
+    # # Executed by `nix flake check`
+    # checks."<system>"."<name>" = derivation;
+
+    # # Executed by `nix build .#<name>`
+    # packages."<system>"."<name>" = derivation;
     packages = forAllSystems (system: import ./pkgs nixpkgs.legacyPackages.${system}); # Custom packages accessible through 'nix build', 'nix shell', etc
+
+    # # Executed by `nix build .`
+    # packages."<system>".default = derivation;
+
+    # # Executed by `nix run .#<name>`
+    # apps."<system>"."<name>" = {
+    #   type = "app";
+    #   program = "<store-path>";
+    # };
+
+    # # Executed by `nix run . -- <args?>`
+    # apps."<system>".default = {
+    #   type = "app";
+    #   program = "...";
+    # };
+
+    # # Formatter (alejandra, nixfmt or nixpkgs-fmt)
+    # formatter."<system>" = derivation;
     formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.alejandra); # Formatter for your nix files, available through 'nix fmt'.
+
+    # # Used for nixpkgs packages, also accessible via `nix build .#<name>`
+    # legacyPackages."<system>"."<name>" = derivation;
+    # # Overlay, consumed by other flakes
+    # overlays."<name>" = final: prev: {};
+
+    # # Default overlay
+    # overlays.default = final: prev: {};
+    # # Nixos module, consumed by other flakes
+    # nixosModules."<name>" = {config, ...}: {
+    #   options = {};
+    #   config = {};
+    # };
+
+    # # Default module
+    # nixosModules.default = {config, ...}: {
+    #   options = {};
+    #   config = {};
+    # };
     nixosModules = import ./modules/nixos; # Reusable nixos modules.
+
+    # # Used with `nixos-rebuild switch --flake .#<hostname>`
+    # # nixosConfigurations."<hostname>".config.system.build.toplevel must be a derivation
+    # nixosConfigurations."<hostname>" = {};
+    nixosConfigurations = {
+      # NixOS configuration entrypoint. Available through 'nixos-rebuild --flake .#sedna'
+      sedna = nixpkgs.lib.nixosSystem {
+        specialArgs = inheritSpecialArgs;
+        modules = [
+          ./hosts/sedna.nix
+          self.commonModules
+          # self.nixosModules
+          chaotic.nixosModules.default
+          home-manager.nixosModules.home-manager
+          self.homeManagerConfig
+        ];
+      };
+    };
+
+    # # Used by `nix develop .#<name>`
+    # devShells."<system>"."<name>" = derivation;
+
+    # # Used by `nix develop`
+    # devShells."<system>".default = derivation;
+
+    # # Hydra build jobs
+    # hydraJobs."<attr>"."<system>" = derivation;
+
+    # # Used by `nix flake init -t <flake>#<name>`
+    # templates."<name>" = {
+    #   path = "<store-path>";
+    #   description = "template description goes here?";
+    # };
+    # # Used by `nix flake init -t <flake>`
+    # templates.default = {
+    #   path = "<store-path>";
+    #   description = "";
+    # };
     homeManagerModules = import ./modules/home-manager; # Reusable home-manager modules.
     homeManagerConfig = {
       nixpkgs.hostPlatform = nixpkgs.lib.mkDefault "x86_64-linux";
@@ -81,49 +163,7 @@ The starlight on the Western Seas.
         {teq.home-manager.enable = true;}
       ];
     };
+    # TODO: Remove commonModules -- just import it twice and let settings merge if necessary.
     commonModules = import ./modules/nixpkgs.nix; # Reusable modules that are not specific to nixos or home-manager.
-    nixosConfigurations = {
-      # NixOS configuration entrypoint. Available through 'nixos-rebuild --flake .#sedna'
-      sedna = nixpkgs.lib.nixosSystem {
-        specialArgs = inheritSpecialArgs;
-        modules = [
-          ./hosts/sedna.nix
-          self.commonModules
-          self.nixosModules
-          chaotic.nixosModules.default
-          home-manager.nixosModules.home-manager
-          self.homeManagerConfig
-        ];
-      };
-      # sudo nixos-rebuild --flake .#thoughtful switch |& nom
-      thoughtful = nixpkgs.lib.nixosSystem {
-        specialArgs = inheritSpecialArgs;
-        modules = [
-          ./nixos/thoughtful.nix
-          self.commonModules
-          self.nixosModules
-          chaotic.nixosModules.default
-          home-manager.nixosModules.home-manager
-          self.homeManagerConfig
-        ];
-      };
-    };
-    homeConfigurations = {
-      # home-manager --flake .#teq@somewhere
-      "teq@somewhere" = home-manager.lib.homeManagerConfiguration {
-        pkgs = nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
-        extraSpecialArgs = {inherit inputs outputs;};
-        modules = [
-          self.commonModules
-          self.homeManagerModules
-          nix-index-database.hmModules.nix-index
-          plasma-manager.homeManagerModules.plasma-manager
-          {
-            teq.home-manager.enable = true;
-            teq.nixpkgs = true;
-          }
-        ];
-      };
-    };
   };
 }

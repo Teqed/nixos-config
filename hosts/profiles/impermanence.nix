@@ -2,12 +2,34 @@
   lib,
   config,
   userinfo,
+  impermanence,
   ...
 }: let
   cfg = config.teq.nixos;
+  label_nixos = cfg.impermanence.label_nixos;
+  label_swap = cfg.impermanence.label_swap;
+  label_boot = cfg.impermanence.label_boot;
 in {
-  options.teq.nixos = {
-    impermanence = lib.mkEnableOption "Teq's NixOS Impermanence configuration defaults.";
+  imports = [
+    impermanence.nixosModules.impermanence
+  ];
+  options.teq.nixos.impermanence = {
+    enable = lib.mkEnableOption "Teq's NixOS Impermanence configuration defaults.";
+    label_nixos = lib.mkOption {
+      type = lib.types.string;
+      default = "nixos";
+      description = "The label of the BTRFS root filesystem.";
+    };
+    label_swap = lib.mkOption {
+      type = lib.types.string;
+      default = "swap";
+      description = "The label of the swap partition.";
+    };
+    label_boot = lib.mkOption {
+      type = lib.types.string;
+      default = "BOOT";
+      description = "The label of the EFI boot partition.";
+    };
   };
   config = lib.mkIf cfg.impermanence {
     fileSystems."/" = {
@@ -15,8 +37,13 @@ in {
       fsType = "tmpfs";
       options = ["noatime" "mode=755" "uid=0" "gid=0" "size=25%"];
     };
+    fileSystems."/boot" = {
+      device = "/dev/disk/by-label/${label_boot}";
+      fsType = "vfat";
+      options = ["fmask=0022" "dmask=0022" "noatime"];
+    };
     fileSystems."/nix" = {
-      device = "/dev/disk/by-label/nixos";
+      device = "/dev/disk/by-label/${label_nixos}";
       fsType = "btrfs";
       neededForBoot = true;
       options = [
@@ -26,7 +53,7 @@ in {
       ];
     };
     fileSystems."/persist" = {
-      device = "/dev/disk/by-label/nixos";
+      device = "/dev/disk/by-label/${label_nixos}";
       fsType = "btrfs";
       neededForBoot = true;
       options = [
@@ -36,7 +63,7 @@ in {
       ];
     };
     fileSystems."/home" = {
-      device = "/dev/disk/by-label/nixos";
+      device = "/dev/disk/by-label/${label_nixos}";
       fsType = "btrfs";
       neededForBoot = true;
       options = [
@@ -47,7 +74,7 @@ in {
     };
     swapDevices = [
       {
-        label = "swap";
+        label = label_swap;
         options = ["nofail"];
       }
     ];
@@ -67,10 +94,10 @@ in {
     boot.initrd.systemd.services.rollback = {
       description = "Rollback BTRFS root subvolume to a pristine state";
       wantedBy = ["initrd.target"];
-      requires = ["dev-disk-by\\x2dlabel-nixos.device"];
-      wants = ["dev-disk-by\\x2dlabel-nixos.device"];
+      requires = ["dev-disk-by\\x2dlabel-${label_nixos}.device"];
+      wants = ["dev-disk-by\\x2dlabel-${label_nixos}.device"];
       after = [
-        "dev-disk-by\\x2dlabel-nixos.device"
+        "dev-disk-by\\x2dlabel-${label_nixos}.device"
         # "systemd-cryptsetup@enc.service" # LUKS/TPM process
       ];
       before = [
@@ -82,11 +109,11 @@ in {
         snapshot_dir="/mnt/nixos/@snapshots"
         root_dir="/mnt/nixos/root"
         mkdir -p {/mnt,/mnt/nixos,$root_dir}
-        mount -t btrfs -L nixos $root_dir
+        mount -t btrfs -L ${label_nixos} $root_dir
         if [[ -e $root_dir/@snapshots ]]; then
             timestamp=$(date "+%Y-%m-%d--%H-%M-%S")
             mkdir -p $snapshot_dir
-            mount -t btrfs -o noatime,compress-force=zstd:1,subvol=@snapshots -L nixos $snapshot_dir;
+            mount -t btrfs -o noatime,compress-force=zstd:1,subvol=@snapshots -L ${label_nixos} $snapshot_dir;
             if [[ -e $root_dir/@home ]]; then
                 mkdir -p $snapshot_dir/@home
                 btrfs subvolume snapshot $root_dir/@home "$snapshot_dir/@home/$timestamp"
@@ -97,11 +124,11 @@ in {
                 mkdir -p $snapshot_dir/@persist
                 btrfs subvolume snapshot $root_dir/@persist "$snapshot_dir/@persist/$timestamp"
             fi
-            find $snapshot_dir/@home/ -maxdepth 1 -type d | sort | head -n -10 | while IFS= read -r snapshot; do
+            find $snapshot_dir/@home/ -maxdepth 1 -type d | sort | head -n -3 | while IFS= read -r snapshot; do
                 if [[ "$snapshot" == "$snapshot_dir/@home/" ]]; then continue ; fi
                 btrfs subvolume delete "$snapshot"
             done
-            find $snapshot_dir/@persist/ -maxdepth 1 -type d | sort | head -n -10 | while IFS= read -r snapshot; do
+            find $snapshot_dir/@persist/ -maxdepth 1 -type d | sort | head -n -5 | while IFS= read -r snapshot; do
                 if [[ "$snapshot" == "$snapshot_dir/@persist/" ]]; then continue ; fi
                 btrfs subvolume delete "$snapshot"
             done
@@ -141,6 +168,7 @@ in {
         }
       ];
       users.teq = {
+        # TODO: Make generic to userconfig
         # hideMounts = true;
         directories = [
           ".cache"

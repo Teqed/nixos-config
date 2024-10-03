@@ -25,7 +25,6 @@ in {
     documentation.man.generateCaches = false; # Whether to generate the manual page index caches. This allows searching for a page or keyword using utilities like apropos(1) and the -k option of man(1).
     documentation.doc.enable = false; # Whether to install documentation distributed in packages’ /share/doc. Usually plain text and/or HTML. This also includes “doc” outputs.
     environment.etc."nix/inputs/nixpkgs".source = "${inputs.nixpkgs}";
-    system.stateVersion = "24.05"; # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
 
     nixpkgs.config.allowUnfree = mkDefault true;
 
