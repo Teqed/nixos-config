@@ -5,8 +5,8 @@
 }: let
   cfg = config.teq.nixos.desktop.audio;
 in {
-  options.teq.nixos.desktop.audio = {
-    enable = lib.mkEnableOption "Teq's NixOS Desktop Audio configuration defaults.";
+  options.teq.nixos.desktop = {
+    audio = lib.mkEnableOption "Teq's NixOS Desktop Audio configuration defaults.";
   };
   config = lib.mkIf cfg.enable {
     services = {

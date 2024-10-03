@@ -97,11 +97,13 @@ The starlight on the Western Seas.
 
     # # Used for nixpkgs packages, also accessible via `nix build .#<name>`
     # legacyPackages."<system>"."<name>" = derivation;
+
     # # Overlay, consumed by other flakes
     # overlays."<name>" = final: prev: {};
 
     # # Default overlay
     # overlays.default = final: prev: {};
+
     # # Nixos module, consumed by other flakes
     # nixosModules."<name>" = {config, ...}: {
     #   options = {};
@@ -113,7 +115,7 @@ The starlight on the Western Seas.
     #   options = {};
     #   config = {};
     # };
-    nixosModules = import ./modules/nixos; # Reusable nixos modules.
+    nixosModules = import ./modules/nixos {flakes = inputs;}; # Reusable nixos modules.
 
     # # Used with `nixos-rebuild switch --flake .#<hostname>`
     # # nixosConfigurations."<hostname>".config.system.build.toplevel must be a derivation
@@ -124,8 +126,7 @@ The starlight on the Western Seas.
         specialArgs = inheritSpecialArgs;
         modules = [
           ./hosts/sedna.nix
-          self.commonModules
-          # self.nixosModules
+          self.nixosModules.default
           chaotic.nixosModules.default
           home-manager.nixosModules.home-manager
           self.homeManagerConfig
@@ -152,6 +153,7 @@ The starlight on the Western Seas.
     #   path = "<store-path>";
     #   description = "";
     # };
+
     homeManagerModules = import ./modules/home-manager; # Reusable home-manager modules.
     homeManagerConfig = {
       nixpkgs.hostPlatform = nixpkgs.lib.mkDefault "x86_64-linux";
@@ -163,7 +165,5 @@ The starlight on the Western Seas.
         {teq.home-manager.enable = true;}
       ];
     };
-    # TODO: Remove commonModules -- just import it twice and let settings merge if necessary.
-    commonModules = import ./modules/nixpkgs.nix; # Reusable modules that are not specific to nixos or home-manager.
   };
 }

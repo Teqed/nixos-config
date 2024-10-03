@@ -34,7 +34,6 @@ in {
       };
       printing.enable = mkDefault true; # Enable CUPS to print documents.
       hardware.bolt.enable = mkDefault true; # Thunderbolt 3 device manager
-      colord.enable = mkDefault true; # color management daemon
       openssh = {
         enable = mkDefault true;
         settings = {
@@ -49,12 +48,10 @@ in {
       };
       spice-vdagentd.enable = mkDefault true;
       earlyoom.enable = mkDefault true;
-
       hardware.openrgb = {
         enable = mkDefault true;
         package = pkgs.openrgb-with-all-plugins;
       };
-
       keyd = {
         # A key remapping daemon for linux. https://github.com/rvaiya/keyd
         enable = mkDefault true;
@@ -64,45 +61,6 @@ in {
             capslock = mkDefault "overload(capslock, esc)";
           };
         };
-      };
-
-      flatpak = {
-        enable = mkDefault true;
-        update.auto = {
-          enable = mkDefault true;
-          onCalendar = mkDefault "weekly"; # Default value
-        };
-        overrides = {
-          global = {
-            Context.sockets = mkDefault ["wayland" "!x11" "!fallback-x11"]; # Force Wayland by default
-            Environment = {
-              XCURSOR_PATH = mkDefault "/run/host/user-share/icons:/run/host/share/icons"; # Fix un-themed cursor in some Wayland apps
-              GTK_THEME = mkDefault "Adwaita:dark"; # Force correct theme for some GTK apps
-            };
-          };
-          "com.visualstudio.code".Context = {
-            filesystems = mkDefault [
-              "xdg-config/git:ro" # Expose user Git config
-              "/run/current-system/sw/bin:ro" # Expose NixOS managed software
-            ];
-            sockets = mkDefault [
-              "gpg-agent" # Expose GPG agent
-              "pcsc" # Expose smart cards (i.e. YubiKey)
-            ];
-          };
-          "org.onlyoffice.desktopeditors".Context.sockets = mkDefault ["x11"]; # No Wayland support
-        };
-      };
-
-      sunshine = {
-        enable = mkDefault true;
-        openFirewall = mkDefault true;
-        capSysAdmin = mkDefault true;
-      };
-
-      xrdp = {
-        enable = mkDefault true;
-        openFirewall = mkDefault true;
       };
     };
   };

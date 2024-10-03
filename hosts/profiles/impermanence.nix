@@ -1,7 +1,6 @@
 {
   lib,
   config,
-  userinfo,
   impermanence,
   ...
 }: let
@@ -16,22 +15,23 @@ in {
   options.teq.nixos.impermanence = {
     enable = lib.mkEnableOption "Teq's NixOS Impermanence configuration defaults.";
     label_nixos = lib.mkOption {
-      type = lib.types.string;
+      type = lib.types.str;
       default = "nixos";
       description = "The label of the BTRFS root filesystem.";
     };
     label_swap = lib.mkOption {
-      type = lib.types.string;
+      type = lib.types.str;
       default = "swap";
       description = "The label of the swap partition.";
     };
     label_boot = lib.mkOption {
-      type = lib.types.string;
+      type = lib.types.str;
       default = "BOOT";
       description = "The label of the EFI boot partition.";
     };
   };
-  config = lib.mkIf cfg.impermanence {
+  # config = lib.mkIf cfg.impermanence {
+  config = {
     fileSystems."/" = {
       device = "none";
       fsType = "tmpfs";
@@ -86,7 +86,7 @@ in {
     users.mutableUsers = false;
     users.users = lib.mkMerge (
       [{root.hashedPasswordFile = "/persist/etc/auth/root";}]
-      ++ lib.forEach userinfo.users (
+      ++ lib.forEach config.userinfo.users (
         u: {"${u}".hashedPasswordFile = "/persist/etc/auth/${u}";}
       )
     );

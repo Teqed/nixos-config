@@ -3,9 +3,9 @@
   config,
   ...
 }: let
-  cfg = config.teq;
+  cfg = config.teq.nixos;
 in {
-  options.teq = {
+  options.teq.nixos = {
     nixpkgs = lib.mkEnableOption "Teq's NixOS Nixpkgs configuration defaults.";
   };
   config = lib.mkIf cfg.nixpkgs {
