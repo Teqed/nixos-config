@@ -29,9 +29,25 @@ with lib; let
   ];
 in {
   options.teq.home-manager = {
-    nixcfg = lib.mkEnableOption "Teq's Home-Manager Nixcfg configuration defaults.";
+    enable = lib.mkEnableOption "Enable Teq's Home-Manager configuration defaults.";
+    allowUnfree = lib.mkEnableOption "Allow unfree software.";
   };
-  config = lib.mkIf cfg.nixcfg {
+  config = lib.mkIf cfg.enable {
+    teq.home-manager = {
+      fonts = lib.mkDefault true;
+      locale = lib.mkDefault true;
+      packages = lib.mkDefault true;
+      programs = lib.mkDefault true;
+      paths = lib.mkDefault true;
+      theming = lib.mkDefault false; # plasma-manager constantly overrides defaults
+      # mime-apps.enable = lib.mkDefault true;
+      files = lib.mkDefault true;
+    };
+    nixpkgs = lib.mkIf cfg.allowUnfree {
+      config = {
+        allowUnfree = true;
+      };
+    };
     nix = {
       # registry = mapAttrs (_: flake: {inherit flake;}) flakeInputs; # Opinionated: make flake registry and nix path match flake inputs
       # nixPath = mkDefault (mapAttrsToList (key: value: "${key}=${value.to.path}") config.nix.registry); # Add inputs to the system's legacy channels Making legacy nix commands consistent

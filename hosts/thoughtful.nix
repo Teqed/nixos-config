@@ -1,7 +1,6 @@
 {
   nixos-hardware,
   impermanence,
-  nix-flatpak,
   ...
 }: {
   imports = [
@@ -10,7 +9,6 @@
     nixos-hardware.nixosModules.common-pc
     nixos-hardware.nixosModules.common-pc-ssd
     impermanence.nixosModules.impermanence
-    nix-flatpak.nixosModules.nix-flatpak
   ];
   networking.hostName = "thoughtful";
   fileSystems."/boot" = {

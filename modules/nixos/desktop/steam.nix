@@ -4,14 +4,14 @@
   lib,
   ...
 }: let
-  cfg = config.teq.nixos.desktop.steam;
+  cfg = config.teq.nixos.desktop;
 in {
-  options.teq.nixos.desktop.steam = {
-    enable = lib.mkEnableOption "Teq's NixOS Steam configuration defaults.";
+  options.teq.nixos.desktop = {
+    steam = lib.mkEnableOption "Teq's NixOS Steam configuration defaults.";
   };
-  config = lib.mkIf cfg.enable {
+  config = lib.mkIf cfg.steam {
     programs.steam = {
-      # enable = lib.mkDefault true; #11.8GB / 300MB (mostly mesa libraries)
+      enable = lib.mkDefault true; #11.8GB / 300MB (mostly mesa libraries)
       remotePlay.openFirewall = true;
       dedicatedServer.openFirewall = true;
       gamescopeSession.enable = true;

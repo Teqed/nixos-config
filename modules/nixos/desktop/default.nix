@@ -20,7 +20,8 @@ in {
     teq.nixos.desktop.bluetooth = lib.mkDefault true;
     teq.nixos.desktop.services = lib.mkDefault true;
     teq.nixos.desktop.fonts = lib.mkDefault true;
-    teq.nixos.desktop.audio.enable = lib.mkDefault true;
-    teq.nixos.desktop.steam.enable = lib.mkDefault true;
+    teq.nixos.desktop.audio = lib.mkDefault true;
+    teq.nixos.desktop.steam = lib.mkDefault false;
+    teq.nixos.desktop.amd = lib.mkDefault false;
   };
 }

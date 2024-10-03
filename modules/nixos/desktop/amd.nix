@@ -6,7 +6,7 @@
 }: let
   cfg = config.teq.nixos.desktop;
 in {
-  options.teq.nixos.desktop.amd = {
+  options.teq.nixos.desktop = {
     amd = lib.mkEnableOption "Teq's NixOS AMD configuration defaults.";
   };
   config = lib.mkIf cfg.enable {

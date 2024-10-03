@@ -129,6 +129,7 @@ The starlight on the Western Seas.
           self.nixosModules.default
           chaotic.nixosModules.default
           home-manager.nixosModules.home-manager
+          nix-flatpak.nixosModules.nix-flatpak
           self.homeManagerConfig
         ];
       };
@@ -154,15 +155,18 @@ The starlight on the Western Seas.
     #   description = "";
     # };
 
-    homeManagerModules = import ./modules/home-manager; # Reusable home-manager modules.
-    homeManagerConfig = {
+    homeManagerModules = import ./modules/home-manager {flakes = inputs;}; # Reusable home-manager modules.
+    homeManagerConfig = {...}: {
       nixpkgs.hostPlatform = nixpkgs.lib.mkDefault "x86_64-linux";
       home-manager.extraSpecialArgs = inheritSpecialArgs;
       home-manager.sharedModules = [
-        self.homeManagerModules
+        self.homeManagerModules.default
         nix-index-database.hmModules.nix-index
         plasma-manager.homeManagerModules.plasma-manager
-        {teq.home-manager.enable = true;}
+        {
+          teq.home-manager.enable = true;
+          home.stateVersion = "24.05"; # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
+        }
       ];
     };
   };
