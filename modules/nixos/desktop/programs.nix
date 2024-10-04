@@ -24,6 +24,7 @@ in {
         userAllowOther = lib.mkDefault true; # Allow non-root users to specify the allow_other or allow_root mount options, see mount.fuse3(8). Might not be needed
         mountMax = lib.mkDefault 32000; # Set the maximum number of FUSE mounts allowed to non-root users. Integer between 0 and 32767, default 1000
       };
+      virt-manager.enable = lib.mkDefault true;
     };
 
     environment.systemPackages = with pkgs; [
@@ -35,7 +36,6 @@ in {
       '') # QEMU virtualization with UEFI firmware
     ];
 
-    virt-manager.enable = lib.mkDefault true;
     virtualisation.waydroid.enable = true;
     # boot.binfmt.emulatedSystems = [
     #   "aarch64-linux" # ARM
