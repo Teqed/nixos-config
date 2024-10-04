@@ -1,6 +1,7 @@
 {
   modulesPath,
   nixos-hardware,
+  lib,
   ...
 }: {
   imports = [
@@ -11,6 +12,7 @@
     (modulesPath + "/profiles/qemu-guest.nix")
   ];
   config = {
+    services.spice-vdagentd.enable = lib.mkDefault true; # TODO: check if handled by the qemu-guest profile?
     nixpkgs.hostPlatform = "x86_64-linux";
     boot = {
       loader = {

@@ -53,8 +53,8 @@ in {
       # registry = mapAttrs (_: flake: {inherit flake;}) flakeInputs; # Opinionated: make flake registry and nix path match flake inputs
       # nixPath = mkDefault (mapAttrsToList (key: value: "${key}=${value.to.path}") config.nix.registry); # Add inputs to the system's legacy channels Making legacy nix commands consistent
 
-      registry = osConfig.nix.registry;
-      nixPath = osConfig.nix.nixPath;
+      # registry = osConfig.nix.registry;
+      # nixPath = osConfig.nix.nixPath;
 
       # registry.nixpkgs.flake = inputs.nixpkgs;
       # nixPath = mapAttrsToList (n: _: "${n}=flake:${n}") flakeInputs;

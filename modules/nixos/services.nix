@@ -46,7 +46,6 @@ in {
         };
         openFirewall = mkDefault true;
       };
-      spice-vdagentd.enable = mkDefault true;
       earlyoom.enable = mkDefault true;
       hardware.openrgb = {
         enable = mkDefault true;

@@ -22,7 +22,6 @@ in {
       locale = lib.mkDefault true;
       nix-ld = lib.mkDefault true;
       nixcfg = lib.mkDefault true;
-      nixpkgs = lib.mkDefault true;
       programs = lib.mkDefault true;
       services = lib.mkDefault true;
       kernel.enable = lib.mkDefault true;

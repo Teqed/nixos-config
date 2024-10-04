@@ -9,6 +9,7 @@
     nixos-hardware.nixosModules.common-gpu-amd
   ];
   networking.hostName = "thoughtful"; # /dev/disk/by-partuuid/032b15fe-6dc7-473e-b1a5-d51f4df7ffd6
+  nixpkgs.hostPlatform = "x86_64-linux";
   boot.loader = {
     systemd-boot.enable = true;
     systemd-boot.configurationLimit = 3;

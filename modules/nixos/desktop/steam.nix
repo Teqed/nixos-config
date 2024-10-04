@@ -5,6 +5,7 @@
   ...
 }: let
   cfg = config.teq.nixos.desktop;
+  wine_wayland = pkgs.wineWowPackages.waylandFull;
 in {
   options.teq.nixos.desktop = {
     steam = lib.mkEnableOption "Teq's NixOS Steam configuration defaults.";
@@ -15,6 +16,7 @@ in {
       remotePlay.openFirewall = true;
       dedicatedServer.openFirewall = true;
       gamescopeSession.enable = true;
+      protontricks.enable = true;
       extraCompatPackages = with pkgs; [
         proton-ge-bin # 1GB
         proton-ge-custom # 1GB
@@ -28,8 +30,21 @@ in {
 
     # programs.gamemode.enable = true;
 
-    environment.systemPackages = with pkgs; [
-      openvr_git
+    environment.systemPackages = [
+      pkgs.openvr_git
+      pkgs.winetricks
+      pkgs.wineasio
+      wine_wayland
     ];
+    boot.binfmt.registrations.wine = {
+      recognitionType = "magic";
+      magicOrExtension = "MZ";
+      interpreter = lib.getExe wine_wayland;
+    };
+    boot.kernel.sysctl = {
+      # Enable usage of performance data from Intel GPUs by non-admin programs, enabled for Wine
+      # <https://wiki.archlinux.org/title/Intel_graphics#Enable_performance_support>
+      "dev.i915.perf_stream_paranoid" = 0;
+    };
   };
 }

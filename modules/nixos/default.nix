@@ -9,7 +9,6 @@ fromFlakes: let
     networking = import ./networking.nix;
     desktop = import ./desktop;
     nixcfg = import ./nixcfg.nix;
-    nixpkgs = import ./nixpkgs.nix;
     # nyx-cache = import ./nyx-cache.nix fromFlakes;
     # nyx-overlay = import ../common/nyx-overlay.nix fromFlakes;
   };
