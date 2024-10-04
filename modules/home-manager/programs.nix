@@ -107,7 +107,6 @@ in {
           {id = "kbmfpngjjgdllneeigpgjifpgocmfgmb";} # Reddit Enhancement Suite
           {id = "hlepfoohegkhhmjieoechaddaejaokhf";} # Refined GitHub
           # {id = "oiigbmnaadbkfbmpbfijlflahbdbdgdf";} # ScriptSafe
-          {id = "mnjggcdmjocbbbhaepdhchncahnbgone";} # SponsorBlock
           {id = "cheogdcgfjpolnpnjijnjccjljjclplg";} # Showdown Randbats Tooltip
           {id = "dabpnahpcemkfbgfbmegmncjllieilai";} # Showdex
           {id = "oedncfcpfcmehalbpdnekgaaldefpaef";} # Substitoot
@@ -195,7 +194,7 @@ in {
       zoxide.enable = lib.mkDefault true;
       # thunderbird.enable = true; # profiles needs to be set
       java.enable = true; # Duplicated from NixOS configuration - NixOS can use binfmt # 900 MB / 600 MB
-      firefox.enable = lib.mkDefault true; # 1.6GB / 300MB
+      firefox.enable = false; # 1.6GB / 300MB
       git = {
         enable = lib.mkDefault true; # 300MB / 70MB (python3 200MB, perl 100MB)
         # prompt = true; # NixOS-specific option

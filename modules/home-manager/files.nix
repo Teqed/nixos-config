@@ -23,5 +23,29 @@ in {
     home.file.".config/vim/.vimrc".source = ./sources/.config/vim/.vimrc;
     # .config/wezterm/wezterm.lua
     home.file.".config/wezterm/wezterm.lua".source = ./sources/.config/wezterm/wezterm.lua;
+    # .config/bash/aliases.sh
+    home.file.".config/bash/aliases.sh".source = ./sources/.config/bash/aliases.sh;
+    # .config/bash/banner.sh
+    home.file.".config/bash/banner.sh".source = ./sources/.config/bash/banner.sh;
+    # .config/bash/functions.sh
+    home.file.".config/bash/functions.sh".source = ./sources/.config/bash/functions.sh;
+    # .config/bash/prompt.bash
+    home.file.".config/bash/prompt.bash".source = ./sources/.config/bash/prompt.bash;
+    # .config/bash/functions.d/cheat.sh
+    home.file.".config/bash/functions.d/cheat.sh".source = ./sources/.config/bash/functions.d/cheat.sh;
+    # .config/bash/functions.d/coloring.bash
+    home.file.".config/bash/functions.d/coloring.bash".source = ./sources/.config/bash/functions.d/coloring.bash;
+    # .config/bash/functions.d/extract.sh
+    home.file.".config/bash/functions.d/extract.sh".source = ./sources/.config/bash/functions.d/extract.sh;
+    # .config/bash/functions.d/lfcd.sh
+    home.file.".config/bash/functions.d/lfcd.sh".source = ./sources/.config/bash/functions.d/lfcd.sh;
+    # .config/bash/functions.d/mkcdr.sh
+    home.file.".config/bash/functions.d/mkcdr.sh".source = ./sources/.config/bash/functions.d/mkcdr.sh;
+    # .config/bash/functions.d/pecho.bash
+    home.file.".config/bash/functions.d/pecho.bash".source = ./sources/.config/bash/functions.d/pecho.bash;
+    # .config/bash/functions.d/ttitle.bash
+    home.file.".config/bash/functions.d/ttitle.bash".source = ./sources/.config/bash/functions.d/ttitle.bash;
+    # .config/vivaldi/policies/managed/defaultExtensions.json
+    home.file.".config/vivaldi/policies/managed/defaultExtensions.json".source = ./sources/.config/vivaldi/policies/managed/defaultExtensions.json;
   };
 }

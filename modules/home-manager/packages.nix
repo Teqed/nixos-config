@@ -2,7 +2,6 @@
   pkgs,
   lib,
   config,
-  inputs,
   ...
 }: let
   cfg = config.teq.home-manager;
@@ -60,6 +59,8 @@ in {
       zed-editor_git # 230MB / 160MB
       python3 # 165MB / 108MB (gcc 40MB, openssl 40MB, readline 40MB, ncurses 30MB, sqlite 30MB, bash 30MB, etc.)
       aseprite # 117MB / 20MB (harfbuzz 70MB / 3MB)
+
+      vivaldi
 
       # ;
       curl # 55MB / 200KB (openssl)
