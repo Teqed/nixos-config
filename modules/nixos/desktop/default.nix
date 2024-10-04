@@ -15,10 +15,12 @@ in {
     ./steam.nix
     ./audio.nix
     ./services.nix
+    ./programs.nix
   ];
   config = lib.mkIf cfg.enable {
     teq.nixos.desktop.bluetooth = lib.mkDefault true;
     teq.nixos.desktop.services = lib.mkDefault true;
+    teq.nixos.desktop.programs = lib.mkDefault true;
     teq.nixos.desktop.fonts = lib.mkDefault true;
     teq.nixos.desktop.audio = lib.mkDefault true;
     teq.nixos.desktop.steam = lib.mkDefault false;

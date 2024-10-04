@@ -5,6 +5,8 @@
   ...
 }: let
   cfg = config.teq.nixos.desktop;
+  vivaldi_policy = import ../../home-manager/sources/.config/vivaldi/policies/managed/defaultExtensions.json;
+  brave_policy = import ../../home-manager/sources/.config/brave/policies/managed/DisableBraveRewardsWalletAI.json;
 in {
   options.teq.nixos.desktop = {
     programs = lib.mkEnableOption "Teq's NixOS Desktop Program configuration defaults.";
@@ -44,104 +46,7 @@ in {
 
     environment.sessionVariables.NIXOS_OZONE_WL = "1"; # Use the Ozone Wayland support in several Electron apps
 
-    environment.etc."brave/policies/managed/DisableBraveRewardsWalletAI.json".text = ''
-      {
-        "BraveRewardsDisabled": true,
-        "BraveWalletDisabled": true,
-        "BraveVPNDisabled": true,
-        "BraveAIChatEnabled": false
-      }
-    '';
-    environment.etc."vivaldi/policies/managed/defaultExtensions.json".text = ''
-        {
-        "ExtensionSettings": {
-          "cjpalhdlnbpafiamejdnhcphjbkeiagm": {
-            "installation_mode": "normal_installed",
-            "update_url":
-               "https://clients2.google.com/service/update2/crx"
-          },
-          "ejddcgojdblidajhngkogefpkknnebdh": {
-            "installation_mode": "normal_installed",
-            "update_url":
-               "https://clients2.google.com/service/update2/crx"
-          },
-          "mnjggcdmjocbbbhaepdhchncahnbgone": {
-            "installation_mode": "normal_installed",
-            "update_url":
-               "https://clients2.google.com/service/update2/crx"
-          },
-          "eimadpbcbfnmbkopoojfekhnkhdbieeh": {
-            "installation_mode": "normal_installed",
-            "update_url":
-               "https://clients2.google.com/service/update2/crx"
-          },
-          "enamippconapkdmgfgjchkhakpfinmaj": {
-            "installation_mode": "normal_installed",
-            "update_url":
-               "https://clients2.google.com/service/update2/crx"
-          },
-          "amefmmaoenlhckgaoppgnmhlcolehkho": {
-            "installation_mode": "normal_installed",
-            "update_url":
-               "https://clients2.google.com/service/update2/crx"
-          },
-          "lpnakhpaodhdkleejaehlapdhbgjbddp": {
-            "installation_mode": "normal_installed",
-            "update_url":
-               "https://clients2.google.com/service/update2/crx"
-          },
-          "dneaehbmnbhcippjikoajpoabadpodje": {
-            "installation_mode": "normal_installed",
-            "update_url":
-               "https://clients2.google.com/service/update2/crx"
-          },
-          "jmpmfcjnflbcoidlgapblgpgbilinlem": {
-            "installation_mode": "normal_installed",
-            "update_url":
-               "https://clients2.google.com/service/update2/crx"
-          },
-          "pkehgijcmpdhfbdbbnkijodmdjhbjlgp": {
-            "installation_mode": "normal_installed",
-            "update_url":
-               "https://clients2.google.com/service/update2/crx"
-          },
-          "kbmfpngjjgdllneeigpgjifpgocmfgmb": {
-            "installation_mode": "normal_installed",
-            "update_url":
-               "https://clients2.google.com/service/update2/crx"
-          },
-          "hlepfoohegkhhmjieoechaddaejaokhf": {
-            "installation_mode": "normal_installed",
-            "update_url":
-               "https://clients2.google.com/service/update2/crx"
-          },
-          "cheogdcgfjpolnpnjijnjccjljjclplg": {
-            "installation_mode": "normal_installed",
-            "update_url":
-               "https://clients2.google.com/service/update2/crx"
-          },
-          "dabpnahpcemkfbgfbmegmncjllieilai": {
-            "installation_mode": "normal_installed",
-            "update_url":
-               "https://clients2.google.com/service/update2/crx"
-          },
-          "oedncfcpfcmehalbpdnekgaaldefpaef": {
-            "installation_mode": "normal_installed",
-            "update_url":
-               "https://clients2.google.com/service/update2/crx"
-          },
-          "fpnmgdkabkmnadcjpehmlllkndpkmiak": {
-            "installation_mode": "normal_installed",
-            "update_url":
-               "https://clients2.google.com/service/update2/crx"
-          },
-          "cimiefiiaegbelhefglklhhakcgmhkai": {
-            "installation_mode": "normal_installed",
-            "update_url":
-               "https://clients2.google.com/service/update2/crx"
-          }
-        }
-      }
-    '';
+    environment.etc."vivaldi/policies/managed/defaultExtensions.json".source = vivaldi_policy;
+    environment.etc."brave/policies/managed/DisableBraveRewardsWalletAI.json".source = brave_policy;
   };
 }
