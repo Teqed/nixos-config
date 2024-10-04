@@ -36,45 +36,6 @@ in {
     launcher.command = mkPreferenceCmdOption "launcher" "krunner";
   };
   config = lib.mkIf cfg.enable {
-    cfg.browser = {
-      command = "brave";
-      desktop = "brave.desktop";
-    };
-    cfg.terminalEmulator = {
-      command = "wezterm";
-      desktop = "wezterm.desktop";
-    };
-    cfg.textEditor = {
-      command = "kate";
-      desktop = "kate.desktop";
-    };
-    cfg.fileManager = {
-      command = "dolphin";
-      desktop = "dolphin.desktop";
-    };
-    cfg.imageViewer = {
-      command = "gwenview";
-      desktop = "gwenview.desktop";
-    };
-    cfg.mediaPlayer = {
-      command = "elisa";
-      desktop = "elisa.desktop";
-    };
-    cfg.archiveManager = {
-      command = "ark";
-      desktop = "org.kde.ark.desktop";
-    };
-    cfg.documentViewer = {
-      command = "brave";
-      desktop = "brave.desktop";
-    };
-    cfg.emailClient = {
-      command = "brave";
-      desktop = "brave.desktop";
-    };
-    cfg.launcher = {
-      command = "krunner";
-    };
     xdg.mimeApps = let
       browser = cfg.browser.desktop;
       textEditor = cfg.textEditor.desktop;
