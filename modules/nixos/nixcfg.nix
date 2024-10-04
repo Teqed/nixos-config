@@ -70,10 +70,10 @@ in {
         ];
         max-jobs = mkDefault "auto"; # default
         builders-use-substitutes = mkDefault true;
-        substituters = mkDefault substituter_list;
-        trusted-substituters = mkDefault substituter_list;
+        substituters = substituter_list;
+        trusted-substituters = substituter_list;
         trusted-users = mkForce ["root" "teq" "@wheel"];
-        trusted-public-keys = mkDefault [
+        trusted-public-keys = [
           "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
           "teq.cachix.org-1:vzpACVksI6em8mYjeJbTWp9x+jQmZiReS7pNot65l+A="
           "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="

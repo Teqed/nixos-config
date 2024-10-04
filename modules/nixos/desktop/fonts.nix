@@ -19,11 +19,11 @@ in {
     fonts = {
       enableDefaultPackages = mkDefault true; # Enable a basic set of fonts providing several styles and families and reasonable coverage of Unicode.
 
-      packages = mkDefault (with pkgs; [
+      packages = with pkgs; [
         inter
         # source-sans-pro
         # source-serif-pro
-        source-code-pro
+        # source-code-pro
         ibm-plex
         dejavu_fonts
         (nerdfonts.override {
@@ -57,17 +57,17 @@ in {
         # material-icons
         # weather-icons
         # meslo-lgs-nf
-      ]);
+      ];
 
       fontDir.enable = mkDefault (!pkgs.stdenv.isDarwin);
     };
 
     services.kmscon = {
       enable = mkDefault true; # Use kmscon as the virtual console instead of gettys.
-      fonts = mkDefault [
+      fonts = [
         {
-          name = "Source Code Pro";
-          package = pkgs.source-code-pro;
+          name = "Noto Sans Mono";
+          package = pkgs.noto-fonts-lgc-plus;
         }
       ];
       extraOptions = mkDefault "--term xterm-256color";

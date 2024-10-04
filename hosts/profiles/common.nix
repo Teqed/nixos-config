@@ -44,14 +44,8 @@ in {
       home.stateVersion = "24.05"; # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
       teq.home-manager = {
         enable = true;
-        fonts = lib.mkDefault false;
-        locale = lib.mkDefault false;
-        packages = lib.mkDefault false;
-        programs = lib.mkDefault false;
-        paths = lib.mkDefault false;
+        fonts = false;
         # theming = lib.mkDefault false; # plasma-manager constantly overrides defaults
-        # mime-apps.enable = lib.mkDefault true;
-        files = lib.mkDefault false;
       };
     };
     users.users = lib.mkMerge (

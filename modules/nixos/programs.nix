@@ -28,15 +28,15 @@ in {
 
     nixpkgs.config.allowUnfree = mkDefault true;
 
-    nixpkgs.config.allowUnfreePredicate = mkDefault (pkg:
+    nixpkgs.config.allowUnfreePredicate = pkg:
       builtins.elem (lib.getName pkg) [
         # Add additional package names here
-      ]);
+      ];
 
-    environment.systemPackages = mkDefault (with pkgs; [
+    environment.systemPackages = with pkgs; [
       nix-output-monitor # nix output monitor
       papirus-icon-theme # Allows icons to be used in the system, like the login screen
-    ]);
+    ];
 
     programs = {
       git.enable = true;
@@ -58,9 +58,9 @@ in {
       appimage = {
         enable = mkDefault true;
         binfmt = mkDefault true; # NixOS-specific option
-        package = mkDefault (pkgs.appimage-run.override {
+        package = pkgs.appimage-run.override {
           extraPkgs = pkgs: [pkgs.ffmpeg pkgs.imagemagick];
-        });
+        };
       };
 
       fuse = {

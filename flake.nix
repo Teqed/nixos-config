@@ -160,27 +160,27 @@ The starlight on the Western Seas.
       nixpkgs.hostPlatform = nixpkgs.lib.mkDefault "x86_64-linux";
       home-manager.extraSpecialArgs = inheritSpecialArgs;
       home-manager.sharedModules = [
-        self.homeManagerModules.default
-        nix-index-database.hmModules.nix-index
-        plasma-manager.homeManagerModules.plasma-manager
+        self.homeManagerModules.default # My custom modules
+        nix-index-database.hmModules.nix-index # nix-index-database
+        plasma-manager.homeManagerModules.plasma-manager # plasma-manager
       ];
     };
-    # homeConfigurations = {
-    #   # home-manager --flake .#teq@somewhere
-    #   "teq@somewhere" = home-manager.lib.homeManagerConfiguration {
-    #     pkgs = nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
-    #     extraSpecialArgs = {inherit inputs outputs;};
-    #     modules = [
-    #       self.commonModules
-    #       self.homeManagerModules
-    #       nix-index-database.hmModules.nix-index
-    #       plasma-manager.homeManagerModules.plasma-manager
-    #       {
-    #         teq.home-manager.enable = true;
-    #         teq.nixpkgs = true;
-    #       }
-    #     ];
-    #   };
-    # };
+    homeConfigurations = {
+      # home-manager --flake .#teq@somewhere
+      "teq@somewhere" = home-manager.lib.homeManagerConfiguration {
+        pkgs = nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
+        extraSpecialArgs = {inherit inputs outputs;};
+        modules = [
+          self.homeManagerModules.default # My custom modules
+          nix-index-database.hmModules.nix-index # nix-index-database
+          {
+            teq.home-manager = {
+              enable = true;
+              fonts = false;
+            };
+          }
+        ];
+      };
+    };
   };
 }

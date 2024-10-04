@@ -35,7 +35,7 @@ in {
         ];
       };
 
-      kernelParams = mkDefault [
+      kernelParams = [
         "boot.shell_on_fail" # Drop to root shell on boot failure
         "quiet" # Silences boot messages
         "rd.systemd.show_status=false" # Silences successful systemd messages from the initrd
