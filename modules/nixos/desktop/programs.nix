@@ -5,8 +5,8 @@
   ...
 }: let
   cfg = config.teq.nixos.desktop;
-  vivaldi_policy = import ../../home-manager/sources/.config/vivaldi/policies/managed/defaultExtensions.json;
-  brave_policy = import ../../home-manager/sources/.config/brave/policies/managed/DisableBraveRewardsWalletAI.json;
+  vivaldi_policy = ../../home-manager/sources/.config/vivaldi/policies/managed/defaultExtensions.json;
+  brave_policy = ../../home-manager/sources/.config/brave/policies/managed/DisableBraveRewardsWalletAI.json;
 in {
   options.teq.nixos.desktop = {
     programs = lib.mkEnableOption "Teq's NixOS Desktop Program configuration defaults.";
