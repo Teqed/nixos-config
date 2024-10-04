@@ -230,10 +230,14 @@ in {
       defaultApplications = associations;
     };
 
-    home.sessionVariables = {
-      BROWSER = cfg.browser.command;
-      DEFAULT_BROWSER = cfg.browser.command;
-      TERMINAL = cfg.terminalEmulator.command;
+    home.sessionVariables = let
+      BROWSER_cmd = cfg.browser.command;
+      DEFAULT_BROWSER_cmd = cfg.browser.command;
+      TERMINAL_cmd = cfg.terminalEmulator.command;
+    in {
+      BROWSER = BROWSER_cmd;
+      DEFAULT_BROWSER = DEFAULT_BROWSER_cmd;
+      TERMINAL = TERMINAL_cmd;
     };
   };
 }
