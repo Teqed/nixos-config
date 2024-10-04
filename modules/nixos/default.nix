@@ -2,7 +2,7 @@ fromFlakes: let
   modulesPerFile = {
     kernel = import ./kernel.nix;
     nix-ld = import ./nix-ld.nix;
-    i18n_en_us_et = import ./i18n_en_us_et.nix;
+    locale = import ./locale.nix;
     boot = import ./boot.nix;
     programs = import ./programs.nix;
     services = import ./services.nix;

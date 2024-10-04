@@ -4,7 +4,6 @@
   ...
 }: let
   cfg = config.teq.home-manager;
-  inherit (lib) mkDefault mkForce;
 in {
   options.teq.home-manager = {
     files = lib.mkEnableOption "Teq's Home-Manager Files configuration defaults.";

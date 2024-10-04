@@ -13,21 +13,19 @@ in {
   config = lib.mkIf cfg.packages {
     nixpkgs.config.allowUnfreePredicate = pkg:
       builtins.elem (lib.getName pkg) [
-        # Add additional package names here
+        # TODO: Move all unfree packages here
       ];
     home.packages = with pkgs; [
       wezterm
-
-      source-sans-pro # 6MB
-      source-serif-pro # 5MB
-      source-code-pro # 2MB
-      dejavu_fonts # 10MB
       (nerdfonts.override {
         fonts = [
           "NerdFontsSymbolsOnly"
           "JetBrainsMono"
         ];
       })
+      inter
+      ibm-plex
+      dejavu_fonts # 10MB
       noto-fonts-lgc-plus # 11MB
       noto-fonts-cjk-sans # 62MB
       noto-fonts-cjk-serif # 54MB
@@ -53,7 +51,7 @@ in {
       kdePackages.kate # 1.4GB / 40MB (ktexteditor)
       # discord # discocss
       discord-krisp # 1.3GB / 300MB (mesa 800MB)
-      lan-mouse_git # 900MB / 10MB (libadwaita 900MB)
+      # lan-mouse_git # 900MB / 10MB (libadwaita 900MB)
       mgba # 800MB / 10MB (ffmpeg)
       notcurses # 700MB / 10MB (ffmpeg)
       solaar # 600MB / 30MB (gtk+3 600MB)

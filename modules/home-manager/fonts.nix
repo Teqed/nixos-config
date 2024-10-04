@@ -12,9 +12,9 @@ in {
   config = lib.mkIf cfg.fonts {
     fonts = {
       fontconfig.enable = mkForce true;
-
       fontconfig.defaultFonts = {
         serif = mkDefault [
+          "IBM Plex Serif"
           "Noto Serif"
           "Noto Serif CJK SC"
           "Noto Serif CJK TC"
@@ -23,8 +23,8 @@ in {
           "Noto Color Emoji"
           "Noto Emoji"
         ];
-
         sansSerif = mkDefault [
+          "Inter"
           "Noto Sans"
           "Noto Sans CJK SC"
           "Noto Sans CJK TC"
@@ -34,9 +34,8 @@ in {
           "Noto Color Emoji"
           "Noto Emoji"
         ];
-
         monospace = mkDefault [
-          # "JetBrainsMono Nerd Font"
+          "JetBrainsMono Nerd Font"
           "Noto Sans Mono"
           "Noto Sans Mono CJK SC"
           "Noto Sans Mono CJK TC"
@@ -46,7 +45,6 @@ in {
           "Noto Color Emoji"
           "Noto Emoji"
         ];
-
         emoji = mkDefault ["Noto Color Emoji" "Noto Emoji"];
       };
     };

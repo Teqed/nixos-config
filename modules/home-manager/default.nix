@@ -3,7 +3,7 @@ fromFlakes: let
   modulesPerFile = {
     fonts = import ./fonts.nix;
     nixcfg = import ./nixcfg.nix;
-    locale = import ./i18n_en_us_et.nix;
+    locale = import ./locale.nix;
     packages = import ./packages.nix;
     programs = import ./programs.nix;
     paths = import ./paths.nix;

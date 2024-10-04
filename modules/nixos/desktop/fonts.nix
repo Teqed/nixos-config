@@ -20,12 +20,6 @@ in {
       enableDefaultPackages = mkDefault true; # Enable a basic set of fonts providing several styles and families and reasonable coverage of Unicode.
 
       packages = with pkgs; [
-        inter
-        # source-sans-pro
-        # source-serif-pro
-        # source-code-pro
-        ibm-plex
-        dejavu_fonts
         (nerdfonts.override {
           fonts = [
             "NerdFontsSymbolsOnly"
@@ -40,6 +34,9 @@ in {
             "JetBrainsMono"
           ]; # 208MB
         })
+        inter
+        ibm-plex
+        dejavu_fonts
         noto-fonts-lgc-plus
         noto-fonts-cjk-sans
         noto-fonts-cjk-serif

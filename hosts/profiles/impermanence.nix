@@ -32,6 +32,7 @@ in {
   };
   # config = lib.mkIf cfg.impermanence {
   config = {
+    cfg.impermanence.enable = true; # Allows other modules to check if impermanence is enabled
     fileSystems."/" = {
       device = "none";
       fsType = "tmpfs";

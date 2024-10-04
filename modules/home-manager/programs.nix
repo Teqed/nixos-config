@@ -5,6 +5,7 @@
   ...
 }: let
   cfg = config.teq.home-manager;
+  XDG_CONFIG_HOME = "${config.xdg.configHome}";
   yaziFlavors = pkgs.fetchFromGitHub {
     owner = "yazi-rs";
     repo = "flavors";
@@ -55,17 +56,32 @@ in {
         historyFile = lib.mkDefault "$HOME/.local/share/history/bash_history"; # "${config.xdg.dataHome}/zsh/zsh_history"
         historyFileSize = lib.mkDefault 1000000;
         historySize = lib.mkDefault 1000000;
-        historyIgnore = lib.mkDefault ["rm *" "pkill *" "ls" "cd" "exit"];
+        # Ignore some controlling instructions
+        # HISTIGNORE is a colon-delimited list of patterns which should be excluded.
+        # The '&' is a special pattern which suppresses duplicate entries.
+        # export HISTIGNORE=$'[ \t]*:&:[fb]g:exit'
+        historyIgnore = lib.mkDefault ["[ \t]*" "&" "[fb]g" "rm *" "pkill *" "ls" "cd" "exit"];
         # blesh, a full-featured line editor written in pure Bash
         initExtra = lib.mkBefore ''
           source ${pkgs.blesh}/share/blesh/ble.sh
+          set -h # Enable 'hash' builtin
+          source "${XDG_CONFIG_HOME}/bash/functions.sh"; # Functions
+          source "${XDG_CONFIG_HOME}/bash/prompt.bash" ; # Set the PS1 prompt for interactive shells
+          source "${XDG_CONFIG_HOME}/bash/aliases.sh" # Aliases
+          source "${XDG_CONFIG_HOME}/bash/banner.sh" ; # Display welcome banner
         '';
-        # interactiveShellInit = "";
-        # loginShellInit = "";
-        # shellInit = "";
         # shellAliases = { };
-        # functions = { };
-        # plugins = [ ];
+        shellOptions = [
+          "checkjobs"
+          "checkwinsize" # check the window size after each command and, if necessary, update the values of LINES and COLUMNS.
+          "globstar" # If set, the pattern "**" used in a pathname expansion context will match all files and zero or more directories and subdirectories.
+          "cdspell" # If set, minor errors in the spelling of a directory component in a cd command will be corrected. The errors checked for are transposed characters, a missing character, and a character too many.
+          "dirspell" # If set, Bash attempts spelling correction on directory names during word completion if the directory name initially supplied does not exist.
+          "dotglob" # If set, Bash includes filenames beginning with a ‘.’ in the results of filename expansion.
+          "extglob" # If set, the extended pattern matching features are enabled.
+          "nocaseglob" # Use case-insensitive filename globbing
+          "histappend" # Make bash append rather than overwrite the history on disk
+        ];
       };
       # programs.tmux = {
       #   enable = true;
