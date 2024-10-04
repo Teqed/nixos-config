@@ -13,6 +13,7 @@
     (modulesPath + "/installer/cd-dvd/installation-cd-graphical-base.nix")
   ];
   config = {
+    programs.plasma.enable = true; # Sets the theming for Plasma
     # teq.nixos.impermanence.label_nixos = label_nixos;
     # teq.nixos.impermanence.label_boot = label_boot;
     nixpkgs.config.allowBroken = true;

@@ -40,7 +40,7 @@ in {
       packages = lib.mkDefault true;
       programs = lib.mkDefault true;
       paths = lib.mkDefault true;
-      # theming = lib.mkDefault false; # plasma-manager constantly overrides defaults
+      theming = lib.mkDefault true;
       mime-apps.enable = lib.mkDefault true;
       files = lib.mkDefault true;
     };

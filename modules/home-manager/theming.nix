@@ -10,25 +10,32 @@ in {
     theming = lib.mkEnableOption "Teq's NixOS Theming configuration defaults.";
   };
   config = lib.mkIf cfg.theming {
-    # home = {
-    #   pointerCursor = {
-    #     name = lib.mkDefault "Bibata-Modern-Classic";
-    #     package = lib.mkDefault pkgs.bibata-cursors;
-    #     gtk.enable = lib.mkDefault true;
-    #     x11.enable = lib.mkDefault true;
-    #     x11.defaultCursor = lib.mkDefault "Bibata-Modern-Classic";
-    #   };
-    # };
-    # gtk = {
-    #   enable = lib.mkDefault true;
-    #   cursorTheme.name = lib.mkDefault "Bibata-Modern-Classic";
-    #   # cursorTheme.size = lib.mkDefault 24; # Default 16
-    #   # font = "Noto Sans,  10"; null or (submodule)
-    #   # iconTheme = "Papirus-Dark"; # null or (submodule)
-    # };
+    home = {
+      pointerCursor = {
+        name = lib.mkDefault "Bibata-Modern-Classic";
+        package = lib.mkDefault pkgs.bibata-cursors;
+        gtk.enable = lib.mkDefault true;
+        x11.enable = lib.mkDefault true;
+        x11.defaultCursor = lib.mkDefault "Bibata-Modern-Classic";
+      };
+    };
+    gtk = {
+      enable = lib.mkDefault true;
+      cursorTheme.name = lib.mkDefault "Bibata-Modern-Classic";
+      # cursorTheme.size = lib.mkDefault 24; # Default 16
+      font = {
+        name = "Inter";
+        size = 10;
+        package = pkgs.inter;
+      };
+      iconTheme = {
+        name = "Papirus-Dark";
+        package = pkgs.papirus-icon-theme;
+      };
+    };
 
     programs.plasma = {
-      enable = true; # Set initial state
+      enable = false; # Only needs to be enabled on fresh+live installs
       overrideConfig = false; # TODO: Make Plasma more declarative
 
       fonts = {
@@ -101,7 +108,7 @@ in {
                     then "${config.home.sessionVariables.TERMINAL}"
                     else "org.kde.konsole";
                 in [
-                  "applications:${terminal}.desktop"
+                  # "applications:${terminal}.desktop"
                   "preferred://filemanager"
                   # "applications:krita.desktop" # TODO: Properly set
                   "preferred://browser" # TODO: Properly set
