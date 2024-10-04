@@ -30,6 +30,8 @@ The starlight on the Western Seas.
       url = "github:MOIS3Y/sddmSugarCandy4Nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    disko.url = "github:nix-community/disko";
+    disko.inputs.nixpkgs.follows = "nixpkgs";
   };
   outputs = {
     self,
@@ -43,6 +45,7 @@ The starlight on the Western Seas.
     nixpkgs-wayland,
     nix-index-database,
     plasma-manager,
+    disko,
     ...
   } @ inputs: let
     inherit (self) outputs;
@@ -56,6 +59,7 @@ The starlight on the Western Seas.
     forAllSystems = nixpkgs.lib.genAttrs systems; # This is a function that generates an attribute by calling a function you pass to it, with each system as an argument
     inheritSpecialArgs = {
       inherit
+        self
         inputs
         outputs
         nixos-hardware
@@ -121,6 +125,18 @@ The starlight on the Western Seas.
     # # nixosConfigurations."<hostname>".config.system.build.toplevel must be a derivation
     # nixosConfigurations."<hostname>" = {};
     nixosConfigurations = {
+      eris = nixpkgs.lib.nixosSystem {
+        specialArgs = inheritSpecialArgs;
+        modules = [
+          ./hosts/eris.nix
+          self.nixosModules.default
+          chaotic.nixosModules.default
+          home-manager.nixosModules.home-manager
+          nix-flatpak.nixosModules.nix-flatpak
+          self.homeManagerConfig
+          disko.nixosModules.disko
+        ];
+      };
       # NixOS configuration entrypoint. Available through 'nixos-rebuild --flake .#sedna'
       sedna = nixpkgs.lib.nixosSystem {
         specialArgs = inheritSpecialArgs;

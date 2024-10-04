@@ -1,7 +1,5 @@
 {...}: {
   imports = [
-    ./profiles/common.nix
-    ./profiles/impermanence.nix
     ./profiles/vm.nix
   ];
   config = {
