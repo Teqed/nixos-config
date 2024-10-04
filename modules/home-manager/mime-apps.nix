@@ -231,13 +231,13 @@ in {
     };
 
     home.sessionVariables = let
-      BROWSER_cmd = cfg.browser.command;
-      DEFAULT_BROWSER_cmd = cfg.browser.command;
-      TERMINAL_cmd = cfg.terminalEmulator.command;
+      browser_command = cfg.browser.command;
+      default_broswer_command = cfg.browser.command;
+      terminal_command = cfg.terminalEmulator.command;
     in {
-      BROWSER = BROWSER_cmd;
-      DEFAULT_BROWSER = DEFAULT_BROWSER_cmd;
-      TERMINAL = TERMINAL_cmd;
+      BROWSER = browser_command;
+      DEFAULT_BROWSER = default_broswer_command;
+      TERMINAL = terminal_command;
     };
   };
 }
