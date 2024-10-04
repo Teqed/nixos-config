@@ -20,7 +20,7 @@
     command = mkPreferenceCmdOption name commandDefault;
     desktop = mkPreferenceDesktopOption name desktopDefault;
   };
-  cfg = config.teq.home-manager;
+  cfg = config.teq.home-manager.mime-apps;
 in {
   options.teq.home-manager.mime-apps = {
     enable = lib.mkEnableOption "Teq's NixOS Mime-Apps configuration defaults.";
@@ -35,7 +35,7 @@ in {
     emailClient = mkPreferenceOptions "email client" "brave" "brave.desktop"; # TODO: Change to Thunderbird
     launcher.command = mkPreferenceCmdOption "launcher" "krunner";
   };
-  config = lib.mkIf cfg.mime-apps.enable {
+  config = lib.mkIf cfg.enable {
     xdg.mimeApps = let
       browser = cfg.browser.desktop;
       textEditor = cfg.textEditor.desktop;
