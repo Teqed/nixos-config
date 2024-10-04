@@ -34,27 +34,27 @@ in {
       fonts = {
         general = {
           family = "Inter";
-          size = 10;
+          pointSize = 10;
         };
         fixedWidth = {
           family = "JetBrainsMono Nerd Font";
-          size = 10;
+          pointSize = 10;
         };
         small = {
           family = "Inter";
-          size = 8;
+          pointSize = 8;
         };
         toolbar = {
           family = "Inter Display";
-          size = 10;
+          pointSize = 10;
         };
         menu = {
           family = "Inter Display";
-          size = 10;
+          pointSize = 10;
         };
         windowTitle = {
           family = "Inter Display";
-          size = 10;
+          pointSize = 10;
         };
       };
       workspace = {
