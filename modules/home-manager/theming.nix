@@ -35,7 +35,7 @@ in {
     };
 
     programs.plasma = {
-      enable = false; # Only needs to be enabled on fresh+live installs
+      enable = lib.mkDefault false; # Only needs to be enabled on fresh+live installs
       overrideConfig = false; # TODO: Make Plasma more declarative
 
       fonts = {
