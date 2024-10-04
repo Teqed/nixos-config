@@ -8,7 +8,7 @@ fromFlakes: let
     programs = import ./programs.nix;
     paths = import ./paths.nix;
     theming = import ./theming.nix;
-    # mime-apps = import ./mime-apps.nix;
+    mime-apps = import ./mime-apps.nix;
     files = import ./files.nix;
   };
   default = {...}: {

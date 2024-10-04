@@ -45,8 +45,8 @@ in {
     home.file.".config/bash/functions.d/pecho.bash".source = ./sources/.config/bash/functions.d/pecho.bash;
     # .config/bash/functions.d/ttitle.bash
     home.file.".config/bash/functions.d/ttitle.bash".source = ./sources/.config/bash/functions.d/ttitle.bash;
-    # .config/vivaldi/policies/managed/defaultExtensions.json
-    home.file.".config/vivaldi/policies/managed/defaultExtensions.json".source = ./sources/.config/vivaldi/policies/managed/defaultExtensions.json;
+    # .config/chromium/policies/managed/defaultExtensions.json
+    home.file.".config/chromium/policies/managed/defaultExtensions.json".source = ./sources/.config/chromium/policies/managed/defaultExtensions.json;
     # .config/brave/policies/managed/DisableBraveRewardsWalletAI.json
     home.file.".config/brave/policies/managed/DisableBraveRewardsWalletAI.json".source = ./sources/.config/brave/policies/managed/DisableBraveRewardsWalletAI.json;
   };

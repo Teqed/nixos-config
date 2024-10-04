@@ -35,13 +35,13 @@ in {
   config = lib.mkIf cfg.enable {
     home.stateVersion = "24.05"; # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
     teq.home-manager = {
-      # fonts = lib.mkDefault false;
+      fonts = lib.mkDefault true;
       locale = lib.mkDefault true;
       packages = lib.mkDefault true;
       programs = lib.mkDefault true;
       paths = lib.mkDefault true;
       # theming = lib.mkDefault false; # plasma-manager constantly overrides defaults
-      # mime-apps.enable = lib.mkDefault true;
+      mime-apps.enable = lib.mkDefault true;
       files = lib.mkDefault true;
     };
     nixpkgs = lib.mkIf (!osConfig.home-manager.useGlobalPkgs) {

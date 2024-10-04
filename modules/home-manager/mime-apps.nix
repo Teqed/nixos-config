@@ -24,15 +24,15 @@
 in {
   options.teq.home-manager.mime-apps = {
     enable = lib.mkEnableOption "Teq's NixOS Mime-Apps configuration defaults.";
-    browser = mkPreferenceOptions "browser" "firefox" "firefox.desktop";
-    terminalEmulator = mkPreferenceOptions "terminal emulator" "wezterm" "wezterm.desktop";
-    textEditor = mkPreferenceOptions "editor" "helix" "helix.desktop";
+    browser = mkPreferenceOptions "browser" "brave" "brave.desktop"; # TODO: Add commandline browser? (lynx, w3m, etc)
+    terminalEmulator = mkPreferenceOptions "terminal emulator" "wezterm" "wezterm.desktop"; # TODO: Change to Foot? Ghostty when released later this year
+    textEditor = mkPreferenceOptions "editor" "kate" "kate.desktop"; # TODO: Change to Codium? or other dedicated editor
     fileManager = mkPreferenceOptions "file manager" "dolphin" "dolphin.desktop";
     imageViewer = mkPreferenceOptions "image viewer" "gwenview" "gwenview.desktop";
     mediaPlayer = mkPreferenceOptions "media player" "elisa" "elisa.desktop";
     archiveManager = mkPreferenceOptions "archive manager" "ark" "org.kde.ark.desktop";
-    documentViewer = mkPreferenceOptions "document viewer" "firefox" "firefox.desktop";
-    emailClient = mkPreferenceOptions "email client" "firefox" "firefox.desktop";
+    documentViewer = mkPreferenceOptions "document viewer" "brave" "brave.desktop"; # TODO: Change to Okular? or other dedicated docviewer
+    emailClient = mkPreferenceOptions "email client" "brave" "brave.desktop"; # TODO: Change to Thunderbird
     launcher.command = mkPreferenceCmdOption "launcher" "krunner";
   };
   config = lib.mkIf cfg.mime-apps.enable {

@@ -5,7 +5,7 @@
   ...
 }: let
   cfg = config.teq.nixos.desktop;
-  vivaldi_policy = ../../home-manager/sources/.config/vivaldi/policies/managed/defaultExtensions.json;
+  chromium_policy = ../../home-manager/sources/.config/chromium/policies/managed/defaultExtensions.json;
   brave_policy = ../../home-manager/sources/.config/brave/policies/managed/DisableBraveRewardsWalletAI.json;
 in {
   options.teq.nixos.desktop = {
@@ -46,7 +46,8 @@ in {
 
     environment.sessionVariables.NIXOS_OZONE_WL = "1"; # Use the Ozone Wayland support in several Electron apps
 
-    environment.etc."vivaldi/policies/managed/defaultExtensions.json".source = vivaldi_policy;
+    environment.etc."vivaldi/policies/managed/defaultExtensions.json".source = chromium_policy;
+    environment.etc."chromium/policies/managed/defaultExtensions.json".source = chromium_policy;
     environment.etc."brave/policies/managed/DisableBraveRewardsWalletAI.json".source = brave_policy;
   };
 }
