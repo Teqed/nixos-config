@@ -28,9 +28,35 @@ in {
     # };
 
     programs.plasma = {
-      enable = true;
-      # overrideConfig = true;
+      enable = true; # Set initial state
+      overrideConfig = false; # TODO: Make Plasma more declarative
 
+      fonts = {
+        general = {
+          family = "Inter";
+          size = 10;
+        };
+        fixedWidth = {
+          family = "JetBrainsMono Nerd Font";
+          size = 10;
+        };
+        small = {
+          family = "Inter";
+          size = 8;
+        };
+        toolbar = {
+          family = "Inter Display";
+          size = 10;
+        };
+        menu = {
+          family = "Inter Display";
+          size = 10;
+        };
+        windowTitle = {
+          family = "Inter Display";
+          size = 10;
+        };
+      };
       workspace = {
         lookAndFeel = "org.kde.breezedark.desktop";
         cursor = {
