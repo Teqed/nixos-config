@@ -163,11 +163,24 @@ The starlight on the Western Seas.
         self.homeManagerModules.default
         nix-index-database.hmModules.nix-index
         plasma-manager.homeManagerModules.plasma-manager
-        {
-          teq.home-manager.enable = true;
-          home.stateVersion = "24.05"; # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
-        }
       ];
     };
+    # homeConfigurations = {
+    #   # home-manager --flake .#teq@somewhere
+    #   "teq@somewhere" = home-manager.lib.homeManagerConfiguration {
+    #     pkgs = nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
+    #     extraSpecialArgs = {inherit inputs outputs;};
+    #     modules = [
+    #       self.commonModules
+    #       self.homeManagerModules
+    #       nix-index-database.hmModules.nix-index
+    #       plasma-manager.homeManagerModules.plasma-manager
+    #       {
+    #         teq.home-manager.enable = true;
+    #         teq.nixpkgs = true;
+    #       }
+    #     ];
+    #   };
+    # };
   };
 }

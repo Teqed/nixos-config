@@ -2,6 +2,7 @@
   # inputs,
   lib,
   config,
+  osConfig,
   ...
 }:
 with lib; let
@@ -30,20 +31,9 @@ with lib; let
 in {
   options.teq.home-manager = {
     enable = lib.mkEnableOption "Enable Teq's Home-Manager configuration defaults.";
-    allowUnfree = lib.mkEnableOption "Allow unfree software.";
   };
   config = lib.mkIf cfg.enable {
-    teq.home-manager = {
-      fonts = lib.mkDefault true;
-      locale = lib.mkDefault true;
-      packages = lib.mkDefault true;
-      programs = lib.mkDefault true;
-      paths = lib.mkDefault true;
-      theming = lib.mkDefault false; # plasma-manager constantly overrides defaults
-      # mime-apps.enable = lib.mkDefault true;
-      files = lib.mkDefault true;
-    };
-    nixpkgs = lib.mkIf cfg.allowUnfree {
+    nixpkgs = lib.mkIf (!osConfig.home-manager.useGlobalPkgs) {
       config = {
         allowUnfree = true;
       };

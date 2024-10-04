@@ -205,9 +205,9 @@ in {
             directory = ".local/share/keyrings";
             mode = "0700";
           }
-          # ".local/state"
-          ".local/state/wireplumber"
-          ".local/state/yazi"
+          ".local/state"
+          # ".local/state/wireplumber"
+          # ".local/state/yazi"
           ".local/user-dirs"
           ".mozilla"
           {
@@ -282,16 +282,16 @@ in {
           # ".local/share/user-places.xbel"
           # ".local/share/user-places.xbel.bak"
           # ".local/share/user-places.xbel.tbcache"
-          ".local/state/arkstaterc"
-          ".local/state/dolphinstaterc"
-          ".local/state/katestaterc"
-          ".local/state/kfontviewstaterc"
-          ".local/state/khelpcenterstaterc"
-          ".local/state/konsolestaterc"
-          ".local/state/lesshst"
-          ".local/state/plasmashellstaterc"
-          ".local/state/systemsettingsstaterc"
-          ".local/state/xdg-desktop-portal-kdestaterc"
+          # ".local/state/arkstaterc"
+          # ".local/state/dolphinstaterc"
+          # ".local/state/katestaterc"
+          # ".local/state/kfontviewstaterc"
+          # ".local/state/khelpcenterstaterc"
+          # ".local/state/konsolestaterc"
+          # ".local/state/lesshst"
+          # ".local/state/plasmashellstaterc"
+          # ".local/state/systemsettingsstaterc"
+          # ".local/state/xdg-desktop-portal-kdestaterc"
         ];
         # allowOther = true;
       };

@@ -17,28 +17,43 @@ in {
   };
   config = {
     teq.nixos = {
+      # amd = lib.mkDefault true;
       boot = lib.mkDefault true;
       locale = lib.mkDefault true;
+      nix-ld = lib.mkDefault true;
+      nixcfg = lib.mkDefault true;
+      nixpkgs = lib.mkDefault true;
+      programs = lib.mkDefault true;
+      services = lib.mkDefault true;
       kernel.enable = lib.mkDefault true;
       kernel.cachyos = lib.mkDefault true;
       networking.enable = lib.mkDefault true;
       networking.blocking = lib.mkDefault true;
-      nix-ld = lib.mkDefault true;
-      programs = lib.mkDefault true;
-      services = lib.mkDefault true;
       # desktop = lib.mkDefault true; # Optional for headless servers.
-      # amd = lib.mkDefault true;
-      nixcfg = lib.mkDefault true;
-      nixpkgs = lib.mkDefault true;
     };
     networking.networkmanager.enable = mkDefault true;
     system.stateVersion = "24.05"; # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
-    home-manager.backupFileExtension = "hm-backup";
+    home-manager.backupFileExtension = lib.mkDefault "hm-backup";
     home-manager.useGlobalPkgs = lib.mkDefault true;
-    home-manager.users.teq = {home.stateVersion = "24.05";}; # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
+    home-manager.useUserPackages = lib.mkDefault true;
+    # TODO: For each user, create a home-manager configuration.
     # home-manager.users = lib.forEach userinfo.users (u: {
     #   "${u}" = {};
     # });
+    home-manager.users.teq = {
+      home.stateVersion = "24.05"; # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
+      teq.home-manager = {
+        enable = true;
+        fonts = lib.mkDefault false;
+        locale = lib.mkDefault false;
+        packages = lib.mkDefault false;
+        programs = lib.mkDefault false;
+        paths = lib.mkDefault false;
+        # theming = lib.mkDefault false; # plasma-manager constantly overrides defaults
+        # mime-apps.enable = lib.mkDefault true;
+        files = lib.mkDefault false;
+      };
+    };
     users.users = lib.mkMerge (
       [
         {
