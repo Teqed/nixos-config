@@ -27,6 +27,7 @@
   XDG_OPT_HOME = "${XDG_LOCAL_HOME}/opt"; # ~/.local/opt
   XDG_GAMES_HOME = "${XDG_OPT_HOME}/games"; # ~/.local/opt/games
   XDG_MISC_DIR = "${XDG_USER_DIRS}/Misc"; # ~/.local/user-dirs/Misc
+  XDG_REPOS_DIR = "${XDG_USER_DIRS}/Repos"; # ~/.local/user-dirs/Repos
   XDG_SCREENSHOTS_DIR = "${XDG_USER_DIRS}/Pictures/Screenshots"; # ~/.local/user-dirs/Pictures/Screenshots
   global_variables = {
     # NAME = "Timothy Quilling"; # Used by: ??? dpkg-buildpackage (unless overridden by $DEBFULLNAME), git (unless overridden by 'user.name'), hg (via ~/.hgrc 'ui.username'), makepkg (via ~/.makepkg.conf $PACKAGER)
@@ -40,6 +41,7 @@
     XDG_OPT_HOME = XDG_OPT_HOME; # ~/.local/opt
     XDG_USER_DIRS = XDG_USER_DIRS; # ~/.local/user-dirs
     XDG_MISC_DIR = XDG_MISC_DIR; # ~/.local/user-dirs/Misc
+    XDG_REPOS_DIR = XDG_REPOS_DIR; # ~/.local/user-dirs/Repos
     XDG_SCREENSHOTS_DIR = XDG_SCREENSHOTS_DIR; # ~/.local/user-dirs/Pictures/Screenshots
     # XDG_RUNTIME_DIR = XDG_RUNTIME_DIR; # /run/user/$UID
     # ENVVAR config
@@ -191,6 +193,7 @@ in {
           XDG_OPT_HOME = XDG_OPT_HOME; # ~/.local/opt
           XDG_USER_DIRS = XDG_USER_DIRS; # ~/.local/user-dirs
           XDG_MISC_DIR = XDG_MISC_DIR; # ~/.local/user-dirs/Misc
+          XDG_REPOS_DIR = XDG_REPOS_DIR; # ~/.local/user-dirs/Repos
           XDG_SCREENSHOTS_DIR = XDG_SCREENSHOTS_DIR; # ~/.local/user-dirs/Pictures/Screenshots
           # XDG_RUNTIME_DIR = XDG_RUNTIME_DIR; # /run/user/$UID
         };
