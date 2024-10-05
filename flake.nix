@@ -149,6 +149,17 @@ The starlight on the Western Seas.
           self.homeManagerConfig
         ];
       };
+      thoughtful = nixpkgs.lib.nixosSystem {
+        specialArgs = inheritSpecialArgs;
+        modules = [
+          ./hosts/thoughtful.nix
+          self.nixosModules.default
+          chaotic.nixosModules.default
+          home-manager.nixosModules.home-manager
+          nix-flatpak.nixosModules.nix-flatpak
+          self.homeManagerConfig
+        ];
+      };
     };
 
     # # Used by `nix develop .#<name>`
