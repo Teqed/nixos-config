@@ -28,7 +28,7 @@ in {
       hunspell
       hunspellDicts.en_US
       # hunspellDictsChromium.en_US # Not usable as a package
-      kdePackages.sonnet
+      libsForQt5.sonnet
       kdePackages.tokodon
       # kdePackages.kdeconnect-kde # Conflicts with kdeconnect wrapped
       kdePackages.wayland-protocols
