@@ -10,7 +10,7 @@
     owner = "yazi-rs";
     repo = "flavors";
     rev = "main";
-    sha256 = "sha256-W56r4LMepQj0vW1tayx0qA43ZhZEQ09ukZ8IlQMFMe0=";
+    sha256 = "sha256-VSlays/D5FtiI8vsj2Eu19lxY8Mkgu0+7K6OAhzc+30=";
   };
 in {
   options.teq.home-manager = {
