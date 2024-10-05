@@ -49,5 +49,7 @@ in {
     home.file.".config/chromium/policies/managed/defaultExtensions.json".source = ./sources/.config/chromium/policies/managed/defaultExtensions.json;
     # .config/brave/policies/managed/DisableBraveRewardsWalletAI.json
     home.file.".config/brave/policies/managed/DisableBraveRewardsWalletAI.json".source = ./sources/.config/brave/policies/managed/DisableBraveRewardsWalletAI.json;
+    # home.file.".local/share/hunspell/en_US.aff".source = "${pkgs.hunspellDicts.en_US}/share/hunspell/en_US.aff";
+    # home.file.".local/share/hunspell/en_US.dic".source = "${pkgs.hunspellDicts.en_US}/share/hunspell/en_US.dic";
   };
 }
