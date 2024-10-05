@@ -30,7 +30,7 @@ in {
       # hunspellDictsChromium.en_US # Not usable as a package
       kdePackages.sonnet
       kdePackages.tokodon
-      kdePackages.kdeconnect-kde
+      # kdePackages.kdeconnect-kde # Conflicts with kdeconnect wrapped
       kdePackages.wayland-protocols
       wezterm
       (nerdfonts.override {
