@@ -26,7 +26,8 @@ in {
       aspellDicts.en-computers
       aspellDicts.en-science
       hunspell
-      hunspellDictsChromium.en_US
+      hunspellDicts.en_US
+      # hunspellDictsChromium.en_US # Not usable as a package
       kdePackages.sonnet
       kdePackages.tokodon
       kdePackages.kdeconnect-kde
