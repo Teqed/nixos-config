@@ -15,6 +15,22 @@ in {
         # TODO: Move all unfree packages here
       ];
     home.packages = with pkgs; [
+      logiops
+      ltex-ls
+      diction
+      nuspell
+      aspell
+      enchant
+      gspell
+      aspellDicts.en
+      aspellDicts.en-computers
+      aspellDicts.en-science
+      hunspell
+      hunspellDictsChromium.en_US
+      kdePackages.sonnet
+      kdePackages.tokodon
+      kdePackages.kdeconnect-kde
+      kdePackages.wayland-protocols
       wezterm
       (nerdfonts.override {
         fonts = [
