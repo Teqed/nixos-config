@@ -55,8 +55,6 @@ in {
       diction
       nuspell
       aspell
-      enchant
-      gspell
       aspellDicts.en
       aspellDicts.en-computers
       aspellDicts.en-science
