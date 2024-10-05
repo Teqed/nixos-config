@@ -15,6 +15,7 @@ in {
         # TODO: Move all unfree packages here
       ];
     home.packages = with pkgs; [
+      lsof # Lsof lists file information about files opened by processes
       kdePackages.tokodon
       # kdePackages.kdeconnect-kde # Conflicts with kdeconnect wrapped
       kdePackages.wayland-protocols
