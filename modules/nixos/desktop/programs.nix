@@ -28,6 +28,7 @@ in {
     };
 
     environment.systemPackages = with pkgs; [
+      solaar # 600MB / 30MB (gtk+3 600MB)
       papirus-icon-theme # Allows icons to be used in the system, like the login screen
       (pkgs.writeShellScriptBin "qemu-system-x86_64-uefi" ''
         qemu-system-x86_64 \

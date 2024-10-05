@@ -56,7 +56,6 @@ in {
       # lan-mouse_git # 900MB / 10MB (libadwaita 900MB)
       mgba # 800MB / 10MB (ffmpeg)
       notcurses # 700MB / 10MB (ffmpeg)
-      solaar # 600MB / 30MB (gtk+3 600MB)
       discover-overlay # 600MB / 15MB (gtk+3, gtk-layer-shell)
       bash-language-server # 300MB / 200MB (nodejs 200MB)
       zed-editor_git # 230MB / 160MB
