@@ -142,6 +142,7 @@ in {
       directories = [
         "/etc/auth"
         "/etc/nixos"
+        "/etc/ssh"
         "/var/log"
         "/var/lib/bluetooth"
         "/var/lib/nixos"
@@ -158,10 +159,10 @@ in {
       ];
       files = [
         "/etc/machine-id" # machine-id is used by systemd for the journal
-        "/etc/ssh/ssh_host_rsa_key"
-        "/etc/ssh/ssh_host_rsa_key.pub"
-        "/etc/ssh/ssh_host_ed25519_key"
-        "/etc/ssh/ssh_host_ed25519_key.pub"
+        # "/etc/ssh/ssh_host_rsa_key"
+        # "/etc/ssh/ssh_host_rsa_key.pub"
+        # "/etc/ssh/ssh_host_ed25519_key"
+        # "/etc/ssh/ssh_host_ed25519_key.pub"
         "/etc/adjtime" # Contains descriptive information about the hardware mode clock setting and clock drift factor. The file is read and write by hwclock.
         {
           file = "/var/keys/secret_file";
