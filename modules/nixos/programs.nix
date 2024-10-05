@@ -35,6 +35,19 @@ in {
       ];
 
     environment.systemPackages = with pkgs; [
+      logiops
+      ltex-ls
+      diction
+      nuspell
+      aspell
+      enchant
+      gspell
+      aspellDicts.en
+      aspellDicts.en-computers
+      aspellDicts.en-science
+      hunspell
+      hunspellDicts.en_US
+      # hunspellDictsChromium.en_US # Not usable as a package
       nix-output-monitor # nix output monitor
     ];
 

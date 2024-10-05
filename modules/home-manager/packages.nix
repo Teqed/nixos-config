@@ -15,20 +15,6 @@ in {
         # TODO: Move all unfree packages here
       ];
     home.packages = with pkgs; [
-      logiops
-      ltex-ls
-      diction
-      nuspell
-      aspell
-      enchant
-      gspell
-      aspellDicts.en
-      aspellDicts.en-computers
-      aspellDicts.en-science
-      hunspell
-      hunspellDicts.en_US
-      # hunspellDictsChromium.en_US # Not usable as a package
-      libsForQt5.sonnet
       kdePackages.tokodon
       # kdePackages.kdeconnect-kde # Conflicts with kdeconnect wrapped
       kdePackages.wayland-protocols
