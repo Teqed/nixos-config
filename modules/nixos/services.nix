@@ -21,6 +21,7 @@ in {
       '';
     };
     services = {
+      languagetool.enable = mkDefault true;
       samba = {
         enable = mkDefault true; # Samba, the SMB/CIFS protocol.
         openFirewall = mkDefault true;
