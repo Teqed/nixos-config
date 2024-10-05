@@ -34,6 +34,7 @@ in {
   };
   config = lib.mkIf cfg.enable {
     home.stateVersion = "24.05"; # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
+    home.extraOutputsToInstall = ["info" "man" "share" "icons" "doc"];
     teq.home-manager = {
       fonts = lib.mkDefault true;
       locale = lib.mkDefault true;
