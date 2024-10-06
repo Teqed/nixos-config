@@ -225,6 +225,7 @@ in {
           # "VirtualBox VMs"
         ];
         files = [
+          ".face.icon"
           ".gtkrc-2.0"
           ".screenrc"
           # ".config/akregatorrc"
