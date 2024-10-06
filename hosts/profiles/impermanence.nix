@@ -312,7 +312,9 @@ in {
 # nixos-generate-config --root /mnt/tmpfs # Inspect boot configuration
 # mkpasswd -m bcrypt -s >> /mnt/tmpfs/persist/etc/auth/root
 # mkpasswd -m bcrypt -s >> /mnt/tmpfs/persist/etc/auth/teq
-# nixos-install --root /mnt/tmpfs --flake https://github.com/Teqed/nixos-config#thoughtful --no-root-passwd --option 'extra-substituters' 'https://chaotic-nyx.cachix.org/' --option extra-trusted-public-keys "chaotic-nyx.cachix.org-1:HfnXSw4pj95iI/n17rIDy40agHj12WfF+Gqk6SonIT8="
-# nixos-install --root /mnt/tmpfs --flake .#sedna --no-root-passwd --option 'extra-substituters' 'https://chaotic-nyx.cachix.org/' --option extra-trusted-public-keys "chaotic-nyx.cachix.org-1:HfnXSw4pj95iI/n17rIDy40agHj12WfF+Gqk6SonIT8="
+# git clone https://github.com/Teqed/nixos-config; cd nixos-config
+# # enable plasma theming for intial load
+# nixos-install --root /mnt/tmpfs --flake .#thoughtful --no-root-passwd
+# --option 'extra-substituters' 'https://chaotic-nyx.cachix.org/' --option extra-trusted-public-keys "chaotic-nyx.cachix.org-1:HfnXSw4pj95iI/n17rIDy40agHj12WfF+Gqk6SonIT8="
 # reboot
 
