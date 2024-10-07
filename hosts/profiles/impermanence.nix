@@ -222,6 +222,7 @@ in {
             directory = ".ssh";
             mode = "0700";
           }
+          ".vscode-oss"
           # "VirtualBox VMs"
         ];
         files = [
