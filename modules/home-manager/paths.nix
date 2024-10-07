@@ -53,7 +53,7 @@
     MOAR = "--statusbar=bold --no-linenumbers";
     DICPATH = "/run/current-system/sw/share/hunspell";
     # General applications / tools
-    INPUTRC = "${XDG_CONFIG_HOME}/readline/inputrc";
+    INPUTRC = lib.mkForce "${XDG_CONFIG_HOME}/readline/inputrc";
     # GTK2_RC_FILES = lib.mkForce "${XDG_CONFIG_HOME}/gtk-2.0/gtkrc"; # Override upstream home-manager/modules/misc/gtk.nix
     XCOMPOSEFILE = "${XDG_CONFIG_HOME}/X11/XCompose"; # ~/.config/X11/XCompose
     VIMINIT = ":so ${XDG_CONFIG_HOME}/vim/.vimrc"; # ~/.vimrc
