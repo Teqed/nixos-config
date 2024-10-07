@@ -119,16 +119,16 @@ in {
       };
       vscode = {
         enable = lib.mkDefault true; # 1.44GB / 400MB (mesa 800MB)
-        package = lib.mkDefault pkgs.vscodium;
+        package = lib.mkDefault pkgs.vscodium-fhs;
         # enableUpdateCheck = lib.mkDefault false;
         # enableExtensionUpdateCheck = lib.mkDefault false;
-        userSettings = {
-          "window.dialogStyle" = "custom";
-          "window.customTitleBarVisibility" = "auto";
-          "window.titleBarStyle" = "custom";
-          "nix.enableLanguageServer" = true;
-          "nix.serverPath" = "nixd";
-        };
+        # userSettings = {
+        #   "window.dialogStyle" = "custom";
+        #   "window.customTitleBarVisibility" = "auto";
+        #   "window.titleBarStyle" = "custom";
+        #   "nix.enableLanguageServer" = true;
+        #   "nix.serverPath" = "nixd";
+        # };
         # extensions = with pkgs; [vscode-extension-jnoortheen-nix-ide];
       };
       lesspipe.enable = lib.mkDefault true;
