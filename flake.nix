@@ -32,6 +32,8 @@ The starlight on the Western Seas.
     };
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
+    wezterm-flake.url = "github:wez/wezterm/main?dir=nix";
+    wezterm-flake.inputs.nixpkgs.follows = "nixpkgs";
   };
   outputs = {
     self,
@@ -46,6 +48,7 @@ The starlight on the Western Seas.
     nix-index-database,
     plasma-manager,
     disko,
+    wezterm-flake,
     ...
   } @ inputs: let
     inherit (self) outputs;

@@ -18,7 +18,7 @@ in {
       lsof # Lsof lists file information about files opened by processes
       kdePackages.tokodon
       kdePackages.wayland-protocols
-      wezterm
+      # wezterm
       (nerdfonts.override {
         fonts = [
           "NerdFontsSymbolsOnly"
