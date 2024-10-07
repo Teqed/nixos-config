@@ -49,6 +49,11 @@ in {
         enable = lib.mkDefault true;
         # config = { };
       };
+      starship = {
+        enable = true;
+        # enableTransience = true;
+        settings = pkgs.lib.importTOML ./sources/.config/starship.toml;
+      };
       bash = {
         enable = lib.mkDefault true;
         enableVteIntegration = lib.mkDefault true;
@@ -64,11 +69,9 @@ in {
         # blesh, a full-featured line editor written in pure Bash
         initExtra = lib.mkBefore ''
           source ${pkgs.blesh}/share/blesh/ble.sh
-          set -h # Enable 'hash' builtin
+          # set -h # Enable 'hash' builtin
           source "${XDG_CONFIG_HOME}/bash/functions.sh"; # Functions
-          source "${XDG_CONFIG_HOME}/bash/prompt.bash" ; # Set the PS1 prompt for interactive shells
           source "${XDG_CONFIG_HOME}/bash/aliases.sh" # Aliases
-          source "${XDG_CONFIG_HOME}/bash/banner.sh" ; # Display welcome banner
         '';
         # shellAliases = { };
         shellOptions = [
