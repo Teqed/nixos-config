@@ -53,7 +53,7 @@
     MOAR = "--statusbar=bold --no-linenumbers";
     DICPATH = "/run/current-system/sw/share/hunspell";
     # General applications / tools
-    INPUTRC = lib.mkForce "${XDG_CONFIG_HOME}/readline/inputrc";
+    INPUTRC = "${XDG_CONFIG_HOME}/readline/inputrc";
     # GTK2_RC_FILES = lib.mkForce "${XDG_CONFIG_HOME}/gtk-2.0/gtkrc"; # Override upstream home-manager/modules/misc/gtk.nix
     XCOMPOSEFILE = "${XDG_CONFIG_HOME}/X11/XCompose"; # ~/.config/X11/XCompose
     VIMINIT = ":so ${XDG_CONFIG_HOME}/vim/.vimrc"; # ~/.vimrc
@@ -127,7 +127,7 @@ in {
       packages = with pkgs; [xdg-ninja]; # A shell script which checks your $HOME for unwanted files and directories.
       preferXdgDirectories = true;
       # sessionPath = [XDG_BIN_HOME];
-      sessionVariables = global_variables;
+      sessionVariables = lib.mkForce global_variables; # TODO: only inputrc needs to be forced
       shellAliases = {
         wget = "wget --hsts-file='\${XDG_STATE_HOME}/history/wget_history'";
       };
