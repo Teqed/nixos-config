@@ -27,12 +27,8 @@ in {
     home.file.".config/wezterm/wezterm.lua".source = ./sources/.config/wezterm/wezterm.lua;
     # .config/bash/aliases.sh
     home.file.".config/bash/aliases.sh".source = ./sources/.config/bash/aliases.sh;
-    # .config/bash/banner.sh # TODO: Create config json for fastfetch
-    home.file.".config/bash/banner.sh".source = ./sources/.config/bash/banner.sh;
     # .config/bash/functions.sh # TODO: Convert to Nix config
     home.file.".config/bash/functions.sh".source = ./sources/.config/bash/functions.sh;
-    # .config/bash/prompt.bash # TODO: Replace with prompt framework
-    home.file.".config/bash/prompt.bash".source = ./sources/.config/bash/prompt.bash;
     # .config/bash/functions.d/cheat.sh
     home.file.".config/bash/functions.d/cheat.sh".source = ./sources/.config/bash/functions.d/cheat.sh;
     # .config/bash/functions.d/coloring.bash
