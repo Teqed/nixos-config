@@ -15,6 +15,8 @@ in {
         # TODO: Move all unfree packages here
       ];
     home.packages = with pkgs; [
+      wl-clipboard
+      wl-clipboard-x11 # Wrapper to use wl-clipboard as a drop-in replacement for X11 clipboard tools
       lsof # Lsof lists file information about files opened by processes
       kdePackages.tokodon
       kdePackages.wayland-protocols
