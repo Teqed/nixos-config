@@ -21,6 +21,7 @@ in {
       '';
     };
     services = {
+      clipcat.enable = lib.mkDefault true;
       languagetool.enable = mkDefault true;
       samba = {
         enable = mkDefault true; # Samba, the SMB/CIFS protocol.
