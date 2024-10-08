@@ -123,6 +123,23 @@ in {
     systemd.user.startServices = lib.mkDefault "sd-switch"; # Nicely reload system units when changing configs
     services = {
       kdeconnect.enable = lib.mkDefault true; # 1GB / 23MB
+      recoll = {
+        enable = lib.mkDefault true;
+        configDir = "${config.xdg.configHome}/recoll";
+        settings = {
+          nocjk = true;
+          loglevel = 5;
+          topdirs = ["~/_/Downloads" "~/_/Documents" "~/_/Repos"];
+
+          "~/_/Downloads" = {
+            "skippedNames+" = ["*.iso"];
+          };
+
+          "~/_/Repos" = {
+            "skippedNames+" = ["node_modules" "target" "result"];
+          };
+        };
+      };
       # remmina.enable = true; # 900MB / 15MB (freerdp 700MB, spice-gtk 600MB)
     };
     programs = {
@@ -218,8 +235,6 @@ in {
           source ${pkgs.blesh}/share/blesh/ble.sh
           # set -h # Enable 'hash' builtin
           source "${XDG_CONFIG_HOME}/bash/functions.sh"; # Functions
-        '';
-        interactiveShellInit = ''
           if [[ $(${pkgs.procps}/bin/ps --no-header --pid=$PPID --format=comm) != "fish" && -z ''${BASH_EXECUTION_STRING} ]]
           then
             shopt -q login_shell && LOGIN_OPTION='--login' || LOGIN_OPTION=""
@@ -239,7 +254,7 @@ in {
           "histappend" # Make bash append rather than overwrite the history on disk
         ];
       };
-      programs.tmux = {
+      tmux = {
         enable = true;
         mouse = lib.mkDefault true;
         # keymode = lib.mkDefault "vi"; # default is "emacs"
@@ -409,23 +424,6 @@ in {
           };
         };
       };
-      recoll = {
-        enable = lib.mkDefault true;
-        configDir = "${config.xdg.configHome}/recoll";
-        settings = {
-          nocjk = true;
-          loglevel = 5;
-          topdirs = ["~/_/Downloads" "~/_/Documents" "~/_/Repos"];
-
-          "~/_/Downloads" = {
-            "skippedNames+" = ["*.iso"];
-          };
-
-          "~/_/Repos" = {
-            "skippedNames+" = ["node_modules" "target" "result"];
-          };
-        };
-      };
       zsh = {
         enable = lib.mkDefault true;
         autosuggestion.enable = lib.mkDefault true;
@@ -480,7 +478,9 @@ in {
       fzf.enable = lib.mkDefault true;
       fish = {
         enable = lib.mkDefault true;
-        # interactiveShellInit = "";
+        interactiveShellInit = ''
+          set fish_greeting # Disable greeting
+        '';
         # loginShellInit = "";
         # shellInit = "";
         # useBabelfish = true; NixOS-only option
@@ -489,6 +489,9 @@ in {
         shellAliases = aliases;
         # functions = { };
         # plugins = [ ]; # The plugins to source in conf.d/99plugins.fish.
+      };
+      skim = {
+        enable = lib.mkDefault true;
       };
     };
   };
