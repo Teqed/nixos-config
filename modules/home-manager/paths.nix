@@ -52,6 +52,48 @@
     LESS = "-RF";
     MOAR = "--statusbar=bold --no-linenumbers";
     DICPATH = "/run/current-system/sw/share/hunspell";
+    # COLORTERM = "truecolor";
+    CLICOLOR = "1";
+    COLOR_0_BLACK = ";30";
+    COLOR_1_MAROON = ";31";
+    COLOR_2_GREEN = ";32";
+    COLOR_3_OLIVE = ";33";
+    COLOR_4_NAVY = ";34";
+    COLOR_5_PURPLE = ";35";
+    COLOR_6_TEAL = ";36";
+    COLOR_7_SILVER = ";37";
+    COLOR_8_GREY = ";90";
+    COLOR_9_RED = ";91";
+    COLOR_10_LIME = ";92";
+    COLOR_11_YELLOW = ";93";
+    COLOR_12_BLUE = ";94";
+    COLOR_13_FUCHSIA = ";95";
+    COLOR_14_AQUA = ";96";
+    COLOR_15_WHITE = ";97";
+    COLOR_RESET = "\e[0m";
+    # export LESS_TERMCAP_mb=$'\e[01${COLOR_1_MAROON}m'   # begin bold
+    LESS_TERMCAP_mb = "\e[01;31m";
+    # export LESS_TERMCAP_md=$'\e[01;38;5;74m'  # begin blink
+    LESS_TERMCAP_md = "\e[01;38;5;74m";
+    # export LESS_TERMCAP_me=$COLOR_RESET       # reset bold/blink
+    LESS_TERMCAP_me = "\e[0m";
+    # export LESS_TERMCAP_se=$COLOR_RESET       # reset reverse video
+    LESS_TERMCAP_se = "\e[0m";
+    # export LESS_TERMCAP_so=$'\e[38;5;246m' # begin reverse video
+    LESS_TERMCAP_so = "\e[38;5;246m";
+    # export LESS_TERMCAP_ue=$COLOR_RESET       # reset underline
+    LESS_TERMCAP_ue = "\e[0m";
+    # export LESS_TERMCAP_us=$'\e[04;38;5;146m' # begin underline
+    LESS_TERMCAP_us = "\e[04;38;5;146m";
+    # export GREP_COLORS="ms=1;32:mc=1;32:ln=33" # (new) Matching text in Selected line = green, line numbers dark yellow
+    GREP_COLORS = "ms=1;32:mc=1;32:ln=33";
+    ERROR_COLOR = ";31";
+    VERBOSE_COLOR = ";32";
+    DEBUG_COLOR = ";34";
+    WARNING_COLOR = ";35";
+    INFO_COLOR = ";36";
+    GCC_COLORS = "error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01";
+
     # General applications / tools
     INPUTRC = "${XDG_CONFIG_HOME}/readline/inputrc";
     # GTK2_RC_FILES = lib.mkForce "${XDG_CONFIG_HOME}/gtk-2.0/gtkrc"; # Override upstream home-manager/modules/misc/gtk.nix

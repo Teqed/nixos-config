@@ -25,8 +25,6 @@ in {
     home.file.".config/vim/.vimrc".source = ./sources/.config/vim/.vimrc;
     # .config/wezterm/wezterm.lua
     home.file.".config/wezterm/wezterm.lua".source = ./sources/.config/wezterm/wezterm.lua;
-    # .config/bash/aliases.sh
-    home.file.".config/bash/aliases.sh".source = ./sources/.config/bash/aliases.sh;
     # .config/bash/functions.sh # TODO: Convert to Nix config
     home.file.".config/bash/functions.sh".source = ./sources/.config/bash/functions.sh;
     # .config/bash/functions.d/cheat.sh

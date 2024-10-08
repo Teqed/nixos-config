@@ -12,6 +12,109 @@
     rev = "main";
     sha256 = "sha256-VSlays/D5FtiI8vsj2Eu19lxY8Mkgu0+7K6OAhzc+30=";
   };
+  aliases = {
+    dir = "dir --color=auto";
+    vdir = "vdir --color=auto";
+    grep = "grep --color=auto";
+    fgrep = "LC_ALL=C fgrep --color=auto";
+    egrep = "egrep --color=auto";
+    ncdu = "ncdu --color dark";
+    # bat = "bat --paging=never --style=plain";
+    rm = "rm -i";
+    tn5250 = "tn5250 env.TERM=IBM-3477-FC"; # ssl:localhost
+    colourify = "grc -es  --colour=auto";
+    docker = "colourify docker";
+    docker-compose = "colourify docker-compose";
+    docker-machine = "colourify docker-machine";
+    make = "colourify make";
+    "g++" = "colourify g++";
+    as = "colourify as";
+    gas = "colourify gas";
+    journalctl = "colourify journalctl";
+    kubectl = "colourify kubectl";
+    ld = "colourify ld";
+    head = "colourify head";
+    tail = "colourify tail";
+    semanage = "colourify semanage";
+    sockstat = "colourify sockstat";
+
+    whois = "colourify whois";
+    wdiff = "colourify wdiff";
+    vmstat = "colourify vmstat";
+    uptime = "colourify uptime";
+    ulimit = "colourify ulimit";
+    tune2fs = "colourify tune2fs";
+    traceroute = "colourify traceroute";
+    traceroute6 = "colourify traceroute6";
+    tcpdump = "colourify tcpdump";
+    systemctl = "colourify systemctl";
+    sysctl = "colourify sysctl";
+    stat = "colourify stat";
+    ss = "colourify ss";
+    sql = "colourify sql";
+    showmount = "colourify showmount";
+    sensors = "colourify sensors";
+    semanageuser = "colourify semanageuser";
+    semanagefcontext = "colourify semanagefcontext";
+    semanageboolean = "colourify semanageboolean";
+    pv = "colourify pv";
+    ps = "colourify ps";
+    proftpd = "colourify proftpd";
+    ping2 = "colourify ping2";
+    ping = "colourify ping";
+    php = "colourify php";
+    ntpdate = "colourify ntpdate";
+    nmap = "colourify nmap";
+    netstat = "colourify netstat";
+    mvn = "colourify mvn";
+    mtr = "colourify mtr";
+    mount = "colourify mount";
+    lspci = "colourify lspci";
+    lsof = "colourify lsof";
+    lsmod = "colourify lsmod";
+    lsblk = "colourify lsblk";
+    lsattr = "colourify lsattr";
+    ls = "eza";
+    lolcat = "colourify lolcat";
+    log = "colourify log";
+    ldap = "colourify ldap";
+    last = "colourify last";
+    iwconfig = "colourify iwconfig";
+    irclog = "colourify irclog";
+    iptables = "colourify iptables";
+    iproute = "colourify iproute";
+    ipneighbor = "colourify ipneighbor";
+    ipaddr = "colourify ipaddr";
+    ip = "colourify ip";
+    iostat_sar = "colourify iostat_sar";
+    ifconfig = "colourify ifconfig";
+    id = "colourify id";
+    getsebool = "colourify getsebool";
+    getfacl = "colourify getfacl";
+    gcc = "colourify gcc";
+    free = "colourify free -h";
+    findmnt = "colourify findmnt";
+    fdisk = "colourify fdisk";
+    esperanto = "colourify esperanto";
+    env = "colourify env";
+    du = "colourify du -h";
+    dockerversion = "colourify dockerversion";
+    dockersearch = "colourify dockersearch";
+    dockerpull = "colourify dockerpull";
+    dockerps = "colourify dockerps";
+    dockernetwork = "colourify dockernetwork";
+    docker-machinels = "colourify docker-machinels";
+    dockerinfo = "colourify dockerinfo";
+    dockerimages = "colourify dockerimages";
+    dnf = "colourify dnf";
+    dig = "colourify dig";
+    diff = "colourify diff";
+    df = "colourify df -h";
+    cvs = "colourify cvs";
+    configure = "colourify ./configure";
+    blkid = "colourify blkid";
+    ant = "colourify ant";
+  };
 in {
   options.teq.home-manager = {
     programs = lib.mkEnableOption "Teq's Home-Manager Programs configuration defaults.";
@@ -32,11 +135,22 @@ in {
           enable = lib.mkDefault true;
         };
       };
+      ion = {
+        enable = lib.mkDefault true;
+        # initExtra
+        shellAliases = aliases;
+      };
       eza = {
         enable = lib.mkDefault true;
         extraOptions = [
           "--group-directories-first"
+          "--color-scale"
+          "--color=auto"
+          "--hyperlink"
+          "--extended"
+          "--classify"
           "--header"
+          "--mounts"
         ];
         git = lib.mkDefault true;
         icons = lib.mkDefault true;
@@ -45,15 +159,48 @@ in {
         enable = lib.mkDefault true;
         # settings = { };
       };
+      thefuck.enable = lib.mkDefault true;
       bat = {
         enable = lib.mkDefault true;
-        # config = { };
+        config = {
+          # --paging=never --style=plain'
+          map-syntax = [
+            "*.jenkinsfile:Groovy"
+            "*.props:Java Properties"
+          ];
+          pager = "less -FR";
+          theme = "TwoDark";
+        };
+        extraPackages = with pkgs.bat-extras; [batdiff batman batgrep batwatch];
+        # syntaxes = {
+        #   gleam = {
+        #     src = pkgs.fetchFromGitHub {
+        #       owner = "molnarmark";
+        #       repo = "sublime-gleam";
+        #       rev = "2e761cdb1a87539d827987f997a20a35efd68aa9";
+        #       hash = "sha256-Zj2DKTcO1t9g18qsNKtpHKElbRSc9nBRE2QBzRn9+qs=";
+        #     };
+        #     file = "syntax/gleam.sublime-syntax";
+        #   };
+        # };
+        # themes = {
+        #   dracula = {
+        #     src = pkgs.fetchFromGitHub {
+        #       owner = "dracula";
+        #       repo = "sublime"; # Bat uses sublime syntax for its themes
+        #       rev = "26c57ec282abcaa76e57e055f38432bd827ac34e";
+        #       sha256 = "019hfl4zbn4vm4154hh3bwk6hm7bdxbr1hdww83nabxwjn99ndhv";
+        #     };
+        #     file = "Dracula.tmTheme";
+        #   };
+        # };
       };
       starship = {
         enable = true;
         # enableTransience = true;
         settings = pkgs.lib.importTOML ./sources/.config/starship.toml;
       };
+      nushell.enable = lib.mkDefault true;
       bash = {
         enable = lib.mkDefault true;
         enableVteIntegration = lib.mkDefault true;
@@ -71,9 +218,15 @@ in {
           source ${pkgs.blesh}/share/blesh/ble.sh
           # set -h # Enable 'hash' builtin
           source "${XDG_CONFIG_HOME}/bash/functions.sh"; # Functions
-          source "${XDG_CONFIG_HOME}/bash/aliases.sh" # Aliases
         '';
-        # shellAliases = { };
+        interactiveShellInit = ''
+          if [[ $(${pkgs.procps}/bin/ps --no-header --pid=$PPID --format=comm) != "fish" && -z ''${BASH_EXECUTION_STRING} ]]
+          then
+            shopt -q login_shell && LOGIN_OPTION='--login' || LOGIN_OPTION=""
+            exec ${pkgs.fish}/bin/fish $LOGIN_OPTION
+          fi
+        '';
+        shellAliases = aliases;
         shellOptions = [
           "checkjobs"
           "checkwinsize" # check the window size after each command and, if necessary, update the values of LINES and COLUMNS.
@@ -86,10 +239,52 @@ in {
           "histappend" # Make bash append rather than overwrite the history on disk
         ];
       };
-      # programs.tmux = {
-      #   enable = true;
-      #   extraConfig = builtins.readFile (./. + "/tmux.conf");
-      # };
+      programs.tmux = {
+        enable = true;
+        mouse = lib.mkDefault true;
+        # keymode = lib.mkDefault "vi"; # default is "emacs"
+        # extraConfig = builtins.readFile (./. + "/tmux.conf");
+        # plugins = with pkgs; [
+        #   tmuxPlugins.cpu
+        #   {
+        #     plugin = tmuxPlugins.resurrect;
+        #     extraConfig = "set -g @resurrect-strategy-nvim 'session'";
+        #   }
+        #   {
+        #     plugin = tmuxPlugins.continuum;
+        #     extraConfig = ''
+        #       set -g @continuum-restore 'on'
+        #       set -g @continuum-save-interval '60' # minutes
+        #     '';
+        #   }
+        # ];
+      };
+      translate-shell = {
+        enable = lib.mkDefault true;
+        settings = {
+          hl = "en";
+          tl = [
+            "es"
+            "fr"
+            "de"
+            "zh"
+            "it"
+            "ja"
+            "ko"
+            "no"
+          ];
+          # verbose = true;
+        };
+      };
+      xplr = {
+        enable = lib.mkDefault true;
+        # extraConfig =
+        # plugins =
+      };
+      zellij = {
+        enable = lib.mkDefault true;
+        # settings = { };
+      };
       chromium = {
         enable = true;
         package = pkgs.brave;
@@ -166,7 +361,6 @@ in {
         enable = lib.mkDefault true;
         # settings = { };
       };
-      nushell.enable = lib.mkDefault true;
       pyenv.enable = lib.mkDefault true;
       pylint.enable = lib.mkDefault true;
       rbenv.enable = lib.mkDefault true;
@@ -215,6 +409,23 @@ in {
           };
         };
       };
+      recoll = {
+        enable = lib.mkDefault true;
+        configDir = "${config.xdg.configHome}/recoll";
+        settings = {
+          nocjk = true;
+          loglevel = 5;
+          topdirs = ["~/_/Downloads" "~/_/Documents" "~/_/Repos"];
+
+          "~/_/Downloads" = {
+            "skippedNames+" = ["*.iso"];
+          };
+
+          "~/_/Repos" = {
+            "skippedNames+" = ["node_modules" "target" "result"];
+          };
+        };
+      };
       zsh = {
         enable = lib.mkDefault true;
         autosuggestion.enable = lib.mkDefault true;
@@ -248,7 +459,7 @@ in {
         # prezto ... Options to configure prezto.
         # profileExtra = " " # Extra commands that should be added to .zprofile.
         # sessionVariables = { } # Environment variables that will be set for zsh session.
-        # shellAliases = {}
+        shellAliases = aliases;
         # shellGlobalAliases # Similar to programs.zsh.shellAliases, but are substituted anywhere on a line.
         syntaxHighlighting.enable = lib.mkDefault true;
         # zplug ... Options to configure zplug.
@@ -274,8 +485,8 @@ in {
         # shellInit = "";
         # useBabelfish = true; NixOS-only option
         # preferAbbrs = true; # If enabled, abbreviations will be preferred over aliases when other modules define aliases for fish.
-        # shellAbbrs = { }; # An attribute set that maps aliases (the top level attribute names in this option) to abbreviations. Abbreviations are expanded with the longer phrase after they are entered.
-        # shellAliases = { }; # An attribute set that maps aliases (the top level attribute names in this option) to command strings or directly to build outputs.
+        # shellAbbrs = { };
+        shellAliases = aliases;
         # functions = { };
         # plugins = [ ]; # The plugins to source in conf.d/99plugins.fish.
       };
