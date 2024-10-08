@@ -24,7 +24,7 @@ in {
       ];
       extraPackages = with pkgs; [
         gamescope
-        # gamescope-wsi32_git	
+        # gamescope-wsi32_git
         # gamescope-wsi_git
         # gamescope_git
       ];
