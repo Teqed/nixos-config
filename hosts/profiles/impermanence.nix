@@ -125,11 +125,11 @@ in {
                 mkdir -p $snapshot_dir/@persist
                 btrfs subvolume snapshot $root_dir/@persist "$snapshot_dir/@persist/$timestamp"
             fi
-            find $snapshot_dir/@home/ -maxdepth 1 -type d | sort | head -n -3 | while IFS= read -r snapshot; do
+            find $snapshot_dir/@home/ -maxdepth 1 -type d | sort | head -n -10 | while IFS= read -r snapshot; do
                 if [[ "$snapshot" == "$snapshot_dir/@home/" ]]; then continue ; fi
                 btrfs subvolume delete "$snapshot"
             done
-            find $snapshot_dir/@persist/ -maxdepth 1 -type d | sort | head -n -5 | while IFS= read -r snapshot; do
+            find $snapshot_dir/@persist/ -maxdepth 1 -type d | sort | head -n -10 | while IFS= read -r snapshot; do
                 if [[ "$snapshot" == "$snapshot_dir/@persist/" ]]; then continue ; fi
                 btrfs subvolume delete "$snapshot"
             done
