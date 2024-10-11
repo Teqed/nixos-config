@@ -358,8 +358,8 @@ in {
       fd.enable = lib.mkDefault true;
       gh.enable = lib.mkDefault true; # / GitHub Desktop
       jq.enable = lib.mkDefault true;
-      # ssh.enable = true;
-      # dircolors.enable = true;
+      # ssh.enable = true; # Enabled elsewhere
+      # dircolors.enable = true; # Enabled elsewhere
       foot = {
         enable = lib.mkDefault true;
         # settings = { };
@@ -390,7 +390,6 @@ in {
         enable = lib.mkDefault true;
         # mounts = { };
       };
-      # starship.enable = true; # Prompt
       vim.enable = lib.mkDefault true; # 570MB / 75MB (vim-full 570MB / 90KB)
       yazi = {
         enable = lib.mkDefault true; # 426MB / 20MB (imagemagick, ffmegthumbnailer)
