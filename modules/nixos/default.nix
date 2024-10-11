@@ -11,6 +11,7 @@ fromFlakes: let
     nixcfg = import ./nixcfg.nix;
     # nyx-cache = import ./nyx-cache.nix fromFlakes;
     # nyx-overlay = import ../common/nyx-overlay.nix fromFlakes;
+    media = import ./media.nix;
   };
   default = {...}: {
     imports = builtins.attrValues modulesPerFile;
