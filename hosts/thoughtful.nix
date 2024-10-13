@@ -8,6 +8,10 @@
     nixos-hardware.nixosModules.common-cpu-amd
     nixos-hardware.nixosModules.common-gpu-amd
   ];
+  # boot.supportedFilesystems = [ "zfs" ];
+  # nixpkgs.config.allowBroken = true;
+  # boot.zfs.forceImportRoot = false;
+  networking.hostId = "9936699a";
   teq.nixos.media.enable = true; # Test media hosting
   networking.hostName = "thoughtful"; # /dev/disk/by-partuuid/032b15fe-6dc7-473e-b1a5-d51f4df7ffd6
   nixpkgs.hostPlatform = "x86_64-linux";
