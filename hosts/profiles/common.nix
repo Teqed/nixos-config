@@ -4,6 +4,7 @@
   ...
 }: let
   userinfo.users = ["teq"];
+  userinfo.service_users = ["media"];
   inherit (lib) mkDefault mkForce;
 in {
   options = {
@@ -12,6 +13,11 @@ in {
         type = with lib.types; listOf str;
         default = userinfo.users;
         description = "List of users to create.";
+      };
+      service_users = lib.mkOption {
+        type = with lib.types; listOf str;
+        default = userinfo.service_users;
+        description = "List of service users to create.";
       };
     };
   };
@@ -67,6 +73,24 @@ in {
           isNormalUser = mkDefault true;
           description = mkDefault u;
           extraGroups = mkDefault ["networkmanager" "wheel" "audio" "docker"];
+        };
+      })
+      ++ lib.forEach config.userinfo.service_users (u: {
+        "${u}" = {
+          isSystemUser = mkDefault true;
+          description = mkDefault u;
+          group = mkDefault u;
+          createHome = mkForce true;
+          homeMode = mkForce "775";
+          home = mkForce "/home/${u}";
+        };
+      })
+    );
+    users.groups = lib.mkMerge (
+      lib.forEach config.userinfo.service_users (u: {
+        "${u}" = {
+          name = mkDefault u;
+          members = mkDefault [u];
         };
       })
     );
