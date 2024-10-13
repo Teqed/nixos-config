@@ -5,13 +5,12 @@
   ...
 }: let
   cfg = config.teq.home-manager;
-  # XDG Base Directory Specification https://specifications.freedesktop.org/basedir-spec/latest/
   XDG_LOCAL_HOME = "${config.home.homeDirectory}/.local"; # ~/.local
   XDG_CACHE_HOME = "${config.home.homeDirectory}/.cache"; # ~/.cache
   XDG_CONFIG_HOME = "${config.home.homeDirectory}/.config"; # ~/.config # $XDG_CONFIG_HOME defines the base directory relative to which user-specific configuration files should be stored.
   XDG_STATE_HOME = "${XDG_LOCAL_HOME}/state"; # ~/.local/state # $XDG_STATE_HOME defines the base directory relative to which user-specific state files should be stored.
   XDG_DATA_HOME = "${XDG_LOCAL_HOME}/share"; # ~/.local/share # $XDG_DATA_HOME defines the base directory relative to which user-specific data files should be stored.
-  XDG_BIN_HOME = "${XDG_LOCAL_HOME}/bin"; # ~/.local/bin # $XDG_BIN_HOME defines the base directory relative to which user specific executable files should be stored.
+  # XDG_BIN_HOME = "${XDG_LOCAL_HOME}/bin"; # ~/.local/bin # $XDG_BIN_HOME defines the base directory relative to which user specific executable files should be stored.
   XDG_RUNTIME_DIR = "/run/user/$UID"; # /run/user/$UID # If $XDG_RUNTIME_DIR is not set applications should fall back to a replacement directory with similar capabilities and print a warning message.
   XDG_USER_DIRS = "${XDG_LOCAL_HOME}/user-dirs"; # ~/.local/user-dirs
   XDG_DESKTOP_DIR = "${XDG_USER_DIRS}/Desktop";
@@ -23,7 +22,7 @@
   XDG_TEMPLATES_DIR = "${XDG_USER_DIRS}/Templates";
   XDG_VIDEOS_DIR = "${XDG_USER_DIRS}/Videos";
   # Extra XDG-like directories
-  XDG_LIB_HOME = "${XDG_LOCAL_HOME}/lib"; # ~/.local/lib
+  # XDG_LIB_HOME = "${XDG_LOCAL_HOME}/lib"; # ~/.local/lib
   XDG_OPT_HOME = "${XDG_LOCAL_HOME}/opt"; # ~/.local/opt
   XDG_GAMES_HOME = "${XDG_OPT_HOME}/games"; # ~/.local/opt/games
   XDG_MISC_DIR = "${XDG_USER_DIRS}/Misc"; # ~/.local/user-dirs/Misc
@@ -33,7 +32,6 @@
     # NAME = "Timothy Quilling"; # Used by: ??? dpkg-buildpackage (unless overridden by $DEBFULLNAME), git (unless overridden by 'user.name'), hg (via ~/.hgrc 'ui.username'), makepkg (via ~/.makepkg.conf $PACKAGER)
     # EMAIL = "teqed@shatteredsky.net"; # Used by: dpkg-buildpackage (unless overridden by $DEBEMAIL), git (unless overridden by 'user.email'), hg (via ~/.hgrc 'ui.username'), makepkg (via ~/.makepkg.conf $PACKAGER)
     # LD_LIBRARY_PATH = "${XDG_LOCAL_HOME}/lib"; TODO: Prepend to the existing value / LIBPATH
-    # XDG
     XDG_LOCAL_HOME = XDG_LOCAL_HOME; # ~/.local
     # XDG_BIN_HOME = XDG_BIN_HOME; # ~/.local/bin
     # XDG_LIB_HOME = XDG_LIB_HOME; # ~/.local/lib
@@ -54,38 +52,13 @@
     DICPATH = "/run/current-system/sw/share/hunspell";
     # COLORTERM = "truecolor";
     CLICOLOR = "1";
-    COLOR_0_BLACK = ";30";
-    COLOR_1_MAROON = ";31";
-    COLOR_2_GREEN = ";32";
-    COLOR_3_OLIVE = ";33";
-    COLOR_4_NAVY = ";34";
-    COLOR_5_PURPLE = ";35";
-    COLOR_6_TEAL = ";36";
-    COLOR_7_SILVER = ";37";
-    COLOR_8_GREY = ";90";
-    COLOR_9_RED = ";91";
-    COLOR_10_LIME = ";92";
-    COLOR_11_YELLOW = ";93";
-    COLOR_12_BLUE = ";94";
-    COLOR_13_FUCHSIA = ";95";
-    COLOR_14_AQUA = ";96";
-    COLOR_15_WHITE = ";97";
-    COLOR_RESET = "\e[0m";
-    # export LESS_TERMCAP_mb=$'\e[01${COLOR_1_MAROON}m'   # begin bold
     LESS_TERMCAP_mb = "\e[01;31m";
-    # export LESS_TERMCAP_md=$'\e[01;38;5;74m'  # begin blink
     LESS_TERMCAP_md = "\e[01;38;5;74m";
-    # export LESS_TERMCAP_me=$COLOR_RESET       # reset bold/blink
     LESS_TERMCAP_me = "\e[0m";
-    # export LESS_TERMCAP_se=$COLOR_RESET       # reset reverse video
     LESS_TERMCAP_se = "\e[0m";
-    # export LESS_TERMCAP_so=$'\e[38;5;246m' # begin reverse video
     LESS_TERMCAP_so = "\e[38;5;246m";
-    # export LESS_TERMCAP_ue=$COLOR_RESET       # reset underline
     LESS_TERMCAP_ue = "\e[0m";
-    # export LESS_TERMCAP_us=$'\e[04;38;5;146m' # begin underline
     LESS_TERMCAP_us = "\e[04;38;5;146m";
-    # export GREP_COLORS="ms=1;32:mc=1;32:ln=33" # (new) Matching text in Selected line = green, line numbers dark yellow
     GREP_COLORS = "ms=1;32:mc=1;32:ln=33";
     ERROR_COLOR = ";31";
     VERBOSE_COLOR = ";32";
@@ -93,7 +66,6 @@
     WARNING_COLOR = ";35";
     INFO_COLOR = ";36";
     GCC_COLORS = "error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01";
-
     # General applications / tools
     INPUTRC = "${XDG_CONFIG_HOME}/readline/inputrc";
     # GTK2_RC_FILES = lib.mkForce "${XDG_CONFIG_HOME}/gtk-2.0/gtkrc"; # Override upstream home-manager/modules/misc/gtk.nix
@@ -173,43 +145,6 @@ in {
       shellAliases = {
         wget = "wget --hsts-file='\${XDG_STATE_HOME}/history/wget_history'";
       };
-      # configFile = {
-      #   "npm/npmrc".text = ''
-      #     prefix=${XDG_DATA_HOME}/npm
-      #     cache=${XDG_CACHE_HOME}/npm
-      #     tmp=${XDG_RUNTIME_DIR}/npm
-      #     init-module=${XDG_CONFIG_HOME}/npm/config/npm-init.js
-      #   '';
-
-      #   "python/pythonrc.py".text = ''
-      #     def is_vanilla() -> bool:
-      #         import sys
-      #         return not hasattr(__builtins__, '__IPYTHON__') and 'bpython' not in sys.argv[0]
-
-      #     def setup_history():
-      #         import os
-      #         import atexit
-      #         import readline
-      #         from pathlib import Path
-
-      #         if state_home := os.environ.get('XDG_STATE_HOME'):
-      #             state_home = Path(state_home)
-      #         else:
-      #             state_home = Path.home() / '.local' / 'state'
-
-      #         history: Path = state_home / 'python_history'
-
-      #         # https://github.com/python/cpython/issues/105694
-      #         if not history.is_file():
-      #           readline.write_history_file(str(history)) # breaks on macos + python3 without this.
-
-      #         readline.read_history_file(str(history))
-      #         atexit.register(readline.write_history_file, str(history))
-
-      #     if is_vanilla():
-      #         setup_history()
-      #   '';
-      # };
     };
     xdg = {
       enable = true;

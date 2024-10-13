@@ -26,7 +26,6 @@ in {
         # };
         verbose = mkDefault false; # Remove extra NixOS logging from the initrd
       };
-
       plymouth = {
         enable = mkDefault true;
         theme = mkDefault "hud_3";
@@ -34,7 +33,6 @@ in {
           (pkgs.adi1090x-plymouth-themes.override {selected_themes = ["hud_3"];})
         ];
       };
-
       kernelParams = [
         "boot.shell_on_fail" # Drop to root shell on boot failure
         "quiet" # Silences boot messages
@@ -48,7 +46,6 @@ in {
       ];
       consoleLogLevel = mkDefault 3; # Silence dmesg
     };
-
     services.kmscon = {
       enable = mkDefault true; # Use kmscon as the virtual console instead of gettys.
       fonts = [
