@@ -354,6 +354,7 @@ in {
         enable = lib.mkDefault true;
         # settings = { };
         # extraConfig = " ";
+        package = pkgs.btop.override { rocmSupport = true; };
       };
       fd.enable = lib.mkDefault true;
       gh.enable = lib.mkDefault true; # / GitHub Desktop
