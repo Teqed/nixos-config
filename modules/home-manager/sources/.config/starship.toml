@@ -96,7 +96,6 @@ truncation_symbol = "…/"
 "Private" = " "
 "Repos" = " " #  
 "Home" = " "
-"_" = " "
 "user-dirs" = " "
 
 # powerline_extra:                                         
