@@ -10,7 +10,7 @@ in {
   };
   config = lib.mkIf cfg.files {
     # _ -> .local/user-dirs symlink
-    home.file."_".source = config.lib.file.mkOutOfStoreSymlink ".local/user-dirs";
+    home.file."_".source = config.lib.file.mkOutOfStoreSymlink "/home/teq/.local/user-dirs";
     # .hushlogin
     home.file.".hushlogin".source = ./sources/.hushlogin;
     # .config/readline/inputrc
