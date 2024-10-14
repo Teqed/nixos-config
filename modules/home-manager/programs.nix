@@ -4,15 +4,16 @@
   config,
   ...
 }: let
-  cfg = config.teq.home-manager;
+  cfg = config.teq.home-manager.programs;
 in {
-  options.teq.home-manager = {
-    programs = lib.mkEnableOption "Teq's Home-Manager Programs configuration defaults.";
+  options.teq.home-manager.programs = {
+    enable = lib.mkEnableOption "Teq's Home-Manager Programs configuration defaults.";
   };
   imports = [
-    ./by-category/shells/programs.nix
+    ./by-category/_shells/programs.nix
   ];
-  config = lib.mkIf cfg.programs {
+  config = lib.mkIf cfg.enable {
+    teq.home-manager.programs.shells = true;
     systemd.user.startServices = lib.mkDefault "sd-switch"; # Nicely reload system units when changing configs
     services = {
       kdeconnect.enable = lib.mkDefault true; # 1GB / 23MB

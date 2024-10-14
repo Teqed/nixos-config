@@ -4,7 +4,7 @@
   config,
   ...
 }: let
-  cfg = config.teq.home-manager;
+  cfg = config.teq.home-manager.programs;
   XDG_CONFIG_HOME = "${config.xdg.configHome}";
   yaziFlavors = pkgs.fetchFromGitHub {
     owner = "yazi-rs";
@@ -116,10 +116,10 @@
     ant = "colourify ant";
   };
 in {
-  options.teq.home-manager = {
-    programs = lib.mkEnableOption "Teq's Home-Manager Shell Programs configuration defaults.";
+  options.teq.home-manager.programs = {
+    shells = lib.mkEnableOption "Teq's Home-Manager Shell Programs configuration defaults.";
   };
-  config = lib.mkIf cfg.programs {
+  config = lib.mkIf cfg.shells {
     home.shellAliases = aliases;
     programs = {
       nix-index-database.comma.enable = lib.mkDefault true; # optional to also wrap and install comma
