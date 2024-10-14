@@ -13,6 +13,7 @@
         nativeBuildInputs = oldAttrs.nativeBuildInputs ++ [pkgs.kdePackages.wrapQtAppsHook];
       }))
     ];
+    programs = {
     chromium = {
       enable = true; # 2GB / 600 MB
       package = pkgs.brave;
@@ -44,5 +45,6 @@
       ];
     };
     firefox.enable = false; # 1.6GB / 300MB
+    };
   };
 }

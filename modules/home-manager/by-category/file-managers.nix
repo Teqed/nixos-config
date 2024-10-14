@@ -13,6 +13,7 @@
   };
 in {
   config = lib.mkIf config.teq.home-manager.enable {
+    programs = {
     eza = {
       enable = lib.mkDefault true;
       extraOptions = [
@@ -43,6 +44,7 @@ in {
       flavors = {
         catppuccin-mocha = lib.mkDefault "${yaziFlavors}/catppuccin-mocha.yazi";
       };
+    };
     };
   };
 }

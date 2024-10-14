@@ -8,5 +8,7 @@
 in {
   config = lib.mkIf config.teq.home-manager.enable {
     # home.packages = with pkgs; [];
+    # programs = {
+    # };
   };
 }

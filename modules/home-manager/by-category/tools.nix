@@ -3,9 +3,7 @@
   lib,
   config,
   ...
-}: let
-  # XDG_CONFIG_HOME = "${config.xdg.configHome}";
-in {
+}: {
   config = lib.mkIf config.teq.home-manager.enable {
     home.packages = with pkgs; [
       lsof # Lsof lists file information about files opened by processes
@@ -23,6 +21,7 @@ in {
       ### text:
       colordiff
     ];
+    programs = {
     nix-index.enable = lib.mkDefault true; # integrate with shell's command-not-found functionality
     nix-index-database.comma.enable = lib.mkDefault true; # optional to also wrap and install comma
     direnv = {
@@ -126,6 +125,7 @@ in {
     sftpman = {
       enable = lib.mkDefault true;
       # mounts = { };
+    };
     };
   };
 }

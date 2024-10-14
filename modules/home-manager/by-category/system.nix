@@ -11,11 +11,13 @@ in {
       clinfo # For confirming OpenCL support
       radeontop # For monitoring AMD GPU usage
     ];
+    programs = {
     btop = {
       enable = lib.mkDefault true;
       # settings = { };
       # extraConfig = " ";
       package = pkgs.btop.override {rocmSupport = true;};
+    };
     };
   };
 }

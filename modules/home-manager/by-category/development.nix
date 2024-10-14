@@ -16,17 +16,19 @@ in {
       nil
       nixd # Nix language server, based on nix libraries https://github.com/nix-community/nixd
     ];
-    jq.enable = lib.mkDefault true;
-    pyenv.enable = lib.mkDefault true;
-    ### python-modules:
-    pylint.enable = lib.mkDefault true;
-    ### ruby-modules:
-    rbenv.enable = lib.mkDefault true;
-    ### compilers:
-    go = {
-      enable = lib.mkDefault true; # 200MB / 200MB
-      # packages = { };
+    programs = {
+      jq.enable = lib.mkDefault true;
+      pyenv.enable = lib.mkDefault true;
+      ### python-modules:
+      pylint.enable = lib.mkDefault true;
+      ### ruby-modules:
+      rbenv.enable = lib.mkDefault true;
+      ### compilers:
+      go = {
+        enable = lib.mkDefault true; # 200MB / 200MB
+        # packages = { };
+      };
+      java.enable = true; # Duplicated from NixOS configuration - NixOS can use binfmt # 900 MB / 600 MB
     };
-    java.enable = true; # Duplicated from NixOS configuration - NixOS can use binfmt # 900 MB / 600 MB
   };
 }
