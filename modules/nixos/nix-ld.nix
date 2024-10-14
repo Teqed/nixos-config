@@ -49,6 +49,7 @@ in {
         util-linux
         zlib # screeps
         zstd
+        libz
       ]
       ++ lib.optionals (config.hardware.graphics.enable) [
         # Only loaded on systems with graphics enabled:
