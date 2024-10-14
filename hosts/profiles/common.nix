@@ -32,7 +32,6 @@ in {
       kernel.cachyos = lib.mkDefault true;
       networking.enable = lib.mkDefault true;
       networking.blocking = lib.mkDefault true;
-      # desktop = lib.mkDefault true; # Optional for headless servers.
     };
     networking.networkmanager.enable = mkDefault true;
     system.stateVersion = "24.05"; # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
@@ -45,10 +44,7 @@ in {
     # });
     home-manager.users.teq = {
       home.stateVersion = "24.05"; # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
-      teq.home-manager = {
-        enable = true;
-        theming = true;
-      };
+      teq.home-manager.enable = true;
     };
     users.users = lib.mkMerge (
       [

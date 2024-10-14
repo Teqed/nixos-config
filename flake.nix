@@ -206,7 +206,6 @@ The starlight on the Western Seas.
           {
             teq.home-manager = {
               enable = true;
-              fonts = false;
             };
           }
         ];

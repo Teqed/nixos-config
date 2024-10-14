@@ -30,8 +30,11 @@ with lib; let
   defaultLang = "en_US.UTF-8";
   inherit (lib) mkDefault;
 in {
+  options.teq.home-manager = {
+    enable = lib.mkEnableOption "Enable Teq's Home-Manager configuration defaults.";
+    gui = lib.mkEnableOption "Enable GUI configuration.";
+  };
   config = lib.mkIf config.teq.home-manager.enable {
-    teq.home-manager.gui = lib.mkDefault config.hardware.graphics.enable;
     home.stateVersion = "24.05"; # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
     home.extraOutputsToInstall = ["info" "man" "share" "icons" "doc"];
     home.keyboard.layout = mkDefault "us";
