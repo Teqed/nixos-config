@@ -27,7 +27,6 @@
       "video=HDMI-A-1:1920x1080@60" # /sys/class/drm/card0-HDMI-A-1/status
       # To figure out the connector names, execute the following command while your monitors are connected:
       # head /sys/class/drm/*/status
-
       "boot.shell_on_fail" # Drop to root shell on boot failure
       "quiet" # Silences boot messages
       "rd.systemd.show_status=false" # Silences successful systemd messages from the initrd
@@ -39,13 +38,12 @@
       "plymouth.use-simpledrm" # Use simple DRM backend for Plymouth
     ];
   };
-  # BTRFS
-  teq.nixos.impermanence = {
-    enable = true;
-    btrfs = true;
-  };
   teq.nixos = {
     kernel.cachyos = true;
     networking.blocking = true;
+    impermanence = {
+      enable = true;
+      btrfs = true;
+    };
   };
 }
