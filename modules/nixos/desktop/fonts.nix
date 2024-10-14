@@ -10,13 +10,45 @@ in {
   options.teq.nixos.desktop = {
     fonts = lib.mkEnableOption "Teq's NixOS Font configuration defaults.";
   };
-  imports = [
-    ../../home-manager/fonts.nix
-  ];
   config = lib.mkIf cfg.fonts {
     nixpkgs.config.joypixels.acceptLicense = mkDefault true;
-
     fonts = {
+      fontconfig.enable = lib.mkForce true;
+      fontconfig.defaultFonts = {
+        serif = mkDefault [
+          "IBM Plex Serif"
+          "Noto Serif"
+          "Noto Serif CJK SC"
+          "Noto Serif CJK TC"
+          "Noto Serif CJK JP"
+          "Noto Serif CJK KR"
+          "Noto Color Emoji"
+          "Noto Emoji"
+        ];
+        sansSerif = mkDefault [
+          "Inter"
+          "Noto Sans"
+          "Noto Sans CJK SC"
+          "Noto Sans CJK TC"
+          "Noto Sans CJK JP"
+          "Noto Sans CJK KR"
+          "Noto Sans CJK HK"
+          "Noto Color Emoji"
+          "Noto Emoji"
+        ];
+        monospace = mkDefault [
+          "JetBrainsMono Nerd Font"
+          "Noto Sans Mono"
+          "Noto Sans Mono CJK SC"
+          "Noto Sans Mono CJK TC"
+          "Noto Sans Mono CJK JP"
+          "Noto Sans Mono CJK KR"
+          "Noto Sans Mono CJK HK"
+          "Noto Color Emoji"
+          "Noto Emoji"
+        ];
+        emoji = mkDefault ["Noto Color Emoji" "Noto Emoji"];
+      };
       enableDefaultPackages = mkDefault true; # Enable a basic set of fonts providing several styles and families and reasonable coverage of Unicode.
 
       packages = with pkgs; [
