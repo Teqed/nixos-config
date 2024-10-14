@@ -25,7 +25,6 @@ in {
     teq.nixos = {
       # amd = lib.mkDefault true;
       boot = lib.mkDefault true;
-      locale = lib.mkDefault true;
       nix-ld = lib.mkDefault true;
       nixcfg = lib.mkDefault true;
       programs = lib.mkDefault true;
