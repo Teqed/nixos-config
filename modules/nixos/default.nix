@@ -4,6 +4,7 @@ fromFlakes: let
     nix-ld = import ./nix-ld.nix;
     locale = import ./locale.nix;
     boot = import ./boot.nix;
+    impermanence = import ./impermanence.nix;
     programs = import ./programs.nix;
     services = import ./services.nix;
     networking = import ./networking.nix;
