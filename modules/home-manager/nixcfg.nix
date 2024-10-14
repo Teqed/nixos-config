@@ -6,7 +6,6 @@
   ...
 }:
 with lib; let
-  cfg = config.teq.home-manager;
   # flakeInputs = filterAttrs (_: isType "flake") inputs;
   substituter_list = [
     "https://cache.nixos.org/"
@@ -28,23 +27,27 @@ with lib; let
     "https://nixpkgs-wayland.cachix.org"
     "https://nixpkgs-unfree.cachix.org"
   ];
+  defaultLang = "en_US.UTF-8";
+  inherit (lib) mkDefault;
 in {
-  options.teq.home-manager = {
-    enable = lib.mkEnableOption "Enable Teq's Home-Manager configuration defaults.";
-  };
-  config = lib.mkIf cfg.enable {
+  config = lib.mkIf config.teq.home-manager.enable {
+    teq.home-manager.gui = lib.mkDefault config.hardware.graphics.enable;
     home.stateVersion = "24.05"; # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
     home.extraOutputsToInstall = ["info" "man" "share" "icons" "doc"];
-    teq.home-manager = {
-      fonts = lib.mkDefault true;
-      locale = lib.mkDefault true;
-      packages = lib.mkDefault true;
-      programs.enable = lib.mkDefault true;
-      programs.shells = lib.mkDefault true;
-      paths = lib.mkDefault true;
-      theming = lib.mkDefault true;
-      mime-apps.enable = lib.mkDefault true;
-      files = lib.mkDefault true;
+    home.keyboard.layout = mkDefault "us";
+    home.language = {
+      base = mkDefault "${defaultLang}";
+      ctype = mkDefault "${defaultLang}";
+      numeric = mkDefault "${defaultLang}";
+      time = mkDefault "${defaultLang}";
+      collate = mkDefault "${defaultLang}";
+      monetary = mkDefault "${defaultLang}";
+      messages = mkDefault "${defaultLang}";
+      paper = mkDefault "${defaultLang}";
+      name = mkDefault "${defaultLang}";
+      address = mkDefault "${defaultLang}";
+      telephone = mkDefault "${defaultLang}";
+      measurement = mkDefault "${defaultLang}";
     };
     nixpkgs = lib.mkIf (!osConfig.home-manager.useGlobalPkgs) {
       config = {

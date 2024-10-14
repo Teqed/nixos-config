@@ -4,7 +4,6 @@
   pkgs,
   ...
 }: let
-  cfg = config.teq.home-manager;
   XDG_LOCAL_HOME = "${config.home.homeDirectory}/.local"; # ~/.local
   XDG_CACHE_HOME = "${config.home.homeDirectory}/.cache"; # ~/.cache
   XDG_CONFIG_HOME = "${config.home.homeDirectory}/.config"; # ~/.config # $XDG_CONFIG_HOME defines the base directory relative to which user-specific configuration files should be stored.
@@ -130,10 +129,7 @@
     ICEAUTHORITY = "${XDG_RUNTIME_DIR}/ICEauthority"; # ~/.ICEauthority
   };
 in {
-  options.teq.home-manager = {
-    paths = lib.mkEnableOption "Teq's NixOS Paths configuration defaults.";
-  };
-  config = lib.mkIf cfg.paths {
+  config = lib.mkIf config.teq.home-manager.enable {
     programs.bash.sessionVariables = global_variables;
     programs.zsh.sessionVariables = global_variables;
     systemd.user.sessionVariables = global_variables;

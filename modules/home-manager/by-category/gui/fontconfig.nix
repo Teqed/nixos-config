@@ -1,15 +1,29 @@
 {
+  pkgs,
   lib,
   config,
   ...
 }: let
-  cfg = config.teq.home-manager;
   inherit (lib) mkDefault mkForce;
 in {
-  options.teq.home-manager = {
-    fonts = lib.mkEnableOption "Teq's Home-Manager Fonts configuration defaults.";
-  };
-  config = lib.mkIf cfg.fonts {
+  config = lib.mkIf config.teq.home-manager.gui {
+    home.packages = with pkgs; [
+      inter
+      ibm-plex
+      dejavu_fonts # 10MB
+      noto-fonts-lgc-plus # 11MB
+      noto-fonts-cjk-sans # 62MB
+      noto-fonts-cjk-serif # 54MB
+      noto-fonts-monochrome-emoji # 2MB
+      noto-fonts-color-emoji # 10MB
+      liberation_ttf # 4MB
+      (nerdfonts.override {
+        fonts = [
+          "NerdFontsSymbolsOnly"
+          "JetBrainsMono"
+        ];
+      })
+    ];
     fonts = {
       fontconfig.enable = mkForce true;
       fontconfig.defaultFonts = {

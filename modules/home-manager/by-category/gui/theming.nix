@@ -3,13 +3,8 @@
   config,
   pkgs,
   ...
-}: let
-  cfg = config.teq.home-manager;
-in {
-  options.teq.home-manager = {
-    theming = lib.mkEnableOption "Teq's NixOS Theming configuration defaults.";
-  };
-  config = lib.mkIf cfg.theming {
+}: {
+  config = lib.mkIf config.teq.home-manager.gui {
     home = {
       pointerCursor = {
         name = lib.mkDefault "Bibata-Modern-Classic";
@@ -101,13 +96,7 @@ in {
                   middleClickAction = "toggleGrouping"; # What to do on middle-mouse click on a task button.
                   showTasks.onlyInCurrentScreen = true; # Whether to show only window tasks that are on the same screen as the widget.
                 };
-                launchers = let
-                  # Auto switch terminal application desktop file
-                  terminal =
-                    if builtins.hasAttr "TERMINAL" config.home.sessionVariables # TODO: Properly set
-                    then "${config.home.sessionVariables.TERMINAL}"
-                    else "org.kde.konsole";
-                in [
+                launchers = [
                   # "applications:${terminal}.desktop"
                   "preferred://filemanager"
                   # "applications:krita.desktop" # TODO: Properly set

@@ -35,7 +35,7 @@ in {
     emailClient = mkPreferenceOptions "email client" "vivaldi" "vivaldi.desktop"; # TODO: Change to Thunderbird
     launcher.command = mkPreferenceCmdOption "launcher" "krunner";
   };
-  config = lib.mkIf cfg.enable {
+  config = lib.mkIf config.teq.home-manager.enable {
     xdg.mimeApps = let
       browser = cfg.browser.desktop;
       textEditor = cfg.textEditor.desktop;
