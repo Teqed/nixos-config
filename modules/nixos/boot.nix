@@ -9,8 +9,12 @@
 in {
   options.teq.nixos = {
     boot = lib.mkEnableOption "Teq's NixOS Boot configuration defaults.";
+    kernel = {
+      enable = lib.mkEnableOption "Teq's NixOS Kernel configuration defaults.";
+      cachyos = lib.mkEnableOption "Enable CachyOS kernel.";
+    };
   };
-  config = lib.mkIf cfg.boot {
+  config = lib.mkMerge ( lib.mkIf cfg.boot {
     systemd.services.systemd-udev-settle.enable = mkDefault false; # don't wait for udev to settle on boot
     systemd.services.NetworkManager-wait-online.enable = mkDefault false; # don't wait for network to be up on boot
     boot = {
@@ -58,5 +62,20 @@ in {
       extraConfig = mkDefault "font-size=10";
       # hwRender = mkDefault true; # Whether to use 3D hardware acceleration to render the console.
     };
-  };
+  } ++ lib.mkIf cfg.kernel.enable {
+    nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
+    boot.kernelPackages =
+      if cfg.cachyos
+      then pkgs.linuxPackages_cachyos # Use the CachyOS kernel
+      else pkgs.linuxPackages; # Use the default kernel # linux-6.11 500MB
+    boot.kernel.sysctl = {
+      "vm.max_map_count" = 2147483642; # Required for some games
+    };
+    chaotic = lib.mkIf cfg.cachyos {
+      scx = {
+        enable = true; # Additional configurations for scheduler
+        scheduler = "scx_rusty";
+      };
+    };
+  } );
 }
