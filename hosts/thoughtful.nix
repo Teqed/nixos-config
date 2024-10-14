@@ -1,6 +1,7 @@
 {nixos-hardware, ...}: {
   imports = [
     ./profiles/common.nix
+    ./profiles/gui.nix
     nixos-hardware.nixosModules.common-pc
     nixos-hardware.nixosModules.common-pc-ssd
     nixos-hardware.nixosModules.common-cpu-amd
@@ -8,10 +9,7 @@
   ];
   networking.hostName = "thoughtful"; # /dev/disk/by-partuuid/032b15fe-6dc7-473e-b1a5-d51f4df7ffd6
   networking.hostId = "9936699a";
-  # Linux
   nixpkgs.hostPlatform = "x86_64-linux";
-  # CPU AMD
-  hardware.enableRedistributableFirmware = true;
   hardware.cpu.amd.updateMicrocode = true;
   boot = {
     loader = {
@@ -46,13 +44,8 @@
     enable = true;
     btrfs = true;
   };
-  # Desktop
-  home-manager.users.teq.teq.home-manager.gui = true;
   teq.nixos = {
     kernel.cachyos = true;
     networking.blocking = true;
-    gui.enable = true;
-    gui.amd = true;
-    gui.steam = true;
   };
 }
