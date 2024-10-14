@@ -9,33 +9,33 @@
   label_swap = cfg.impermanence.label_swap;
   label_boot = cfg.impermanence.label_boot;
   btrfs_nix = {
-      device = "/dev/disk/by-label/${label_nixos}";
-      fsType = "btrfs";
-      neededForBoot = true;
-      options = [
-        "subvol=@nix" # BTRFS subvolume for Nix store.
-        "compress-force=zstd:1" # ZSTD Compression level 1 -- Suitable for NVMe SSDs.
-        "noatime" # Under read intensive work-loads, specifying noatime significantly improves performance
-      ];
-    };
+    device = "/dev/disk/by-label/${label_nixos}";
+    fsType = "btrfs";
+    neededForBoot = true;
+    options = [
+      "subvol=@nix" # BTRFS subvolume for Nix store.
+      "compress-force=zstd:1" # ZSTD Compression level 1 -- Suitable for NVMe SSDs.
+      "noatime" # Under read intensive work-loads, specifying noatime significantly improves performance
+    ];
+  };
   ext4_nix = {
-      device = "/dev/disk/by-label/${label_nixos}";
-      fsType = "ext4";
-      neededForBoot = true;
-      options = [
-        "noatime"
-      ];
-    };
+    device = "/dev/disk/by-label/${label_nixos}";
+    fsType = "ext4";
+    neededForBoot = true;
+    options = [
+      "noatime"
+    ];
+  };
   btrfs_persist = {
-      device = "/dev/disk/by-label/${label_nixos}";
-      fsType = "btrfs";
-      neededForBoot = true;
-      options = [
-        "subvol=@persist" # BTRFS subvolume for persistent data.
-        "compress-force=zstd:1"
-        "noatime"
-      ];
-    };
+    device = "/dev/disk/by-label/${label_nixos}";
+    fsType = "btrfs";
+    neededForBoot = true;
+    options = [
+      "subvol=@persist" # BTRFS subvolume for persistent data.
+      "compress-force=zstd:1"
+      "noatime"
+    ];
+  };
   ext4_persist = {
     depends = ["/nix"];
     device = "/nix/persist";
@@ -43,22 +43,22 @@
     options = ["bind"];
   };
   btrfs_home = {
-      device = "/dev/disk/by-label/${label_nixos}";
-      fsType = "btrfs";
-      neededForBoot = true;
-      options = [
-        "subvol=@home"
-        # BTRFS subvolume for user home directories. Replaced with empty subvolume on boot.
-        "compress-force=zstd:1"
-        "noatime"
-      ];
-    };
+    device = "/dev/disk/by-label/${label_nixos}";
+    fsType = "btrfs";
+    neededForBoot = true;
+    options = [
+      "subvol=@home"
+      # BTRFS subvolume for user home directories. Replaced with empty subvolume on boot.
+      "compress-force=zstd:1"
+      "noatime"
+    ];
+  };
   ext4_home = {
     depends = ["/nix"];
     device = "/nix/home";
     fsType = "none";
     options = ["bind"];
-    };
+  };
 in {
   imports = [
     impermanence.nixosModules.impermanence
@@ -99,9 +99,18 @@ in {
         options = ["nofail"];
       }
     ];
-    fileSystems."/nix" = if cfg.impermanence.btrfs then btrfs_nix else ext4_nix;
-    fileSystems."/persist" = if cfg.impermanence.btrfs then btrfs_persist else ext4_persist;
-    fileSystems."/home" = if cfg.impermanence.btrfs then btrfs_home else ext4_home;
+    fileSystems."/nix" =
+      if cfg.impermanence.btrfs
+      then btrfs_nix
+      else ext4_nix;
+    fileSystems."/persist" =
+      if cfg.impermanence.btrfs
+      then btrfs_persist
+      else ext4_persist;
+    fileSystems."/home" =
+      if cfg.impermanence.btrfs
+      then btrfs_home
+      else ext4_home;
     environment.variables.NIX_REMOTE = "daemon";
     # Move temporary build artifacts from /tmp to /nix/tmp
     # Otherwise, a larger build could result in No enough space left on device errors.
@@ -171,16 +180,25 @@ in {
         "/etc/NetworkManager/system-connections"
         "/var/cache"
         "/var/db"
-        { directory = "/var/keys"; mode = "0700"; }
+        {
+          directory = "/var/keys";
+          mode = "0700";
+        }
         "/var/lib"
         "/var/log"
         "/var/spool"
-        { directory = "/var/tmp"; mode = "1777"; }
+        {
+          directory = "/var/tmp";
+          mode = "1777";
+        }
       ];
       files = [
         "/etc/machine-id" # machine-id is used by systemd for the journal
         "/etc/adjtime" # Contains descriptive information about the hardware clock.
-        { file = "/var/keys/secret_file"; parentDirectory = {mode = "u=rwx,g=,o=";}; }
+        {
+          file = "/var/keys/secret_file";
+          parentDirectory = {mode = "u=rwx,g=,o=";};
+        }
       ];
       users.media = {
         # TODO: Make generic to userconfig.service_profiles
@@ -189,9 +207,18 @@ in {
           ".cache"
           ".config"
           ".local"
-          { directory = ".gnupg"; mode = "0700"; }
-          { directory = ".nixops"; mode = "0700"; }
-          { directory = ".ssh"; mode = "0700"; }
+          {
+            directory = ".gnupg";
+            mode = "0700";
+          }
+          {
+            directory = ".nixops";
+            mode = "0700";
+          }
+          {
+            directory = ".ssh";
+            mode = "0700";
+          }
         ];
       };
       users.teq = {
@@ -203,9 +230,18 @@ in {
           ".local"
           ".mozilla"
           ".vscode-oss"
-          { directory = ".gnupg"; mode = "0700"; }
-          { directory = ".nixops"; mode = "0700"; }
-          { directory = ".ssh"; mode = "0700"; }
+          {
+            directory = ".gnupg";
+            mode = "0700";
+          }
+          {
+            directory = ".nixops";
+            mode = "0700";
+          }
+          {
+            directory = ".ssh";
+            mode = "0700";
+          }
           # ".pki" # ?
           # ".rbenv" # ? Move
         ];
