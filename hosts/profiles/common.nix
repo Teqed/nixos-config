@@ -29,6 +29,7 @@ in {
     # home-manager.users = lib.forEach userinfo.users (u: {
     #   "${u}" = {};
     # });
+    teq.nixos.enable = true;
     home-manager.users.teq.teq.home-manager.enable = true;
     users.users = lib.mkMerge (
       [
