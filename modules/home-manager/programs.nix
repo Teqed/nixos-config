@@ -10,7 +10,7 @@ in {
     enable = lib.mkEnableOption "Teq's Home-Manager Programs configuration defaults.";
   };
   imports = [
-    ./by-category/_shells/programs.nix
+    ./by-category/shells/programs.nix
   ];
   config = lib.mkIf cfg.enable {
     teq.home-manager.programs.shells = true;
