@@ -82,7 +82,7 @@ in {
     };
     btrfs = lib.mkEnableOption "Use BTRFS for root, home, and persist filesystems. Otherwise, use ext4.";
   };
-  config = lib.mkIf cfg.impermanence {
+  config = lib.mkIf cfg.impermanence.enable {
     fileSystems."/" = {
       device = "none";
       fsType = "tmpfs";
