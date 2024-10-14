@@ -184,7 +184,7 @@ in {
       ];
       users.media = {
         # TODO: Make generic to userconfig.service_profiles
-        hideMounts = true;
+        # hideMounts = true;
         directories = [
           ".cache"
           ".config"
