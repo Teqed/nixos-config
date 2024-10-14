@@ -6,10 +6,10 @@
 }: {
   config = lib.mkIf config.teq.home-manager.gui {
     programs = {
-    foot = {
-      enable = lib.mkDefault true;
-      # settings = { };
-    };
+      foot = {
+        enable = lib.mkDefault true;
+        # settings = { };
+      };
     };
   };
 }

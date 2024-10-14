@@ -9,13 +9,13 @@
       notcurses # 700MB / 10MB (ffmpeg)
     ];
     programs = {
-    readline = {
-      enable = lib.mkDefault true;
-      # TODO: Migrate .inputrc into config here
-      # variables = { };
-      # extraConfig = " ";
-      # bindings = { "\\C-h" = "backward-kill-word"; }
-    };
+      readline = {
+        enable = lib.mkDefault true;
+        # TODO: Migrate .inputrc into config here
+        # variables = { };
+        # extraConfig = " ";
+        # bindings = { "\\C-h" = "backward-kill-word"; }
+      };
     };
   };
 }

@@ -14,37 +14,37 @@
 in {
   config = lib.mkIf config.teq.home-manager.enable {
     programs = {
-    eza = {
-      enable = lib.mkDefault true;
-      extraOptions = [
-        "--group-directories-first"
-        "--color-scale"
-        "--color=auto"
-        "--hyperlink"
-        "--extended"
-        "--classify"
-        "--header"
-        "--mounts"
-      ];
-      git = lib.mkDefault true;
-      icons = lib.mkDefault true;
-    };
-    xplr = {
-      enable = lib.mkDefault true;
-      # extraConfig =
-      # plugins =
-    };
-    yazi = {
-      enable = lib.mkDefault true; # 426MB / 20MB (imagemagick, ffmegthumbnailer)
-      settings.theme = {
-        flavor = {
-          use = lib.mkDefault "catppuccin-mocha";
+      eza = {
+        enable = lib.mkDefault true;
+        extraOptions = [
+          "--group-directories-first"
+          "--color-scale"
+          "--color=auto"
+          "--hyperlink"
+          "--extended"
+          "--classify"
+          "--header"
+          "--mounts"
+        ];
+        git = lib.mkDefault true;
+        icons = lib.mkDefault true;
+      };
+      xplr = {
+        enable = lib.mkDefault true;
+        # extraConfig =
+        # plugins =
+      };
+      yazi = {
+        enable = lib.mkDefault true; # 426MB / 20MB (imagemagick, ffmegthumbnailer)
+        settings.theme = {
+          flavor = {
+            use = lib.mkDefault "catppuccin-mocha";
+          };
+        };
+        flavors = {
+          catppuccin-mocha = lib.mkDefault "${yaziFlavors}/catppuccin-mocha.yazi";
         };
       };
-      flavors = {
-        catppuccin-mocha = lib.mkDefault "${yaziFlavors}/catppuccin-mocha.yazi";
-      };
-    };
     };
   };
 }
