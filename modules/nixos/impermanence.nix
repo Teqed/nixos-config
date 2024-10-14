@@ -8,6 +8,57 @@
   label_nixos = cfg.impermanence.label_nixos;
   label_swap = cfg.impermanence.label_swap;
   label_boot = cfg.impermanence.label_boot;
+  btrfs_nix = {
+      device = "/dev/disk/by-label/${label_nixos}";
+      fsType = "btrfs";
+      neededForBoot = true;
+      options = [
+        "subvol=@nix" # BTRFS subvolume for Nix store.
+        "compress-force=zstd:1" # ZSTD Compression level 1 -- Suitable for NVMe SSDs.
+        "noatime" # Under read intensive work-loads, specifying noatime significantly improves performance
+      ];
+    };
+  ext4_nix = {
+      device = "/dev/disk/by-label/${label_nixos}";
+      fsType = "ext4";
+      neededForBoot = true;
+      options = [
+        "noatime"
+      ];
+    };
+  btrfs_persist = {
+      device = "/dev/disk/by-label/${label_nixos}";
+      fsType = "btrfs";
+      neededForBoot = true;
+      options = [
+        "subvol=@persist" # BTRFS subvolume for persistent data.
+        "compress-force=zstd:1"
+        "noatime"
+      ];
+    };
+  ext4_persist = {
+    depends = ["/nix"];
+    device = "/nix/persist";
+    fsType = "none";
+    options = ["bind"];
+  };
+  btrfs_home = {
+      device = "/dev/disk/by-label/${label_nixos}";
+      fsType = "btrfs";
+      neededForBoot = true;
+      options = [
+        "subvol=@home"
+        # BTRFS subvolume for user home directories. Replaced with empty subvolume on boot.
+        "compress-force=zstd:1"
+        "noatime"
+      ];
+    };
+  ext4_home = {
+    depends = ["/nix"];
+    device = "/nix/home";
+    fsType = "none";
+    options = ["bind"];
+    };
 in {
   imports = [
     impermanence.nixosModules.impermanence
@@ -29,10 +80,9 @@ in {
       default = "BOOT";
       description = "The label of the EFI boot partition.";
     };
+    btrfs = lib.mkEnableOption "Use BTRFS for root, home, and persist filesystems. Otherwise, use ext4.";
   };
-  # config = lib.mkIf cfg.impermanence {
-  config = {
-    teq.nixos.impermanence.enable = true; # Allows other modules to check if impermanence is enabled
+  config = lib.mkIf cfg.impermanence {
     fileSystems."/" = {
       device = "none";
       fsType = "tmpfs";
@@ -43,43 +93,15 @@ in {
       fsType = "vfat";
       options = ["fmask=0022" "dmask=0022" "noatime"];
     };
-    fileSystems."/nix" = {
-      device = "/dev/disk/by-label/${label_nixos}";
-      fsType = "btrfs";
-      neededForBoot = true;
-      options = [
-        "subvol=@nix" # BTRFS subvolume for Nix store.
-        "compress-force=zstd:1" # ZSTD Compression level 1 -- Suitable for NVMe SSDs.
-        "noatime" # Under read intensive work-loads, specifying noatime significantly improves performance
-      ];
-    };
-    fileSystems."/persist" = {
-      device = "/dev/disk/by-label/${label_nixos}";
-      fsType = "btrfs";
-      neededForBoot = true;
-      options = [
-        "subvol=@persist" # BTRFS subvolume for persistent data.
-        "compress-force=zstd:1"
-        "noatime"
-      ];
-    };
-    fileSystems."/home" = {
-      device = "/dev/disk/by-label/${label_nixos}";
-      fsType = "btrfs";
-      neededForBoot = true;
-      options = [
-        "subvol=@home"
-        # BTRFS subvolume for user home directories. Replaced with empty subvolume on boot.
-        "compress-force=zstd:1"
-        "noatime"
-      ];
-    };
     swapDevices = [
       {
         label = label_swap;
         options = ["nofail"];
       }
     ];
+    fileSystems."/nix" = if cfg.impermanence.btrfs then btrfs_nix else ext4_nix;
+    fileSystems."/persist" = if cfg.impermanence.btrfs then btrfs_persist else ext4_persist;
+    fileSystems."/home" = if cfg.impermanence.btrfs then btrfs_home else ext4_home;
     environment.variables.NIX_REMOTE = "daemon";
     # Move temporary build artifacts from /tmp to /nix/tmp
     # Otherwise, a larger build could result in No enough space left on device errors.
@@ -95,7 +117,7 @@ in {
       )
     );
     boot.initrd.systemd.enable = lib.mkForce true;
-    boot.initrd.systemd.services.rollback = {
+    boot.initrd.systemd.services.rollback = lib.mkIf cfg.impermanence.btrfs {
       description = "Rollback BTRFS root subvolume to a pristine state";
       wantedBy = ["initrd.target"];
       requires = ["dev-disk-by\\x2dlabel-${label_nixos}.device"];
@@ -149,11 +171,11 @@ in {
         "/etc/NetworkManager/system-connections"
         "/var/cache"
         "/var/db"
-        "/var/keys"
+        { directory = "/var/keys"; mode = "0700"; }
         "/var/lib"
         "/var/log"
         "/var/spool"
-        "/var/tmp"
+        { directory = "/var/tmp"; mode = "1777"; }
       ];
       files = [
         "/etc/machine-id" # machine-id is used by systemd for the journal

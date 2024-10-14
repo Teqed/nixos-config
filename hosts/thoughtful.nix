@@ -2,7 +2,6 @@
   imports = [
     ./profiles/common.nix
     ./profiles/desktop.nix
-    ./profiles/impermanence.nix
     nixos-hardware.nixosModules.common-pc
     nixos-hardware.nixosModules.common-pc-ssd
     nixos-hardware.nixosModules.common-cpu-amd
@@ -22,5 +21,9 @@
     initrd.availableKernelModules = ["nvme" "xhci_pci" "ahci" "usb_storage" "usbhid" "sd_mod"];
     initrd.kernelModules = ["amdgpu"];
     kernelModules = ["kvm-amd"];
+  };
+  teq.nixos.impermanence = {
+    enable = true;
+    btrfs = true;
   };
 }
