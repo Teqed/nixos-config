@@ -141,7 +141,7 @@ in {
       packages = with pkgs; [xdg-ninja]; # A shell script which checks your $HOME for unwanted files and directories.
       preferXdgDirectories = true;
       # sessionPath = [XDG_BIN_HOME];
-      sessionVariables = lib.mkForce global_variables; # TODO: only inputrc needs to be forced
+      sessionVariables = lib.mkDefault global_variables;
       shellAliases = {
         wget = "wget --hsts-file='\${XDG_STATE_HOME}/history/wget_history'";
       };
