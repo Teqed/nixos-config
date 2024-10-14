@@ -22,19 +22,6 @@ in {
     };
   };
   config = {
-    teq.nixos = {
-      # amd = lib.mkDefault true;
-      boot = lib.mkDefault true;
-      nix-ld = lib.mkDefault true;
-      nixcfg = lib.mkDefault true;
-      programs = lib.mkDefault true;
-      services = lib.mkDefault true;
-      kernel.cachyos = lib.mkDefault true;
-      networking.enable = lib.mkDefault true;
-      networking.blocking = lib.mkDefault true;
-    };
-    networking.networkmanager.enable = mkDefault true;
-    system.stateVersion = "24.05"; # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
     home-manager.backupFileExtension = lib.mkDefault "hm-backup";
     home-manager.useGlobalPkgs = lib.mkDefault true;
     home-manager.useUserPackages = lib.mkDefault true;
@@ -42,10 +29,7 @@ in {
     # home-manager.users = lib.forEach userinfo.users (u: {
     #   "${u}" = {};
     # });
-    home-manager.users.teq = {
-      home.stateVersion = "24.05"; # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
-      teq.home-manager.enable = true;
-    };
+    home-manager.users.teq.teq.home-manager.enable = true;
     users.users = lib.mkMerge (
       [
         {

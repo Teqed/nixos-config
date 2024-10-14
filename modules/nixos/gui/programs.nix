@@ -5,14 +5,10 @@
   inputs,
   ...
 }: let
-  cfg = config.teq.nixos.desktop;
   chromium_policy = ../../home-manager/sources/.config/chromium/policies/managed/defaultExtensions.json;
   brave_policy = ../../home-manager/sources/.config/brave/policies/managed/DisableBraveRewardsWalletAI.json;
 in {
-  options.teq.nixos.desktop = {
-    programs = lib.mkEnableOption "Teq's NixOS Desktop Program configuration defaults.";
-  };
-  config = lib.mkIf cfg.programs {
+  config = lib.mkIf config.teq.nixos.gui.enable {
     programs = {
       appimage = {
         enable = lib.mkDefault true;

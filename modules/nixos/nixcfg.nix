@@ -32,8 +32,12 @@ with lib; let
 in {
   options.teq.nixos = {
     nixcfg = lib.mkEnableOption "Teq's NixOS Nixcfg configuration defaults.";
+    gui.enable = lib.mkEnableOption "Teq's NixOS GUI configuration defaults.";
+    amd = lib.mkEnableOption "Teq's NixOS AMD configuration defaults.";
+    steam = lib.mkEnableOption "Teq's NixOS Steam configuration defaults.";
   };
   config = lib.mkIf cfg.nixcfg {
+    system.stateVersion = "24.05"; # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
     nixpkgs = {
       config = {
         # allowBroken = true;

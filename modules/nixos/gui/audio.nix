@@ -2,13 +2,8 @@
   lib,
   config,
   ...
-}: let
-  cfg = config.teq.nixos.desktop;
-in {
-  options.teq.nixos.desktop = {
-    audio = lib.mkEnableOption "Teq's NixOS Desktop Audio configuration defaults.";
-  };
-  config = lib.mkIf cfg.audio {
+}: {
+  config = lib.mkIf config.teq.nixos.gui.enable {
     services = {
       pipewire = {
         enable = true; # Enable sound with pipewire.

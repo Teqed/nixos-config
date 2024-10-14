@@ -4,12 +4,9 @@
   lib,
   ...
 }: let
-  cfg = config.teq.nixos.desktop;
+  cfg = config.teq.nixos.gui;
   wine_wayland = pkgs.wineWowPackages.waylandFull;
 in {
-  options.teq.nixos.desktop = {
-    steam = lib.mkEnableOption "Teq's NixOS Steam configuration defaults.";
-  };
   config = lib.mkIf cfg.steam {
     programs.steam = {
       enable = lib.mkDefault true; #11.8GB / 300MB (mostly mesa libraries)

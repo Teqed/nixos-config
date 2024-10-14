@@ -48,7 +48,11 @@
   };
   # Desktop
   home-manager.users.teq.teq.home-manager.gui = true;
-  teq.nixos.desktop.enable = true;
-  teq.nixos.desktop.amd = true;
-  teq.nixos.desktop.steam = true;
+  teq.nixos = {
+    kernel.cachyos = true;
+    networking.blocking = true;
+    gui.enable = true;
+    gui.amd = true;
+    gui.steam = true;
+  };
 }

@@ -6,7 +6,6 @@
   # nixpkgs-wayland,
   ...
 }: let
-  cfg = config.teq.nixos.desktop;
   hostname = config.networking.hostName;
   inherit (lib) mkDefault;
   # walls_repo = builtins.fetchGit {
@@ -29,10 +28,7 @@ in {
       };
     }
   ];
-  options.teq.nixos.desktop = {
-    services = lib.mkEnableOption "Teq's NixOS Services configuration defaults.";
-  };
-  config = lib.mkIf cfg.services {
+  config = lib.mkIf config.teq.nixos.gui.enable {
     # nixpkgs.overlays = [nixpkgs-wayland.overlay]; # Automated, pre-built, (potentially) pre-release packages for Wayland (sway/wlroots) tools for NixOS.
     environment.systemPackages = [pkgs.bibata-cursors]; # Allows cursors to be used in the system, like the login screen
     hardware.graphics.enable32Bit = true; # On 64-bit systems, whether to support Direct Rendering for 32-bit applications (such as Wine). This is currently only supported for the nvidia and ati_unfree drivers, as well as Mesa.

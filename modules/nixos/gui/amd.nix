@@ -4,11 +4,8 @@
   pkgs,
   ...
 }: let
-  cfg = config.teq.nixos.desktop;
+  cfg = config.teq.nixos.gui;
 in {
-  options.teq.nixos.desktop = {
-    amd = lib.mkEnableOption "Teq's NixOS AMD configuration defaults.";
-  };
   config = lib.mkIf cfg.enable {
     hardware.graphics.extraPackages = with pkgs; [
       rocmPackages.clr.icd

@@ -4,13 +4,9 @@
   config,
   ...
 }: let
-  cfg = config.teq.nixos.desktop;
   inherit (lib) mkDefault;
 in {
-  options.teq.nixos.desktop = {
-    fonts = lib.mkEnableOption "Teq's NixOS Font configuration defaults.";
-  };
-  config = lib.mkIf cfg.fonts {
+  config = lib.mkIf config.teq.nixos.gui.enable {
     nixpkgs.config.joypixels.acceptLicense = mkDefault true;
     fonts = {
       fontconfig.enable = lib.mkForce true;
