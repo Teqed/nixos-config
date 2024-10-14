@@ -1,6 +1,5 @@
 fromFlakes: let
   modulesPerFile = {
-    kernel = import ./kernel.nix;
     nix-ld = import ./nix-ld.nix;
     locale = import ./locale.nix;
     boot = import ./boot.nix;
