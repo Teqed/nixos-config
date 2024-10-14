@@ -40,6 +40,7 @@ in {
       locale = lib.mkDefault true;
       packages = lib.mkDefault true;
       programs.enable = lib.mkDefault true;
+      programs.shells = lib.mkDefault true;
       paths = lib.mkDefault true;
       theming = lib.mkDefault true;
       mime-apps.enable = lib.mkDefault true;

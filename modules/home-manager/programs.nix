@@ -13,7 +13,6 @@ in {
     ./by-category/shells/programs.nix
   ];
   config = lib.mkIf cfg.enable {
-    teq.home-manager.programs.shells = true;
     systemd.user.startServices = lib.mkDefault "sd-switch"; # Nicely reload system units when changing configs
     services = {
       kdeconnect.enable = lib.mkDefault true; # 1GB / 23MB

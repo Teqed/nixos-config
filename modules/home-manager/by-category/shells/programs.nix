@@ -4,7 +4,6 @@
   config,
   ...
 }: let
-  cfg = config.teq.home-manager.programs;
   XDG_CONFIG_HOME = "${config.xdg.configHome}";
   yaziFlavors = pkgs.fetchFromGitHub {
     owner = "yazi-rs";
@@ -119,7 +118,7 @@ in {
   options.teq.home-manager.programs = {
     shells = lib.mkEnableOption "Teq's Home-Manager Shell Programs configuration defaults.";
   };
-  config = lib.mkIf cfg.shells {
+  config = lib.mkIf config.teq.home-manager.programs.shells {
     home.shellAliases = aliases;
     programs = {
       nix-index-database.comma.enable = lib.mkDefault true; # optional to also wrap and install comma
@@ -194,7 +193,7 @@ in {
       starship = {
         enable = true;
         # enableTransience = true;
-        settings = pkgs.lib.importTOML ./sources/.config/starship.toml;
+        settings = pkgs.lib.importTOML ../../sources/.config/starship.toml;
       };
       nushell.enable = lib.mkDefault true;
       bash = {
