@@ -30,7 +30,6 @@ in {
       nixcfg = lib.mkDefault true;
       programs = lib.mkDefault true;
       services = lib.mkDefault true;
-      kernel.enable = lib.mkDefault true;
       kernel.cachyos = lib.mkDefault true;
       networking.enable = lib.mkDefault true;
       networking.blocking = lib.mkDefault true;
