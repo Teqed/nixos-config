@@ -5,7 +5,6 @@
   ...
 }:
 with lib; let
-  cfg = config.teq.nixos;
   flakeInputs = filterAttrs (_: isType "flake") inputs;
   substituter_list = [
     "https://cache.nixos.org/"
@@ -35,8 +34,9 @@ in {
     gui.enable = lib.mkEnableOption "Teq's NixOS GUI configuration defaults.";
     gui.amd = lib.mkEnableOption "Teq's NixOS AMD configuration defaults.";
     gui.steam = lib.mkEnableOption "Teq's NixOS Steam configuration defaults.";
+    blocklist = lib.mkEnableOption "Enable host blocklist defaults.";
   };
-  config = lib.mkIf cfg.enable {
+  config = lib.mkIf config.teq.nixos.enable {
     system.stateVersion = "24.05"; # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
     nixpkgs = {
       config = {

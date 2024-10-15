@@ -29,6 +29,25 @@ in {
         # packages = { };
       };
       java.enable = true; # Duplicated from NixOS configuration - NixOS can use binfmt # 900 MB / 600 MB
+      ### version-management
+      gh.enable = lib.mkDefault true; # GitHub CLI
+      git = {
+        enable = lib.mkDefault true; # 300MB / 70MB (python3 200MB, perl 100MB)
+        # prompt = true; # NixOS-specific option
+        extraConfig = {
+          init = {
+            defaultBranch = lib.mkDefault "main";
+          };
+          url = {
+            "https://github.com/" = {
+              insteadOf = lib.mkDefault [
+                "gh:"
+                "github:"
+              ];
+            };
+          };
+        };
+      };
     };
   };
 }

@@ -3,10 +3,8 @@
   config,
   pkgs,
   ...
-}: let
-  cfg = config.teq.nixos.gui;
-in {
-  config = lib.mkIf cfg.enable {
+}: {
+  config = lib.mkIf config.teq.nixos.gui.amd {
     hardware.graphics.extraPackages = with pkgs; [
       rocmPackages.clr.icd
       amdvlk # Modern AMD Graphics Core Next (GCN) GPUs are supported through either radv, which is part of mesa, or the amdvlk package. Adding the amdvlk package to hardware.opengl.extraPackages makes both drivers available for applications and lets them choose.

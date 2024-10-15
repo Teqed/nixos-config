@@ -1,21 +1,12 @@
 {
-  inputs,
-  lib,
   config,
   pkgs,
-  # nixpkgs-wayland,
+  lib,
+  inputs,
   ...
 }: let
-  hostname = config.networking.hostName;
-  inherit (lib) mkDefault;
-  # walls_repo = builtins.fetchGit {
-  #   url = "https://github.com/dharmx/walls";
-  #   rev = "6bf4d733ebf2b484a37c17d742eb47e5139e6a14";
-  # };
-  # image_mountains = pkgs.fetchurl {
-  #   url = "https://github.com/dharmx/walls/blob/6bf4d733ebf2b484a37c17d742eb47e5139e6a14/cold/a_mountain_with_clouds_in_the_sky.jpg";
-  #   hash = "sha256-QGE8aXulkm7ergxbYrLTeLoLZaMCITutLM4a+s8x1pc=";
-  # };
+  chromium_policy = ../../home-manager/sources/.config/chromium/policies/managed/defaultExtensions.json;
+  brave_policy = ../../home-manager/sources/.config/brave/policies/managed/DisableBraveRewardsWalletAI.json;
 in {
   imports = [
     {
@@ -29,8 +20,48 @@ in {
     }
   ];
   config = lib.mkIf config.teq.nixos.gui.enable {
+    programs = {
+      appimage = {
+        enable = lib.lib.mkDefault true;
+        binfmt = lib.lib.mkDefault true; # NixOS-specific option
+        package = pkgs.appimage-run.override {
+          extraPkgs = pkgs: [pkgs.ffmpeg pkgs.imagemagick];
+        };
+      };
+      fuse = {
+        userAllowOther = lib.lib.mkDefault true; # Allow non-root users to specify the allow_other or allow_root mount options, see mount.fuse3(8). Might not be needed
+        mountMax = lib.lib.mkDefault 32000; # Set the maximum number of FUSE mounts allowed to non-root users. Integer between 0 and 32767, default 1000
+      };
+      virt-manager.enable = lib.lib.mkDefault true;
+    };
+
+    environment.systemPackages = with pkgs; [
+      inputs.wezterm-flake.packages.${pkgs.system}.default # Wezterm flake
+      solaar # 600MB / 30MB (gtk+3 600MB)
+      papirus-icon-theme # Allows icons to be used in the system, like the login screen
+      bibata-cursors # Allows cursors to be used in the system, like the login screen
+      (pkgs.writeShellScriptBin "qemu-system-x86_64-uefi" ''
+        qemu-system-x86_64 \
+          -bios ${pkgs.OVMF.fd}/FV/OVMF.fd \
+          "$@"
+      '') # QEMU virtualization with UEFI firmware
+    ];
+
+    virtualisation.waydroid.enable = true;
+    # boot.binfmt.emulatedSystems = [
+    #   "aarch64-linux" # ARM
+    #   "riscv64-linux" # RISC-V
+    #   "x86_64-windows" # Windows
+    #   "x86_64-linux" # Linux
+    # ];
+
+    environment.sessionVariables.NIXOS_OZONE_WL = "1"; # Use the Ozone Wayland support in several Electron apps
+
+    environment.etc."vivaldi/policies/managed/defaultExtensions.json".source = chromium_policy;
+    environment.etc."chromium/policies/managed/defaultExtensions.json".source = chromium_policy;
+    environment.etc."brave/policies/managed/DisableBraveRewardsWalletAI.json".source = brave_policy;
+
     # nixpkgs.overlays = [nixpkgs-wayland.overlay]; # Automated, pre-built, (potentially) pre-release packages for Wayland (sway/wlroots) tools for NixOS.
-    environment.systemPackages = [pkgs.bibata-cursors]; # Allows cursors to be used in the system, like the login screen
     hardware.graphics.enable32Bit = true; # On 64-bit systems, whether to support Direct Rendering for 32-bit applications (such as Wine). This is currently only supported for the nvidia and ati_unfree drivers, as well as Mesa.
     hardware.enableRedistributableFirmware = true; # Whether to enable firmware with a license allowing redistribution.
     hardware.enableAllFirmware = true; # Whether to enable all firmware regardless of license.
@@ -86,7 +117,7 @@ in {
                 Locale = "";
                 HourFormat = "HH:mm";
                 DateFormat = "dddd, d of MMMM";
-                HeaderText = "${hostname}";
+                HeaderText = "${config.networking.hostName}";
                 TranslatePlaceholderUsername = "";
                 TranslatePlaceholderPassword = "";
                 TranslateShowPassword = "";
@@ -115,42 +146,42 @@ in {
         };
       };
       desktopManager.plasma6.enable = true;
-      colord.enable = mkDefault true; # color management daemon
+      colord.enable = lib.mkDefault true; # color management daemon
       flatpak = {
-        enable = mkDefault true;
+        enable = lib.mkDefault true;
         update.auto = {
-          enable = mkDefault true;
-          onCalendar = mkDefault "weekly"; # Default value
+          enable = lib.mkDefault true;
+          onCalendar = lib.mkDefault "weekly"; # Default value
         };
         overrides = {
           global = {
-            Context.sockets = mkDefault ["wayland" "!x11" "!fallback-x11"]; # Force Wayland by default
+            Context.sockets = lib.mkDefault ["wayland" "!x11" "!fallback-x11"]; # Force Wayland by default
             Environment = {
-              XCURSOR_PATH = mkDefault "/run/host/user-share/icons:/run/host/share/icons"; # Fix un-themed cursor in some Wayland apps
-              GTK_THEME = mkDefault "Adwaita:dark"; # Force correct theme for some GTK apps
+              XCURSOR_PATH = lib.mkDefault "/run/host/user-share/icons:/run/host/share/icons"; # Fix un-themed cursor in some Wayland apps
+              GTK_THEME = lib.mkDefault "Adwaita:dark"; # Force correct theme for some GTK apps
             };
           };
           "com.visualstudio.code".Context = {
-            filesystems = mkDefault [
+            filesystems = lib.mkDefault [
               "xdg-config/git:ro" # Expose user Git config
               "/run/current-system/sw/bin:ro" # Expose NixOS managed software
             ];
-            sockets = mkDefault [
+            sockets = lib.mkDefault [
               "gpg-agent" # Expose GPG agent
               "pcsc" # Expose smart cards (i.e. YubiKey)
             ];
           };
-          "org.onlyoffice.desktopeditors".Context.sockets = mkDefault ["x11"]; # No Wayland support
+          "org.onlyoffice.desktopeditors".Context.sockets = lib.mkDefault ["x11"]; # No Wayland support
         };
       };
       sunshine = {
-        enable = mkDefault true;
-        openFirewall = mkDefault true;
-        capSysAdmin = mkDefault true;
+        enable = lib.mkDefault true;
+        openFirewall = lib.mkDefault true;
+        capSysAdmin = lib.mkDefault true;
       };
       xrdp = {
-        enable = mkDefault true;
-        openFirewall = mkDefault true;
+        enable = lib.mkDefault true;
+        openFirewall = lib.mkDefault true;
       };
     };
   };

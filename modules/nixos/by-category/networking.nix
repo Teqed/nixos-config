@@ -1,28 +1,13 @@
 {
-  pkgs,
+  # pkgs,
   lib,
   config,
   ...
 }: let
-  cfg = config.teq.nixos;
   inherit (lib) mkDefault;
 in {
-  options.teq.nixos = {
-    services = lib.mkEnableOption "Teq's NixOS Services configuration defaults.";
-  };
-  config = lib.mkIf cfg.services {
-    security.sudo = {
-      enable = mkDefault true;
-      package = pkgs.sudo.override {
-        withInsults = true;
-      };
-      extraConfig = mkDefault ''
-        Defaults lecture = never
-      '';
-    };
+  config = lib.mkIf config.teq.nixos.enable {
     services = {
-      clipcat.enable = lib.mkDefault true;
-      languagetool.enable = mkDefault true;
       samba = {
         enable = mkDefault true; # Samba, the SMB/CIFS protocol.
         openFirewall = mkDefault true;
@@ -34,8 +19,6 @@ in {
         openFirewall = mkDefault true;
         discovery = mkDefault true; # Enable discovery operation mode.
       };
-      printing.enable = mkDefault true; # Enable CUPS to print documents.
-      hardware.bolt.enable = mkDefault true; # Thunderbolt 3 device manager
       openssh = {
         enable = mkDefault true;
         settings = {
@@ -48,21 +31,39 @@ in {
         };
         openFirewall = mkDefault true;
       };
-      earlyoom.enable = mkDefault true;
-      hardware.openrgb = {
-        enable = mkDefault true;
-        package = pkgs.openrgb-with-all-plugins;
-      };
-      keyd = {
-        # A key remapping daemon for linux. https://github.com/rvaiya/keyd
-        enable = mkDefault true;
-        keyboards.default.settings = {
-          main = {
-            # overloads the capslock key to function as both escape (when tapped) and capslock (when held)
-            capslock = mkDefault "overload(capslock, esc)";
-          };
-        };
-      };
+    };
+    programs = {
+      mosh.enable = mkDefault true;
+    };
+    # environment.systemPackages = with pkgs; [
+    # ];
+    networkmanager.enable = lib.mkDefault true;
+    useDHCP = lib.mkDefault true; # Attempt to enable DHCP on all interfaces
+    wireless.enable = lib.mkDefault false; # Enables wireless support via wpa_supplicant.
+    wireless.userControlled.enable = lib.mkDefault true; # Allow normal users to control wpa_supplicant through wpa_gui or wpa_cli.
+    stevenblack = lib.mkIf config.teq.nixos.blocklist {
+      enable = true;
+      block = [
+        "fakenews"
+        "gambling"
+        "porn"
+        # "social"
+      ];
+    };
+    firewall = {
+      enable = true;
+      allowedTCPPortRanges = [
+        {
+          from = 1714;
+          to = 1764;
+        } # KDE Connect
+      ];
+      allowedUDPPortRanges = [
+        {
+          from = 1714;
+          to = 1764;
+        } # KDE Connect
+      ];
     };
   };
 }

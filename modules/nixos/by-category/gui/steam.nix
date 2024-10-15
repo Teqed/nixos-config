@@ -4,10 +4,9 @@
   lib,
   ...
 }: let
-  cfg = config.teq.nixos.gui;
   wine_wayland = pkgs.wineWowPackages.waylandFull;
 in {
-  config = lib.mkIf cfg.steam {
+  config = lib.mkIf config.teq.nixos.gui.steam {
     programs.steam = {
       enable = lib.mkDefault true; #11.8GB / 300MB (mostly mesa libraries)
       remotePlay.openFirewall = true;

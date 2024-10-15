@@ -1,15 +1,13 @@
 {
-  config,
-  lib,
   pkgs,
+  lib,
+  config,
   ...
-}: let
-  cfg = config.teq.nixos.media;
-in {
-  options.teq.nixos.media = {
-    enable = lib.mkEnableOption "Teq's NixOS Media configuration defaults.";
+}: {
+  options.teq.nixos = {
+    media = lib.mkEnableOption "Teq's NixOS Media configuration defaults.";
   };
-  config = lib.mkIf cfg.enable {
+  config = lib.mkIf config.teq.nixos.media {
     services = {
       jellyseerr = {
         enable = true;
@@ -113,6 +111,10 @@ in {
         #   })
         # ];
       };
-    }; # /services
-  }; # /config
+    };
+    # programs = {
+    # };
+    # environment.systemPackages = with pkgs; [
+    # ];
+  };
 }

@@ -39,8 +39,8 @@
     ];
   };
   teq.nixos = {
-    kernel.cachyos = true;
-    networking.blocking = true;
+    cachyos = true;
+    blocklist = true;
     impermanence = {
       enable = true;
       btrfs = true;
