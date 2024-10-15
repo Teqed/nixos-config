@@ -3,7 +3,9 @@
   lib,
   config,
   ...
-}: {
+}: let
+  profile = "media";
+in {
   options.teq.nixos = {
     media = lib.mkEnableOption "Teq's NixOS Media configuration defaults.";
   };
@@ -17,29 +19,29 @@
       bazarr = {
         enable = true;
         openFirewall = true; # 6767
-        user = "media"; # defaults to "bazarr"
-        group = "media"; # defaults to "bazarr"
+        user = profile; # defaults to "bazarr"
+        group = profile; # defaults to "bazarr"
         # listenPort = 6767; # Default
       };
       sabnzbd = {
         enable = true;
         openFirewall = true; # 7080
-        user = "media"; # defaults to "sabnzbd"
-        group = "media"; # defaults to "sabnzbd"
+        user = profile; # defaults to "sabnzbd"
+        group = profile; # defaults to "sabnzbd"
         configFile = "/home/media/.local/state/sabnzbd/sabnzbd.ini";
       };
       radarr = {
         enable = true;
         openFirewall = true; # 7878
-        user = "media"; # defaults to "radarr"
-        group = "media"; # defaults to "radarr"
+        user = profile; # defaults to "radarr"
+        group = profile; # defaults to "radarr"
         dataDir = "/home/media/.local/state/radarr/.config/Radarr";
       };
       jellyfin = {
         enable = true;
         openFirewall = true; # 8096 # The HTTP/HTTPS ports can be changed in the Web UI, so this option should only be used if they are unchanged, see Port Bindings.
-        user = "media"; # defaults to "jellyfin"
-        group = "media"; # defaults to "jellyfin"
+        user = profile; # defaults to "jellyfin"
+        group = profile; # defaults to "jellyfin"
         dataDir = "/home/media/.local/state/jellyfin";
         configDir = "/home/media/.local/state/jellyfin/config";
         logDir = "/home/media/.local/state/jellyfin/log";
@@ -48,8 +50,8 @@
       tautulli = {
         enable = true;
         openFirewall = true; # 8181
-        user = "media"; # defaults to "tautulli"
-        group = "media"; # defaults to "tautulli"
+        user = profile; # defaults to "tautulli"
+        group = profile; # defaults to "tautulli"
         dataDir = "/home/media/.local/state/plexpy";
         port = 8181; # Default
         configFile = "/home/media/.local/state/plexpy/config.ini";
@@ -57,15 +59,15 @@
       readarr = {
         enable = true;
         openFirewall = true; # 8787
-        user = "media"; # defaults to "readarr"
-        group = "media"; # defaults to "readarr"
+        user = profile; # defaults to "readarr"
+        group = profile; # defaults to "readarr"
         dataDir = "/home/media/.local/state/readarr/.config/Readarr";
       };
       sonarr = {
         enable = true;
         openFirewall = true; # 8989
-        user = "media"; # defaults to "sonarr"
-        group = "media"; # defaults to "sonarr"
+        user = profile; # defaults to "sonarr"
+        group = profile; # defaults to "sonarr"
         dataDir = "/home/media/.local/state/sonarr/.config/NzbDrone";
       };
       prowlarr = {
@@ -86,8 +88,8 @@
         package = plexpass;
         enable = false;
         openFirewall = true; # 32400
-        user = "media"; # defaults to "plex"
-        group = "media"; # defaults to "plex"
+        user = profile; # defaults to "plex"
+        group = profile; # defaults to "plex"
         dataDir = "/home/media/.local/state/plex";
         # dataDir = "/home/media/.local/state/plex/.config/Plex Media Server";
         # accelerationDevices = ["*"];
