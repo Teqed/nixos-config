@@ -20,17 +20,17 @@
         extraConfig = lib.mkDefault ''
           Defaults lecture = never
         '';
-        doas = {
-          enable = true;
-          wheelNeedsPassword = false;
-          extraRules = [
-            {
-              users = ["teq"]; # TODO: Add userinfo list variable
-              keepEnv = true;
-              persist = true;
-            }
-          ];
-        };
+      };
+      doas = {
+        enable = true;
+        wheelNeedsPassword = false;
+        extraRules = [
+          {
+            users = ["teq"]; # TODO: Add userinfo list variable
+            keepEnv = true;
+            persist = true;
+          }
+        ];
       };
     };
   };

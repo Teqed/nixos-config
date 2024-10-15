@@ -5,8 +5,8 @@
   inputs,
   ...
 }: let
-  chromium_policy = ../../home-manager/sources/.config/chromium/policies/managed/defaultExtensions.json;
-  brave_policy = ../../home-manager/sources/.config/brave/policies/managed/DisableBraveRewardsWalletAI.json;
+  chromium_policy = ../../../home-manager/sources/.config/chromium/policies/managed/defaultExtensions.json;
+  brave_policy = ../../../home-manager/sources/.config/brave/policies/managed/DisableBraveRewardsWalletAI.json;
 in {
   imports = [
     {
@@ -22,17 +22,17 @@ in {
   config = lib.mkIf config.teq.nixos.gui.enable {
     programs = {
       appimage = {
-        enable = lib.lib.mkDefault true;
-        binfmt = lib.lib.mkDefault true; # NixOS-specific option
+        enable = lib.mkDefault true;
+        binfmt = lib.mkDefault true; # NixOS-specific option
         package = pkgs.appimage-run.override {
           extraPkgs = pkgs: [pkgs.ffmpeg pkgs.imagemagick];
         };
       };
       fuse = {
-        userAllowOther = lib.lib.mkDefault true; # Allow non-root users to specify the allow_other or allow_root mount options, see mount.fuse3(8). Might not be needed
-        mountMax = lib.lib.mkDefault 32000; # Set the maximum number of FUSE mounts allowed to non-root users. Integer between 0 and 32767, default 1000
+        userAllowOther = lib.mkDefault true; # Allow non-root users to specify the allow_other or allow_root mount options, see mount.fuse3(8). Might not be needed
+        mountMax = lib.mkDefault 32000; # Set the maximum number of FUSE mounts allowed to non-root users. Integer between 0 and 32767, default 1000
       };
-      virt-manager.enable = lib.lib.mkDefault true;
+      virt-manager.enable = lib.mkDefault true;
     };
 
     environment.systemPackages = with pkgs; [

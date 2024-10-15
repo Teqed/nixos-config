@@ -37,33 +37,35 @@ in {
     };
     # environment.systemPackages = with pkgs; [
     # ];
-    networkmanager.enable = lib.mkDefault true;
-    useDHCP = lib.mkDefault true; # Attempt to enable DHCP on all interfaces
-    wireless.enable = lib.mkDefault false; # Enables wireless support via wpa_supplicant.
-    wireless.userControlled.enable = lib.mkDefault true; # Allow normal users to control wpa_supplicant through wpa_gui or wpa_cli.
-    stevenblack = lib.mkIf config.teq.nixos.blocklist {
-      enable = true;
-      block = [
-        "fakenews"
-        "gambling"
-        "porn"
-        # "social"
-      ];
-    };
-    firewall = {
-      enable = true;
-      allowedTCPPortRanges = [
-        {
-          from = 1714;
-          to = 1764;
-        } # KDE Connect
-      ];
-      allowedUDPPortRanges = [
-        {
-          from = 1714;
-          to = 1764;
-        } # KDE Connect
-      ];
+    networking = {
+      networkmanager.enable = lib.mkDefault true;
+      useDHCP = lib.mkDefault true; # Attempt to enable DHCP on all interfaces
+      wireless.enable = lib.mkDefault false; # Enables wireless support via wpa_supplicant.
+      wireless.userControlled.enable = lib.mkDefault true; # Allow normal users to control wpa_supplicant through wpa_gui or wpa_cli.
+      stevenblack = lib.mkIf config.teq.nixos.blocklist {
+        enable = true;
+        block = [
+          "fakenews"
+          "gambling"
+          "porn"
+          # "social"
+        ];
+      };
+      firewall = {
+        enable = true;
+        allowedTCPPortRanges = [
+          {
+            from = 1714;
+            to = 1764;
+          } # KDE Connect
+        ];
+        allowedUDPPortRanges = [
+          {
+            from = 1714;
+            to = 1764;
+          } # KDE Connect
+        ];
+      };
     };
   };
 }
