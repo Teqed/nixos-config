@@ -4,6 +4,9 @@
   pkgs,
   ...
 }: {
+  imports = [
+    ./amdvlk-348903-fix.nix
+  ];
   config = lib.mkIf config.teq.nixos.gui.amd {
     hardware.graphics.extraPackages = with pkgs; [
       rocmPackages.clr.icd
