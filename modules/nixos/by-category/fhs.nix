@@ -4,13 +4,9 @@
   config,
   ...
 }: let
-  cfg = config.teq.nixos;
   inherit (lib) mkDefault;
 in {
-  options.teq.nixos = {
-    nix-ld = lib.mkEnableOption "Teq's NixOS nix-ld configuration defaults.";
-  };
-  config = lib.mkIf cfg.nix-ld {
+  config = lib.mkIf config.teq.nixos.enable {
     services.envfs = {
       enable = mkDefault true; # Fuse filesystem that returns symlinks to executables based on the PATH of the requesting process. This is useful to execute shebangs on NixOS that assume hard coded locations in locations like /bin or /usr/bin etc.
       extraFallbackPathCommands = mkDefault ''
