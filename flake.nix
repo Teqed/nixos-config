@@ -17,8 +17,6 @@ The starlight on the Western Seas.
     # nixos-hardware.inputs.nixpkgs.follows = "nixpkgs"; #
     impermanence.url = "github:nix-community/impermanence?rev=63f4d0443e32b0dd7189001ee1894066765d18a5";
     # impermanence.inputs.nixpkgs.follows = "nixpkgs"; #
-    nixpkgs-wayland.url = "github:nix-community/nixpkgs-wayland";
-    nixpkgs-wayland.inputs.nixpkgs.follows = "nixpkgs"; #
     nix-index-database.url = "github:nix-community/nix-index-database";
     nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
     plasma-manager = {
@@ -32,8 +30,6 @@ The starlight on the Western Seas.
     };
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
-    wezterm-flake.url = "github:wez/wezterm/main?dir=nix";
-    wezterm-flake.inputs.nixpkgs.follows = "nixpkgs";
   };
   outputs = {
     self,
@@ -48,7 +44,6 @@ The starlight on the Western Seas.
     nix-index-database,
     plasma-manager,
     disko,
-    wezterm-flake,
     ...
   } @ inputs: let
     inherit (self) outputs;

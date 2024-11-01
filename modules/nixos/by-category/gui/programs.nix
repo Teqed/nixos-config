@@ -36,7 +36,7 @@ in {
     };
 
     environment.systemPackages = with pkgs; [
-      inputs.wezterm-flake.packages.${pkgs.system}.default # Wezterm flake
+      # inputs.wezterm-flake.packages.${pkgs.system}.default # Wezterm flake
       solaar # 600MB / 30MB (gtk+3 600MB)
       papirus-icon-theme # Allows icons to be used in the system, like the login screen
       bibata-cursors # Allows cursors to be used in the system, like the login screen
