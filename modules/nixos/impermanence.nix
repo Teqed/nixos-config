@@ -227,6 +227,7 @@ in {
         directories = [
           ".cache"
           ".config"
+          ".factorio"
           ".local"
           ".mozilla"
           ".vscode-oss"
