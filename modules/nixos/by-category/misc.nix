@@ -40,7 +40,9 @@ in {
       };
     };
     services = {
-      clipcat.enable = lib.mkDefault true; # Clipcat clipboard daemon.
+      # error: lint `box_pointers` has been removed: it does not detect other kinds of allocations, and existed only for historical reasons
+      # error: could not compile `clipcat-base` (lib) due to 1 previous error
+      # clipcat.enable = lib.mkDefault true; # Clipcat clipboard daemon.
       languagetool.enable = mkDefault true; # LanguageTool server, a multilingual spelling, style, and grammar checker that helps correct or paraphrase texts.
     };
   };
