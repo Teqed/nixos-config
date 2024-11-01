@@ -158,6 +158,17 @@ The starlight on the Western Seas.
           self.homeManagerConfig
         ];
       };
+      jupiter = nixpkgs.lib.nixosSystem {
+        specialArgs = inheritSpecialArgs;
+        modules = [
+          ./hosts/jupiter.nix
+          self.nixosModules.default
+          chaotic.nixosModules.default
+          home-manager.nixosModules.home-manager
+          self.homeManagerConfig
+          disko.nixosModules.disko
+        ];
+      };
     };
 
     # # Used by `nix develop .#<name>`
