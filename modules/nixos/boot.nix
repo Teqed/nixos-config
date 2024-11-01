@@ -68,7 +68,7 @@ in {
     chaotic = lib.mkIf config.teq.nixos.cachyos {
       scx = {
         enable = true; # Additional configurations for scheduler
-        scheduler = "scx_rusty";
+        scheduler = "scx_lavd";
       };
     };
   };
