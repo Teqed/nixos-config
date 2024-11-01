@@ -48,12 +48,12 @@ in {
     ];
 
     virtualisation.waydroid.enable = true;
-    # boot.binfmt.emulatedSystems = [
-    #   "aarch64-linux" # ARM
-    #   "riscv64-linux" # RISC-V
-    #   "x86_64-windows" # Windows
-    #   "x86_64-linux" # Linux
-    # ];
+    boot.binfmt.emulatedSystems = [
+      "aarch64-linux" # ARM
+      # "riscv64-linux" # RISC-V
+      # "x86_64-windows" # Windows
+      # "x86_64-linux" # Linux
+    ];
 
     environment.sessionVariables.NIXOS_OZONE_WL = "1"; # Use the Ozone Wayland support in several Electron apps
 
