@@ -17,7 +17,7 @@
     gtk = {
       enable = lib.mkDefault true;
       cursorTheme.name = lib.mkDefault "Bibata-Modern-Classic";
-      # cursorTheme.size = lib.mkDefault 24; # Default 16
+      cursorTheme.size = lib.mkDefault 24; # Default 16
       font = {
         name = "Inter";
         size = 10;
@@ -63,7 +63,7 @@
         lookAndFeel = "org.kde.breezedark.desktop";
         cursor = {
           theme = "Bibata-Modern-Classic";
-          # size = 32;
+          size = 24;
         };
         iconTheme = "Papirus-Dark";
         # wallpaperPictureOfTheDay.provider = "bing";

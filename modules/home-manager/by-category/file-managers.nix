@@ -27,7 +27,7 @@ in {
           "--mounts"
         ];
         git = lib.mkDefault true;
-        icons = lib.mkDefault true;
+        icons = lib.mkDefault "auto";
       };
       xplr = {
         enable = lib.mkDefault true;
