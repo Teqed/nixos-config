@@ -61,7 +61,7 @@ in {
     boot.kernelPackages =
       if config.teq.nixos.cachyos
       then pkgs.linuxPackages_cachyos # Use the CachyOS kernel
-      else pkgs.linuxPackages; # Use the default kernel # linux-6.11 500MB
+      else pkgs.linuxPackages_latest; # Use the default kernel # linux-6.11 500MB
     boot.kernel.sysctl = {
       "vm.max_map_count" = 2147483642; # Required for some games
     };
