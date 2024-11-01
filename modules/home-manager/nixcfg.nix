@@ -78,7 +78,7 @@ in {
         nix-path = mkDefault config.nix.nixPath; # Workaround for https://github.com/NixOS/nix/issues/9574
         auto-optimise-store = mkDefault true;
         bash-prompt-prefix = mkDefault "(nix:$name)\040";
-        experimental-features = mkDefault ["nix-command" "flakes" "ca-derivations" "recursive-nix" "repl-flake" "auto-allocate-uids"];
+        experimental-features = mkDefault ["nix-command" "flakes" "ca-derivations" "recursive-nix" "auto-allocate-uids"];
         accept-flake-config = mkDefault true; # Whether to accept nix configuration from a flake without prompting.
         allow-dirty = mkDefault true; # Whether to allow dirty Git/Mercurial trees.
         allow-symlinked-store = mkDefault true; # Nix will stop complaining if the store directory (typically /nix/store) contains symlink components.
