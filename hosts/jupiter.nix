@@ -1,56 +1,81 @@
-{lib, ...}: {
+{lib, modulesPath, pkgs, ...}: {
   imports = [
     ./profiles/common.nix
+    (modulesPath + "/installer/scan/not-detected.nix")
+    (modulesPath + "/profiles/qemu-guest.nix")
   ];
   networking.hostName = "jupiter"; # U+2643 ♃ JUPITER
-  networking.hostId = "1d19a1e0";
-  nixpkgs.hostPlatform = "aarch64-linux";
+  networking.useDHCP = lib.mkDefault true;
+  nixpkgs.hostPlatform = lib.mkDefault "aarch64-linux";
+  boot.initrd.availableKernelModules = [ "xhci_pci" "virtio_scsi" ];
+  boot.loader.grub = {
+    efiSupport = true;
+    efiInstallAsRemovable = true;
+  };
+  boot.initrd.systemd.enable = false;
+  services.openssh.enable = true;
+  environment.systemPackages = map lib.lowPrio [
+    pkgs.curl
+    pkgs.gitMinimal
+  ];
+  system.stateVersion = "24.05";
   disko.devices = {
-    disk.disk1 = {
-      device = lib.mkDefault "/dev/sda";
-      type = "disk";
-      content = {
-        type = "gpt";
-        partitions = {
-          boot = {
-            name = "boot";
-            size = "1M";
-            type = "EF02";
-          };
-          esp = {
-            name = "ESP";
-            size = "500M";
-            type = "EF00";
-            content = {
-              type = "filesystem";
-              format = "vfat";
-              mountpoint = "/boot";
+    disk = {
+      main = {
+        type = "disk";
+        device = "/dev/sda";
+        content = {
+          type = "gpt";
+          partitions = {
+            ESP = {
+              priority = 1;
+              name = "ESP";
+              start = "1M";
+              end = "128M";
+              type = "EF00";
+              content = {
+                type = "filesystem";
+                format = "vfat";
+                mountpoint = "/boot";
+                mountOptions = [ "umask=0077" ];
+              };
             };
-          };
-          root = {
-            name = "root";
-            size = "100%";
-            content = {
-              type = "lvm_pv";
-              vg = "pool";
-            };
-          };
-        };
-      };
-    };
-    lvm_vg = {
-      pool = {
-        type = "lvm_vg";
-        lvs = {
-          root = {
-            size = "100%FREE";
-            content = {
-              type = "filesystem";
-              format = "ext4";
-              mountpoint = "/";
-              mountOptions = [
-                "defaults"
-              ];
+            root = {
+              size = "100%";
+              content = {
+                type = "btrfs";
+                extraArgs = [ "-f" ];
+                subvolumes = {
+                  "/@" = {
+                    mountpoint = "/";
+                  };
+                  "/@home" = {
+                    mountOptions = [ "compress=zstd" ];
+                    mountpoint = "/home";
+                  };
+                  "/@nix" = {
+                    mountOptions = [ "compress=zstd" "noatime" ];
+                    mountpoint = "/nix";
+                  };
+                  "/swap" = {
+                    mountpoint = "/.swapvol";
+                    swap = {
+                      swapfile.size = "20M";
+                      swapfile2.size = "20M";
+                      swapfile2.path = "rel-path";
+                    };
+                  };
+                };
+                mountpoint = "/partition-root";
+                swap = {
+                  swapfile = {
+                    size = "20M";
+                  };
+                  swapfile1 = {
+                    size = "20M";
+                  };
+                };
+              };
             };
           };
         };
