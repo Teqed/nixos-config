@@ -162,7 +162,6 @@ The starlight on the Western Seas.
         specialArgs = inheritSpecialArgs;
         modules = [
           ./hosts/jupiter.nix
-          ./hosts/jupiter-hardware-configuration.nix
           self.nixosModules.default
           chaotic.nixosModules.default
           home-manager.nixosModules.home-manager
