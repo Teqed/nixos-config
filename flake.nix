@@ -107,6 +107,8 @@ The starlight on the Western Seas.
     # # Default overlay
     # overlays.default = final: prev: {};
 
+    overlays = import ./overlays {inherit inputs;};
+
     # # Nixos module, consumed by other flakes
     # nixosModules."<name>" = {config, ...}: {
     #   options = {};
