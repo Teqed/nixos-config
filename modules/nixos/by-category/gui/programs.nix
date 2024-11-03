@@ -33,6 +33,7 @@ in {
         mountMax = lib.mkDefault 32000; # Set the maximum number of FUSE mounts allowed to non-root users. Integer between 0 and 32767, default 1000
       };
       virt-manager.enable = lib.mkDefault true;
+      mouse-actions.enable = lib.mkDefault true; # Enable mouse-actions udev rules; required to use mouse gestures as non-root
     };
 
     environment.systemPackages = with pkgs; [
