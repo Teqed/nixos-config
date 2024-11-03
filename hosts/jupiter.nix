@@ -6,9 +6,10 @@
   ];
   networking.hostName = "jupiter"; # U+2643 ♃ JUPITER
   networking.useDHCP = lib.mkDefault true;
-  nixpkgs.hostPlatform = lib.mkDefault "aarch64-linux";
+  nixpkgs.hostPlatform = lib.mkForce "aarch64-linux";
   boot.initrd.availableKernelModules = [ "xhci_pci" "virtio_scsi" ];
   boot.loader.grub = {
+    device = "nodev";
     efiSupport = true;
     efiInstallAsRemovable = true;
   };
@@ -19,6 +20,7 @@
     pkgs.gitMinimal
   ];
   system.stateVersion = "24.05";
+  documentation.man.generateCaches = false;
   disko.devices = {
     disk = {
       main = {
