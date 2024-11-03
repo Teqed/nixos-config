@@ -245,6 +245,7 @@ in {
           }
           # ".pki" # ?
           # ".rbenv" # ? Move
+          ".zen" # Zen browser XDG dir spec on roadmap: https://github.com/zen-browser/desktop/issues/1074
         ];
         files = [
           ".face.icon"
