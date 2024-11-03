@@ -8,7 +8,6 @@
     home.packages = with pkgs; [
       lsof # Lsof lists file information about files opened by processes
       grc # Generic text colouriser
-      most
       trash-cli
       catimg # Insanely fast image printing in your terminal
       chafa # Terminal graphics for the 21st century
@@ -20,6 +19,11 @@
       sshfs # programs.sftpman ?
       ### text:
       colordiff
+      ### pagers:
+      most # Supports multiple windows and can scroll left and right. "Why settle for less?"
+      moar # Nice-to-use pager for humans
+      less # More advanced file pager than 'more'. Included by default
+      ov # Feature-rich terminal-based text viewer
     ];
     programs = {
       nix-index.enable = lib.mkDefault true; # integrate with shell's command-not-found functionality
