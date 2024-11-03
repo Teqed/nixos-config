@@ -15,7 +15,7 @@ The starlight on the Western Seas.
     # nix-flatpak.inputs.nixpkgs.follows = "nixpkgs"; #
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     # nixos-hardware.inputs.nixpkgs.follows = "nixpkgs"; #
-    impermanence.url = "github:nix-community/impermanence?rev=63f4d0443e32b0dd7189001ee1894066765d18a5";
+    impermanence.url = "github:nix-community/impermanence";
     # impermanence.inputs.nixpkgs.follows = "nixpkgs"; #
     nix-index-database.url = "github:nix-community/nix-index-database";
     nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
