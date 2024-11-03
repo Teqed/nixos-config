@@ -9,14 +9,6 @@
       clinfo # For confirming OpenCL support
       radeontop # For monitoring AMD GPU usage
     ];
-    hardware.graphics.extraPackages = with pkgs; [
-      rocmPackages.clr.icd
-      amdvlk # Modern AMD Graphics Core Next (GCN) GPUs are supported through either radv, which is part of mesa, or the amdvlk package. Adding the amdvlk package to hardware.opengl.extraPackages makes both drivers available for applications and lets them choose.
-      rocmPackages.rocm-runtime # OpenCL Image support is provided through the non-free rocm-runtime package.
-    ];
-    hardware.graphics.extraPackages32 = with pkgs; [
-      driversi686Linux.amdvlk # The 32-bit AMDVLK drivers can be used in addition to the Mesa RADV drivers.
-    ];
     chaotic.mesa-git.enable = true; # Use the Mesa graphics drivers from the Chaotic-AUR repository.
     chaotic.mesa-git.extraPackages = with pkgs; [
       mesa_git.opencl
