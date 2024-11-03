@@ -45,6 +45,7 @@ in {
           -bios ${pkgs.OVMF.fd}/FV/OVMF.fd \
           "$@"
       '') # QEMU virtualization with UEFI firmware
+      inputs.zen-browser.packages."${system}".specific
     ];
 
     virtualisation.waydroid.enable = true;
