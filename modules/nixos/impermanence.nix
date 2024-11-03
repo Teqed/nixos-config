@@ -195,10 +195,6 @@ in {
       files = [
         "/etc/machine-id" # machine-id is used by systemd for the journal
         "/etc/adjtime" # Contains descriptive information about the hardware clock.
-        {
-          file = "/var/keys/secret_file";
-          parentDirectory = {mode = "u=rwx,g=,o=";};
-        }
       ];
       users.media = {
         # TODO: Make generic to userconfig.service_profiles
