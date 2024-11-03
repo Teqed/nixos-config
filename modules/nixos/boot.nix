@@ -71,5 +71,8 @@ in {
         scheduler = "scx_lavd";
       };
     };
+    services.irqbalance.enable = lib.mkDefault true;
+    services.ananicy.enable = true;
+    services.ananicy.rulesProvider = pkgs.ananicy-rules-cachyos;
   };
 }
