@@ -13,6 +13,7 @@ in {
       dedicatedServer.openFirewall = true;
       gamescopeSession.enable = true;
       protontricks.enable = true;
+      # extest.enable = true; # For using Steam Input on Wayland
       extraCompatPackages = with pkgs; [
         proton-ge-bin # 1GB
         proton-ge-custom # 1GB
@@ -25,8 +26,43 @@ in {
         # gamescope_git
       ];
     };
+    # programs.gamescope = {
+    #   enable = true;
+    #   capSysNice = false;
+    # };
 
-    # programs.gamemode.enable = true;
+    # programs.gamemode = {
+    #   enable = true;
+    #   enableRenice = true;
+    #   settings = {
+    #     general = {
+    #       renice = 10;
+    #     };
+    #     gpu = {
+    #       apply_gpu_optimisations = "accept-responsibility";
+    #       amd_performance_level = "high";
+    #     };
+    #     cpu = {
+    #       park_cores = "no";
+    #       pin_cores = "yes";
+    #     };
+    #     custom = {
+    #       start = "${pkgs.libnotify}/bin/notify-send 'GameMode Started'";
+    #       end = "${pkgs.libnotify}/bin/notify-send 'GameMode Ended'";
+    #     };
+    #   };
+    # };
+
+    # programs.corectrl.enable = true;
+
+    # hardware.cpu.amd.updateMicrocode = true;
+    # hardware.graphics.enable = true;
+    # hardware.graphics.enable32Bit = true;
+    # hardware.steam-hardware.enable = true;
+    # hardware.enableAllFirmware = true;
+    # hardware.enableRedistributableFirmware = true; 
+
+    # services.fwupd.enable = true;
 
     environment.systemPackages = [
       pkgs.openvr_git
