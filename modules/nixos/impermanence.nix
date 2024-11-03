@@ -249,6 +249,9 @@ in {
         # allowOther = true;
       };
     };
+    # TODO: remove workaround ; https://github.com/nix-community/impermanence/issues/229
+    boot.initrd.systemd.suppressedUnits = [ "systemd-machine-id-commit.service" ];
+    systemd.suppressedSystemUnits = [ "systemd-machine-id-commit.service" ];
   };
 }
 # Assumptions: 512MB FAT32 EFI "BOOT", 32GB "swap", BTRFS "nixos"
