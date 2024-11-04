@@ -6,6 +6,17 @@
   ];
   networking.hostName = "jupiter"; # U+2643 ♃ JUPITER
   # Deployment
+  services.caddy = {
+    enable = true;
+    virtualHosts."srd.shatteredsky.net".extraConfig = ''
+      tls internal
+      reverse_proxy http://localhost:3000
+    '';
+    # virtualHosts."another.example.org".extraConfig = ''
+    #   reverse_proxy unix//run/gunicorn.sock
+    # '';
+  };
+  networking.firewall.allowedTCPPorts = [ 80 443];
   services.postgresql = {
     enable = true;
     ensureDatabases = [ "wiki-js" ];
