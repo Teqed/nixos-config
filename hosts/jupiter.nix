@@ -29,9 +29,9 @@
   };
   # Implementation
   users.users = lib.mkMerge (
-    [{root.hashedPasswordFile = "/etc/auth/root";}]
+    [{root.initialHashedPassword = "$2b$05$2ckfv7WhD4dCuDK9DZi1MuDT6lOLJI9xDVZEAze2/sjw0lODXYCh6";}]
     ++ lib.forEach config.userinfo.users (
-      u: {"${u}".hashedPasswordFile = "/etc/auth/${u}";}
+      u: {"${u}".initialHashedPassword = "$2b$05$2ckfv7WhD4dCuDK9DZi1MuDT6lOLJI9xDVZEAze2/sjw0lODXYCh6";}
     )
   );
   networking.useDHCP = lib.mkDefault true;
