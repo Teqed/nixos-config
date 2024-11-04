@@ -5,6 +5,29 @@
     (modulesPath + "/profiles/qemu-guest.nix")
   ];
   networking.hostName = "jupiter"; # U+2643 ♃ JUPITER
+  # Deployment
+  services.postgresql = {
+    enable = true;
+    ensureDatabases = [ "wiki-js" ];
+    ensureUsers = [{
+      name = "wiki-js";
+      ensureDBOwnership = true;
+    }];
+  };
+  services.wiki-js = {
+    enable = true;
+    settings.db = {
+      db  = "wiki-js";
+      host = "/run/postgresql";
+      type = "postgres";
+      user = "wiki-js";
+    };
+  };
+  systemd.services.wiki-js = {
+    requires = [ "postgresql.service" ];
+    after    = [ "postgresql.service" ];
+  };
+  # Implementation
   networking.useDHCP = lib.mkDefault true;
   nixpkgs.hostPlatform = lib.mkForce "aarch64-linux";
   boot.initrd.availableKernelModules = [ "xhci_pci" "virtio_scsi" ];
