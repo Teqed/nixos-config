@@ -49,7 +49,7 @@ The starlight on the Western Seas.
   } @ inputs: let
     inherit (self) outputs;
     systems = [
-      # "aarch64-linux"
+      "aarch64-linux"
       # "i686-linux"
       "x86_64-linux"
       # "aarch64-darwin"
