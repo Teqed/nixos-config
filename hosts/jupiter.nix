@@ -16,7 +16,7 @@
     #   reverse_proxy unix//run/gunicorn.sock
     # '';
   };
-  networking.firewall.allowedTCPPorts = [ 80 443];
+  networking.firewall.allowedTCPPorts = [ 80 443 3000 ];
   services.postgresql = {
     enable = true;
     ensureDatabases = [ "wiki-js" ];
