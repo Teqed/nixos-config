@@ -1,4 +1,4 @@
-{lib, modulesPath, pkgs, ...}: {
+{lib, modulesPath, pkgs, config, ...}: {
   imports = [
     ./profiles/common.nix
     (modulesPath + "/installer/scan/not-detected.nix")
@@ -28,6 +28,12 @@
     after    = [ "postgresql.service" ];
   };
   # Implementation
+  users.users = lib.mkMerge (
+    [{root.hashedPasswordFile = "/etc/auth/root";}]
+    ++ lib.forEach config.userinfo.users (
+      u: {"${u}".hashedPasswordFile = "/etc/auth/${u}";}
+    )
+  );
   networking.useDHCP = lib.mkDefault true;
   nixpkgs.hostPlatform = lib.mkForce "aarch64-linux";
   boot.initrd.availableKernelModules = [ "xhci_pci" "virtio_scsi" ];
