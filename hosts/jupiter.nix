@@ -49,8 +49,8 @@
   };
   containers.foundryvtt-spheres = {
     autoStart = true;
-    system.stateVersion = currentStateVersion;
     config = { pkgs, ... }: {
+      system.stateVersion = currentStateVersion;
       imports = [ inputs.foundryvtt.nixosModules.foundryvtt ];
       services.foundryvtt = {
         enable = true;
