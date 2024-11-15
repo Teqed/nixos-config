@@ -27,6 +27,7 @@
   };
   services.wiki-js = {
     enable = true;
+    settings.offline = true;
     settings.db = {
       db  = "wiki-js";
       host = "/run/postgresql";
