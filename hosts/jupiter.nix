@@ -46,7 +46,8 @@
   };
   containers.foundryvtt-spheres = {
     autoStart = true;
-    config = { pkgs, inputs, ... }: {
+    config = { pkgs, ... }: {
+      imports = [ inputs.foundryvtt.nixosModules.foundryvtt ];
       services.foundryvtt = {
         enable = true;
         hostName = "foundry.shatteredsky.net";
