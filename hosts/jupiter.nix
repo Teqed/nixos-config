@@ -61,7 +61,7 @@
         proxyPort = 443;
         proxySSL = true;
         upnp = false;
-        package = inputs.foundryvtt.packages.${pkgs.system}.foundryvtt_12;
+        package = inputs.foundryvtt.packages.${pkgs.system}.foundryvtt_11;
       };
     };
   };
