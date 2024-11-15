@@ -46,7 +46,7 @@
   };
   containers.foundryvtt-spheres = {
     autoStart = true;
-    config = { pkgs, ... }: {
+    config = { pkgs, inputs, ... }: {
       services.foundryvtt = {
         enable = true;
         hostName = "foundry.shatteredsky.net";
