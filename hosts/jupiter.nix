@@ -1,4 +1,7 @@
-{lib, modulesPath, pkgs, config, inputs, ...}: {
+{lib, modulesPath, pkgs, config, inputs, ...}:
+  let
+    currentStateVersion = "24.05";
+  in {
   imports = [
     ./profiles/common.nix
     (modulesPath + "/installer/scan/not-detected.nix")
@@ -46,6 +49,7 @@
   };
   containers.foundryvtt-spheres = {
     autoStart = true;
+    system.stateVersion = currentStateVersion;
     config = { pkgs, ... }: {
       imports = [ inputs.foundryvtt.nixosModules.foundryvtt ];
       services.foundryvtt = {
@@ -82,7 +86,7 @@
     pkgs.curl
     pkgs.gitMinimal
   ];
-  system.stateVersion = "24.05";
+  system.stateVersion = currentStateVersion;
   documentation.man.generateCaches = false;
   disko.devices = {
     disk = {
