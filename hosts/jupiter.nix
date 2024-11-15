@@ -16,7 +16,12 @@
     #   reverse_proxy unix//run/gunicorn.sock
     # '';
   };
-  networking.firewall.allowedTCPPorts = [ 80 443 3000 ];
+  networking.firewall.allowedTCPPorts = [
+      80    # HTTP Caddy
+      443   # HTTPS Caddy
+      3000  # HTTP Wiki.js
+      30000 # HTTP Foundry VTT
+    ];
   services.postgresql = {
     enable = true;
     ensureDatabases = [ "wiki-js" ];
@@ -47,6 +52,7 @@
         hostName = "foundry.shatteredsky.net";
         routePrefix = "spheres";
         minifyStaticFiles = true;
+        # port = 30000; # Default port
         proxyPort = 443;
         proxySSL = true;
         upnp = false;
