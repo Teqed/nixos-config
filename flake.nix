@@ -31,6 +31,7 @@ The starlight on the Western Seas.
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
     zen-browser.url = "github:ch4og/zen-browser-flake";
+    inputs.foundryvtt.url = "github:reckenrode/nix-foundryvtt";
   };
   outputs = {
     self,
@@ -45,6 +46,7 @@ The starlight on the Western Seas.
     nix-index-database,
     plasma-manager,
     disko,
+    foundryvtt,
     ...
   } @ inputs: let
     inherit (self) outputs;
@@ -171,6 +173,7 @@ The starlight on the Western Seas.
           nix-flatpak.nixosModules.nix-flatpak
           self.homeManagerConfig
           disko.nixosModules.disko
+          inputs.foundryvtt.nixosModules.foundryvtt
         ];
       };
     };

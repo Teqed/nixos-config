@@ -1,4 +1,4 @@
-{lib, modulesPath, pkgs, config, ...}: {
+{lib, modulesPath, pkgs, config, inputs, ...}: {
   imports = [
     ./profiles/common.nix
     (modulesPath + "/installer/scan/not-detected.nix")
@@ -38,6 +38,21 @@
   systemd.services.wiki-js = {
     requires = [ "postgresql.service" ];
     after    = [ "postgresql.service" ];
+  };
+  containers.foundryvtt-spheres = {
+    autoStart = true;
+    config = { pkgs, ... }: {
+      services.foundryvtt = {
+        enable = true;
+        hostName = "foundry.shatteredsky.net";
+        routePrefix = "spheres";
+        minifyStaticFiles = true;
+        proxyPort = 443;
+        proxySSL = true;
+        upnp = false;
+        package = inputs.foundryvtt.packages.${pkgs.system}.foundryvtt_12;
+      };
+    };
   };
   # Implementation
   users.users = lib.mkMerge (
