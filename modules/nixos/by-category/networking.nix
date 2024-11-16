@@ -8,6 +8,7 @@
 in {
   config = lib.mkIf config.teq.nixos.enable {
     services = {
+      tailscale.enable = true;
       samba = {
         enable = mkDefault true; # Samba, the SMB/CIFS protocol.
         openFirewall = mkDefault true;
