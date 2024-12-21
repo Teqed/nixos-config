@@ -15,6 +15,7 @@
       handbrake # 1.5GB / 64MB (ffmpeg 1.3GB / 35MB)
       ### misc:
       obsidian # 1.8GB / 20MB
+      parsec-bin # Parsec Remote Desktop client
       # lan-mouse_git # 900MB / 10MB (libadwaita 900MB)
       ### tools - wayland
       wl-clipboard
