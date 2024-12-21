@@ -224,5 +224,37 @@ The starlight on the Western Seas.
         ];
       };
     };
+
+    
+    devShells.x86_64-linux.thoughtful = let
+      buildInputs = with nixpkgs.legacyPackages.x86_64-linux; [
+          udev
+          alsa-lib
+          vulkan-loader
+          xorg.libX11
+          xorg.libXcursor
+          xorg.libXi
+          xorg.libXrandr # To use the x11 feature
+          libxkbcommon
+          wayland # To use the wayland feature
+          openssl
+          pkg-config
+        ];
+      in nixpkgs.legacyPackages.x86_64-linux.mkShell {
+      nativeBuildInputs = with nixpkgs.legacyPackages.x86_64-linux; [
+        gcc
+        pkg-config
+        cargo
+        rustc
+        rustup
+        rustfmt
+        rust-analyzer
+        bacon
+        clippy
+      ];
+      buildInputs = buildInputs;
+      LD_LIBRARY_PATH = nixpkgs.legacyPackages.x86_64-linux.lib.makeLibraryPath buildInputs;
+      RUST_SRC_PATH = "${nixpkgs.legacyPackages.x86_64-linux.rust.packages.stable.rustPlatform.rustLibSrc}";
+    };
   };
 }
