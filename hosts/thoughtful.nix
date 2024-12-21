@@ -38,9 +38,19 @@
       "plymouth.use-simpledrm" # Use simple DRM backend for Plymouth
     ];
   };
+  environment = {
+    fhs = {
+      enable = false;
+      linkLibs = false;
+    };
+    lsb = {
+      enable = false;
+      support32Bit = false;
+    };
+  };
   teq.nixos = {
     cachyos = true;
-    blocklist = true;
+    blocklist = false;
     impermanence = {
       enable = true;
       btrfs = true;
