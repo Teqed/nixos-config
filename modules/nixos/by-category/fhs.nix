@@ -128,7 +128,6 @@ in {
         libva-utils
         #pipewire.lib
         ocamlPackages.alsa
-        alsa-lib
         harfbuzz # steamwebhelper
         libthai # steamwebhelper
         brotli
