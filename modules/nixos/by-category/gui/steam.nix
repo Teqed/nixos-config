@@ -65,6 +65,7 @@ in {
     # services.fwupd.enable = true;
 
     environment.systemPackages = [
+      pkgs.r2modman
       pkgs.openvr_git
       pkgs.winetricks
       pkgs.wineasio
