@@ -54,6 +54,10 @@ in {
       };
       firewall = {
         enable = true;
+        checkReversePath = "loose";
+        trustedInterfaces = [ "tailscale0" ];
+        allowedUDPPorts = [ 9000 config.services.tailscale.port ];
+        allowedTCPPorts = [ 9000 ];
         allowedTCPPortRanges = [
           {
             from = 1714;
