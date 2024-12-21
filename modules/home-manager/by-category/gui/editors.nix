@@ -23,7 +23,7 @@
         #   "nix.enableLanguageServer" = true;
         #   "nix.serverPath" = "nixd";
         # };
-        # extensions = with pkgs; [vscode-extension-jnoortheen-nix-ide];
+        extensions = with pkgs; [vscode-extensions.rust-lang.rust-analyzer];
       };
     };
   };
