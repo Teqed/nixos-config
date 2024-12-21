@@ -71,6 +71,9 @@ in {
           } # KDE Connect
         ];
       };
+      hosts = {
+        "10.0.0.12" = [ "dreamer.local" "pihole.shatteredsky.net" "cloud-aio.shatteredsky.net" "awx.shatteredsky.net" ];
+      };
     };
   };
 }
