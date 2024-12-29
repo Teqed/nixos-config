@@ -5,14 +5,6 @@
   ...
 }: {
   config = lib.mkIf config.teq.home-manager.gui {
-    home.packages = with pkgs; [
-      (vivaldi.overrideAttrs (oldAttrs: {
-        proprietaryCodecs = true;
-        dontWrapQtApps = false;
-        dontPatchELF = true;
-        nativeBuildInputs = oldAttrs.nativeBuildInputs ++ [pkgs.kdePackages.wrapQtAppsHook];
-      }))
-    ];
     programs = {
       chromium = {
         enable = true; # 2GB / 600 MB

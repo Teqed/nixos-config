@@ -2,14 +2,12 @@
   # pkgs,
   lib,
   config,
+  inputs,
   ...
 }: {
   config = lib.mkIf config.teq.home-manager.gui {
-    programs = {
-      foot = {
-        enable = lib.mkDefault true;
-        # settings = { };
-      };
-    };
+    home.packages = [ 
+      inputs.ghostty.packages.x86_64-linux.default
+    ];
   };
 }

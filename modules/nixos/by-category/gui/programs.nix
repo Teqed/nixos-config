@@ -59,7 +59,6 @@ in {
 
     environment.sessionVariables.NIXOS_OZONE_WL = "1"; # Use the Ozone Wayland support in several Electron apps
 
-    environment.etc."vivaldi/policies/managed/defaultExtensions.json".source = chromium_policy;
     environment.etc."chromium/policies/managed/defaultExtensions.json".source = chromium_policy;
     environment.etc."brave/policies/managed/DisableBraveRewardsWalletAI.json".source = brave_policy;
 
