@@ -1,4 +1,4 @@
-{nixos-hardware, ...}: {
+{nixos-hardware, pkgs, ...}: {
   imports = [
     ./profiles/common.nix
     ./profiles/gui.nix
@@ -38,7 +38,9 @@
       "plymouth.use-simpledrm" # Use simple DRM backend for Plymouth
     ];
   };
+  programs.btop.package = pkgs.btop.override {rocmSupport = true;};
   teq.nixos = {
+    media = true;
     cachyos = true;
     blocklist = false;
     impermanence = {

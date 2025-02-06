@@ -57,7 +57,7 @@ in {
         checkReversePath = "loose";
         trustedInterfaces = [ "tailscale0" ];
         allowedUDPPorts = [ 9000 config.services.tailscale.port ];
-        allowedTCPPorts = [ 9000 47984 47989 47990 48010 ];
+        allowedTCPPorts = [ 9000 ];
         allowedTCPPortRanges = [
           {
             from = 1714;
@@ -69,10 +69,6 @@ in {
             from = 1714;
             to = 1764;
           } # KDE Connect
-          {
-            from = 47998;
-            to = 48000;
-          } # Sunshine
         ];
       };
       hosts = {
@@ -80,4 +76,5 @@ in {
       };
     };
   };
+  
 }

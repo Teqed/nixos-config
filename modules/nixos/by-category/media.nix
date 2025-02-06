@@ -24,7 +24,7 @@ in {
         # listenPort = 6767; # Default
       };
       sabnzbd = {
-        enable = true;
+        enable = false;
         openFirewall = true; # 7080
         user = profile; # defaults to "sabnzbd"
         group = profile; # defaults to "sabnzbd"
@@ -38,7 +38,7 @@ in {
         dataDir = "/home/media/.local/state/radarr/.config/Radarr";
       };
       jellyfin = {
-        enable = true;
+        enable = false;
         openFirewall = true; # 8096 # The HTTP/HTTPS ports can be changed in the Web UI, so this option should only be used if they are unchanged, see Port Bindings.
         user = profile; # defaults to "jellyfin"
         group = profile; # defaults to "jellyfin"

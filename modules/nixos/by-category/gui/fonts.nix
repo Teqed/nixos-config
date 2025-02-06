@@ -48,20 +48,8 @@ in {
       enableDefaultPackages = mkDefault true; # Enable a basic set of fonts providing several styles and families and reasonable coverage of Unicode.
 
       packages = with pkgs; [
-        (nerdfonts.override {
-          fonts = [
-            "NerdFontsSymbolsOnly"
-            # "IBMPlexMono"
-            # "CascadiaCode"
-            # "CascadiaMono"
-            # "FiraCode"
-            # "FiraMono"
-            # "DroidSansMono"
-            # "LiberationMono"
-            # "DejaVuSansMono"
-            "JetBrainsMono"
-          ]; # 208MB
-        })
+        nerd-fonts.symbols-only
+        nerd-fonts.jetbrains-mono
         inter
         ibm-plex
         dejavu_fonts

@@ -32,6 +32,12 @@ The starlight on the Western Seas.
     disko.inputs.nixpkgs.follows = "nixpkgs";
     zen-browser.url = "github:ch4og/zen-browser-flake";
     foundryvtt.url = "github:reckenrode/nix-foundryvtt";
+    rust-overlay.url = "github:oxalica/rust-overlay";
+    ghostty.url = "github:ghostty-org/ghostty";
+    pia = {
+      url = "github:Fuwn/pia.nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
   outputs = {
     self,
@@ -47,6 +53,9 @@ The starlight on the Western Seas.
     plasma-manager,
     disko,
     foundryvtt,
+    rust-overlay,
+    ghostty,
+    pia,
     ...
   } @ inputs: let
     inherit (self) outputs;
@@ -227,7 +236,19 @@ The starlight on the Western Seas.
 
     
     devShells.x86_64-linux.thoughtful = let
-      buildInputs = with nixpkgs.legacyPackages.x86_64-linux; [
+      system = "x86_64-linux";
+      overlays = [ (import rust-overlay) ];
+      pkgs = import nixpkgs {
+          inherit system overlays;
+        };
+      rust = pkgs.rust-bin.selectLatestNightlyWith (toolchain: toolchain.default.override {
+        extensions = [
+          "rust-src" # for rust-analyzer
+          "rust-analyzer"
+        ];
+        targets = [ "wasm32-unknown-unknown" ];
+      });
+      buildInputs = with pkgs; [
           udev
           alsa-lib
           vulkan-loader
@@ -239,22 +260,22 @@ The starlight on the Western Seas.
           wayland # To use the wayland feature
           openssl
           pkg-config
+          gcc
+          pkg-config
+          rust
+          bacon
+          clippy
         ];
-      in nixpkgs.legacyPackages.x86_64-linux.mkShell {
+    in nixpkgs.legacyPackages.x86_64-linux.mkShell {
       nativeBuildInputs = with nixpkgs.legacyPackages.x86_64-linux; [
-        gcc
-        pkg-config
-        cargo
-        rustc
-        rustup
-        rustfmt
-        rust-analyzer
-        bacon
-        clippy
+        # cargo
+        # rustfmt
+        # bacon
+        # clippy
       ];
       buildInputs = buildInputs;
       LD_LIBRARY_PATH = nixpkgs.legacyPackages.x86_64-linux.lib.makeLibraryPath buildInputs;
-      RUST_SRC_PATH = "${nixpkgs.legacyPackages.x86_64-linux.rust.packages.stable.rustPlatform.rustLibSrc}";
+      RUST_BACKTRACE = 1;
     };
   };
 }

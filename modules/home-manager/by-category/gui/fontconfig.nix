@@ -17,12 +17,8 @@ in {
       noto-fonts-monochrome-emoji # 2MB
       noto-fonts-color-emoji # 10MB
       liberation_ttf # 4MB
-      (nerdfonts.override {
-        fonts = [
-          "NerdFontsSymbolsOnly"
-          "JetBrainsMono"
-        ];
-      })
+      nerd-fonts.symbols-only
+      nerd-fonts.jetbrains-mono
     ];
     fonts = {
       fontconfig.enable = mkForce true;

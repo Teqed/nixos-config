@@ -65,12 +65,8 @@ in {
     boot.kernel.sysctl = {
       "vm.max_map_count" = 2147483642; # Required for some games
     };
-    chaotic = lib.mkIf config.teq.nixos.cachyos {
-      scx = {
-        enable = true; # Additional configurations for scheduler
-        scheduler = "scx_lavd";
-      };
-    };
+    services.scx.enable = true; # by default uses scx_rustland scheduler
+    services.scx.scheduler = "scx_lavd";
     services.irqbalance.enable = lib.mkDefault true;
     services.ananicy.enable = true;
     services.ananicy.rulesProvider = pkgs.ananicy-rules-cachyos;
