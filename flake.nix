@@ -30,7 +30,7 @@ The starlight on the Western Seas.
     };
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
-    zen-browser.url = "github:ch4og/zen-browser-flake";
+    zen-browser.url = "github:youwen5/zen-browser-flake";
     foundryvtt.url = "github:reckenrode/nix-foundryvtt";
     rust-overlay.url = "github:oxalica/rust-overlay";
     ghostty.url = "github:ghostty-org/ghostty";
