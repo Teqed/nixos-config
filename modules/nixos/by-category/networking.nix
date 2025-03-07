@@ -56,8 +56,8 @@ in {
         enable = true;
         checkReversePath = "loose";
         trustedInterfaces = [ "tailscale0" ];
-        allowedUDPPorts = [ 9000 config.services.tailscale.port ];
-        allowedTCPPorts = [ 9000 ];
+        allowedUDPPorts = [ 9000 config.services.tailscale.port 3000 ];
+        allowedTCPPorts = [ 9000 3000 ];
         allowedTCPPortRanges = [
           {
             from = 1714;
