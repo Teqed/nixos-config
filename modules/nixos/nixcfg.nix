@@ -41,6 +41,10 @@ in {
     system.stateVersion = "24.05"; # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
     nixpkgs = {
       config = {
+        permittedInsecurePackages = [
+          "dotnet-sdk-6.0.428"
+          "aspnetcore-runtime-6.0.36"
+        ];
         # allowBroken = true;
         allowUnfree = true;
         # allowUnsupportedSystem = true;
