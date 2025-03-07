@@ -191,6 +191,7 @@ in {
           directory = "/var/tmp";
           mode = "1777";
         }
+        "/usr/systemd-placeholder"
       ];
       files = [
         "/etc/machine-id" # machine-id is used by systemd for the journal
