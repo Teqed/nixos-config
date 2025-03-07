@@ -1,5 +1,5 @@
 {
-  # pkgs,
+  pkgs,
   lib,
   config,
   ...
@@ -15,9 +15,15 @@
       };
       ### version-management
       git.enable = lib.mkDefault true;
+      ecryptfs.enable = lib.mkDefault true;
     };
-    # environment.systemPackages = with pkgs; [
-    # ];
+    environment.systemPackages = with pkgs; [
+      dbeaver-bin
+      # blender # blender-hip ?
+      httpie
+      websocat
+      rar
+    ];
     virtualisation.docker.enable = true;
     users.users.teq.extraGroups = [ "docker" ];
     virtualisation.docker.storageDriver = "btrfs";
