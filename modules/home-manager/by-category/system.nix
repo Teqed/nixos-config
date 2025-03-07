@@ -12,8 +12,7 @@ in {
         enable = lib.mkDefault true;
         # settings = { };
         # extraConfig = " ";
-        # package = pkgs.btop.override {rocmSupport = true;};
-        package = lib.mkIf config.teq.nixos.gui.amd pkgs.btop.override {rocmSupport = true;};
+        package = pkgs.btop.override {rocmSupport = true;};
       };
     };
   };
