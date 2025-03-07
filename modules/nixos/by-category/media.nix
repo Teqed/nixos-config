@@ -12,7 +12,7 @@ in {
   config = lib.mkIf config.teq.nixos.media {
     services = {
       jellyseerr = {
-        enable = true;
+        enable = false;
         openFirewall = true; # 5055
         # port = 5055; # Default
       };
