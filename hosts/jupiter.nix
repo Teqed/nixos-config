@@ -24,6 +24,7 @@
       443   # HTTPS Caddy
       3000  # HTTP Wiki.js
       30000 # HTTP Foundry VTT
+      30001 # HTTP Foundry VTT - Noct
     ];
   services.postgresql = {
     enable = true;
@@ -62,6 +63,24 @@
         proxySSL = true;
         upnp = false;
         package = inputs.foundryvtt.packages.${pkgs.system}.foundryvtt_11;
+      };
+    };
+  };
+  containers.foundryvtt-noctuae = {
+    autoStart = true;
+    config = { pkgs, ... }: {
+      system.stateVersion = currentStateVersion;
+      imports = [ inputs.foundryvtt.nixosModules.foundryvtt ];
+      services.foundryvtt = {
+        enable = true;
+        hostName = "foundry.shatteredsky.net";
+        routePrefix = "noct";
+        minifyStaticFiles = true;
+        port = 30001;
+        proxyPort = 443;
+        proxySSL = true;
+        upnp = false;
+        package = inputs.foundryvtt.packages.${pkgs.system}.foundryvtt_12;
       };
     };
   };
