@@ -16,6 +16,13 @@
       ### version-management
       git.enable = lib.mkDefault true;
       ecryptfs.enable = lib.mkDefault true;
+      gnupg = {
+        agent = {
+          enable = true;
+          enableSSHSupport = true;
+          pinentryPackage = pkgs.pinentry-curses;
+        };
+      };
     };
     environment.systemPackages = with pkgs; [
       dbeaver-bin
