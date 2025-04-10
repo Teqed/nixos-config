@@ -1,5 +1,5 @@
 {
-  # pkgs,
+  pkgs,
   lib,
   config,
   ...
@@ -36,9 +36,14 @@ in {
     programs = {
       mosh.enable = mkDefault true;
     };
-    # environment.systemPackages = with pkgs; [
-    # ];
+    environment.systemPackages = with pkgs; [
+      cifs-utils
+      kdePackages.kio-fuse #to mount remote filesystems via FUSE
+      kdePackages.kio-extras #extra protocols support (sftp, fish and more)
+      kdePackages.qtsvg #support for svg icons
+    ];
     networking = {
+      # nftables.enable = true; # Attempt to get ipv6 forwarding for tailscale exit nodes working
       networkmanager.enable = lib.mkDefault true;
       useDHCP = lib.mkDefault true; # Attempt to enable DHCP on all interfaces
       wireless.enable = lib.mkDefault false; # Enables wireless support via wpa_supplicant.
@@ -70,6 +75,7 @@ in {
             to = 1764;
           } # KDE Connect
         ];
+        extraCommands = ''iptables -t raw -A OUTPUT -p udp -m udp --dport 137 -j CT --helper netbios-ns'';
       };
       hosts = {
         "10.0.0.12" = [ "dreamer.local" "pihole.shatteredsky.net" "cloud-aio.shatteredsky.net" "awx.shatteredsky.net" ];
