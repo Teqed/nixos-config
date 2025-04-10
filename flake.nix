@@ -38,6 +38,10 @@ The starlight on the Western Seas.
       url = "github:Fuwn/pia.nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    bluepds = {
+      url = "github:Teqed/bluepds/lint";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
   outputs = {
     self,
@@ -56,6 +60,7 @@ The starlight on the Western Seas.
     rust-overlay,
     ghostty,
     pia,
+    bluepds,
     ...
   } @ inputs: let
     inherit (self) outputs;
@@ -183,6 +188,7 @@ The starlight on the Western Seas.
           self.homeManagerConfig
           disko.nixosModules.disko
           inputs.foundryvtt.nixosModules.foundryvtt
+          bluepds.nixosModules.bluepds
         ];
       };
     };
