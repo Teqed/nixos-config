@@ -10,7 +10,7 @@
         alsa.enable = true;
         alsa.support32Bit = true; # Whether to enable 32-bit ALSA support on 64-bit systems.
         pulse.enable = true;
-        jack.enable = true; # If you want to use JACK applications, uncomment this
+        jack.enable = true; # If you want to use JACK applications
         socketActivation = true; # Automatically run PipeWire when connections are made to the PipeWire socket.
       };
     };
