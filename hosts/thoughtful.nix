@@ -14,7 +14,7 @@
   boot = {
     loader = {
       systemd-boot.enable = true;
-      systemd-boot.configurationLimit = 14;
+      systemd-boot.configurationLimit = 32;
       efi.canTouchEfiVariables = true;
     };
     initrd.availableKernelModules = ["nvme" "xhci_pci" "ahci" "usb_storage" "usbhid" "sd_mod"];
@@ -39,7 +39,7 @@
     ];
   };
   teq.nixos = {
-    media = true;
+    media = false;
     cachyos = true;
     blocklist = false;
     impermanence = {
