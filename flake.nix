@@ -39,7 +39,11 @@ The starlight on the Western Seas.
       inputs.nixpkgs.follows = "nixpkgs";
     };
     bluepds = {
-      url = "github:Teqed/bluepds/lint";
+      url = "github:Teqed/bluepds/oauth";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    nixpkgs-wayland = {
+      url = "github:nix-community/nixpkgs-wayland";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
