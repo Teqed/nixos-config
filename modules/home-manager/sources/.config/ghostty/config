@@ -1,0 +1,13 @@
+shell-integration-features = cursor,sudo,title
+custom-shader = ghostty-shaders/my_bloom.glsl
+custom-shader-animation = true
+copy-on-select = false
+window-padding-x = 7,12
+window-padding-y = 7,12
+window-padding-balance = true
+window-padding-color = extend
+background = #23272F
+cursor-opacity = 0.6
+font-size = 8
+font-thicken = true
+mouse-hide-while-typing = true

@@ -240,7 +240,7 @@ vimcmd_visual_symbol = '[](bold fg:color_yellow)'
 
 [nix_shell]
 style = 'bg:color_bg_purple'
-format = '[$state]($style)[$name ](fg:#color_fg0 bg:color_bg_purple)'
+format = '[$state]($style)[$name ](fg:color_fg0 bg:color_bg_purple)'
 impure_msg = '[ ⌽ ](fg:color_red bg:color_bg_purple)'
 pure_msg = '[ ⌾ ](fg:color_green bg:color_bg_purple)'
 unknown_msg = '[ ◌ ](fg:color_yellow bg:color_bg_purple)'
