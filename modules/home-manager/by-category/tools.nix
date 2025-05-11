@@ -56,7 +56,7 @@
       };
       zellij = {
         enable = lib.mkDefault true;
-        # settings = { };
+        # settings = { }; // ~/.config/zellij/config.kdl and ~/.config/zellij/themes/custom.kdl
       };
       lesspipe.enable = lib.mkDefault true;
       fastfetch = {

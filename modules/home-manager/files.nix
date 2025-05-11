@@ -15,6 +15,8 @@
     home.file.".config/nano/nanorc".source = ./sources/.config/nano/nanorc;
     home.file.".config/vim/.vimrc".source = ./sources/.config/vim/.vimrc;
     home.file.".config/wezterm/wezterm.lua".source = ./sources/.config/wezterm/wezterm.lua;
+    home.file.".config/ghostty/config".source = ./sources/.config/ghostty/config;
+    home.file.".config/ghostty/ghostty-shaders/my_bloom.glsl".source = ./sources/.config/ghostty/ghostty-shaders/my_bloom.glsl;
     # .config/bash/functions.sh # TODO: Convert to Nix config
     home.file.".config/bash/functions.sh".source = ./sources/.config/bash/functions.sh;
     home.file.".config/bash/functions.d/cheat.sh".source = ./sources/.config/bash/functions.d/cheat.sh;
