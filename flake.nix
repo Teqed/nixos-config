@@ -42,9 +42,8 @@ The starlight on the Western Seas.
       url = "github:Teqed/bluepds?rev=5de7c22468d3585952d33b469ac4edb1c3e9bba0";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    # rsky.url = "github:Teqed/rsky?rev=431bc942f5d8ace9a273f35d1076975144add6d0";
-    rsky.url = "git+file:///home/teq/_/Repos/rsky";
-    
+    rsky.url = "github:Teqed/rsky?rev=431bc942f5d8ace9a273f35d1076975144add6d0";
+    # rsky.url = "git+file:///home/teq/_/Repos/rsky";    
     nixpkgs-wayland = {
       url = "github:nix-community/nixpkgs-wayland";
       inputs.nixpkgs.follows = "nixpkgs";
