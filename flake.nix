@@ -42,6 +42,9 @@ The starlight on the Western Seas.
       url = "github:Teqed/bluepds/oauth";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    # rsky.url = "github:Teqed/rsky?rev=ebe216270d5c6618fb5addb02a84995293119bcb";
+    rsky.url = "git+file:///home/teq/_/Repos/rsky";
+    
     nixpkgs-wayland = {
       url = "github:nix-community/nixpkgs-wayland";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -65,6 +68,7 @@ The starlight on the Western Seas.
     ghostty,
     pia,
     bluepds,
+    rsky,
     ...
   } @ inputs: let
     inherit (self) outputs;
@@ -179,6 +183,7 @@ The starlight on the Western Seas.
           home-manager.nixosModules.home-manager
           nix-flatpak.nixosModules.nix-flatpak
           self.homeManagerConfig
+          inputs.rsky.nixosModules.default
         ];
       };
       jupiter = nixpkgs.lib.nixosSystem {
@@ -193,6 +198,7 @@ The starlight on the Western Seas.
           disko.nixosModules.disko
           inputs.foundryvtt.nixosModules.foundryvtt
           bluepds.nixosModules.bluepds
+          inputs.rsky.nixosModules.default
         ];
       };
     };

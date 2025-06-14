@@ -1,4 +1,7 @@
-{nixos-hardware, pkgs, ...}: {
+{nixos-hardware, pkgs, inputs, ...}: 
+  let
+    currentStateVersion = "24.05";
+  in {
   imports = [
     ./profiles/common.nix
     ./profiles/gui.nix
@@ -9,12 +12,15 @@
   ];
   networking.hostName = "thoughtful"; # /dev/disk/by-partuuid/032b15fe-6dc7-473e-b1a5-d51f4df7ffd6
   networking.hostId = "9936699a";
-  nixpkgs.hostPlatform = "x86_64-linux";
+  nixpkgs = {
+      hostPlatform = "aarch64-linux";
+      buildPlatform = "x86_64-linux";
+  };
   hardware.cpu.amd.updateMicrocode = true;
   boot = {
     loader = {
       systemd-boot.enable = true;
-      systemd-boot.configurationLimit = 30;
+      systemd-boot.configurationLimit = 12;
       efi.canTouchEfiVariables = true;
     };
     initrd.availableKernelModules = ["nvme" "xhci_pci" "ahci" "usb_storage" "usbhid" "sd_mod"];
@@ -44,6 +50,33 @@
     impermanence = {
       enable = true;
       btrfs = true;
+    };
+  };
+  services = {
+    nix-serve = {
+      enable = true;
+      secretKeyFile = "/var/lib/nix-serve/cache-priv-key.pem";
+    };
+  };
+  networking = {
+    firewall = {
+      allowedTCPPorts = [ 5000 ]; # Nix-Serve
+    };
+  };
+  containers.rsky = {
+    autoStart = true;
+    config = { pkgs, ... }: {
+      system.stateVersion = currentStateVersion;
+      imports = [ inputs.rsky.nixosModules.default ];
+      services.rsky-pds = {
+        enable = true;
+        environmentFiles = [ "/var/lib/rsky-pds/pds.env" ];
+        settings = {
+          PDS_PORT = 2583;
+          PDS_HOSTNAME = "psi.shatteredsky.net";
+          PDS_DEV_MODE = "true";
+        };
+      };
     };
   };
 }
