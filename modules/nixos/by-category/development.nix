@@ -7,22 +7,21 @@
   config = lib.mkIf config.teq.nixos.enable {
     services = {
       postgresql = {
-        enable = false;
-        ensureDatabases = [ "pds" ];
-          identMap = ''
-              # ArbitraryMapName systemUser DBUser
-              superuser_map      root      postgres
-              superuser_map      teq       postgres
-              superuser_map      postgres  postgres
-              # Let other names login as themselves
-              superuser_map      /^(.*)$   \1
-          '';
-          authentication = pkgs.lib.mkOverride 10 ''
-            #type database  DBuser  auth-method optional_ident_map
-            local all       teq     peer        map=superuser_map
-            local all       postgres peer        map=superuser_map
-            local sameuser  all     peer        map=superuser_map
-          '';
+        enable = lib.mkDefault false;
+        identMap = ''
+            # ArbitraryMapName systemUser DBUser
+            superuser_map      root      postgres
+            superuser_map      teq       postgres
+            superuser_map      postgres  postgres
+            # Let other names login as themselves
+            superuser_map      /^(.*)$   \1
+        '';
+        authentication = pkgs.lib.mkOverride 10 ''
+          #type database  DBuser  auth-method optional_ident_map
+          local all       teq     peer        map=superuser_map
+          local all       postgres peer        map=superuser_map
+          local sameuser  all     peer        map=superuser_map
+        '';
         package = pkgs.postgresql_16;
         settings = {
           # listen_addresses = "*";
