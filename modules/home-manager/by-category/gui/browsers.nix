@@ -36,7 +36,7 @@
           "--disable-features=WebRtcAllowInputVolumeAdjustment"
         ];
       };
-      firefox.enable = false; # 1.6GB / 300MB
+      firefox.enable = true; # 1.6GB / 300MB
     };
   };
 }
