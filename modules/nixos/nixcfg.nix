@@ -8,6 +8,7 @@
 with lib; let
   flakeInputs = filterAttrs (_: isType "flake") inputs;
   substituter_list = [
+    "https://thoughtful.binarycache.shatteredsky.net"
     "https://cache.nixos.org/"
     "https://nix-community.cachix.org/"
     "https://teq.cachix.org"
@@ -39,10 +40,6 @@ in {
     system.stateVersion = "24.05"; # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
     nixpkgs = {
       config = {
-        permittedInsecurePackages = [
-          "dotnet-sdk-6.0.428"
-          "aspnetcore-runtime-6.0.36"
-        ];
         # allowBroken = true;
         allowUnfree = true;
         # allowUnsupportedSystem = true;
@@ -107,6 +104,7 @@ in {
         trusted-substituters = substituter_list;
         trusted-users = mkForce ["root" "teq" "@wheel"];
         trusted-public-keys = [
+          "thoughtful.binarycache.shatteredsky.net:yPenzjz5AHspYSCnuLULxLVe/9h+d0FLqlnuBmbogz0="
           "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
           "teq.cachix.org-1:vzpACVksI6em8mYjeJbTWp9x+jQmZiReS7pNot65l+A="
           "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="

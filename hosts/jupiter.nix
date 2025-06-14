@@ -22,15 +22,21 @@
   networking.firewall.allowedTCPPorts = [
       80    # HTTP Caddy
       443   # HTTPS Caddy
+      2583  # rsky
       3000  # HTTP Wiki.js
+      8000  # BluePDS
       30000 # HTTP Foundry VTT
-      30001 # HTTP Foundry VTT - Noct
+      30001 # HTTP Foundry VTT - Noctuae
     ];
   services.postgresql = {
     enable = true;
-    ensureDatabases = [ "wiki-js" ];
+    ensureDatabases = [ "wiki-js" "pds" ];
     ensureUsers = [{
       name = "wiki-js";
+      ensureDBOwnership = true;
+    }
+    {
+      name = "pds";
       ensureDBOwnership = true;
     }];
   };
@@ -47,6 +53,36 @@
   systemd.services.wiki-js = {
     requires = [ "postgresql.service" ];
     after    = [ "postgresql.service" ];
+  };
+  containers.rsky = {
+    autoStart = true;
+    config = { lib, pkgs, ... }: {
+        system.stateVersion = currentStateVersion;
+        imports = [ inputs.rsky.nixosModules.default ];
+        services.postgresql.enable = lib.mkForce false;
+        services.rsky-pds = {
+            enable = true;
+            environmentFiles = [ "/var/lib/rsky-pds/pds.env" ];
+            settings = {
+                PDS_PORT = 2583;
+                PDS_HOSTNAME = "psi.shatteredsky.net";
+                PDS_DEV_MODE = "true";
+            };
+        };
+    };
+  };
+  containers.bluepds = {
+    autoStart = true;
+    config = { pkgs, ... }: {
+        system.stateVersion = currentStateVersion;
+        imports = [ inputs.bluepds.nixosModules.default ];
+        services.bluepds = {
+            enable = true;
+            host_name = "pds.shatteredsky.net";
+            listen_address = "0.0.0.0:8000";
+            test = "false";
+        };
+    };
   };
   containers.foundryvtt-spheres = {
     autoStart = true;
