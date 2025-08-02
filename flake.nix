@@ -175,6 +175,7 @@ The starlight on the Western Seas.
       };
       thoughtful = nixpkgs.lib.nixosSystem {
         specialArgs = inheritSpecialArgs;
+        system = "x86_64-linux";
         modules = [
           ./hosts/thoughtful.nix
           self.nixosModules.default
@@ -187,6 +188,7 @@ The starlight on the Western Seas.
       };
       jupiter = nixpkgs.lib.nixosSystem {
         specialArgs = inheritSpecialArgs;
+        system = "aarch64-linux";
         modules = [
           ./hosts/jupiter.nix
           self.nixosModules.default
