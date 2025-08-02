@@ -42,6 +42,9 @@ in {
         nss
         stdenv.cc.cc # Godot + Blender
         openssl
+        openssl_1_1
+        webkitgtk
+        glib-networking
         util-linux
         zlib # screeps
         zstd

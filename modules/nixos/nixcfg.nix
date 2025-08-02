@@ -43,6 +43,9 @@ in {
         # allowBroken = true;
         allowUnfree = true;
         # allowUnsupportedSystem = true;
+        permittedInsecurePackages = [
+          "openssl-1.1.1w"
+        ];
       };
       # You can add overlays here
       overlays = [
