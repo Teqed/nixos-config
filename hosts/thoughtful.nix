@@ -1,4 +1,4 @@
-{nixos-hardware, pkgs, inputs, ...}: 
+{nixos-hardware, pkgs, inputs, ...}:
   let
     currentStateVersion = "24.05";
   in {

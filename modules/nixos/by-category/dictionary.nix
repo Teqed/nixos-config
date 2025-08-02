@@ -15,7 +15,7 @@
     ];
     environment.systemPackages = with pkgs; [
       ltex-ls # LSP language server for LanguageTool
-      diction # GNU style and diction utilities
+      # diction # GNU style and diction utilities
       nuspell # C++ spell checking library
       aspell # Spell checker for many languages
       aspellDicts.en

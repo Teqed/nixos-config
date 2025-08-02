@@ -57,7 +57,7 @@
       # blender # blender-hip ?
       httpie
       websocat
-      rar
+      # rar
     ];
     virtualisation.docker.enable = true;
     users.users.teq.extraGroups = [ "docker" ];
