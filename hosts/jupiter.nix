@@ -9,6 +9,7 @@
   ];
   networking.hostName = "jupiter"; # U+2643 ♃ JUPITER
   # Deployment
+  services.scx.enable = false;
   services.caddy = {
     enable = true;
     virtualHosts."srd.shatteredsky.net".extraConfig = ''
@@ -128,14 +129,27 @@
     )
   );
   networking.useDHCP = lib.mkDefault true;
-  nixpkgs.hostPlatform = lib.mkForce "aarch64-linux";
-  boot.initrd.availableKernelModules = [ "xhci_pci" "virtio_scsi" ];
-  boot.loader.grub = {
-    device = "nodev";
-    efiSupport = true;
-    efiInstallAsRemovable = true;
+  nixpkgs = {
+      config.allowUnsupportedSystem = true;
+      hostPlatform = lib.mkForce "aarch64-linux";
+      buildPlatform = lib.mkForce "x86_64-linux";
   };
-  boot.initrd.systemd.enable = false;
+  boot = {
+    loader = {
+      # grub = {
+      #   device = "nodev";
+      #   efiSupport = true;
+      #   efiInstallAsRemovable = true;
+      # };
+      systemd-boot.enable = true;
+      systemd-boot.configurationLimit = 12;
+      efi.canTouchEfiVariables = true;
+    };
+    initrd = {
+      availableKernelModules = [ "xhci_pci" "virtio_scsi" ];
+      systemd.enable = false;
+    };
+  };
   services.openssh.enable = true;
   environment.systemPackages = map lib.lowPrio [
     pkgs.curl
