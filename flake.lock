@@ -33,17 +33,17 @@
         "rust-overlay": "rust-overlay"
       },
       "locked": {
-        "lastModified": 1747755518,
-        "narHash": "sha256-nvcF0ctqb3i2oWWJ0kuhGr+wFX3qPpWWya/miEuz5Jg=",
+        "lastModified": 1746591291,
+        "narHash": "sha256-iwY/i4wDpmWQ08an7Ut1vxa3UdmceVib5dTH2ps+L2Q=",
         "owner": "Teqed",
         "repo": "bluepds",
-        "rev": "ae43ff26fbdd7ac45d764ebbdf524853b458ccd0",
+        "rev": "5de7c22468d3585952d33b469ac4edb1c3e9bba0",
         "type": "github"
       },
       "original": {
         "owner": "Teqed",
-        "ref": "oauth",
         "repo": "bluepds",
+        "rev": "5de7c22468d3585952d33b469ac4edb1c3e9bba0",
         "type": "github"
       }
     },
@@ -767,17 +767,17 @@
         "rust-overlay": "rust-overlay_2"
       },
       "locked": {
-        "lastModified": 1749744047,
-        "narHash": "sha256-h3ZW+Ma+P2IGzg846Uu6UX7r8whXyzqbmVsZm+oGwWc=",
+        "lastModified": 1750393643,
+        "narHash": "sha256-edv5Ooujn2yx1/Oig86fS5vV/oF7q4f7qljlwqgr9mY=",
         "owner": "Teqed",
         "repo": "rsky",
-        "rev": "ebe216270d5c6618fb5addb02a84995293119bcb",
+        "rev": "a2fa9f49142a939725ce655a097f3b5856fe98ee",
         "type": "github"
       },
       "original": {
         "owner": "Teqed",
         "repo": "rsky",
-        "rev": "ebe216270d5c6618fb5addb02a84995293119bcb",
+        "rev": "a2fa9f49142a939725ce655a097f3b5856fe98ee",
         "type": "github"
       }
     },
