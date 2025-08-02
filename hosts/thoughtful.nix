@@ -13,7 +13,7 @@
   networking.hostName = "thoughtful"; # /dev/disk/by-partuuid/032b15fe-6dc7-473e-b1a5-d51f4df7ffd6
   networking.hostId = "9936699a";
   nixpkgs = {
-      hostPlatform = "aarch64-linux";
+      # hostPlatform = "aarch64-linux";
       buildPlatform = "x86_64-linux";
   };
   hardware.cpu.amd.updateMicrocode = true;
@@ -44,7 +44,15 @@
     ];
   };
   # VM
-  programs.dconf.enable = true;
+  programs = {
+    dconf.enable = true;
+    btop = {
+      enable = true;
+      # settings = { };
+      # extraConfig = " ";
+      package = pkgs.btop.override {rocmSupport = true;};
+    };
+  };
   users.users.gcis.extraGroups = [ "libvirtd" ];
   users.users.gcis.group = "gcis";
   users.groups.gcis = {};
