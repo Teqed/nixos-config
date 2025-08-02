@@ -62,6 +62,17 @@
     };
   };
   services = {
+    ollama = {
+      enable = true;
+      acceleration = "rocm";
+      # Optional: preload models, see https://ollama.com/library
+      loadModels = [ ];
+    };
+    open-webui = {
+      enable = true;
+      openFirewall = true;
+    };
+    qdrant.enable = true;
     nix-serve = {
       enable = true;
       secretKeyFile = "/var/lib/nix-serve/cache-priv-key.pem";
