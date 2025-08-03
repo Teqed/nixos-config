@@ -43,7 +43,7 @@ in {
         stdenv.cc.cc # Godot + Blender
         openssl
         openssl_1_1
-        webkitgtk
+        # webkitgtk
         glib-networking
         util-linux
         zlib # screeps
