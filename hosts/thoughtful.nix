@@ -58,7 +58,7 @@
     win-virtio
     win-spice
     adwaita-icon-theme
-    btop.override {rocmSupport = true;} # Not related to VM though
+    btop-rocm # Not related to VM -- ROCM support for AMD GPUs
   ];
   virtualisation = { libvirtd = { enable = true; qemu = { swtpm.enable = true; ovmf.enable = true; ovmf.packages = [ pkgs.OVMFFull.fd ]; }; }; spiceUSBRedirection.enable = true; }; services.spice-vdagentd.enable = true;
   # /VM
