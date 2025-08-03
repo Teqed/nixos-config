@@ -86,7 +86,7 @@
           # verbose = true;
         };
       };
-      thefuck.enable = lib.mkDefault true; # corrects previous command
+      pay-respects.enable = lib.mkDefault true; # corrects previous command
       bat = {
         # Cat(1) clone with syntax highlighting and Git integration
         enable = lib.mkDefault true;
