@@ -42,8 +42,8 @@ The starlight on the Western Seas.
       url = "github:Teqed/bluepds?rev=5de7c22468d3585952d33b469ac4edb1c3e9bba0";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    rsky.url = "github:Teqed/rsky?rev=a2fa9f49142a939725ce655a097f3b5856fe98ee";
-    # rsky.url = "git+file:///home/teq/_/Repos/rsky";    
+    # rsky.url = "github:Teqed/rsky?rev=a2fa9f49142a939725ce655a097f3b5856fe98ee";
+    # rsky.url = "git+file:///home/teq/_/Repos/rsky";
     nixpkgs-wayland = {
       url = "github:nix-community/nixpkgs-wayland";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -67,7 +67,7 @@ The starlight on the Western Seas.
     ghostty,
     pia,
     bluepds,
-    rsky,
+    # rsky,
     ...
   } @ inputs: let
     inherit (self) outputs;
@@ -183,7 +183,7 @@ The starlight on the Western Seas.
           home-manager.nixosModules.home-manager
           nix-flatpak.nixosModules.nix-flatpak
           self.homeManagerConfig
-          inputs.rsky.nixosModules.default
+          # inputs.rsky.nixosModules.default
         ];
       };
       jupiter = nixpkgs.lib.nixosSystem {
@@ -199,7 +199,7 @@ The starlight on the Western Seas.
           disko.nixosModules.disko
           inputs.foundryvtt.nixosModules.foundryvtt
           inputs.bluepds.nixosModules.default
-          inputs.rsky.nixosModules.default
+          # inputs.rsky.nixosModules.default
         ];
       };
     };
@@ -251,7 +251,7 @@ The starlight on the Western Seas.
       };
     };
 
-    
+
     devShells.x86_64-linux.thoughtful = let
       system = "x86_64-linux";
       overlays = [ (import rust-overlay) ];

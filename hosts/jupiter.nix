@@ -55,23 +55,23 @@
     requires = [ "postgresql.service" ];
     after    = [ "postgresql.service" ];
   };
-  containers.rsky = {
-    autoStart = true;
-    config = { lib, pkgs, ... }: {
-        system.stateVersion = currentStateVersion;
-        imports = [ inputs.rsky.nixosModules.default ];
-        services.postgresql.enable = lib.mkForce false;
-        services.rsky-pds = {
-            enable = true;
-            environmentFiles = [ "/var/lib/rsky-pds/pds.env" ];
-            settings = {
-                PDS_PORT = 2583;
-                PDS_HOSTNAME = "psi.shatteredsky.net";
-                PDS_DEV_MODE = "true";
-            };
-        };
-    };
-  };
+  # containers.rsky = {
+  #   autoStart = true;
+  #   config = { lib, pkgs, ... }: {
+  #       system.stateVersion = currentStateVersion;
+  #       imports = [ inputs.rsky.nixosModules.default ];
+  #       services.postgresql.enable = lib.mkForce false;
+  #       services.rsky-pds = {
+  #           enable = true;
+  #           environmentFiles = [ "/var/lib/rsky-pds/pds.env" ];
+  #           settings = {
+  #               PDS_PORT = 2583;
+  #               PDS_HOSTNAME = "psi.shatteredsky.net";
+  #               PDS_DEV_MODE = "true";
+  #           };
+  #       };
+  #   };
+  # };
   containers.bluepds = {
     autoStart = true;
     config = { pkgs, ... }: {
