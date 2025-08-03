@@ -11,7 +11,7 @@
       ### emulators:
       mgba # 800MB / 10MB (ffmpeg)
       ### video:
-      plex-media-player # 1.7GB / 300MB
+      plex-desktop
       handbrake # 1.5GB / 64MB (ffmpeg 1.3GB / 35MB)
       ### misc:
       obsidian # 1.8GB / 20MB
