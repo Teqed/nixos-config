@@ -3,11 +3,12 @@
   lib,
   config,
   ...
-}: {
+}:
+{
   config = lib.mkIf config.teq.home-manager.gui {
     home.packages = with pkgs; [
       aseprite # 117MB / 20MB (harfbuzz 70MB / 3MB)
-      zed-editor-fhs_git # 230MB / 160MB
+      zed-editor_git # 230MB / 160MB
       kdePackages.kate # 1.4GB / 40MB (ktexteditor)
     ];
     programs = {
@@ -23,7 +24,7 @@
         #   "nix.enableLanguageServer" = true;
         #   "nix.serverPath" = "nixd";
         # };
-        extensions = with pkgs; [vscode-extensions.rust-lang.rust-analyzer];
+        extensions = with pkgs; [ vscode-extensions.rust-lang.rust-analyzer ];
       };
     };
   };

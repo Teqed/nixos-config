@@ -4,16 +4,19 @@
   lib,
   inputs,
   ...
-}: let
+}:
+let
   chromium_policy = ../../../home-manager/sources/.config/chromium/policies/managed/defaultExtensions.json;
   brave_policy = ../../../home-manager/sources/.config/brave/policies/managed/DisableBraveRewardsWalletAI.json;
-in {
+in
+{
   imports = [
     {
       nixpkgs = {
         overlays = [
           (final: prev: {
-            sddm-sugar-candy = inputs.sddmSugarCandy4Nix.packages.${pkgs.stdenv.hostPlatform.system}.sddm-sugar-candy;
+            sddm-sugar-candy =
+              inputs.sddmSugarCandy4Nix.packages.${pkgs.stdenv.hostPlatform.system}.sddm-sugar-candy;
           })
         ];
       };
@@ -25,7 +28,10 @@ in {
         enable = lib.mkDefault true;
         binfmt = lib.mkDefault true; # NixOS-specific option
         package = pkgs.appimage-run.override {
-          extraPkgs = pkgs: [pkgs.ffmpeg pkgs.imagemagick];
+          extraPkgs = pkgs: [
+            pkgs.ffmpeg
+            pkgs.imagemagick
+          ];
         };
       };
       fuse = {
@@ -82,60 +88,61 @@ in {
         enable = true;
         wayland.enable = true;
         wayland.compositor = "kwin";
-#        theme = ''${ # <-- string interpolation and nix expression inside {}
-#            pkgs.sddm-sugar-candy.override {
-#              settings = {
-#                # Background = image_mountains;
-#                DimBackgroundImage = "0.0";
-#                ScaleImageCropped = true;
-#                ScreenWidth = "1920";
-#                ScreenHeight = "1080";
-#                FullBlur = false;
-#                PartialBlur = true;
-#                BlurRadius = "100";
-#                HaveFormBackground = false;
-#                FormPosition = "center";
-#                BackgroundImageHAlignment = "center";
-#                BackgroundImageVAlignment = "center";
-#                MainColor = "white";
-#                AccentColor = "#fb884f";
-#                BackgroundColor = "#444";
-#                OverrideLoginButtonTextColor = "";
-#                InterfaceShadowSize = "6";
-#                InterfaceShadowOpacity = "0.6";
-#                RoundCorners = "20";
-#                ScreenPadding = "0";
-#                # Font = "Noto Sans";
-#                FontSize = "";
-#                ForceRightToLeft = false;
-#                ForceLastUser = true;
-#                ForcePasswordFocus = true;
-#                ForceHideCompletePassword = true;
-#                ForceHideVirtualKeyboardButton = false;
-#                ForceHideSystemButtons = false;
-#                AllowEmptyPassword = false;
-#                AllowBadUsernames = false;
-#                Locale = "";
-#                HourFormat = "HH:mm";
-#                DateFormat = "dddd, d of MMMM";
-#                HeaderText = "${config.networking.hostName}";
-#                TranslatePlaceholderUsername = "";
-#                TranslatePlaceholderPassword = "";
-#                TranslateShowPassword = "";
-#                TranslateLogin = "";
-#                TranslateLoginFailedWarning = "";
-#                TranslateCapslockWarning = "";
-#                TranslateSession = "";
-#                TranslateSuspend = "";
-#                TranslateHibernate = "";
-#                TranslateReboot = "";
-#                TranslateShutdown = "";
-#                TranslateVirtualKeyboardButton = "";
-#              };
-#            }
-#          }'';
+        #        theme = ''${ # <-- string interpolation and nix expression inside {}
+        #            pkgs.sddm-sugar-candy.override {
+        #              settings = {
+        #                # Background = image_mountains;
+        #                DimBackgroundImage = "0.0";
+        #                ScaleImageCropped = true;
+        #                ScreenWidth = "1920";
+        #                ScreenHeight = "1080";
+        #                FullBlur = false;
+        #                PartialBlur = true;
+        #                BlurRadius = "100";
+        #                HaveFormBackground = false;
+        #                FormPosition = "center";
+        #                BackgroundImageHAlignment = "center";
+        #                BackgroundImageVAlignment = "center";
+        #                MainColor = "white";
+        #                AccentColor = "#fb884f";
+        #                BackgroundColor = "#444";
+        #                OverrideLoginButtonTextColor = "";
+        #                InterfaceShadowSize = "6";
+        #                InterfaceShadowOpacity = "0.6";
+        #                RoundCorners = "20";
+        #                ScreenPadding = "0";
+        #                # Font = "Noto Sans";
+        #                FontSize = "";
+        #                ForceRightToLeft = false;
+        #                ForceLastUser = true;
+        #                ForcePasswordFocus = true;
+        #                ForceHideCompletePassword = true;
+        #                ForceHideVirtualKeyboardButton = false;
+        #                ForceHideSystemButtons = false;
+        #                AllowEmptyPassword = false;
+        #                AllowBadUsernames = false;
+        #                Locale = "";
+        #                HourFormat = "HH:mm";
+        #                DateFormat = "dddd, d of MMMM";
+        #                HeaderText = "${config.networking.hostName}";
+        #                TranslatePlaceholderUsername = "";
+        #                TranslatePlaceholderPassword = "";
+        #                TranslateShowPassword = "";
+        #                TranslateLogin = "";
+        #                TranslateLoginFailedWarning = "";
+        #                TranslateCapslockWarning = "";
+        #                TranslateSession = "";
+        #                TranslateSuspend = "";
+        #                TranslateHibernate = "";
+        #                TranslateReboot = "";
+        #                TranslateShutdown = "";
+        #                TranslateVirtualKeyboardButton = "";
+        #              };
+        #            }
+        #          }'';
         package = lib.mkForce pkgs.libsForQt5.sddm;
-        extraPackages = with pkgs;
+        extraPackages =
+          with pkgs;
           lib.mkForce [
             libsForQt5.qt5.qtgraphicaleffects
           ];
@@ -156,7 +163,11 @@ in {
         };
         overrides = {
           global = {
-            Context.sockets = lib.mkDefault ["wayland" "!x11" "!fallback-x11"]; # Force Wayland by default
+            Context.sockets = lib.mkDefault [
+              "wayland"
+              "!x11"
+              "!fallback-x11"
+            ]; # Force Wayland by default
             Environment = {
               XCURSOR_PATH = lib.mkDefault "/run/host/user-share/icons:/run/host/share/icons"; # Fix un-themed cursor in some Wayland apps
               GTK_THEME = lib.mkDefault "Adwaita:dark"; # Force correct theme for some GTK apps
@@ -172,7 +183,7 @@ in {
               "pcsc" # Expose smart cards (i.e. YubiKey)
             ];
           };
-          "org.onlyoffice.desktopeditors".Context.sockets = lib.mkDefault ["x11"]; # No Wayland support
+          "org.onlyoffice.desktopeditors".Context.sockets = lib.mkDefault [ "x11" ]; # No Wayland support
         };
       };
       sunshine = {
