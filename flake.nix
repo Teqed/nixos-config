@@ -193,6 +193,18 @@ The starlight on the Western Seas.
             # inputs.rsky.nixosModules.default
           ];
         };
+        bubblegum = nixpkgs.lib.nixosSystem {
+          specialArgs = inheritSpecialArgs;
+          system = "x86_64-linux";
+          modules = [
+            ./hosts/bubblegum.nix
+            self.nixosModules.default
+            chaotic.nixosModules.default
+            home-manager.nixosModules.home-manager
+            nix-flatpak.nixosModules.nix-flatpak
+            self.homeManagerConfig
+          ];
+        };
         jupiter = nixpkgs.lib.nixosSystem {
           specialArgs = inheritSpecialArgs;
           system = "aarch64-linux";
