@@ -6,10 +6,11 @@
   outputs,
   ...
 }:
-with lib; let
+with lib;
+let
   # flakeInputs = filterAttrs (_: isType "flake") inputs;
   substituter_list = [
-    # "https://thoughtful.binarycache.shatteredsky.net"
+    "https://thoughtful.binarycache.shatteredsky.net"
     "https://cache.nixos.org/"
     "https://nix-community.cachix.org/"
     "https://teq.cachix.org"
@@ -29,14 +30,21 @@ with lib; let
   ];
   defaultLang = "en_US.UTF-8";
   inherit (lib) mkDefault;
-in {
+in
+{
   options.teq.home-manager = {
     enable = lib.mkEnableOption "Enable Teq's Home-Manager configuration defaults.";
     gui = lib.mkEnableOption "Enable GUI configuration.";
   };
   config = lib.mkIf config.teq.home-manager.enable {
     home.stateVersion = "24.05"; # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
-    home.extraOutputsToInstall = ["info" "man" "share" "icons" "doc"];
+    home.extraOutputsToInstall = [
+      "info"
+      "man"
+      "share"
+      "icons"
+      "doc"
+    ];
     home.keyboard.layout = mkDefault "us";
     home.language = {
       base = mkDefault "${defaultLang}";
@@ -92,7 +100,13 @@ in {
         nix-path = mkDefault config.nix.nixPath; # Workaround for https://github.com/NixOS/nix/issues/9574
         auto-optimise-store = mkDefault true;
         bash-prompt-prefix = mkDefault "(nix:$name)\040";
-        experimental-features = mkDefault ["nix-command" "flakes" "ca-derivations" "recursive-nix" "auto-allocate-uids"];
+        experimental-features = mkDefault [
+          "nix-command"
+          "flakes"
+          "ca-derivations"
+          "recursive-nix"
+          "auto-allocate-uids"
+        ];
         accept-flake-config = mkDefault true; # Whether to accept nix configuration from a flake without prompting.
         allow-dirty = mkDefault true; # Whether to allow dirty Git/Mercurial trees.
         allow-symlinked-store = mkDefault true; # Nix will stop complaining if the store directory (typically /nix/store) contains symlink components.
@@ -109,9 +123,13 @@ in {
         builders-use-substitutes = mkDefault true;
         substituters = mkDefault substituter_list;
         trusted-substituters = mkDefault substituter_list;
-        trusted-users = mkForce ["root" "teq" "@wheel"];
+        trusted-users = mkForce [
+          "root"
+          "teq"
+          "@wheel"
+        ];
         trusted-public-keys = mkDefault [
-          # "thoughtful.binarycache.shatteredsky.net:yPenzjz5AHspYSCnuLULxLVe/9h+d0FLqlnuBmbogz0="
+          "thoughtful.binarycache.shatteredsky.net:yPenzjz5AHspYSCnuLULxLVe/9h+d0FLqlnuBmbogz0="
           "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
           "teq.cachix.org-1:vzpACVksI6em8mYjeJbTWp9x+jQmZiReS7pNot65l+A="
           "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
