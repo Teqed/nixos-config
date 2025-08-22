@@ -86,12 +86,10 @@ The starlight on the Western Seas.
       ];
       forAllSystems = nixpkgs.lib.genAttrs systems; # This is a function that generates an attribute by calling a function you pass to it, with each system as an argument
       inheritSpecialArgs = {
-        inherit (self)
-          inputs
-          outputs
-          ;
         inherit
           self
+          inputs
+          outputs
           nixos-hardware
           impermanence
           nix-flatpak
