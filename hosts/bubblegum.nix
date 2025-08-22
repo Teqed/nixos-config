@@ -4,6 +4,9 @@
   inputs,
   ...
 }:
+let
+  currentStateVersion = "24.05";
+in
 {
   imports = [
     ./profiles/common.nix
@@ -13,7 +16,7 @@
     nixos-hardware.nixosModules.framework-12-13th-gen-intel
   ];
   networking.hostName = "bubblegum";
-  # networking.hostId = "9936699a"; # head -c 8 /etc/machine-id
+  networking.hostId = "489919130"; # head -c 8 /etc/machine-id
   nixpkgs = {
     buildPlatform = "x86_64-linux";
   };
@@ -34,8 +37,8 @@
     cachyos = true;
     blocklist = false;
     impermanence = {
-      enable = true;
-      btrfs = true;
+      enable = false;
+      btrfs = false;
     };
   };
   networking = {
