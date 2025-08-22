@@ -1,10 +1,15 @@
 {
   nixos-hardware,
+  pkgs,
+  inputs,
   ...
 }:
 {
   imports = [
     ./profiles/common.nix
+    nixos-hardware.nixosModules.common-pc
+    nixos-hardware.nixosModules.common-pc-ssd
+    nixos-hardware.nixosModules.common-pc-laptop
     nixos-hardware.nixosModules.framework-12-13th-gen-intel
   ];
   networking.hostName = "bubblegum";
