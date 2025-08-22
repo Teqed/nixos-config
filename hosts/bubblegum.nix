@@ -15,14 +15,6 @@
   nixpkgs = {
     buildPlatform = "x86_64-linux";
   };
-  boot = {
-    loader = {
-      systemd-boot.enable = true;
-      systemd-boot.configurationLimit = 12;
-      efi.canTouchEfiVariables = true;
-    };
-    initrd.kernelModules = [ "pinctrl_tigerlake" ];
-  };
   home-manager.users.teq.teq.home-manager.gui = true;
   teq.nixos = {
     gui.enable = true;
