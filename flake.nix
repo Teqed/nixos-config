@@ -89,6 +89,9 @@ The starlight on the Western Seas.
         inherit (self)
           inputs
           outputs
+          ;
+        inherit
+          self
           nixos-hardware
           impermanence
           nix-flatpak
