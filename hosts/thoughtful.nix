@@ -96,6 +96,7 @@ in
     };
   };
   services = {
+    parakeet.enable = true;
     ollama = {
       enable = true;
       acceleration = "rocm";

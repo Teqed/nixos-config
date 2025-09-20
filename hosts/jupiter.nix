@@ -85,6 +85,7 @@ in
   };
   #   };
   # };
+  # services.parakeet.enable = true;
   containers.bluepds = {
     autoStart = true;
     config =
