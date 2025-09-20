@@ -140,12 +140,12 @@ in
         #              };
         #            }
         #          }'';
-        package = lib.mkForce pkgs.libsForQt5.sddm;
-        extraPackages =
-          with pkgs;
-          lib.mkForce [
-            libsForQt5.qt5.qtgraphicaleffects
-          ];
+        # package = lib.mkForce pkgs.libsForQt5.sddm;
+        # extraPackages =
+        #   with pkgs;
+        #   lib.mkForce [
+        #     libsForQt5.qt5.qtgraphicaleffects
+        #   ];
         settings = {
           Theme = {
             CursorTheme = "Bibata-Modern-Classic";

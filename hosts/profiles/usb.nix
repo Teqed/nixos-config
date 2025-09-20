@@ -18,7 +18,7 @@
     # teq.nixos.impermanence.label_boot = label_boot;
     nixpkgs.config.allowBroken = true;
     nix.optimise.automatic = true;
-    nix.optimise.dates = ["03:45"];
+    nix.optimise.dates = [ "03:45" ];
     nix.settings.auto-optimise-store = true;
     nix.gc = {
       automatic = true;
@@ -35,13 +35,14 @@
       maliit-framework
       maliit-keyboard
       # Calamares for graphical installation
-      libsForQt5.kpmcore
+      # libsForQt5.kpmcore
+      kdePackages.kpmcore
       calamares-nixos
       calamares-nixos-extensions
       # Get list of locales
       glibcLocales
     ];
-    i18n.supportedLocales = ["all"]; # Support choosing from any locale
+    i18n.supportedLocales = [ "all" ]; # Support choosing from any locale
     # disko.devices = {
     #   disk = {
     #     main = {
