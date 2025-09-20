@@ -1,7 +1,15 @@
-{lib, modulesPath, pkgs, config, inputs, ...}:
-  let
-    currentStateVersion = "24.05";
-  in {
+{
+  lib,
+  modulesPath,
+  pkgs,
+  config,
+  inputs,
+  ...
+}:
+let
+  currentStateVersion = "24.05";
+in
+{
   imports = [
     ./profiles/common.nix
     (modulesPath + "/installer/scan/not-detected.nix")
@@ -21,31 +29,36 @@
     # '';
   };
   networking.firewall.allowedTCPPorts = [
-      80    # HTTP Caddy
-      443   # HTTPS Caddy
-      2583  # rsky
-      3000  # HTTP Wiki.js
-      8000  # BluePDS
-      30000 # HTTP Foundry VTT
-      30001 # HTTP Foundry VTT - Noctuae
-    ];
+    80 # HTTP Caddy
+    443 # HTTPS Caddy
+    2583 # rsky
+    3000 # HTTP Wiki.js
+    8000 # BluePDS
+    30000 # HTTP Foundry VTT
+    30001 # HTTP Foundry VTT - Noctuae
+  ];
   services.postgresql = {
     enable = true;
-    ensureDatabases = [ "wiki-js" "pds" ];
-    ensureUsers = [{
-      name = "wiki-js";
-      ensureDBOwnership = true;
-    }
-    {
-      name = "pds";
-      ensureDBOwnership = true;
-    }];
+    ensureDatabases = [
+      "wiki-js"
+      "pds"
+    ];
+    ensureUsers = [
+      {
+        name = "wiki-js";
+        ensureDBOwnership = true;
+      }
+      {
+        name = "pds";
+        ensureDBOwnership = true;
+      }
+    ];
   };
   services.wiki-js = {
     enable = true;
     settings.offline = true;
     settings.db = {
-      db  = "wiki-js";
+      db = "wiki-js";
       host = "/run/postgresql";
       type = "postgres";
       user = "wiki-js";
@@ -53,7 +66,7 @@
   };
   systemd.services.wiki-js = {
     requires = [ "postgresql.service" ];
-    after    = [ "postgresql.service" ];
+    after = [ "postgresql.service" ];
   };
   # containers.rsky = {
   #   autoStart = true;
@@ -61,78 +74,84 @@
   #       system.stateVersion = currentStateVersion;
   #       imports = [ inputs.rsky.nixosModules.default ];
   #       services.postgresql.enable = lib.mkForce false;
-  #       services.rsky-pds = {
-  #           enable = true;
-  #           environmentFiles = [ "/var/lib/rsky-pds/pds.env" ];
-  #           settings = {
-  #               PDS_PORT = 2583;
-  #               PDS_HOSTNAME = "psi.shatteredsky.net";
-  #               PDS_DEV_MODE = "true";
-  #           };
-  #       };
+  services.rsky-pds = {
+    enable = true;
+    environmentFiles = [ "/var/lib/rsky-pds/pds.env" ];
+    settings = {
+      PDS_PORT = 2583;
+      PDS_HOSTNAME = "psi.shatteredsky.net";
+      PDS_DEV_MODE = "true";
+    };
+  };
   #   };
   # };
   containers.bluepds = {
     autoStart = true;
-    config = { pkgs, ... }: {
+    config =
+      { pkgs, ... }:
+      {
         system.stateVersion = currentStateVersion;
         imports = [ inputs.bluepds.nixosModules.default ];
         services.bluepds = {
-            enable = true;
-            host_name = "pds.shatteredsky.net";
-            listen_address = "0.0.0.0:8000";
-            test = "false";
+          enable = true;
+          host_name = "pds.shatteredsky.net";
+          listen_address = "0.0.0.0:8000";
+          test = "false";
         };
-    };
+      };
   };
   containers.foundryvtt-spheres = {
     autoStart = true;
-    config = { pkgs, ... }: {
-      system.stateVersion = currentStateVersion;
-      imports = [ inputs.foundryvtt.nixosModules.foundryvtt ];
-      services.foundryvtt = {
-        enable = true;
-        hostName = "foundry.shatteredsky.net";
-        routePrefix = "spheres";
-        minifyStaticFiles = true;
-        # port = 30000; # Default port
-        proxyPort = 443;
-        proxySSL = true;
-        upnp = false;
-        package = inputs.foundryvtt.packages.${pkgs.system}.foundryvtt_11;
+    config =
+      { pkgs, ... }:
+      {
+        system.stateVersion = currentStateVersion;
+        imports = [ inputs.foundryvtt.nixosModules.foundryvtt ];
+        services.foundryvtt = {
+          enable = true;
+          hostName = "foundry.shatteredsky.net";
+          routePrefix = "spheres";
+          minifyStaticFiles = true;
+          # port = 30000; # Default port
+          proxyPort = 443;
+          proxySSL = true;
+          upnp = false;
+          package = inputs.foundryvtt.packages.${pkgs.system}.foundryvtt_11;
+        };
       };
-    };
   };
   containers.foundryvtt-noctuae = {
     autoStart = true;
-    config = { pkgs, ... }: {
-      system.stateVersion = currentStateVersion;
-      imports = [ inputs.foundryvtt.nixosModules.foundryvtt ];
-      services.foundryvtt = {
-        enable = true;
-        hostName = "foundry.shatteredsky.net";
-        routePrefix = "noct";
-        minifyStaticFiles = true;
-        port = 30001;
-        proxyPort = 443;
-        proxySSL = true;
-        upnp = false;
-        package = inputs.foundryvtt.packages.${pkgs.system}.foundryvtt_12;
+    config =
+      { pkgs, ... }:
+      {
+        system.stateVersion = currentStateVersion;
+        imports = [ inputs.foundryvtt.nixosModules.foundryvtt ];
+        services.foundryvtt = {
+          enable = true;
+          hostName = "foundry.shatteredsky.net";
+          routePrefix = "noct";
+          minifyStaticFiles = true;
+          port = 30001;
+          proxyPort = 443;
+          proxySSL = true;
+          upnp = false;
+          package = inputs.foundryvtt.packages.${pkgs.system}.foundryvtt_12;
+        };
       };
-    };
   };
   # Implementation
   users.users = lib.mkMerge (
-    [{root.initialHashedPassword = "$2b$05$2ckfv7WhD4dCuDK9DZi1MuDT6lOLJI9xDVZEAze2/sjw0lODXYCh6";}]
-    ++ lib.forEach config.userinfo.users (
-      u: {"${u}".initialHashedPassword = "$2b$05$2ckfv7WhD4dCuDK9DZi1MuDT6lOLJI9xDVZEAze2/sjw0lODXYCh6";}
-    )
+    [ { root.initialHashedPassword = "$2b$05$2ckfv7WhD4dCuDK9DZi1MuDT6lOLJI9xDVZEAze2/sjw0lODXYCh6"; } ]
+    ++ lib.forEach config.userinfo.users (u: {
+      "${u}".initialHashedPassword = "$2b$05$2ckfv7WhD4dCuDK9DZi1MuDT6lOLJI9xDVZEAze2/sjw0lODXYCh6";
+    })
   );
   networking.useDHCP = lib.mkDefault true;
   nixpkgs = {
-      config.allowUnsupportedSystem = true;
-      hostPlatform = lib.mkForce "aarch64-linux";
-      buildPlatform = lib.mkForce "x86_64-linux";
+    config.allowUnsupportedSystem = true;
+    hostPlatform = lib.mkForce "aarch64-linux";
+    buildPlatform = lib.mkForce "x86_64-linux";
   };
   boot = {
     loader = {
@@ -146,7 +165,10 @@
       efi.canTouchEfiVariables = true;
     };
     initrd = {
-      availableKernelModules = [ "xhci_pci" "virtio_scsi" ];
+      availableKernelModules = [
+        "xhci_pci"
+        "virtio_scsi"
+      ];
       systemd.enable = false;
     };
   };
@@ -192,7 +214,10 @@
                     mountpoint = "/home";
                   };
                   "/@nix" = {
-                    mountOptions = [ "compress=zstd" "noatime" ];
+                    mountOptions = [
+                      "compress=zstd"
+                      "noatime"
+                    ];
                     mountpoint = "/nix";
                   };
                   "/swap" = {
