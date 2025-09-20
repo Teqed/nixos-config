@@ -31,7 +31,10 @@ in
   # Needed for desktop environments to detect display orientation
   hardware.sensor.iio.enable = lib.mkDefault true;
 
-  environment.systemPackages = [ pkgs.framework-tool ];
+  environment.systemPackages = [
+    pkgs.framework-tool
+    pkgs.btop-cuda
+  ];
   # / From
   boot = {
     loader = {
@@ -73,6 +76,11 @@ in
   ];
   home-manager.users.teq.teq.home-manager.gui = true;
   hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+  hardware.graphics.extraPackages = with pkgs; [
+    vpl-gpu-rt
+    vaapiIntel
+    intel-media-driver
+  ];
   teq.nixos = {
     gui.enable = true;
     gui.amd = false;

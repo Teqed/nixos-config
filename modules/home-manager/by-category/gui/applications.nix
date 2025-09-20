@@ -3,7 +3,8 @@
   lib,
   config,
   ...
-}: {
+}:
+{
   config = lib.mkIf config.teq.home-manager.gui {
     home.packages = with pkgs; [
       bibata-cursors # 160MB
@@ -23,6 +24,15 @@
       kdePackages.wayland-protocols
       # kde:
       kdePackages.filelight # Disk usage analyzer
+      moonlight-qt
+      prismlauncher
+      qalculate-qt
+      kdePackages.kalk
+      krita
+      haruna
+      digikam
+      kdePackages.yakuake
+      kdePackages.kcharselect
     ];
     services = {
       ### kde:
@@ -34,14 +44,22 @@
         settings = {
           nocjk = true;
           loglevel = 5;
-          topdirs = ["~/_/Downloads" "~/_/Documents" "~/_/Repos"];
+          topdirs = [
+            "~/_/Downloads"
+            "~/_/Documents"
+            # "~/_/Repos"
+          ];
 
           "~/_/Downloads" = {
-            "skippedNames+" = ["*.iso"];
+            "skippedNames+" = [ "*.iso" ];
           };
 
           "~/_/Repos" = {
-            "skippedNames+" = ["node_modules" "target" "result"];
+            "skippedNames+" = [
+              "node_modules"
+              "target"
+              "result"
+            ];
           };
         };
       };

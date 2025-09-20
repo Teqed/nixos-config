@@ -3,9 +3,11 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   inherit (lib) mkDefault;
-in {
+in
+{
   config = lib.mkIf config.teq.nixos.enable {
     services = {
       tailscale.enable = true;
@@ -37,11 +39,41 @@ in {
       mosh.enable = mkDefault true;
     };
     environment.systemPackages = with pkgs; [
+      openfortivpn
       cifs-utils
-      kdePackages.kio-fuse #to mount remote filesystems via FUSE
-      kdePackages.kio-extras #extra protocols support (sftp, fish and more)
-      kdePackages.qtsvg #support for svg icons
+      kdePackages.kio-fuse # to mount remote filesystems via FUSE
+      kdePackages.kio-extras # extra protocols support (sftp, fish and more)
+      kdePackages.qtsvg # support for svg icons
     ];
+    # systemd.services.openfortivpn = {
+    #   description = "OpenFortiVPN Service";
+    #   after = [ "network.target" ];
+    #   wants = [ "network-online.target" "systemd-networkd-wait-online.service" ];
+    #   documentation = ["https://github.com/adrienverge/openfortivpn#readme"];
+    #   wantedBy = [ "multi-user.target" ];
+    #   serviceConfig = {
+    #     Type = "notify";
+    #     PrivateTmp = true;
+    #     ExecStart = "${pkgs.openfortivpn}/bin/openfortivpn";
+    #     Restart = "no";
+    #     RestartSec = "30s";
+    #     User = "root";
+    #     Sockets = [ "openfortivpn.socket" ];
+    #     StandardInput = "socket";
+    #     StandardOutput = "journal";
+    #     StandardError = "journal";
+    #   };
+    # };
+    # systemd.sockets.openfortivpn = {
+    #   description = "OpenFortiVPN Socket";
+    #   socketConfig = {
+    #     ListenFIFO = "/run/openfortivpn.stdin";
+    #     Service = "openfortivpn.service";
+    #     Accept = "false";
+    #     RemoveOnStop = "yes";
+    #     SocketMode = "0660";
+    #   };
+    # };
     networking = {
       # nftables.enable = true; # Attempt to get ipv6 forwarding for tailscale exit nodes working
       networkmanager.enable = lib.mkDefault true;
@@ -61,8 +93,15 @@ in {
         enable = true;
         checkReversePath = "loose";
         trustedInterfaces = [ "tailscale0" ];
-        allowedUDPPorts = [ 9000 config.services.tailscale.port 3000 ];
-        allowedTCPPorts = [ 9000 3000 ];
+        allowedUDPPorts = [
+          9000
+          config.services.tailscale.port
+          3000
+        ];
+        allowedTCPPorts = [
+          9000
+          3000
+        ];
         allowedTCPPortRanges = [
           {
             from = 1714;
@@ -78,9 +117,14 @@ in {
         extraCommands = ''iptables -t raw -A OUTPUT -p udp -m udp --dport 137 -j CT --helper netbios-ns'';
       };
       hosts = {
-        "10.0.0.12" = [ "dreamer.local" "pihole.shatteredsky.net" "cloud-aio.shatteredsky.net" "awx.shatteredsky.net" ];
+        "10.0.0.12" = [
+          "dreamer.local"
+          "pihole.shatteredsky.net"
+          "cloud-aio.shatteredsky.net"
+          "awx.shatteredsky.net"
+        ];
       };
     };
   };
-  
+
 }
