@@ -52,7 +52,7 @@ The starlight on the Western Seas.
       url = "github:nix-community/nixpkgs-wayland";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    parakeet.url = "git+https://tangled.sh/@quilling.dev/parakeet?rev=70aaa85a6278dd61d90800ccffcf6c45256b7059";
+    parakeet.url = "git+https://tangled.sh/@quilling.dev/parakeet?rev=588b6fdbb4a96d1e3fa9c4ad8f021457c762147b";
   };
   outputs =
     {
@@ -191,7 +191,7 @@ The starlight on the Western Seas.
             home-manager.nixosModules.home-manager
             nix-flatpak.nixosModules.nix-flatpak
             self.homeManagerConfig
-            # inputs.rsky.nixosModules.default
+            inputs.parakeet.nixosModules.default
           ];
         };
         bubblegum = nixpkgs.lib.nixosSystem {
@@ -220,6 +220,7 @@ The starlight on the Western Seas.
             inputs.foundryvtt.nixosModules.foundryvtt
             inputs.bluepds.nixosModules.default
             inputs.rsky.nixosModules.default
+            inputs.parakeet.nixosModules.default
           ];
         };
       };

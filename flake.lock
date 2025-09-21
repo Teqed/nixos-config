@@ -710,16 +710,16 @@
         "rust-overlay": "rust-overlay_3"
       },
       "locked": {
-        "lastModified": 1758402363,
-        "narHash": "sha256-yiU+UVHsvLIRDxXoxQpfY+PLjdcIP7rIuRlcarBA53M=",
+        "lastModified": 1758407389,
+        "narHash": "sha256-WKLdz5qzgpqpJMOuGUkg5ivjC7SfhRhOU5NLWVuL3Os=",
         "ref": "refs/heads/main",
-        "rev": "70aaa85a6278dd61d90800ccffcf6c45256b7059",
-        "revCount": 179,
+        "rev": "34d8682ebd8e03215c82dbcd02a07444dbf6e4dd",
+        "revCount": 186,
         "type": "git",
         "url": "https://tangled.sh/@quilling.dev/parakeet"
       },
       "original": {
-        "rev": "70aaa85a6278dd61d90800ccffcf6c45256b7059",
+        "rev": "34d8682ebd8e03215c82dbcd02a07444dbf6e4dd",
         "type": "git",
         "url": "https://tangled.sh/@quilling.dev/parakeet"
       }
