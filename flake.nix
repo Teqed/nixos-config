@@ -52,7 +52,7 @@ The starlight on the Western Seas.
       url = "github:nix-community/nixpkgs-wayland";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    parakeet.url = "git+https://tangled.sh/@quilling.dev/parakeet?rev=588b6fdbb4a96d1e3fa9c4ad8f021457c762147b";
+    parakeet.url = "git+https://tangled.sh/@quilling.dev/parakeet?rev=3f1dcc059ddc28d94caea58076458c11dfd9e6db";
   };
   outputs =
     {
