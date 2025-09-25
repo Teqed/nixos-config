@@ -72,7 +72,7 @@ in
     win-spice
     adwaita-icon-theme
     btop-rocm # Not related to VM -- ROCM support for AMD GPUs
-    consumer # parakeet consumer
+    # consumer # parakeet consumer
   ];
   virtualisation = {
     libvirtd = {
