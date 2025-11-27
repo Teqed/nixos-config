@@ -17,6 +17,18 @@ in
       bash-language-server # 300MB / 200MB (nodejs 200MB)
       nil
       nixd # Nix language server, based on nix libraries https://github.com/nix-community/nixd
+      lazygit
+      just
+      grpcurl
+      redisinsight
+      goaccess
+      jujutsu
+      jjui
+      lazyjj
+      gg-jj
+      tokei
+      ast-grep
+      scc
     ];
     programs = {
       jq.enable = lib.mkDefault true;

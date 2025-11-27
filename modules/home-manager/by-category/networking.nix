@@ -11,6 +11,7 @@
       ### browsers:
       lynx
       w3m-nox
+      reader
     ];
   };
 }
