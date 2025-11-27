@@ -223,6 +223,7 @@ in {
         # hideMounts = true;
         directories = [
           ".cache"
+          ".claude" # https://github.com/anthropics/claude-code/issues/1455
           ".config"
           ".factorio"
           ".local"
@@ -245,6 +246,7 @@ in {
           ".zen" # Zen browser XDG dir spec on roadmap: https://github.com/zen-browser/desktop/issues/1074
         ];
         files = [
+          ".claude" # https://github.com/anthropics/claude-code/issues/1455
           ".face.icon"
         ];
         # allowOther = true;

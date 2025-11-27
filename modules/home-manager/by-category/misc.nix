@@ -90,6 +90,7 @@
       strace
 
       teams-for-linux
+      claude-code
     ];
   };
 }
