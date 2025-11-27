@@ -59,6 +59,13 @@ in
                 "github:"
               ];
             };
+            "https://tangled.org/" = {
+              insteadOf = lib.mkDefault [
+                "t:"
+                "to:"
+                "tangled:"
+              ];
+            };
           };
         };
       };
