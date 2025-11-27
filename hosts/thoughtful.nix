@@ -95,6 +95,16 @@ in
     };
   };
   services = {
+    bluesky-pds = {
+      enable = true;
+      environmentFiles = [ "/var/lib/pds/.env" ];
+      settings = {
+        PDS_HOSTNAME = "pds.shatteredsky.net";
+        # PDS_BSKY_APP_VIEW_URL = "https://api.shatteredsky.net";
+        # PDS_BSKY_APP_VIEW_DID = "did:web:api.shatteredsky.net";
+        PDS_PORT = 3300;
+      };
+    };
     parakeet.enable = true;
     ollama = {
       # enable = true;
