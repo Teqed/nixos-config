@@ -3,9 +3,11 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   # XDG_CONFIG_HOME = "${config.xdg.configHome}";
-in {
+in
+{
   config = lib.mkIf config.teq.home-manager.enable {
     home.packages = with pkgs; [
       rustup # cargo

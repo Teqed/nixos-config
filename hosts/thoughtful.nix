@@ -68,7 +68,7 @@ in
     spice
     spice-gtk
     spice-protocol
-    win-virtio
+    virtio-win
     win-spice
     adwaita-icon-theme
     btop-rocm # Not related to VM -- ROCM support for AMD GPUs
@@ -79,8 +79,6 @@ in
       enable = true;
       qemu = {
         swtpm.enable = true;
-        ovmf.enable = true;
-        ovmf.packages = [ pkgs.OVMFFull.fd ];
       };
     };
     spiceUSBRedirection.enable = true;
@@ -99,7 +97,7 @@ in
   services = {
     parakeet.enable = true;
     ollama = {
-      enable = true;
+      # enable = true;
       acceleration = "rocm";
       # Optional: preload models, see https://ollama.com/library
       loadModels = [ ];

@@ -3,7 +3,8 @@
   lib,
   config,
   ...
-}: {
+}:
+{
   config = lib.mkIf config.teq.home-manager.enable {
     systemd.user.startServices = lib.mkDefault "sd-switch"; # Nicely reload system units when changing configs
     services = {
@@ -12,7 +13,8 @@
     programs = {
       # thunderbird.enable = true; # profiles needs to be set
     };
-    nixpkgs.config.allowUnfreePredicate = pkg:
+    nixpkgs.config.allowUnfreePredicate =
+      pkg:
       builtins.elem (lib.getName pkg) [
         # TODO: Move all unfree packages here
       ];

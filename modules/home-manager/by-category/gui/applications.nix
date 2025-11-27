@@ -10,7 +10,7 @@
       bibata-cursors # 160MB
       papirus-icon-theme # 200MB / 130MB
       ### emulators:
-      mgba # 800MB / 10MB (ffmpeg)
+      # mgba # 800MB / 10MB (ffmpeg)
       ### video:
       plex-desktop
       handbrake # 1.5GB / 64MB (ffmpeg 1.3GB / 35MB)
