@@ -26,6 +26,7 @@ let
     "https://yazi.cachix.org"
     "https://nixpkgs-wayland.cachix.org"
     "https://nixpkgs-unfree.cachix.org"
+    "https://claude-code.cachix.org"
   ];
   defaultLang = "en_US.UTF-8";
   inherit (lib) mkDefault;
@@ -136,6 +137,7 @@ in
           "yazi.cachix.org-1:Dcdz63NZKfvUCbDGngQDAZq6kOroIrFoyO064uvLh8k="
           "nixpkgs-wayland.cachix.org-1:3lwxaILxMRkVhehr5StQprHdEo4IrE8sRho9R9HOLYA="
           "nixpkgs-unfree.cachix.org-1:hqvoInulhbV4nJ9yJOEr+4wxhDV4xq2d1DK7S6Nj6rs="
+          "claude-code.cachix.org-1:YeXf2aNu7UTX8Vwrze0za1WEDS+4DuI2kVeWEE4fsRk="
         ];
       };
     };

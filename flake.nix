@@ -54,6 +54,7 @@ The starlight on the Western Seas.
     };
     # parakeet.url = "git+https://tangled.sh/@quilling.dev/parakeet?rev=3f1dcc059ddc28d94caea58076458c11dfd9e6db";
     parakeet.url = "git+file:///home/teq/.local/user-dirs/Repos/parakeet";
+    claude-code.url = "github:sadjow/claude-code-nix";
   };
   outputs =
     {
@@ -75,6 +76,7 @@ The starlight on the Western Seas.
       pia,
       bluepds,
       # rsky,
+      claude-code,
       ...
     }@inputs:
     let
@@ -193,6 +195,7 @@ The starlight on the Western Seas.
             nix-flatpak.nixosModules.nix-flatpak
             self.homeManagerConfig
             inputs.parakeet.nixosModules.default
+            { nixpkgs.overlays = [ claude-code.overlays.default ]; }
           ];
         };
         bubblegum = nixpkgs.lib.nixosSystem {
