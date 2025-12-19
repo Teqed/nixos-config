@@ -21,7 +21,7 @@
       colordiff
       ### pagers:
       most # Supports multiple windows and can scroll left and right. "Why settle for less?"
-      moar # Nice-to-use pager for humans
+      moor # Nice-to-use pager for humans
       less # More advanced file pager than 'more'. Included by default
       ov # Feature-rich terminal-based text viewer
     ];

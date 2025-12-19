@@ -45,9 +45,9 @@
     MANPAGER = "sh -c 'col -bx | bat -l man -p'";
     EDITOR = "micro";
     VISUAL = "micro";
-    PAGER = "moar";
+    PAGER = "moor";
     LESS = "-RF";
-    MOAR = "--statusbar=bold --no-linenumbers";
+    MOOR = "--statusbar=bold --no-linenumbers";
     DICPATH = "/run/current-system/sw/share/hunspell";
     # COLORTERM = "truecolor";
     CLICOLOR = "1";
