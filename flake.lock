@@ -792,6 +792,7 @@
         "plasma-manager": "plasma-manager",
         "rust-overlay": "rust-overlay_4",
         "sddmSugarCandy4Nix": "sddmSugarCandy4Nix",
+        "vpn-confinement": "vpn-confinement",
         "zen-browser": "zen-browser"
       }
     },
@@ -1000,6 +1001,21 @@
       "original": {
         "owner": "nix-systems",
         "repo": "default",
+        "type": "github"
+      }
+    },
+    "vpn-confinement": {
+      "locked": {
+        "lastModified": 1765634578,
+        "narHash": "sha256-Fujb9sn1cj+u/bzfo2RbQkcAvJ7Ch1pimJzFie4ptb4=",
+        "owner": "Maroka-chan",
+        "repo": "VPN-Confinement",
+        "rev": "f2989e1e3cb06c7185939e9ddc368f88b998616a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Maroka-chan",
+        "repo": "VPN-Confinement",
         "type": "github"
       }
     },

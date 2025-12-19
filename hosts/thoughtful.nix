@@ -1,4 +1,5 @@
 {
+  config,
   nixos-hardware,
   pkgs,
   inputs,
@@ -73,6 +74,7 @@ in
     adwaita-icon-theme
     btop-rocm # Not related to VM -- ROCM support for AMD GPUs
     # consumer # parakeet consumer
+    inputs.agenix.packages.${pkgs.system}.default # agenix CLI tool
   ];
   virtualisation = {
     libvirtd = {
@@ -94,7 +96,40 @@ in
       btrfs = true;
     };
   };
+
+  # Agenix secret management
+  age.secrets."wg0" = {
+    file = ../secrets/wg0.age;
+    # The decrypted file will be available at config.age.secrets."wg0".path
+  };
+
+  vpnNamespaces.wg = {
+    enable = true;
+    wireguardConfigFile = config.age.secrets."wg0".path;
+    accessibleFrom = [
+      "10.0.0.0/24"
+      "100.64.0.0/10"
+    ];
+    portMappings = [
+      { from = 8080; to = 8080; }
+    ];
+    openVPNPorts = [{
+      port = 6881;
+      protocol = "both";
+    }];
+  };
+  systemd.services.qbittorrent.vpnConfinement = {
+    enable = true;
+    vpnNamespace = "wg";
+  };
+
   services = {
+    qbittorrent = {
+      enable = true;
+      webuiPort = 8080;
+      torrentingPort = 6881;
+      openFirewall = false;
+    };
     bluesky-pds = {
       enable = true;
       environmentFiles = [ "/var/lib/pds/.env" ];

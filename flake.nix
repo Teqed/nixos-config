@@ -55,6 +55,12 @@ The starlight on the Western Seas.
     # parakeet.url = "git+https://tangled.sh/@quilling.dev/parakeet?rev=3f1dcc059ddc28d94caea58076458c11dfd9e6db";
     parakeet.url = "git+file:///home/teq/.local/user-dirs/Repos/parakeet";
     claude-code.url = "github:sadjow/claude-code-nix";
+    vpn-confinement.url = "github:Maroka-chan/VPN-Confinement";
+    agenix = {
+      url = "github:ryantm/agenix";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.darwin.follows = ""; # Save resources on Linux
+    };
   };
   outputs =
     {
@@ -77,6 +83,8 @@ The starlight on the Western Seas.
       bluepds,
       # rsky,
       claude-code,
+      vpn-confinement,
+      agenix,
       ...
     }@inputs:
     let
@@ -195,6 +203,8 @@ The starlight on the Western Seas.
             nix-flatpak.nixosModules.nix-flatpak
             self.homeManagerConfig
             inputs.parakeet.nixosModules.default
+            vpn-confinement.nixosModules.default
+            agenix.nixosModules.default
             { nixpkgs.overlays = [ claude-code.overlays.default ]; }
           ];
         };
