@@ -75,6 +75,7 @@ in
     btop-rocm # Not related to VM -- ROCM support for AMD GPUs
     # consumer # parakeet consumer
     inputs.agenix.packages.${pkgs.system}.default # agenix CLI tool
+    wireguard-tools
   ];
   virtualisation = {
     libvirtd = {
