@@ -87,6 +87,11 @@ in
   };
   services.spice-vdagentd.enable = true;
   # /VM
+
+  # GameCube adapter udev rule
+  services.udev.extraRules = ''
+    SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ATTRS{idVendor}=="057e", ATTRS{idProduct}=="0337", MODE="0666"
+  '';
   teq.nixos = {
     media = false;
     cachyos = true;

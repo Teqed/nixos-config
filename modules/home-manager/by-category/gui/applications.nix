@@ -33,6 +33,7 @@
       digikam
       kdePackages.yakuake
       kdePackages.kcharselect
+      dolphin-emu
     ];
     services = {
       ### kde:
