@@ -3,11 +3,9 @@
   lib,
   config,
   ...
-}:
-let
+}: let
   inherit (lib) mkDefault;
-in
-{
+in {
   config = lib.mkIf config.teq.nixos.enable {
     services = {
       tailscale.enable = true;
@@ -93,7 +91,7 @@ in
       firewall = {
         enable = true;
         checkReversePath = "loose";
-        trustedInterfaces = [ "tailscale0" ];
+        trustedInterfaces = ["tailscale0"];
         allowedUDPPorts = [
           9000
           config.services.tailscale.port
@@ -127,5 +125,4 @@ in
       };
     };
   };
-
 }

@@ -3,8 +3,7 @@
   lib,
   config,
   ...
-}:
-{
+}: {
   config = lib.mkIf config.teq.home-manager.gui {
     home.packages = with pkgs; [
       aseprite # 117MB / 20MB (harfbuzz 70MB / 3MB)
@@ -25,7 +24,7 @@
         #   "nix.enableLanguageServer" = true;
         #   "nix.serverPath" = "nixd";
         # };
-        extensions = with pkgs; [ vscode-extensions.rust-lang.rust-analyzer ];
+        extensions = with pkgs; [vscode-extensions.rust-lang.rust-analyzer];
       };
     };
   };

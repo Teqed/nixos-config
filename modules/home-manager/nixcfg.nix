@@ -6,14 +6,12 @@
   outputs,
   ...
 }:
-with lib;
-let
+with lib; let
   # flakeInputs = filterAttrs (_: isType "flake") inputs;
   caches = import ../shared-caches.nix;
   defaultLang = "en_US.UTF-8";
   inherit (lib) mkDefault;
-in
-{
+in {
   options.teq.home-manager = {
     enable = lib.mkEnableOption "Enable Teq's Home-Manager configuration defaults.";
     gui = lib.mkEnableOption "Enable GUI configuration.";

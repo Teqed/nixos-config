@@ -5,11 +5,9 @@
   pkgs,
   inputs,
   ...
-}:
-let
+}: let
   currentStateVersion = "24.05";
-in
-{
+in {
   imports = [
     ./profiles/common.nix
     inputs.nixos-hardware.nixosModules.common-pc-ssd
@@ -49,15 +47,13 @@ in
         "usb_storage"
         "sd_mod"
       ];
-      kernelModules = [ "pinctrl_tigerlake" ];
+      kernelModules = ["pinctrl_tigerlake"];
       luks.devices = {
-        "luks-3247add6-0d03-4f9e-8258-a3dbbb7780ee".device =
-          "/dev/disk/by-uuid/3247add6-0d03-4f9e-8258-a3dbbb7780ee";
-        "luks-cfc290e0-d912-4c35-979d-8e6a9d6473c7".device =
-          "/dev/disk/by-uuid/cfc290e0-d912-4c35-979d-8e6a9d6473c7";
+        "luks-3247add6-0d03-4f9e-8258-a3dbbb7780ee".device = "/dev/disk/by-uuid/3247add6-0d03-4f9e-8258-a3dbbb7780ee";
+        "luks-cfc290e0-d912-4c35-979d-8e6a9d6473c7".device = "/dev/disk/by-uuid/cfc290e0-d912-4c35-979d-8e6a9d6473c7";
       };
     };
-    kernelModules = [ "kvm-intel" ];
+    kernelModules = ["kvm-intel"];
   };
   fileSystems."/" = {
     device = "/dev/disk/by-uuid/104f1332-eb7a-4e43-af39-d01cb9329816";
@@ -72,7 +68,7 @@ in
     ];
   };
   swapDevices = [
-    { device = "/dev/disk/by-uuid/8fd5400e-0dad-4ebc-ac53-7cc2120fbc6e"; }
+    {device = "/dev/disk/by-uuid/8fd5400e-0dad-4ebc-ac53-7cc2120fbc6e";}
   ];
   home-manager.users.teq.teq.home-manager.gui = true;
   hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;

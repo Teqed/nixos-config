@@ -14,10 +14,9 @@ let
 
   allUsers = builtins.attrValues users;
   allSystems = builtins.attrValues systems;
-in
-{
+in {
   # WireGuard configuration for thoughtful
-  "wg0.age".publicKeys = allUsers ++ [ systems.thoughtful ];
+  "wg0.age".publicKeys = allUsers ++ [systems.thoughtful];
 
   # Add more secrets here as needed:
   # "example.age".publicKeys = allUsers ++ allSystems;

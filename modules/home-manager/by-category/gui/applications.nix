@@ -3,8 +3,7 @@
   lib,
   config,
   ...
-}:
-{
+}: {
   config = lib.mkIf config.teq.home-manager.gui {
     home.packages = with pkgs; [
       bibata-cursors # 160MB
@@ -52,7 +51,7 @@
           ];
 
           "~/_/Downloads" = {
-            "skippedNames+" = [ "*.iso" ];
+            "skippedNames+" = ["*.iso"];
           };
 
           "~/_/Repos" = {

@@ -5,14 +5,12 @@
   outputs,
   ...
 }:
-with lib;
-let
+with lib; let
   flakeInputs = filterAttrs (_: isType "flake") inputs;
   caches = import ../shared-caches.nix;
   defaultLang = "en_US.UTF-8";
   inherit (lib) mkDefault;
-in
-{
+in {
   options.teq.nixos = {
     enable = lib.mkEnableOption "Teq's NixOS configuration defaults.";
     gui.enable = lib.mkEnableOption "Teq's NixOS GUI configuration defaults.";
@@ -50,7 +48,7 @@ in
       ];
     };
     nix = {
-      registry = mapAttrs (_: flake: { inherit flake; }) flakeInputs; # Opinionated: make flake registry and nix path match flake inputs
+      registry = mapAttrs (_: flake: {inherit flake;}) flakeInputs; # Opinionated: make flake registry and nix path match flake inputs
       nixPath = mkDefault (mapAttrsToList (key: value: "${key}=${value.to.path}") config.nix.registry); # Add inputs to the system's legacy channels Making legacy nix commands consistent
 
       # registry.nixpkgs.flake = inputs.nixpkgs;

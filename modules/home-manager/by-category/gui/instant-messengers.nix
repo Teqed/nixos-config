@@ -3,8 +3,7 @@
   lib,
   config,
   ...
-}:
-{
+}: {
   config = lib.mkIf config.teq.home-manager.gui {
     home.packages = with pkgs; [
       vesktop # 1.8GB / 8MB

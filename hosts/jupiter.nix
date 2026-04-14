@@ -5,11 +5,9 @@
   config,
   inputs,
   ...
-}:
-let
+}: let
   currentStateVersion = "24.05";
-in
-{
+in {
   imports = [
     ./profiles/common.nix
     (modulesPath + "/installer/scan/not-detected.nix")
@@ -65,8 +63,8 @@ in
     };
   };
   systemd.services.wiki-js = {
-    requires = [ "postgresql.service" ];
-    after = [ "postgresql.service" ];
+    requires = ["postgresql.service"];
+    after = ["postgresql.service"];
   };
   # containers.rsky = {
   #   autoStart = true;
@@ -88,62 +86,56 @@ in
   # services.parakeet.enable = true;
   containers.bluepds = {
     autoStart = true;
-    config =
-      { pkgs, ... }:
-      {
-        system.stateVersion = currentStateVersion;
-        imports = [ inputs.bluepds.nixosModules.default ];
-        services.bluepds = {
-          enable = true;
-          host_name = "pds.shatteredsky.net";
-          listen_address = "0.0.0.0:8000";
-          test = "false";
-        };
+    config = {pkgs, ...}: {
+      system.stateVersion = currentStateVersion;
+      imports = [inputs.bluepds.nixosModules.default];
+      services.bluepds = {
+        enable = true;
+        host_name = "pds.shatteredsky.net";
+        listen_address = "0.0.0.0:8000";
+        test = "false";
       };
+    };
   };
   containers.foundryvtt-spheres = {
     autoStart = true;
-    config =
-      { pkgs, ... }:
-      {
-        system.stateVersion = currentStateVersion;
-        imports = [ inputs.foundryvtt.nixosModules.foundryvtt ];
-        services.foundryvtt = {
-          enable = true;
-          hostName = "foundry.shatteredsky.net";
-          routePrefix = "spheres";
-          minifyStaticFiles = true;
-          # port = 30000; # Default port
-          proxyPort = 443;
-          proxySSL = true;
-          upnp = false;
-          package = inputs.foundryvtt.packages.${pkgs.stdenv.hostPlatform.system}.foundryvtt_11;
-        };
+    config = {pkgs, ...}: {
+      system.stateVersion = currentStateVersion;
+      imports = [inputs.foundryvtt.nixosModules.foundryvtt];
+      services.foundryvtt = {
+        enable = true;
+        hostName = "foundry.shatteredsky.net";
+        routePrefix = "spheres";
+        minifyStaticFiles = true;
+        # port = 30000; # Default port
+        proxyPort = 443;
+        proxySSL = true;
+        upnp = false;
+        package = inputs.foundryvtt.packages.${pkgs.stdenv.hostPlatform.system}.foundryvtt_11;
       };
+    };
   };
   containers.foundryvtt-noctuae = {
     autoStart = true;
-    config =
-      { pkgs, ... }:
-      {
-        system.stateVersion = currentStateVersion;
-        imports = [ inputs.foundryvtt.nixosModules.foundryvtt ];
-        services.foundryvtt = {
-          enable = true;
-          hostName = "foundry.shatteredsky.net";
-          routePrefix = "noct";
-          minifyStaticFiles = true;
-          port = 30001;
-          proxyPort = 443;
-          proxySSL = true;
-          upnp = false;
-          package = inputs.foundryvtt.packages.${pkgs.stdenv.hostPlatform.system}.foundryvtt_12;
-        };
+    config = {pkgs, ...}: {
+      system.stateVersion = currentStateVersion;
+      imports = [inputs.foundryvtt.nixosModules.foundryvtt];
+      services.foundryvtt = {
+        enable = true;
+        hostName = "foundry.shatteredsky.net";
+        routePrefix = "noct";
+        minifyStaticFiles = true;
+        port = 30001;
+        proxyPort = 443;
+        proxySSL = true;
+        upnp = false;
+        package = inputs.foundryvtt.packages.${pkgs.stdenv.hostPlatform.system}.foundryvtt_12;
       };
+    };
   };
   # Implementation
   users.users = lib.mkMerge (
-    [ { root.initialHashedPassword = "$2b$05$2ckfv7WhD4dCuDK9DZi1MuDT6lOLJI9xDVZEAze2/sjw0lODXYCh6"; } ]
+    [{root.initialHashedPassword = "$2b$05$2ckfv7WhD4dCuDK9DZi1MuDT6lOLJI9xDVZEAze2/sjw0lODXYCh6";}]
     ++ lib.forEach config.userinfo.users (u: {
       "${u}".initialHashedPassword = "$2b$05$2ckfv7WhD4dCuDK9DZi1MuDT6lOLJI9xDVZEAze2/sjw0lODXYCh6";
     })
@@ -198,20 +190,20 @@ in
                 type = "filesystem";
                 format = "vfat";
                 mountpoint = "/boot";
-                mountOptions = [ "umask=0077" ];
+                mountOptions = ["umask=0077"];
               };
             };
             root = {
               size = "100%";
               content = {
                 type = "btrfs";
-                extraArgs = [ "-f" ];
+                extraArgs = ["-f"];
                 subvolumes = {
                   "/@" = {
                     mountpoint = "/";
                   };
                   "/@home" = {
-                    mountOptions = [ "compress=zstd" ];
+                    mountOptions = ["compress=zstd"];
                     mountpoint = "/home";
                   };
                   "/@nix" = {

@@ -60,7 +60,7 @@ in {
     # hardware.graphics.enable32Bit = true;
     # hardware.steam-hardware.enable = true;
     # hardware.enableAllFirmware = true;
-    # hardware.enableRedistributableFirmware = true; 
+    # hardware.enableRedistributableFirmware = true;
 
     # services.fwupd.enable = true;
 

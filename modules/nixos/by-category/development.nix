@@ -9,12 +9,12 @@
       postgresql = {
         enable = lib.mkDefault false;
         identMap = ''
-            # ArbitraryMapName systemUser DBUser
-            superuser_map      root      postgres
-            superuser_map      teq       postgres
-            superuser_map      postgres  postgres
-            # Let other names login as themselves
-            superuser_map      /^(.*)$   \1
+          # ArbitraryMapName systemUser DBUser
+          superuser_map      root      postgres
+          superuser_map      teq       postgres
+          superuser_map      postgres  postgres
+          # Let other names login as themselves
+          superuser_map      /^(.*)$   \1
         '';
         authentication = pkgs.lib.mkOverride 10 ''
           #type database  DBuser  auth-method optional_ident_map
@@ -60,7 +60,7 @@
       # rar
     ];
     virtualisation.docker.enable = true;
-    users.users.teq.extraGroups = [ "docker" ];
+    users.users.teq.extraGroups = ["docker"];
     virtualisation.docker.storageDriver = "btrfs";
     virtualisation.docker.rootless = {
       enable = true;

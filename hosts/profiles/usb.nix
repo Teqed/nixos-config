@@ -17,7 +17,7 @@
     # teq.nixos.impermanence.label_nixos = label_nixos;
     # teq.nixos.impermanence.label_boot = label_boot;
     nix.optimise.automatic = true;
-    nix.optimise.dates = [ "03:45" ];
+    nix.optimise.dates = ["03:45"];
     nix.settings.auto-optimise-store = true;
     nix.gc = {
       automatic = true;
@@ -41,7 +41,7 @@
       # Get list of locales
       glibcLocales
     ];
-    i18n.supportedLocales = [ "all" ]; # Support choosing from any locale
+    i18n.supportedLocales = ["all"]; # Support choosing from any locale
     # disko.devices = {
     #   disk = {
     #     main = {

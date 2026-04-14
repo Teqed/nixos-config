@@ -4,12 +4,10 @@
   lib,
   inputs,
   ...
-}:
-let
+}: let
   chromium_policy = ../../../home-manager/sources/.config/chromium/policies/managed/defaultExtensions.json;
   brave_policy = ../../../home-manager/sources/.config/brave/policies/managed/DisableBraveRewardsWalletAI.json;
-in
-{
+in {
   imports = [
     {
       nixpkgs = {
@@ -183,7 +181,7 @@ in
               "pcsc" # Expose smart cards (i.e. YubiKey)
             ];
           };
-          "org.onlyoffice.desktopeditors".Context.sockets = lib.mkDefault [ "x11" ]; # No Wayland support
+          "org.onlyoffice.desktopeditors".Context.sockets = lib.mkDefault ["x11"]; # No Wayland support
         };
       };
       sunshine = {

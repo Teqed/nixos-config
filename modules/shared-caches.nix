@@ -1,17 +1,17 @@
 {
   # Lower priority = checked first
   substituters = [
-    "https://cache.nixos.org?priority=10"  # Official nixpkgs
-    "https://thoughtful.binarycache.shatteredsky.net?priority=20"  # Local cache
-    "https://nixpkgs-wayland.cachix.org?priority=30"  # Wayland packages
+    "https://cache.nixos.org?priority=10" # Official nixpkgs
+    "https://thoughtful.binarycache.shatteredsky.net?priority=20" # Local cache
+    "https://nixpkgs-wayland.cachix.org?priority=30" # Wayland packages
     "https://attic.xuyh0120.win/lantian?priority=40" # CachyOS kernel
-    "https://yazi.cachix.org?priority=50"  # Yazi file manager
-    "https://claude-code.cachix.org?priority=50"  # Claude code
-    "https://devenv.cachix.org?priority=55"  # devenv
-    "https://teq.cachix.org?priority=60"  # Personal cachix
-    "https://nixpkgs-unfree.cachix.org?priority=70"  # Unfree packages
-    "https://nix-community.cachix.org?priority=80"  # Community packages
-    "https://cache.garnix.io?priority=90"  # Garnix CI
+    "https://yazi.cachix.org?priority=50" # Yazi file manager
+    "https://claude-code.cachix.org?priority=50" # Claude code
+    "https://devenv.cachix.org?priority=55" # devenv
+    "https://teq.cachix.org?priority=60" # Personal cachix
+    "https://nixpkgs-unfree.cachix.org?priority=70" # Unfree packages
+    "https://nix-community.cachix.org?priority=80" # Community packages
+    "https://cache.garnix.io?priority=90" # Garnix CI
   ];
 
   trustedPublicKeys = [
@@ -31,14 +31,14 @@
   # Haskell/specialty caches - not actively used, kept for reference
   # Can be added back to substituters if working with Haskell projects
   unusedSubstituters = [
-    "https://cache.iog.io"  # Cardano/IOHK Haskell
-    "https://digitallyinduced.cachix.org"  # IHP framework
-    "https://ghc-nix.cachix.org"  # GHC builds
-    "https://ic-hs-test.cachix.org"  # Internet Computer
-    "https://kaleidogen.cachix.org"  # Specific project
-    "https://static-haskell-nix.cachix.org"  # Static Haskell
-    "https://tttool.cachix.org"  # TipToi tool
-    "https://nixcache.reflex-frp.org"  # Reflex FRP
+    "https://cache.iog.io" # Cardano/IOHK Haskell
+    "https://digitallyinduced.cachix.org" # IHP framework
+    "https://ghc-nix.cachix.org" # GHC builds
+    "https://ic-hs-test.cachix.org" # Internet Computer
+    "https://kaleidogen.cachix.org" # Specific project
+    "https://static-haskell-nix.cachix.org" # Static Haskell
+    "https://tttool.cachix.org" # TipToi tool
+    "https://nixcache.reflex-frp.org" # Reflex FRP
   ];
 
   unusedTrustedPublicKeys = [

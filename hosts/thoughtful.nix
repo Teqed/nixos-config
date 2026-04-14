@@ -4,11 +4,9 @@
   pkgs,
   inputs,
   ...
-}:
-let
+}: let
   currentStateVersion = "24.05";
-in
-{
+in {
   imports = [
     ./profiles/common.nix
     ./profiles/gui.nix
@@ -38,8 +36,8 @@ in
       "usbhid"
       "sd_mod"
     ];
-    initrd.kernelModules = [ "amdgpu" ];
-    kernelModules = [ "kvm-amd" ];
+    initrd.kernelModules = ["amdgpu"];
+    kernelModules = ["kvm-amd"];
     kernelParams = [
       # "video=DP-1:1920x1080@144" # /sys/class/drm/card0-DP-1/status 143.85 Hz
       # "video=DP-2:1920x1080@144" # /sys/class/drm/card0-DP-2/status
@@ -59,9 +57,9 @@ in
   };
   # VM
   programs.dconf.enable = true;
-  users.users.gcis.extraGroups = [ "libvirtd" ];
+  users.users.gcis.extraGroups = ["libvirtd"];
   users.users.gcis.group = "gcis";
-  users.groups.gcis = { };
+  users.groups.gcis = {};
   users.users.gcis.isSystemUser = true;
   environment.systemPackages = with pkgs; [
     virt-manager
@@ -116,12 +114,17 @@ in
       "100.64.0.0/10"
     ];
     portMappings = [
-      { from = 8080; to = 8080; }
+      {
+        from = 8080;
+        to = 8080;
+      }
     ];
-    openVPNPorts = [{
-      port = 6881;
-      protocol = "both";
-    }];
+    openVPNPorts = [
+      {
+        port = 6881;
+        protocol = "both";
+      }
+    ];
   };
   systemd.services.qbittorrent.vpnConfinement = {
     enable = true;
@@ -137,7 +140,7 @@ in
     };
     bluesky-pds = {
       enable = true;
-      environmentFiles = [ "/var/lib/pds/.env" ];
+      environmentFiles = ["/var/lib/pds/.env"];
       settings = {
         PDS_HOSTNAME = "pds.shatteredsky.net";
         # PDS_BSKY_APP_VIEW_URL = "https://api.shatteredsky.net";
@@ -150,7 +153,7 @@ in
       # enable = true;
       package = pkgs.ollama-rocm; # Use ROCm-accelerated package instead of deprecated acceleration option
       # Optional: preload models, see https://ollama.com/library
-      loadModels = [ ];
+      loadModels = [];
       port = 11434;
       host = "0.0.0.0";
       openFirewall = true;
