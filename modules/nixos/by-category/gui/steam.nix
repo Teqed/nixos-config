@@ -16,8 +16,8 @@ in {
       # extest.enable = true; # For using Steam Input on Wayland
       extraCompatPackages = with pkgs; [
         proton-ge-bin # 1GB
-        proton-ge-custom # 1GB
-        luxtorpeda # 70MB
+        # proton-ge-custom # 1GB # Discontinued
+        # luxtorpeda # 70MB # Discontinued, maybe protonup-qt instead?
       ];
       extraPackages = with pkgs; [
         gamescope
@@ -66,7 +66,8 @@ in {
 
     environment.systemPackages = [
       pkgs.r2modman
-      pkgs.openvr_git
+      pkgs.openvr
+      # pkgs.openvr_git # Discontinued
       pkgs.winetricks
       pkgs.wineasio
       wine_wayland

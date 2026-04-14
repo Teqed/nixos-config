@@ -6,7 +6,8 @@ The starlight on the Western Seas.
 ";
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
+    # chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable"; # Discontinued as of 2025-12-08
+    nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel/release"; # CachyOS kernel replacement
     alejandra.url = "github:kamadorueda/alejandra/3.0.0";
     alejandra.inputs.nixpkgs.follows = "nixpkgs";
     home-manager.url = "github:nix-community/home-manager";
@@ -68,7 +69,8 @@ The starlight on the Western Seas.
       nixpkgs,
       home-manager,
       alejandra,
-      chaotic,
+      # chaotic, # Removed - discontinued
+      nix-cachyos-kernel,
       nix-flatpak,
       nixos-hardware,
       impermanence,
@@ -173,7 +175,7 @@ The starlight on the Western Seas.
           modules = [
             ./hosts/eris.nix
             self.nixosModules.default
-            chaotic.nixosModules.default
+            # chaotic.nixosModules.default # Removed - discontinued
             home-manager.nixosModules.home-manager
             nix-flatpak.nixosModules.nix-flatpak
             self.homeManagerConfig
@@ -186,7 +188,7 @@ The starlight on the Western Seas.
           modules = [
             ./hosts/sedna.nix
             self.nixosModules.default
-            chaotic.nixosModules.default
+            # chaotic.nixosModules.default # Removed - discontinued
             home-manager.nixosModules.home-manager
             nix-flatpak.nixosModules.nix-flatpak
             self.homeManagerConfig
@@ -198,14 +200,17 @@ The starlight on the Western Seas.
           modules = [
             ./hosts/thoughtful.nix
             self.nixosModules.default
-            chaotic.nixosModules.default
+            # chaotic.nixosModules.default # Removed - discontinued
             home-manager.nixosModules.home-manager
             nix-flatpak.nixosModules.nix-flatpak
             self.homeManagerConfig
             inputs.parakeet.nixosModules.default
             vpn-confinement.nixosModules.default
             agenix.nixosModules.default
-            { nixpkgs.overlays = [ claude-code.overlays.default ]; }
+            { nixpkgs.overlays = [
+              claude-code.overlays.default
+              nix-cachyos-kernel.overlays.pinned  # CachyOS kernel with binary cache
+            ]; }
           ];
         };
         bubblegum = nixpkgs.lib.nixosSystem {
@@ -214,10 +219,11 @@ The starlight on the Western Seas.
           modules = [
             ./hosts/bubblegum.nix
             self.nixosModules.default
-            chaotic.nixosModules.default
+            # chaotic.nixosModules.default # Removed - discontinued
             home-manager.nixosModules.home-manager
             nix-flatpak.nixosModules.nix-flatpak
             self.homeManagerConfig
+            { nixpkgs.overlays = [ nix-cachyos-kernel.overlays.pinned ]; }  # CachyOS kernel
           ];
         };
         jupiter = nixpkgs.lib.nixosSystem {
@@ -226,7 +232,7 @@ The starlight on the Western Seas.
           modules = [
             ./hosts/jupiter.nix
             self.nixosModules.default
-            chaotic.nixosModules.default
+            # chaotic.nixosModules.default # Removed - discontinued
             home-manager.nixosModules.home-manager
             nix-flatpak.nixosModules.nix-flatpak
             self.homeManagerConfig
@@ -267,8 +273,8 @@ The starlight on the Western Seas.
           home-manager.extraSpecialArgs = inheritSpecialArgs;
           home-manager.sharedModules = [
             self.homeManagerModules.default # My custom modules
-            nix-index-database.hmModules.nix-index # nix-index-database
-            plasma-manager.homeManagerModules.plasma-manager # plasma-manager
+            nix-index-database.homeModules.nix-index # nix-index-database (renamed from hmModules)
+            plasma-manager.homeModules.plasma-manager # plasma-manager (renamed from homeManagerModules)
           ];
         };
       homeConfigurations = {
@@ -278,7 +284,7 @@ The starlight on the Western Seas.
           extraSpecialArgs = { inherit inputs outputs; };
           modules = [
             self.homeManagerModules.default # My custom modules
-            nix-index-database.hmModules.nix-index # nix-index-database
+            nix-index-database.homeModules.nix-index # nix-index-database (renamed from hmModules)
             {
               teq.home-manager = {
                 enable = true;

@@ -95,7 +95,7 @@ in
   '';
   teq.nixos = {
     media = false;
-    cachyos = true;
+    cachyos = true; # Now using xddxdd/nix-cachyos-kernel
     blocklist = false;
     impermanence = {
       enable = true;
@@ -149,7 +149,7 @@ in
     parakeet.enable = true;
     ollama = {
       # enable = true;
-      acceleration = "rocm";
+      package = pkgs.ollama-rocm; # Use ROCm-accelerated package instead of deprecated acceleration option
       # Optional: preload models, see https://ollama.com/library
       loadModels = [ ];
       port = 11434;

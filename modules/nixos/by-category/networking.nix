@@ -30,7 +30,7 @@ in
           PasswordAuthentication = mkDefault false; # disable password login
           StreamLocalBindUnlink = mkDefault "yes"; # Automatically remove stale sockets
           GatewayPorts = mkDefault "clientspecified"; # Allow forwarding ports to everywhere
-          AcceptEnv = mkDefault "WAYLAND_DISPLAY"; # Let WAYLAND_DISPLAY be forwarded
+          AcceptEnv = mkDefault ["WAYLAND_DISPLAY"]; # Let WAYLAND_DISPLAY be forwarded
         };
         openFirewall = mkDefault true;
       };
@@ -80,7 +80,7 @@ in
       networkmanager.enable = lib.mkDefault true;
       useDHCP = lib.mkDefault true; # Attempt to enable DHCP on all interfaces
       wireless.enable = lib.mkDefault false; # Enables wireless support via wpa_supplicant.
-      wireless.userControlled.enable = lib.mkDefault true; # Allow normal users to control wpa_supplicant through wpa_gui or wpa_cli.
+      wireless.userControlled = lib.mkDefault true; # Allow normal users to control wpa_supplicant through wpa_gui or wpa_cli.
       stevenblack = lib.mkIf config.teq.nixos.blocklist {
         enable = true;
         block = [

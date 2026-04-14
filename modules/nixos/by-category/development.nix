@@ -43,7 +43,7 @@
       };
       ### version-management
       git.enable = lib.mkDefault true;
-      ecryptfs.enable = lib.mkDefault true;
+      # ecryptfs.enable = lib.mkDefault true; # Removed from nixpkgs
       gnupg = {
         agent = {
           enable = true;

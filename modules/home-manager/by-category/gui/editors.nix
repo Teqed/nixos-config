@@ -8,7 +8,8 @@
   config = lib.mkIf config.teq.home-manager.gui {
     home.packages = with pkgs; [
       aseprite # 117MB / 20MB (harfbuzz 70MB / 3MB)
-      zed-editor_git # 230MB / 160MB
+      zed-editor
+      # zed-editor_git # 230MB / 160MB # Removed - was provided by chaotic-cx/nyx (discontinued)
       kdePackages.kate # 1.4GB / 40MB (ktexteditor)
     ];
     programs = {

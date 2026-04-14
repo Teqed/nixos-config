@@ -23,7 +23,8 @@ let
     "https://tttool.cachix.org"
     "https://cache.garnix.io/"
     "https://nixcache.reflex-frp.org"
-    "https://chaotic-nyx.cachix.org/"
+    # "https://chaotic-nyx.cachix.org/" # Removed - discontinued
+    "https://attic.xuyh0120.win/lantian"  # CachyOS kernel cache from xddxdd
     "https://yazi.cachix.org"
     "https://nixpkgs-wayland.cachix.org"
     "https://nixpkgs-unfree.cachix.org"
@@ -72,7 +73,7 @@ in
         # You can also add overlays exported from other flakes:
         # neovim-nightly-overlay.overlays.default
         # inputs.nixpkgs-wayland.overlay # We only want to use these overlays in Wayland
-        claude-code.overlays.default
+        # claude-code.overlays.default # Need to pass claude-code as input to use this
 
         # Or define it inline, for example:
         # (final: prev: {
@@ -143,7 +144,8 @@ in
           "static-haskell-nix.cachix.org-1:Q17HawmAwaM1/BfIxaEDKAxwTOyRVhPG5Ji9K3+FvUU="
           "tttool.cachix.org-1:e/5HpIa6ZqwatH07kmO7di1p9K+AMrgkNHl/OGUUMzU="
           "ryantrinkle.com-1:JJiAKaRv9mWgpVAz8dwewnZe0AzzEAzPkagE9SP5NWI="
-          "chaotic-nyx.cachix.org-1:HfnXSw4pj95iI/n17rIDy40agHj12WfF+Gqk6SonIT8="
+          # "chaotic-nyx.cachix.org-1:HfnXSw4pj95iI/n17rIDy40agHj12WfF+Gqk6SonIT8=" # Removed - discontinued
+          "lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc="  # CachyOS kernel cache from xddxdd
           "yazi.cachix.org-1:Dcdz63NZKfvUCbDGngQDAZq6kOroIrFoyO064uvLh8k="
           "nixpkgs-wayland.cachix.org-1:3lwxaILxMRkVhehr5StQprHdEo4IrE8sRho9R9HOLYA="
           "nixpkgs-unfree.cachix.org-1:hqvoInulhbV4nJ9yJOEr+4wxhDV4xq2d1DK7S6Nj6rs="
