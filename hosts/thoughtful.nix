@@ -132,6 +132,15 @@ in {
   };
 
   services = {
+    tangled.spindle = {
+      enable = true;
+      package = inputs.tangled-core.packages.${pkgs.stdenv.hostPlatform.system}.spindle;
+      server = {
+        hostname = "spindle.shatteredsky.net";
+        owner = "did:plc:jrtgsidnmxaen4offglr5lsh";
+        dev = true;
+      };
+    };
     qbittorrent = {
       enable = true;
       webuiPort = 8080;
@@ -162,6 +171,7 @@ in {
     firewall = {
       allowedTCPPorts = [
         5000 # Nix-Serve
+        6555 # Spindle
         8283 # Letta
         11434 # Ollama
       ];

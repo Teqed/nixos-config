@@ -58,6 +58,7 @@ The starlight on the Western Seas.
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.darwin.follows = ""; # Save resources on Linux
     };
+    tangled-core.url = "git+https://tangled.org/@tangled.org/core";
   };
   outputs = {
     self,
@@ -81,6 +82,7 @@ The starlight on the Western Seas.
     claude-code,
     vpn-confinement,
     agenix,
+    tangled-core,
     ...
   } @ inputs: let
     inherit (self) outputs;
@@ -199,6 +201,7 @@ The starlight on the Western Seas.
           # inputs.parakeet.nixosModules.default
           vpn-confinement.nixosModules.default
           agenix.nixosModules.default
+          tangled-core.nixosModules.spindle
           {
             nixpkgs.overlays = [
               claude-code.overlays.default
