@@ -73,8 +73,7 @@ in
     win-spice
     adwaita-icon-theme
     btop-rocm # Not related to VM -- ROCM support for AMD GPUs
-    # consumer # parakeet consumer
-    inputs.agenix.packages.${pkgs.system}.default # agenix CLI tool
+    inputs.agenix.packages.${pkgs.stdenv.hostPlatform.system}.default # agenix CLI tool
     wireguard-tools
   ];
   virtualisation = {
@@ -146,7 +145,7 @@ in
         PDS_PORT = 3300;
       };
     };
-    parakeet.enable = true;
+    # parakeet.enable = true;
     ollama = {
       # enable = true;
       package = pkgs.ollama-rocm; # Use ROCm-accelerated package instead of deprecated acceleration option

@@ -13,11 +13,7 @@
     programs = {
       # thunderbird.enable = true; # profiles needs to be set
     };
-    nixpkgs.config.allowUnfreePredicate =
-      pkg:
-      builtins.elem (lib.getName pkg) [
-        # TODO: Move all unfree packages here
-      ];
+    # nixpkgs config is handled globally via home-manager.useGlobalPkgs
     home.packages = with pkgs; [
       # Especially large programs:
       # blender-hip # blender with hardware accelerated rendering # 6.2GB / 1 GB

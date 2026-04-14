@@ -110,6 +110,7 @@
   };
 in {
   config = lib.mkIf config.teq.home-manager.enable {
+    xdg.configFile."atuin/config.toml".force = true;
     home.shellAliases = aliases;
     programs = {
       home-manager.enable = lib.mkDefault true;
@@ -174,7 +175,7 @@ in {
         #   vids  = "$XDG_VIDEOS_DIR";
         #   dl    = "$XDG_DOWNLOADS_DIR";
         # };
-        dotDir = lib.mkDefault ".config/zsh";
+        dotDir = lib.mkDefault "${config.xdg.configHome}/zsh";
         # envExtra = "" # Extra commands that should be added to .zshenv.
         history = {
           append = lib.mkDefault true;

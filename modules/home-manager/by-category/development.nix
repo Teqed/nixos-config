@@ -48,6 +48,7 @@ in
       git = {
         enable = lib.mkDefault true; # 300MB / 70MB (python3 200MB, perl 100MB)
         # prompt = true; # NixOS-specific option
+        signing.format = null; # Use new default
         extraConfig = {
           init = {
             defaultBranch = lib.mkDefault "main";

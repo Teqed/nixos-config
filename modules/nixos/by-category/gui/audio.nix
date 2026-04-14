@@ -14,7 +14,7 @@
         socketActivation = true; # Automatically run PipeWire when connections are made to the PipeWire socket.
       };
     };
-    hardware.pulseaudio = {
+    services.pulseaudio = {
       enable = false; # Disable PulseAudio to use PipeWire instead.
       support32Bit = true; # Enable 32-bit support for PulseAudio, if being used.
     };

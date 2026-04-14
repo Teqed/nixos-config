@@ -1,6 +1,7 @@
 {
   lib,
   config,
+  pkgs,
   ...
 }: let
   userinfo.users = ["teq"];
@@ -24,11 +25,12 @@ in {
   config = {
     teq.nixos.enable = true; # Enables my NixOS options -- see /modules/nixos
     home-manager.users.teq.teq.home-manager.enable = true; # Enables my home-manager options -- see /modules/home-manager
+    programs.fish.enable = true; # Enable fish shell system-wide
     # TODO: For each user, create a home-manager configuration.
     # home-manager.users = lib.forEach userinfo.users (u: {
     #   "${u}" = {};
     # });
-    home-manager.backupFileExtension = lib.mkDefault "hm-backup";
+    home-manager.backupFileExtension = null; # No backups needed with force = true on managed files
     home-manager.useGlobalPkgs = lib.mkDefault true;
     home-manager.useUserPackages = lib.mkDefault true;
     users.users = lib.mkMerge (
@@ -40,6 +42,7 @@ in {
           teq = {
             isNormalUser = mkForce true;
             description = mkForce "Teq";
+            shell = pkgs.fish;
             extraGroups = mkForce ["networkmanager" "wheel" "audio" "docker" "input"];
             openssh.authorizedKeys.keys = mkForce [
               "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICRc7d7TBl5Y43KsLQZgP9ewJSmyAbC2xXDnASIa1T5B teq@thoughtful"

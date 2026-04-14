@@ -42,26 +42,7 @@ in
       telephone = mkDefault "${defaultLang}";
       measurement = mkDefault "${defaultLang}";
     };
-    nixpkgs = lib.mkIf (!osConfig.home-manager.useGlobalPkgs) {
-      config = {
-        allowUnfree = true;
-      };
-      overlays = [
-        # Add overlays your own flake exports (from overlays and pkgs dir):
-        # outputs.overlays.additions
-        outputs.overlays.modifications
-
-        # You can also add overlays exported from other flakes:
-        # neovim-nightly-overlay.overlays.default
-        # inputs.nixpkgs-wayland.overlay # We only want to use these overlays in Wayland
-        inputs.claude-code.overlays.default
-
-        # Or define it inline, for example:
-        # (final: prev: {
-        #   hi = final.hello.overrideAttrs (oldAttrs: {
-        #     patches = [ ./change-hello-to-hi.patch ];
-      ];
-    };
+    # nixpkgs config disabled when using home-manager.useGlobalPkgs
     nix = {
       registry = osConfig.nix.registry;
       nixPath = osConfig.nix.nixPath;

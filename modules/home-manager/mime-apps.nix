@@ -36,6 +36,7 @@ in {
     launcher.command = mkPreferenceCmdOption "launcher" "krunner";
   };
   config = lib.mkIf config.teq.home-manager.enable {
+    xdg.configFile."mimeapps.list".force = true;
     xdg.mimeApps = let
       browser = cfg.browser.desktop;
       textEditor = cfg.textEditor.desktop;

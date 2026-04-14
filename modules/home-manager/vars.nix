@@ -152,6 +152,7 @@ in {
       userDirs = {
         enable = true;
         createDirectories = true;
+        setSessionVariables = false; # Use new default behavior
         desktop = XDG_DESKTOP_DIR; # ~/.local/user-dirs/Desktop
         documents = XDG_DOCUMENTS_DIR; # ~/.local/user-dirs/Documents
         download = XDG_DOWNLOAD_DIR; # ~/.local/user-dirs/Downloads
@@ -167,9 +168,9 @@ in {
           XDG_GAMES_HOME = XDG_GAMES_HOME; # ~/.local/games
           XDG_OPT_HOME = XDG_OPT_HOME; # ~/.local/opt
           XDG_USER_DIRS = XDG_USER_DIRS; # ~/.local/user-dirs
-          XDG_MISC_DIR = XDG_MISC_DIR; # ~/.local/user-dirs/Misc
-          XDG_REPOS_DIR = XDG_REPOS_DIR; # ~/.local/user-dirs/Repos
-          XDG_SCREENSHOTS_DIR = XDG_SCREENSHOTS_DIR; # ~/.local/user-dirs/Pictures/Screenshots
+          MISC = XDG_MISC_DIR; # ~/.local/user-dirs/Misc
+          REPOS = XDG_REPOS_DIR; # ~/.local/user-dirs/Repos
+          SCREENSHOTS = XDG_SCREENSHOTS_DIR; # ~/.local/user-dirs/Pictures/Screenshots
           # XDG_RUNTIME_DIR = XDG_RUNTIME_DIR; # /run/user/$UID
         };
       };

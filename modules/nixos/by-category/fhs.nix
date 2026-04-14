@@ -64,10 +64,10 @@ in {
         wayland
         egl-wayland # egl?
         wayland-utils # utils?
-        xorg.libxcb
-        xorg.libXdamage
-        xorg.libxshmfence
-        xorg.libXxf86vm
+        libxcb
+        libxdamage
+        libxshmfence
+        libxxf86vm
         libelf
         (lib.getLib elfutils) # elfutils
 
@@ -89,25 +89,25 @@ in {
         libGL # Required by steam with proper errors
         libappindicator-gtk2
         libappindicator-gtk3
-        xorg.libX11 # Required by steam with proper errors
-        xorg.libXScrnSaver # Dead Cells
-        xorg.libXcomposite # Required by steam with proper errors
-        xorg.libXcursor
-        xorg.libXdamage
-        xorg.libXext # Required by steam with proper errors
-        xorg.libXfixes # Required by steam with proper errors
-        xorg.libXi
-        xorg.libXrandr # Required by steam with proper errors
-        xorg.libXrender
-        xorg.libXtst # Required by steam with proper errors
-        xorg.libxcb
-        xorg.libxkbfile
-        xorg.libxshmfence
-        xorg.libXinerama
-        xorg.libSM
-        xorg.libICE
-        xorg.libXt
-        xorg.libXmu
+        libx11 # Required by steam with proper errors
+        libxscrnsaver # Dead Cells
+        libxcomposite # Required by steam with proper errors
+        libxcursor
+        libxdamage
+        libxext # Required by steam with proper errors
+        libxfixes # Required by steam with proper errors
+        libxi
+        libxrandr # Required by steam with proper errors
+        libxrender
+        libxtst # Required by steam with proper errors
+        libxcb
+        libxkbfile
+        libxshmfence
+        libxinerama
+        libsm
+        libice
+        libxt
+        libxmu
 
         # Questionably graphical
 
@@ -115,7 +115,7 @@ in {
         pciutils # Errors in output without those
         glibc_multi.bin # run.sh wants ldconfig     # ??????
         # Games' dependencies
-        xorg.xrandr
+        xrandr
         which
         perl # Needed by gdialog, including in the steam-runtime
         # Open URLs
@@ -158,7 +158,7 @@ in {
         libvorbis # Dead Cells
         SDL
         SDL2_image
-        glew110
+        glew_1_10
         libidn
         tbb
 
@@ -186,7 +186,7 @@ in {
         libgcrypt
         libvpx
         librsvg
-        xorg.libXft
+        libxft
         libvdpau
 
         # Prison Architect
@@ -211,8 +211,8 @@ in {
         json-glib # paradox launcher (Stellaris)
         libxcrypt # Alien Isolation, XCOM 2, Company of Heroes 2
         mono
-        xorg.xkeyboardconfig
-        xorg.libpciaccess
+        xkeyboard-config
+        libpciaccess
       ];
   };
 }

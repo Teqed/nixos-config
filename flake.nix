@@ -54,7 +54,7 @@ The starlight on the Western Seas.
       inputs.nixpkgs.follows = "nixpkgs";
     };
     # parakeet.url = "git+https://tangled.sh/@quilling.dev/parakeet?rev=3f1dcc059ddc28d94caea58076458c11dfd9e6db";
-    parakeet.url = "git+file:///home/teq/.local/user-dirs/Repos/parakeet";
+    # parakeet.url = "git+file:///home/teq/.local/user-dirs/Repos/parakeet";
     claude-code.url = "github:sadjow/claude-code-nix";
     vpn-confinement.url = "github:Maroka-chan/VPN-Confinement";
     agenix = {
@@ -204,7 +204,7 @@ The starlight on the Western Seas.
             home-manager.nixosModules.home-manager
             nix-flatpak.nixosModules.nix-flatpak
             self.homeManagerConfig
-            inputs.parakeet.nixosModules.default
+            # inputs.parakeet.nixosModules.default
             vpn-confinement.nixosModules.default
             agenix.nixosModules.default
             { nixpkgs.overlays = [
@@ -240,7 +240,7 @@ The starlight on the Western Seas.
             inputs.foundryvtt.nixosModules.foundryvtt
             inputs.bluepds.nixosModules.default
             # inputs.rsky.nixosModules.default
-            inputs.parakeet.nixosModules.default
+            # inputs.parakeet.nixosModules.default
           ];
         };
       };
@@ -315,10 +315,10 @@ The starlight on the Western Seas.
             udev
             alsa-lib
             vulkan-loader
-            xorg.libX11
-            xorg.libXcursor
-            xorg.libXi
-            xorg.libXrandr # To use the x11 feature
+            libx11
+            libxcursor
+            libxi
+            libxrandr # To use the x11 feature
             libxkbcommon
             wayland # To use the wayland feature
             openssl

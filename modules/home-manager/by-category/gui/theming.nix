@@ -5,6 +5,7 @@
   ...
 }: {
   config = lib.mkIf config.teq.home-manager.gui {
+    xdg.configFile."gtk-2.0/gtkrc".force = true;
     home = {
       pointerCursor = {
         name = lib.mkDefault "Bibata-Modern-Classic";
@@ -27,6 +28,7 @@
         name = "Papirus-Dark";
         package = pkgs.papirus-icon-theme;
       };
+      gtk4.theme = null; # Use new default
     };
 
     programs.plasma = {

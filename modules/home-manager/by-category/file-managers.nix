@@ -36,6 +36,7 @@ in {
       };
       yazi = {
         enable = lib.mkDefault true; # 426MB / 20MB (imagemagick, ffmegthumbnailer)
+        shellWrapperName = "y"; # Use new default
         settings.theme = {
           flavor = {
             use = lib.mkDefault "catppuccin-mocha";
