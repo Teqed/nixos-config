@@ -15,7 +15,7 @@
       };
     };
     services.pulseaudio = {
-      enable = false; # Disable PulseAudio to use PipeWire instead.
+      enable = false; # Explicitly disabled (default: false) - using PipeWire instead
       support32Bit = true; # Enable 32-bit support for PulseAudio, if being used.
     };
     security.rtkit.enable = true; # Whether to enable the RealtimeKit system service, which hands out realtime scheduling priority to user processes on demand. The PulseAudio server uses this to acquire realtime priority.

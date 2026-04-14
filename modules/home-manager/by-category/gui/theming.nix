@@ -5,7 +5,6 @@
   ...
 }: {
   config = lib.mkIf config.teq.home-manager.gui {
-    xdg.configFile."gtk-2.0/gtkrc".force = true;
     home = {
       pointerCursor = {
         name = lib.mkDefault "Bibata-Modern-Classic";
@@ -28,12 +27,11 @@
         name = "Papirus-Dark";
         package = pkgs.papirus-icon-theme;
       };
-      gtk4.theme = null; # Use new default
+      gtk4.theme = null; # Opt into 26.05+ default (null) instead of legacy default (config.gtk.theme)
     };
 
     programs.plasma = {
-      enable = lib.mkDefault false; # Only needs to be enabled on fresh+live installs
-      overrideConfig = false; # TODO: Make Plasma more declarative
+      enable = lib.mkDefault false; # Only needs to be enabled on fresh+live installs (disabled by default)
 
       fonts = {
         general = {

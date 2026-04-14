@@ -30,7 +30,7 @@ in {
     # home-manager.users = lib.forEach userinfo.users (u: {
     #   "${u}" = {};
     # });
-    home-manager.backupFileExtension = null; # No backups needed with force = true on managed files
+    home-manager.backupFileExtension = "backup";
     home-manager.useGlobalPkgs = lib.mkDefault true;
     home-manager.useUserPackages = lib.mkDefault true;
     users.users = lib.mkMerge (
@@ -71,8 +71,7 @@ in {
     users.groups = lib.mkMerge (
       lib.forEach config.userinfo.service_users (u: {
         "${u}" = {
-          name = mkDefault u;
-          members = mkDefault [u];
+          members = mkDefault [u]; # Add service user to their own group (default is empty list)
         };
       })
     );

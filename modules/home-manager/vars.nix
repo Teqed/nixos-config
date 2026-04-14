@@ -152,7 +152,7 @@ in {
       userDirs = {
         enable = true;
         createDirectories = true;
-        setSessionVariables = false; # Use new default behavior
+        setSessionVariables = false; # Opt into 26.05+ default (false) instead of legacy default (true for stateVersion 24.05)
         desktop = XDG_DESKTOP_DIR; # ~/.local/user-dirs/Desktop
         documents = XDG_DOCUMENTS_DIR; # ~/.local/user-dirs/Documents
         download = XDG_DOWNLOAD_DIR; # ~/.local/user-dirs/Downloads

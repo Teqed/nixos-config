@@ -110,7 +110,7 @@
   };
 in {
   config = lib.mkIf config.teq.home-manager.enable {
-    xdg.configFile."atuin/config.toml".force = true;
+    xdg.configFile."atuin/config.toml".force = lib.mkForce true;
     home.shellAliases = aliases;
     programs = {
       home-manager.enable = lib.mkDefault true;
