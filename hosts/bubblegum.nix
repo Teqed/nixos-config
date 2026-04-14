@@ -74,7 +74,7 @@ in {
   hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
   hardware.graphics.extraPackages = with pkgs; [
     vpl-gpu-rt
-    vaapiIntel
+    intel-vaapi-driver
     intel-media-driver
   ];
   teq.nixos = {
