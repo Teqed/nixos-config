@@ -4,7 +4,7 @@
   lib,
   ...
 }: let
-  wine_wayland = pkgs.wineWowPackages.waylandFull;
+  wine_package = pkgs.wineWow64Packages.staging;
 in {
   config = lib.mkIf config.teq.nixos.gui.steam {
     programs.steam = {
@@ -70,12 +70,12 @@ in {
       # pkgs.openvr_git # Discontinued
       pkgs.winetricks
       pkgs.wineasio
-      wine_wayland
+      wine_package
     ];
     boot.binfmt.registrations.wine = {
       recognitionType = "magic";
       magicOrExtension = "MZ";
-      interpreter = lib.getExe wine_wayland;
+      interpreter = lib.getExe wine_package;
     };
     boot.kernel.sysctl = {
       # Enable usage of performance data from Intel GPUs by non-admin programs, enabled for Wine
