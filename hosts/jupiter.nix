@@ -84,19 +84,6 @@ in {
   #   };
   # };
   # services.parakeet.enable = true;
-  containers.bluepds = {
-    autoStart = true;
-    config = {pkgs, ...}: {
-      system.stateVersion = currentStateVersion;
-      imports = [inputs.bluepds.nixosModules.default];
-      services.bluepds = {
-        enable = true;
-        host_name = "pds.shatteredsky.net";
-        listen_address = "0.0.0.0:8000";
-        test = "false";
-      };
-    };
-  };
   containers.foundryvtt-spheres = {
     autoStart = true;
     config = {pkgs, ...}: {

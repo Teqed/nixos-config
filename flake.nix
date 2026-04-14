@@ -43,10 +43,6 @@ The starlight on the Western Seas.
       url = "github:Fuwn/pia.nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    bluepds = {
-      url = "github:Teqed/bluepds?rev=5de7c22468d3585952d33b469ac4edb1c3e9bba0";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     # rsky.url = "github:Teqed/rsky?rev=3a0f021490f17cd7faf95d1611c8cce7915232bd";
     # rsky.url = "git+file:///home/teq/_/Repos/rsky";
     nixpkgs-wayland = {
@@ -81,7 +77,6 @@ The starlight on the Western Seas.
     rust-overlay,
     ghostty,
     pia,
-    bluepds,
     # rsky,
     claude-code,
     vpn-confinement,
@@ -237,7 +232,6 @@ The starlight on the Western Seas.
           self.homeManagerConfig
           disko.nixosModules.disko
           inputs.foundryvtt.nixosModules.foundryvtt
-          inputs.bluepds.nixosModules.default
           # inputs.rsky.nixosModules.default
           # inputs.parakeet.nixosModules.default
         ];
