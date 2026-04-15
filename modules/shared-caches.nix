@@ -9,6 +9,7 @@
     "https://claude-code.cachix.org?priority=50" # Claude code
     "https://devenv.cachix.org?priority=55" # devenv
     "https://teq.cachix.org?priority=60" # Personal cachix
+    "https://tranquil.cachix.org?priority=65" # Tranquil PDS
     "https://nixpkgs-unfree.cachix.org?priority=70" # Unfree packages
     "https://nix-community.cachix.org?priority=80" # Community packages
     "https://cache.garnix.io?priority=90" # Garnix CI
@@ -18,6 +19,7 @@
     "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
     "thoughtful.binarycache.shatteredsky.net:yPenzjz5AHspYSCnuLULxLVe/9h+d0FLqlnuBmbogz0="
     "teq.cachix.org-1:vzpACVksI6em8mYjeJbTWp9x+jQmZiReS7pNot65l+A="
+    "tranquil.cachix.org-1:PoO+mGL6a6LcJiPakMDHN4E218/ei/7v2sxeDtNkSRg="
     "lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc=" # CachyOS kernel
     "nixpkgs-wayland.cachix.org-1:3lwxaILxMRkVhehr5StQprHdEo4IrE8sRho9R9HOLYA="
     "yazi.cachix.org-1:Dcdz63NZKfvUCbDGngQDAZq6kOroIrFoyO064uvLh8k="
