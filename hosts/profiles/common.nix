@@ -30,7 +30,7 @@ in {
     # home-manager.users = lib.forEach userinfo.users (u: {
     #   "${u}" = {};
     # });
-    home-manager.backupFileExtension = "backup";
+    home-manager.backupFileExtension = "backup-hm";
     home-manager.useGlobalPkgs = lib.mkDefault true;
     home-manager.useUserPackages = lib.mkDefault true;
     users.users = lib.mkMerge (

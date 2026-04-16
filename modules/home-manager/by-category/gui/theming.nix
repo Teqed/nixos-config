@@ -30,6 +30,8 @@
       gtk4.theme = null; # Opt into 26.05+ default (null) instead of legacy default (config.gtk.theme)
     };
 
+    # xdg.configFile."gtk-2.0/gtkrc".force = lib.mkForce true;
+
     programs.plasma = {
       enable = lib.mkDefault false; # Only needs to be enabled on fresh+live installs (disabled by default)
 
