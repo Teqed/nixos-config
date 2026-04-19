@@ -32,7 +32,10 @@ The starlight on the Western Seas.
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
     zen-browser.url = "github:youwen5/zen-browser-flake";
-    foundryvtt.url = "github:reckenrode/nix-foundryvtt";
+    foundryvtt = {
+      url = "github:reckenrode/nix-foundryvtt";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     rust-overlay.url = "github:oxalica/rust-overlay";
     # ghostty.url = "github:ghostty-org/ghostty?ref=refs/tags/v1.1.3"; # latest: v1.1.3
     ghostty = {
