@@ -27,14 +27,12 @@
       "https://yazi.cachix.org" # Yazi file manager
       "https://devenv.cachix.org" # devenv
       "https://tranquil.cachix.org" # Tranquil PDS
-      "https://cache.iog.io" # Cardano/IOHK Haskell
       "https://digitallyinduced.cachix.org" # IHP framework
       "https://ghc-nix.cachix.org" # GHC builds
       "https://ic-hs-test.cachix.org" # Internet Computer
       "https://kaleidogen.cachix.org" # Specific project
       "https://static-haskell-nix.cachix.org" # Static Haskell
       "https://tttool.cachix.org" # TipToi tool
-      "https://nixcache.reflex-frp.org" # Reflex FRP
   ];
 
   extraTrustedPublicKeys = [
@@ -42,13 +40,11 @@
       "yazi.cachix.org-1:Dcdz63NZKfvUCbDGngQDAZq6kOroIrFoyO064uvLh8k="
       "devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw="
       "tranquil.cachix.org-1:PoO+mGL6a6LcJiPakMDHN4E218/ei/7v2sxeDtNkSRg="
-      "hydra.iohk.io:f/Ea+s+dFdN+3Y/G+FDgSq+a5NEWhJGzdjvKNGv0/EQ="
       "digitallyinduced.cachix.org-1:y+wQvrnxQ+PdEsCt91rmvv39qRCYzEgGQaldK26hCKE="
       "ghc-nix.cachix.org-1:ziC/I4BPqeA4VbtOFpFpu6D1t6ymFvRWke/lc2+qjcg="
       "ic-hs-test.cachix.org-1:8Ct2qPYnI4jZSyE+wJ0aR5laqaE2VRedzyX7JplSsHI="
       "kaleidogen.cachix.org-1:Ib2KIGCtrU/QFt1MRQdLpx5QMBv9++CrZsUfXle7m/Q="
       "static-haskell-nix.cachix.org-1:Q17HawmAwaM1/BfIxaEDKAxwTOyRVhPG5Ji9K3+FvUU="
       "tttool.cachix.org-1:e/5HpIa6ZqwatH07kmO7di1p9K+AMrgkNHl/OGUUMzU="
-      "ryantrinkle.com-1:JJiAKaRv9mWgpVAz8dwewnZe0AzzEAzPkagE9SP5NWI="
   ];
 }
