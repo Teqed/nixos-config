@@ -37,7 +37,7 @@
     };
     programs = {
       ### compilers
-      java = {
+      java = lib.mkIf config.teq.nixos.gui.enable {
         enable = lib.mkDefault true;
         binfmt = lib.mkDefault true; # NixOS-specific option
       };
@@ -52,13 +52,16 @@
         };
       };
     };
-    environment.systemPackages = with pkgs; [
-      dbeaver-bin
-      # blender # blender-hip ?
-      httpie
-      websocat
-      # rar
-    ];
+    environment.systemPackages = with pkgs;
+      [
+        # blender # blender-hip ?
+        httpie
+        websocat
+        # rar
+      ]
+      ++ lib.optionals config.teq.nixos.gui.enable [
+        dbeaver-bin
+      ];
     virtualisation.docker.enable = true;
     users.users.teq.extraGroups = ["docker"];
     virtualisation.docker.storageDriver = "btrfs";

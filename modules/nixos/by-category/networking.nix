@@ -9,17 +9,6 @@ in {
   config = lib.mkIf config.teq.nixos.enable {
     services = {
       tailscale.enable = true;
-      samba = {
-        enable = mkDefault true; # Samba, the SMB/CIFS protocol.
-        openFirewall = mkDefault true;
-        nsswins = mkDefault true; # nss_wins, allows applications to resolve WINS/NetBIOS names (a.k.a. Windows machine names) by transparently querying the winbindd daemon .
-        nmbd.enable = mkDefault true; # nmbd, which replies to NetBIOS over IP name service requests. It also participates in the browsing protocols which make up the Windows “Network Neighborhood” view.
-      };
-      samba-wsdd = {
-        enable = mkDefault true; # WSDD, a Web Services Dynamic Discovery host daemon. Enables (Samba) hosts, like your local NAS device, to be found by Web Service Discovery Clients like Windows .
-        openFirewall = mkDefault true;
-        discovery = mkDefault true; # Enable discovery operation mode.
-      };
       openssh = {
         enable = mkDefault true;
         settings = {
@@ -32,18 +21,31 @@ in {
         };
         openFirewall = mkDefault true;
       };
+      samba = {
+        enable = mkDefault true; # Samba, the SMB/CIFS protocol.
+        openFirewall = mkDefault true;
+        nsswins = mkDefault true; # nss_wins, allows applications to resolve WINS/NetBIOS names (a.k.a. Windows machine names) by transparently querying the winbindd daemon .
+        nmbd.enable = mkDefault true; # nmbd, which replies to NetBIOS over IP name service requests. It also participates in the browsing protocols which make up the Windows “Network Neighborhood” view.
+      };
+      samba-wsdd = {
+        openFirewall = mkDefault true;
+        discovery = mkDefault true; # Enable discovery operation mode.
+      };
     };
     programs = {
       mosh.enable = mkDefault true;
     };
-    environment.systemPackages = with pkgs; [
-      openfortivpn
-      waypipe
-      cifs-utils
-      kdePackages.kio-fuse # to mount remote filesystems via FUSE
-      kdePackages.kio-extras # extra protocols support (sftp, fish and more)
-      kdePackages.qtsvg # support for svg icons
-    ];
+    environment.systemPackages = with pkgs;
+      [
+        waypipe # Wayland forwarding over SSH — useful on both ends
+        cifs-utils # mount.cifs, CLI-usable
+      ]
+      ++ lib.optionals config.teq.nixos.gui.enable [
+        openfortivpn
+        kdePackages.kio-fuse # to mount remote filesystems via FUSE
+        kdePackages.kio-extras # extra protocols support (sftp, fish and more)
+        kdePackages.qtsvg # support for svg icons
+      ];
     # systemd.services.openfortivpn = {
     #   description = "OpenFortiVPN Service";
     #   after = [ "network.target" ];
@@ -75,7 +77,7 @@ in {
     # };
     networking = {
       # nftables.enable = true; # Attempt to get ipv6 forwarding for tailscale exit nodes working
-      networkmanager.enable = lib.mkDefault true;
+      networkmanager.enable = lib.mkIf config.teq.nixos.gui.enable (lib.mkDefault true);
       useDHCP = lib.mkDefault true; # Attempt to enable DHCP on all interfaces
       wireless.enable = lib.mkDefault false; # Enables wireless support via wpa_supplicant.
       wireless.userControlled = lib.mkDefault true; # Allow normal users to control wpa_supplicant through wpa_gui or wpa_cli.
@@ -101,13 +103,13 @@ in {
           9000
           3000
         ];
-        allowedTCPPortRanges = [
+        allowedTCPPortRanges = lib.optionals config.teq.nixos.gui.enable [
           {
             from = 1714;
             to = 1764;
           } # KDE Connect
         ];
-        allowedUDPPortRanges = [
+        allowedUDPPortRanges = lib.optionals config.teq.nixos.gui.enable [
           {
             from = 1714;
             to = 1764;

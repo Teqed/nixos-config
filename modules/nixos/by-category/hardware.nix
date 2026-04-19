@@ -4,7 +4,7 @@
   config,
   ...
 }: {
-  config = lib.mkIf config.teq.nixos.enable {
+  config = lib.mkIf config.teq.nixos.gui.enable {
     services = {
       printing.enable = lib.mkDefault true; # Enable CUPS to print documents.
       hardware.openrgb = {
