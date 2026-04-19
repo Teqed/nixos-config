@@ -48,7 +48,7 @@
       "ic-hs-test.cachix.org-1:8Ct2qPYnI4jZSyE+wJ0aR5laqaE2VRedzyX7JplSsHI="
       "kaleidogen.cachix.org-1:Ib2KIGCtrU/QFt1MRQdLpx5QMBv9++CrZsUfXle7m/Q="
       "static-haskell-nix.cachix.org-1:Q17HawmAwaM1/BfIxaEDKAxwTOyRVhPG5Ji9K3+FvUU="
-      "tttool.cachix.org-1:e/5HpIa6ZqwatH07kmO7di1p9K+AMrgkNHl/OGUUMzU+"
+      "tttool.cachix.org-1:e/5HpIa6ZqwatH07kmO7di1p9K+AMrgkNHl/OGUUMzU="
       "ryantrinkle.com-1:JJiAKaRv9mWgpVAz8dwewnZe0AzzEAzPkagE9SP5NWI="
   ];
 }
