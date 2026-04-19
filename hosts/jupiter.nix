@@ -32,8 +32,9 @@ in {
     2583 # rsky
     3000 # HTTP Wiki.js
     8000 # BluePDS
-    30000 # HTTP Foundry VTT
+    30000 # HTTP Foundry VTT - Spheres
     30001 # HTTP Foundry VTT - Noctuae
+    30002 # HTTP Foundry VTT - Jeimuzu
   ];
   services.postgresql = {
     enable = true;
@@ -117,6 +118,24 @@ in {
         proxySSL = true;
         upnp = false;
         package = inputs.foundryvtt.packages.${pkgs.stdenv.hostPlatform.system}.foundryvtt_12;
+      };
+    };
+  };
+  containers.foundryvtt-jeimuzu = {
+    autoStart = true;
+    config = {pkgs, ...}: {
+      system.stateVersion = currentStateVersion;
+      imports = [inputs.foundryvtt.nixosModules.foundryvtt];
+      services.foundryvtt = {
+        enable = true;
+        hostName = "foundry.shatteredsky.net";
+        routePrefix = "jei";
+        minifyStaticFiles = true;
+        port = 30002;
+        proxyPort = 443;
+        proxySSL = true;
+        upnp = false;
+        package = inputs.foundryvtt.packages.${pkgs.stdenv.hostPlatform.system}.foundryvtt_14;
       };
     };
   };
