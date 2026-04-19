@@ -135,7 +135,7 @@ in {
         proxyPort = 443;
         proxySSL = true;
         upnp = false;
-        package = inputs.foundryvtt.packages.${pkgs.stdenv.hostPlatform.system}.foundryvtt_14;
+        package = inputs.foundryvtt.packages.${pkgs.stdenv.hostPlatform.system}.foundryvtt_13;
       };
     };
   };
