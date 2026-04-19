@@ -158,7 +158,7 @@ in {
         device = "nodev";
         efiSupport = true;
         efiInstallAsRemovable = true;
-        configurationLimit = 12;
+        configurationLimit = 2;
       };
       efi.canTouchEfiVariables = false; # efiInstallAsRemovable doesn't touch NVRAM
     };
