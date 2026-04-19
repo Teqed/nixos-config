@@ -153,14 +153,14 @@ in {
   };
   boot = {
     loader = {
-      # grub = {
-      #   device = "nodev";
-      #   efiSupport = true;
-      #   efiInstallAsRemovable = true;
-      # };
-      systemd-boot.enable = true;
-      systemd-boot.configurationLimit = 12;
-      efi.canTouchEfiVariables = true;
+      grub = {
+        enable = true;
+        device = "nodev";
+        efiSupport = true;
+        efiInstallAsRemovable = true;
+        configurationLimit = 12;
+      };
+      efi.canTouchEfiVariables = false; # efiInstallAsRemovable doesn't touch NVRAM
     };
     initrd = {
       availableKernelModules = [
