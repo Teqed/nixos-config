@@ -12,9 +12,9 @@
     sha256 = "sha256-VSlays/D5FtiI8vsj2Eu19lxY8Mkgu0+7K6OAhzc+30=";
   };
 in {
-  config = lib.mkIf config.teq.home-manager.enable {
-    programs = {
-      eza = {
+  config = lib.mkMerge [
+    (lib.mkIf config.teq.home-manager.enable {
+      programs.eza = {
         enable = lib.mkDefault true;
         extraOptions = [
           "--group-directories-first"
@@ -29,23 +29,27 @@ in {
         git = lib.mkDefault true;
         icons = lib.mkDefault "auto";
       };
-      xplr = {
-        enable = lib.mkDefault true;
-        # extraConfig =
-        # plugins =
-      };
-      yazi = {
-        enable = lib.mkDefault true; # 426MB / 20MB (imagemagick, ffmegthumbnailer)
-        shellWrapperName = "y"; # Use new default
-        settings.theme = {
-          flavor = {
-            use = lib.mkDefault "catppuccin-mocha";
+    })
+    (lib.mkIf config.teq.home-manager.gui {
+      programs = {
+        xplr = {
+          enable = lib.mkDefault true;
+          # extraConfig =
+          # plugins =
+        };
+        yazi = {
+          enable = lib.mkDefault true; # 426MB / 20MB (imagemagick, ffmegthumbnailer)
+          shellWrapperName = "y"; # Use new default
+          settings.theme = {
+            flavor = {
+              use = lib.mkDefault "catppuccin-mocha";
+            };
+          };
+          flavors = {
+            catppuccin-mocha = lib.mkDefault "${yaziFlavors}/catppuccin-mocha.yazi";
           };
         };
-        flavors = {
-          catppuccin-mocha = lib.mkDefault "${yaziFlavors}/catppuccin-mocha.yazi";
-        };
       };
-    };
-  };
+    })
+  ];
 }

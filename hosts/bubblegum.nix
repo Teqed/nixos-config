@@ -71,6 +71,7 @@ in {
     {device = "/dev/disk/by-uuid/8fd5400e-0dad-4ebc-ac53-7cc2120fbc6e";}
   ];
   home-manager.users.teq.teq.home-manager.gui = true;
+  home-manager.users.teq.teq.home-manager.dev = true;
   hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
   hardware.graphics.extraPackages = with pkgs; [
     vpl-gpu-rt

@@ -150,7 +150,6 @@ in {
   nixpkgs = {
     config.allowUnsupportedSystem = true;
     hostPlatform = lib.mkForce "aarch64-linux";
-    buildPlatform = lib.mkForce "x86_64-linux";
   };
   boot = {
     loader = {

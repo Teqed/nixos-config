@@ -83,9 +83,6 @@
       perl # 100MB / 55MB
       rsync
       strace
-
-      teams-for-linux
-      claude-code
     ];
   };
 }

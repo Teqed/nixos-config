@@ -21,6 +21,7 @@ in {
     # hostPlatform = "aarch64-linux";
     buildPlatform = "x86_64-linux";
   };
+  boot.binfmt.emulatedSystems = ["aarch64-linux"];
   hardware.cpu.amd.updateMicrocode = true;
   boot = {
     loader = {

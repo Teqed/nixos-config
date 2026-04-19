@@ -15,6 +15,7 @@ in {
   options.teq.home-manager = {
     enable = lib.mkEnableOption "Enable Teq's Home-Manager configuration defaults.";
     gui = lib.mkEnableOption "Enable GUI configuration.";
+    dev = lib.mkEnableOption "Enable development toolchains and dev-adjacent tools.";
   };
   config = lib.mkIf config.teq.home-manager.enable {
     home.stateVersion = "24.05"; # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
@@ -85,12 +86,15 @@ in {
         builders-use-substitutes = mkDefault true;
         substituters = mkDefault caches.substituters;
         trusted-substituters = mkDefault caches.substituters;
+        extra-substituters = mkDefault caches.extraSubstituters;
+        extra-trusted-substituters = mkDefault caches.extraSubstituters;
         trusted-users = mkForce [
           "root"
           "teq"
           "@wheel"
         ];
         trusted-public-keys = mkDefault caches.trustedPublicKeys;
+        extra-trusted-public-keys = mkDefault caches.extraTrustedPublicKeys;
       };
     };
   };

@@ -34,6 +34,7 @@ in {
         # Add overlays your own flake exports (from overlays and pkgs dir):
         # outputs.overlays.additions
         outputs.overlays.modifications
+        inputs.claude-code.overlays.default
 
         # You can also add overlays exported from other flakes:
         # neovim-nightly-overlay.overlays.default
@@ -93,12 +94,14 @@ in {
         builders-use-substitutes = mkDefault true;
         substituters = caches.substituters;
         trusted-substituters = caches.substituters;
+        extra-trusted-substituters = caches.extraSubstituters;
         trusted-users = mkForce [
           "root"
           "teq"
           "@wheel"
         ];
         trusted-public-keys = caches.trustedPublicKeys;
+        extra-trusted-public-keys = caches.extraTrustedPublicKeys;
       };
     };
     system.autoUpgrade.enable = true;

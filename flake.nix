@@ -202,12 +202,7 @@ The starlight on the Western Seas.
           vpn-confinement.nixosModules.default
           agenix.nixosModules.default
           tangled-core.nixosModules.spindle
-          {
-            nixpkgs.overlays = [
-              claude-code.overlays.default
-              nix-cachyos-kernel.overlays.pinned # CachyOS kernel with binary cache
-            ];
-          }
+          {nixpkgs.overlays = [nix-cachyos-kernel.overlays.pinned];} # CachyOS kernel
         ];
       };
       bubblegum = nixpkgs.lib.nixosSystem {

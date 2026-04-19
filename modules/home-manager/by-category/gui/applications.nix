@@ -33,6 +33,7 @@
       kdePackages.yakuake
       kdePackages.kcharselect
       dolphin-emu
+      teams-for-linux
     ];
     services = {
       ### kde:
