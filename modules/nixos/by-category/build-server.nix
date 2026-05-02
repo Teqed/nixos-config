@@ -43,6 +43,12 @@ in {
       default = ["origin" "tangled"];
       description = "Remotes to push the lockfile commit to. First is required, rest are best-effort.";
     };
+
+    sshIdentity = lib.mkOption {
+      type = lib.types.str;
+      default = "/home/teq/.ssh/id_ed25519";
+      description = "Path to key for git push.";
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -55,7 +61,7 @@ in {
         Type = "oneshot";
         User = cfg.user;
         WorkingDirectory = cfg.repoPath;
-        # Stay out of the way of interactive use.
+        Environment = "GIT_SSH_COMMAND=ssh -i ${cfg.sshIdentity} -o IdentitiesOnly=yes";
         CPUSchedulingPolicy = "idle";
         IOSchedulingClass = "idle";
         Restart = "on-failure";
