@@ -25,7 +25,6 @@
   ];
 
   extraSubstituters = [
-      "https://nixpkgs-wayland.cachix.org" # Wayland packages
       "https://yazi.cachix.org" # Yazi file manager
       "https://devenv.cachix.org" # devenv
       "https://tranquil.cachix.org" # Tranquil PDS
@@ -38,7 +37,6 @@
   ];
 
   extraTrustedPublicKeys = [
-      "nixpkgs-wayland.cachix.org-1:3lwxaILxMRkVhehr5StQprHdEo4IrE8sRho9R9HOLYA="
       "yazi.cachix.org-1:Dcdz63NZKfvUCbDGngQDAZq6kOroIrFoyO064uvLh8k="
       "devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw="
       "tranquil.cachix.org-1:PoO+mGL6a6LcJiPakMDHN4E218/ei/7v2sxeDtNkSRg="

@@ -38,6 +38,7 @@
       };
       firefox = {
         enable = true;
+        configPath = "${config.xdg.configHome}/mozilla/firefox"; # 26.05+ XDG default; migration handled by home.activation.migrateFirefoxProfile below
         nativeMessagingHosts = [
           # pkgs.tridactyl
           pkgs.fx-cast-bridge
@@ -45,5 +46,19 @@
         ];
       };
     };
+
+    # One-shot migration: ~/.mozilla/firefox → $XDG_CONFIG_HOME/mozilla/firefox.
+    # Idempotent — no-op once the new directory exists. Native messaging hosts
+    # and global extensions stay under ~/.mozilla and aren't moved by this option.
+    # Both source and destination sit under existing impermanence persistence roots
+    # (.mozilla and .config), so the mv is a same-volume rename on /persist.
+    home.activation.migrateFirefoxProfile = lib.hm.dag.entryBefore [ "writeBoundary" ] ''
+      oldDir="$HOME/.mozilla/firefox"
+      newDir="${config.xdg.configHome}/mozilla/firefox"
+      if [ -d "$oldDir" ] && [ ! -d "$newDir" ]; then
+        $DRY_RUN_CMD mkdir -p "$(dirname "$newDir")"
+        $DRY_RUN_CMD mv "$oldDir" "$newDir"
+      fi
+    '';
   };
 }

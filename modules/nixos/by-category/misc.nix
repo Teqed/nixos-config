@@ -8,9 +8,9 @@
   inherit (lib) mkDefault;
 in {
   config = lib.mkIf config.teq.nixos.enable {
-    # documentation.man.enable = false; # Whether to install manual pages. This also includes man outputs. # We may want these
-    # documentation.man.generateCaches = false; # Whether to generate the manual page index caches. This allows searching for a page or keyword using utilities like apropos(1) and the -k option of man(1).
-    # documentation.doc.enable = false; # Whether to install documentation distributed in packages’ /share/doc. Usually plain text and/or HTML. This also includes “doc” outputs.
+    documentation.doc.enable = lib.mkDefault false; # /share/doc HTML/PDF docs (~50-100 MiB); per-package docs still readable via `nix-shell -p <pkg>` if needed
+    # documentation.man.generateCaches = false; # fish tab completion uses `man -k` for argument descriptions
+    # documentation.man.enable = false; # Used for for `man <cmd>` lookups
     environment.etc."nix/inputs/nixpkgs".source = "${inputs.nixpkgs}";
     environment.pathsToLink = [
       "/share/man"
@@ -24,7 +24,7 @@ in {
       "/bin"
       "/etc"
     ];
-    environment.extraOutputsToInstall = ["info" "man" "share" "icons" "doc"]; # Entries listed here will be appended to the meta.outputsToInstall attribute.
+    environment.extraOutputsToInstall = ["man" "share" "icons"]; # Removed "info" and "doc" — rarely browsed; man pages still kept
     nixpkgs.config.allowUnfree = mkDefault true; # TODO: Move all unfree packages into allowUnfreePredicate
     nixpkgs.config.allowUnfreePredicate = pkg:
       builtins.elem (lib.getName pkg) [

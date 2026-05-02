@@ -1,14 +1,9 @@
 {...}: {
   additions = final: _prev: import ../pkgs final.pkgs;
   modifications = final: prev: {
-    # Hotfixes ffmpeg ; https://github.com/NixOS/nixpkgs/pull/353198
-    # ffmpeg_7-full = prev.ffmpeg_7-full.override {
-    #   withXevd = false;
-    #   withXeve = false;
-    # };
-    ffmpeg_7-full = prev.ffmpeg_7;
-    # Hotfixes #353119 ; "Build failure: _7zz" ; https://github.com/NixOS/nixpkgs/issues/353119
-    # Resolved by #353272 ; "_7zz: disable UASM properly" ; https://github.com/NixOS/nixpkgs/pull/353272
-    _7zz = prev._7zz.override {useUasm = true;};
+    # No active modifications.
+    # Historical entries (now resolved upstream):
+    #   - ffmpeg_7-full alias to ffmpeg_7 (was a hotfix for withXevd/withXeve build failure)
+    #   - _7zz useUasm override (NixOS/nixpkgs#353272, fixed 2024-11)
   };
 }

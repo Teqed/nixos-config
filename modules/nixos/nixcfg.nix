@@ -111,6 +111,7 @@ in {
     };
     i18n = {
       defaultLocale = mkDefault "${defaultLang}";
+      supportedLocales = mkDefault [ "${defaultLang}/UTF-8" "C.UTF-8/UTF-8" ]; # Saves ~200 MiB vs "all"; usb.nix overrides to "all" for installer
       extraLocaleSettings = {
         LC_ADDRESS = mkDefault "${defaultLang}";
         LC_IDENTIFICATION = mkDefault "${defaultLang}";

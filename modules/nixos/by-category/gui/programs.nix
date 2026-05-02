@@ -36,7 +36,7 @@ in {
         userAllowOther = lib.mkDefault true; # Allow non-root users to specify the allow_other or allow_root mount options, see mount.fuse3(8). Might not be needed
         mountMax = lib.mkDefault 32000; # Set the maximum number of FUSE mounts allowed to non-root users. Integer between 0 and 32767, default 1000
       };
-      virt-manager.enable = lib.mkDefault true;
+      virt-manager.enable = lib.mkDefault false; # Pulls qemu (~1 GiB); enable per-host if VMs needed
       mouse-actions.enable = lib.mkDefault true; # Enable mouse-actions udev rules; required to use mouse gestures as non-root
     };
 
@@ -53,7 +53,7 @@ in {
       # inputs.zen-browser.packages."${system}".default # Removed — using firefox/brave instead (~356 MiB)
     ];
 
-    virtualisation.waydroid.enable = true;
+    virtualisation.waydroid.enable = lib.mkDefault false; # Android container; enable per-host if needed
     boot.binfmt.emulatedSystems = [
       "aarch64-linux" # ARM
       # "riscv64-linux" # RISC-V
@@ -65,6 +65,7 @@ in {
 
     environment.plasma6.excludePackages = with pkgs.kdePackages; [
       khelpcenter # Pulls qtwebengine (~430 MiB closure); rarely used
+      # plasma-workspace-wallpapers # ~217 MiB of stock KDE wallpapers
     ];
 
     environment.etc."chromium/policies/managed/defaultExtensions.json".source = chromium_policy;
@@ -160,7 +161,7 @@ in {
       speechd.enable = lib.mkForce false; # Force-enabled by graphical-desktop module; mkForce overrides
       colord.enable = lib.mkDefault true; # color management daemon
       flatpak = {
-        enable = lib.mkDefault true;
+        enable = lib.mkDefault false; # No flatpaks installed currently; enable per-host if you start using them
         update.auto = {
           enable = lib.mkDefault true;
           onCalendar = lib.mkDefault "weekly"; # Default value

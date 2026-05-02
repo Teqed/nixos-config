@@ -24,7 +24,7 @@
         #   "nix.enableLanguageServer" = true;
         #   "nix.serverPath" = "nixd";
         # };
-        extensions = with pkgs; [vscode-extensions.rust-lang.rust-analyzer];
+        profiles.default.extensions = with pkgs; [vscode-extensions.rust-lang.rust-analyzer];
       };
     };
   };

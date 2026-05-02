@@ -31,7 +31,6 @@ The starlight on the Western Seas.
     };
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
-    zen-browser.url = "github:youwen5/zen-browser-flake";
     foundryvtt = {
       url = "github:reckenrode/nix-foundryvtt";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -42,16 +41,16 @@ The starlight on the Western Seas.
       url = "github:ghostty-org/ghostty?ref=refs/tags/tip";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    pia = {
-      url = "github:Fuwn/pia.nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    # pia = {
+    #   url = "github:Fuwn/pia.nix";
+    #   inputs.nixpkgs.follows = "nixpkgs";
+    # };
     # rsky.url = "github:Teqed/rsky?rev=3a0f021490f17cd7faf95d1611c8cce7915232bd";
     # rsky.url = "git+file:///home/teq/_/Repos/rsky";
-    nixpkgs-wayland = {
-      url = "github:nix-community/nixpkgs-wayland";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    # nixpkgs-wayland = {
+    #   url = "github:nix-community/nixpkgs-wayland";
+    #   inputs.nixpkgs.follows = "nixpkgs";
+    # };
     # parakeet.url = "git+https://tangled.sh/@quilling.dev/parakeet?rev=3f1dcc059ddc28d94caea58076458c11dfd9e6db";
     # parakeet.url = "git+file:///home/teq/.local/user-dirs/Repos/parakeet";
     claude-code.url = "github:sadjow/claude-code-nix";
@@ -73,14 +72,12 @@ The starlight on the Western Seas.
     nix-flatpak,
     nixos-hardware,
     impermanence,
-    nixpkgs-wayland,
     nix-index-database,
     plasma-manager,
     disko,
     foundryvtt,
     rust-overlay,
     ghostty,
-    pia,
     # rsky,
     claude-code,
     vpn-confinement,
@@ -105,7 +102,6 @@ The starlight on the Western Seas.
         nixos-hardware
         impermanence
         nix-flatpak
-        nixpkgs-wayland
         ;
     };
     # <system> is something like "x86_64-linux", "aarch64-linux", "i686-linux", "x86_64-darwin"

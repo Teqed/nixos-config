@@ -28,7 +28,7 @@ in {
           enable = lib.mkDefault true; # 300MB / 70MB (python3 200MB, perl 100MB)
           # prompt = true; # NixOS-specific option
           signing.format = null; # Explicitly use 26.05+ default format
-          extraConfig = {
+          settings = {
             init = {
               defaultBranch = lib.mkDefault "main";
             };
