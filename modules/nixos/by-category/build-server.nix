@@ -23,8 +23,8 @@ in {
 
     hosts = lib.mkOption {
       type = lib.types.listOf lib.types.str;
-      default = ["thoughtful" "bubblegum" "sedna"];
-      description = "nixosConfigurations to build. eris (USB installer) and jupiter (aarch64) excluded.";
+      default = ["thoughtful" "bubblegum"];
+      description = "nixosConfigurations to build. Excluded: eris (USB installer), sedna (incomplete fileSystems), jupiter (aarch64).";
     };
 
     dates = lib.mkOption {
@@ -57,11 +57,12 @@ in {
       after = ["network-online.target"];
       wants = ["network-online.target"];
       path = with pkgs; [git nix openssh coreutils];
+      # NixOS `environment` attr writes a properly-quoted Environment= line in the unit.
+      environment.GIT_SSH_COMMAND = "ssh -i ${cfg.sshIdentity} -o IdentitiesOnly=yes";
       serviceConfig = {
         Type = "oneshot";
         User = cfg.user;
         WorkingDirectory = cfg.repoPath;
-        Environment = "GIT_SSH_COMMAND=ssh -i ${cfg.sshIdentity} -o IdentitiesOnly=yes";
         CPUSchedulingPolicy = "idle";
         IOSchedulingClass = "idle";
         Restart = "on-failure";
