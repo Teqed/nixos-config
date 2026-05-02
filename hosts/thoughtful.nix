@@ -99,6 +99,7 @@ in {
       enable = true;
       btrfs = true;
     };
+    buildServer.enable = true;
   };
 
   # Agenix secret management

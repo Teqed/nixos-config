@@ -15,6 +15,7 @@ fromFlakes: let
     programs_misc = import ./by-category/misc.nix;
     programs_networking = import ./by-category/networking.nix;
     programs_security = import ./by-category/security.nix;
+    build_server = import ./by-category/build-server.nix;
     boot = import ./boot.nix;
     impermanence = import ./impermanence.nix;
     nixcfg = import ./nixcfg.nix;

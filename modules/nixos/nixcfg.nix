@@ -104,20 +104,27 @@ in {
         extra-trusted-public-keys = caches.extraTrustedPublicKeys;
       };
     };
-    # Auto-upgrade disabled: it uses the legacy channel-based path (nix-build '<nixpkgs/nixos>')
-    # which fails on this flake-based setup. Manually rebuild with nixos-rebuild --flake.
-    system.autoUpgrade.enable = mkDefault false;
-    system.autoUpgrade.allowReboot = false;
-
-    # Automatic store GC + optimization. Keeps disk usage bounded over time.
-    nix.gc = {
-      automatic = mkDefault true;
-      dates = mkDefault "weekly";
-      options = mkDefault "--delete-older-than 30d";
+    # `enable` only when self has a clean revision — never clobber a host with local edits.
+    system.autoUpgrade = {
+      enable = mkDefault ((inputs.self.rev or "dirty") != "dirty");
+      flake = mkDefault "github:Teqed/nixos-config";
+      flags = mkDefault ["-L" "--refresh"];
+      randomizedDelaySec = mkDefault "30min";
+      dates = mkDefault "04:00";
+      allowReboot = mkDefault false;
     };
-    nix.optimise.automatic = mkDefault true;
-    nix.optimise.dates = mkDefault [ "03:45" ];
-    nix.settings.auto-optimise-store = mkDefault true;
+    # Retry transient failures (NixOS/nixpkgs#274146); idle so post-suspend wakes don't stall.
+    systemd.services.nixos-upgrade = {
+      startLimitIntervalSec = 120;
+      startLimitBurst = 6;
+      serviceConfig = {
+        Restart = "on-failure";
+        RestartSec = "20";
+        CPUSchedulingPolicy = "idle";
+        IOSchedulingClass = "idle";
+      };
+    };
+
     time = {
       timeZone = mkDefault "America/New_York";
     };
