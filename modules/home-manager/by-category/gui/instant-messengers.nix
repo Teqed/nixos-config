@@ -7,7 +7,7 @@
   config = lib.mkIf config.teq.home-manager.gui {
     home.packages = with pkgs; [
       vesktop # 1.8GB / 8MB
-      discord-ptb # discocss
+      # discord-ptb — removed; preferring vesktop (~570 MiB + electron-40)
       betterdiscordctl
       # discord-krisp # Removed - was provided by chaotic-cx/nyx (discontinued)
       discover-overlay # 600MB / 15MB (gtk+3, gtk-layer-shell)

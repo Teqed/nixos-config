@@ -40,7 +40,7 @@
       kdeconnect.enable = lib.mkDefault true; # 1GB / 23MB
       ### search:
       recoll = {
-        enable = lib.mkDefault true;
+        enable = lib.mkDefault false; # CPU spikes; pulls akonadi/mariadb (~270 MiB)
         configDir = "${config.xdg.configHome}/recoll";
         settings = {
           nocjk = true;

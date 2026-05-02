@@ -50,7 +50,7 @@ in {
           -bios ${pkgs.OVMF.fd}/FV/OVMF.fd \
           "$@"
       '') # QEMU virtualization with UEFI firmware
-      inputs.zen-browser.packages."${system}".default
+      # inputs.zen-browser.packages."${system}".default # Removed — using firefox/brave instead (~356 MiB)
     ];
 
     virtualisation.waydroid.enable = true;
@@ -62,6 +62,10 @@ in {
     ];
 
     environment.sessionVariables.NIXOS_OZONE_WL = "1"; # Use the Ozone Wayland support in several Electron apps
+
+    environment.plasma6.excludePackages = with pkgs.kdePackages; [
+      khelpcenter # Pulls qtwebengine (~430 MiB closure); rarely used
+    ];
 
     environment.etc."chromium/policies/managed/defaultExtensions.json".source = chromium_policy;
     environment.etc."brave/policies/managed/DisableBraveRewardsWalletAI.json".source = brave_policy;
@@ -152,6 +156,8 @@ in {
         };
       };
       desktopManager.plasma6.enable = true;
+      orca.enable = lib.mkForce false; # Plasma6 force-enables; mkForce overrides. Pulls speech-dispatcher → mbrola-voices (~645 MiB); enable per-host if screen reader needed
+      speechd.enable = lib.mkForce false; # Force-enabled by graphical-desktop module; mkForce overrides
       colord.enable = lib.mkDefault true; # color management daemon
       flatpak = {
         enable = lib.mkDefault true;
