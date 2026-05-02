@@ -23,8 +23,8 @@ in {
 
     hosts = lib.mkOption {
       type = lib.types.listOf lib.types.str;
-      default = ["thoughtful" "bubblegum" "eris" "sedna"];
-      description = "nixosConfigurations to build (aarch64 hosts excluded).";
+      default = ["thoughtful" "bubblegum" "sedna"];
+      description = "nixosConfigurations to build. eris (USB installer) and jupiter (aarch64) excluded.";
     };
 
     dates = lib.mkOption {
