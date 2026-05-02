@@ -17,7 +17,7 @@ in {
 
     url = lib.mkOption {
       type = lib.types.str;
-      default = "https://ntfy.thoughtful.shatteredsky.net";
+      default = "https://ntfy.shatteredsky.net";
       description = "Public base URL of the ntfy server. Used by clients to publish.";
     };
 
