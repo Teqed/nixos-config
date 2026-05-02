@@ -30,5 +30,13 @@
     home.file.".config/brave/policies/managed/DisableBraveRewardsWalletAI.json".source = ./sources/.config/brave/policies/managed/DisableBraveRewardsWalletAI.json;
     # home.file.".local/share/hunspell/en_US.aff".source = "${pkgs.hunspellDicts.en_US}/share/hunspell/en_US.aff";
     # home.file.".local/share/hunspell/en_US.dic".source = "${pkgs.hunspellDicts.en_US}/share/hunspell/en_US.dic";
+
+    # Stale `*.backup-hm` / `*.hm-backup` left by interrupted HM activations block subsequent
+    # runs ("would be clobbered by backing up"). Sweep them before HM does its file checks.
+    home.activation.cleanupStaleHmBackups = lib.hm.dag.entryBefore ["checkLinkTargets"] ''
+      $DRY_RUN_CMD find "$HOME/.config" "$HOME/.local/share" -type f \
+        \( -name "*.backup-hm" -o -name "*.hm-backup" \) \
+        -delete 2>/dev/null || true
+    '';
   };
 }
