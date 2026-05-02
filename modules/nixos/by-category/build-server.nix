@@ -56,6 +56,7 @@ in {
       description = "Update flake.lock, build all hosts to warm cache, and push";
       after = ["network-online.target"];
       wants = ["network-online.target"];
+      onFailure = lib.optional config.teq.nixos.notify.failureTemplate.enable "notify-fail@%n.service";
       path = with pkgs; [git nix openssh coreutils];
       # NixOS `environment` attr writes a properly-quoted Environment= line in the unit.
       environment.GIT_SSH_COMMAND = "ssh -i ${cfg.sshIdentity} -o IdentitiesOnly=yes";

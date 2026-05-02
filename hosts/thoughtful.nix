@@ -100,6 +100,7 @@ in {
       btrfs = true;
     };
     buildServer.enable = true;
+    notify.server.enable = true;
   };
 
   # Agenix secret management
