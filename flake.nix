@@ -39,7 +39,8 @@ The starlight on the Western Seas.
     # ghostty.url = "github:ghostty-org/ghostty?ref=refs/tags/v1.1.3"; # latest: v1.1.3
     ghostty = {
       url = "github:ghostty-org/ghostty?ref=refs/tags/tip";
-      inputs.nixpkgs.follows = "nixpkgs";
+      # No `inputs.nixpkgs.follows` — must use ghostty's pinned nixpkgs so
+      # ghostty.cachix.org cache hits land. Cost: small nixpkgs duplicate in closure.
     };
     # pia = {
     #   url = "github:Fuwn/pia.nix";

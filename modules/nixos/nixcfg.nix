@@ -104,8 +104,20 @@ in {
         extra-trusted-public-keys = caches.extraTrustedPublicKeys;
       };
     };
-    system.autoUpgrade.enable = true;
+    # Auto-upgrade disabled: it uses the legacy channel-based path (nix-build '<nixpkgs/nixos>')
+    # which fails on this flake-based setup. Manually rebuild with nixos-rebuild --flake.
+    system.autoUpgrade.enable = mkDefault false;
     system.autoUpgrade.allowReboot = false;
+
+    # Automatic store GC + optimization. Keeps disk usage bounded over time.
+    nix.gc = {
+      automatic = mkDefault true;
+      dates = mkDefault "weekly";
+      options = mkDefault "--delete-older-than 30d";
+    };
+    nix.optimise.automatic = mkDefault true;
+    nix.optimise.dates = mkDefault [ "03:45" ];
+    nix.settings.auto-optimise-store = mkDefault true;
     time = {
       timeZone = mkDefault "America/New_York";
     };

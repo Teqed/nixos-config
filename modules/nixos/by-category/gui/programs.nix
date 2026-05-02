@@ -25,12 +25,9 @@ in {
       appimage = {
         enable = lib.mkDefault true;
         binfmt = lib.mkDefault true; # NixOS-specific option
-        package = pkgs.appimage-run.override {
-          extraPkgs = pkgs: [
-            pkgs.ffmpeg
-            pkgs.imagemagick
-          ];
-        };
+        # No `package` override — use stock pkgs.appimage-run so it cache-hits.
+        # If a future AppImage needs ffmpeg/imagemagick, re-add via:
+        #   package = pkgs.appimage-run.override { extraPkgs = pkgs: [ pkgs.ffmpeg pkgs.imagemagick ]; };
       };
       fuse = {
         userAllowOther = lib.mkDefault true; # Allow non-root users to specify the allow_other or allow_root mount options, see mount.fuse3(8). Might not be needed
