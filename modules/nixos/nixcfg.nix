@@ -114,7 +114,7 @@ in {
       allowReboot = mkDefault false;
     };
     # Retry transient failures (NixOS/nixpkgs#274146); idle so post-suspend wakes don't stall.
-    systemd.services.nixos-upgrade = {
+    systemd.services.nixos-upgrade = lib.mkIf config.system.autoUpgrade.enable {
       startLimitIntervalSec = 120;
       startLimitBurst = 6;
       serviceConfig = {
