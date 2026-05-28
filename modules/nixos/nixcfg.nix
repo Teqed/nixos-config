@@ -71,7 +71,7 @@ in {
         max-free = ${toString (1024 * 1024 * 1024)}
       '';
       settings = {
-        access-keys = config.age.secrets."gh".path;
+        access-tokens = config.age.secrets."gh".path;
         # nix-path = mkForce "nixpkgs=/etc/nix/inputs/nixpkgs";
         nix-path = mkDefault config.nix.nixPath; # Workaround for https://github.com/NixOS/nix/issues/9574
         auto-optimise-store = mkDefault true;
