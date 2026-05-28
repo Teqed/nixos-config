@@ -50,7 +50,7 @@ in {
       ];
     };
     age.secrets."gh" = {
-        file = ../secrets/gh.age;
+        file = ../../secrets/gh.age;
     };
     nix = {
       registry = mapAttrs (_: flake: {inherit flake;}) flakeInputs; # Opinionated: make flake registry and nix path match flake inputs
