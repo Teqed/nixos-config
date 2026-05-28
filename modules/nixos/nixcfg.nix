@@ -27,6 +27,7 @@ in {
         # allowUnsupportedSystem = true;
         permittedInsecurePackages = [
           "openssl-1.1.1w"
+          "nodejs-slim-20.20.2"
         ];
       };
       # You can add overlays here
