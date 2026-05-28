@@ -48,6 +48,9 @@ in {
         # })
       ];
     };
+    age.secrets."gh" = {
+        file = ../secrets/gh.age;
+    };
     nix = {
       registry = mapAttrs (_: flake: {inherit flake;}) flakeInputs; # Opinionated: make flake registry and nix path match flake inputs
       nixPath = mkDefault (mapAttrsToList (key: value: "${key}=${value.to.path}") config.nix.registry); # Add inputs to the system's legacy channels Making legacy nix commands consistent
@@ -67,6 +70,7 @@ in {
         max-free = ${toString (1024 * 1024 * 1024)}
       '';
       settings = {
+        access-keys = config.age.secrets."gh".path;
         # nix-path = mkForce "nixpkgs=/etc/nix/inputs/nixpkgs";
         nix-path = mkDefault config.nix.nixPath; # Workaround for https://github.com/NixOS/nix/issues/9574
         auto-optimise-store = mkDefault true;

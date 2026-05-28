@@ -17,6 +17,8 @@ let
 in {
   # WireGuard configuration for thoughtful
   "wg0.age".publicKeys = allUsers ++ [systems.thoughtful];
+  # GitHub PAT
+  "gh.age".publicKeys = allUsers ++ allSystems;
 
   # Add more secrets here as needed:
   # "example.age".publicKeys = allUsers ++ allSystems;
