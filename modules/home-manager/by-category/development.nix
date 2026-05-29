@@ -62,7 +62,7 @@ in {
         nil
         nixd # Nix language server, based on nix libraries https://github.com/nix-community/nixd
         grpcurl
-        redisinsight
+        # redisinsight
         goaccess
       ];
       programs = {
