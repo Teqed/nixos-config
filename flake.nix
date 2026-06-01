@@ -215,6 +215,7 @@ The starlight on the Western Seas.
           home-manager.nixosModules.home-manager
           nix-flatpak.nixosModules.nix-flatpak
           self.homeManagerConfig
+          agenix.nixosModules.default
           {nixpkgs.overlays = [nix-cachyos-kernel.overlays.pinned];} # CachyOS kernel
         ];
       };

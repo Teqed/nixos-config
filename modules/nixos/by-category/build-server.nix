@@ -66,8 +66,6 @@ in {
         WorkingDirectory = cfg.repoPath;
         CPUSchedulingPolicy = "idle";
         IOSchedulingClass = "idle";
-        Restart = "on-failure";
-        RestartSec = "5min";
       };
       script = ''
         set -euo pipefail
