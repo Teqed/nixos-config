@@ -1,5 +1,5 @@
 ## Syntax highlighting
-include ~/.local/share/nano/*
+include /run/current-system/sw/share/nano/*.nanorc
 
 # Options
 set tabsize 4

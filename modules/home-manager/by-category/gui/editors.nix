@@ -12,7 +12,7 @@
       kdePackages.kate # 1.4GB / 40MB (ktexteditor)
     ];
     programs = {
-      vscode = {
+      vscodium = {
         enable = lib.mkDefault true; # 1.44GB / 400MB (mesa 800MB)
         package = lib.mkDefault pkgs.vscodium-fhs;
         # enableUpdateCheck = lib.mkDefault false;
