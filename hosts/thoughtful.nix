@@ -56,6 +56,17 @@ in {
       #      "plymouth.use-simpledrm" # Use simple DRM backend for Plymouth
     ];
   };
+  # Samsung 990 PRO data drive (/dev/nvme0n1, GPT + single ext4 partition).
+  # Intended as a base for mapping service storage out of /var/lib via binds/symlinks.
+  fileSystems."/mnt/nvme0n1" = {
+    device = "/dev/disk/by-label/samsung-990-pro";
+    fsType = "ext4";
+    options = [
+      "nofail" # Don't block boot if the drive is absent.
+      "noatime"
+    ];
+  };
+
   # VM
   programs.dconf.enable = true;
   users.users.gcis.extraGroups = ["libvirtd"];
