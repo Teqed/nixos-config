@@ -4,4 +4,5 @@ pkgs: {
   # example = pkgs.callPackage ./example { };
   scripts = pkgs.callPackage ./scripts {};
   kando = pkgs.callPackage ./by-name/ka/kando/package.nix {};
+  claude-desktop = pkgs.callPackage ./by-name/cl/claude-desktop/package.nix {};
 }

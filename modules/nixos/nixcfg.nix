@@ -27,6 +27,9 @@ in {
         # allowUnsupportedSystem = true;
         permittedInsecurePackages = [
           "openssl-1.1.1w"
+          # vesktop's build-time pnpm; runtime closure is unaffected. Drop after
+          # the next nixpkgs bump moves vesktop's pnpmDeps off 10.29.2.
+          "pnpm-10.29.2"
         ];
       };
       # You can add overlays here
