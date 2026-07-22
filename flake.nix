@@ -62,6 +62,10 @@ The starlight on the Western Seas.
       inputs.darwin.follows = ""; # Save resources on Linux
     };
     tangled-core.url = "git+https://tangled.org/@tangled.org/core";
+    washing-machien = {
+      url = "git+https://tangled.org/coil-habdle.ebil.club/washing-machien";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
   outputs = {
     self,
@@ -202,6 +206,7 @@ The starlight on the Western Seas.
           vpn-confinement.nixosModules.default
           agenix.nixosModules.default
           tangled-core.nixosModules.spindle
+          inputs.washing-machien.nixosModules.default
           {nixpkgs.overlays = [nix-cachyos-kernel.overlays.pinned];} # CachyOS kernel
         ];
       };

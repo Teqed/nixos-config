@@ -119,6 +119,17 @@ in {
     file = ../secrets/wg0.age;
     # The decrypted file will be available at config.age.secrets."wg0".path
   };
+  age.secrets."washing-machien" = {
+    file = ../secrets/washing-machien.age;
+  };
+
+  # puts u in dhe washing machein
+  # https://tangled.org/coil-habdle.ebil.club/washing-machien
+  services.washing-machien = {
+    enable = true;
+    input = ./assets/washing-machien-avatar.jpg;
+    environmentFile = config.age.secrets."washing-machien".path;
+  };
 
   vpnNamespaces.wg = {
     enable = true;

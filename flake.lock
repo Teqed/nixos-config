@@ -874,7 +874,8 @@
         "plasma-manager": "plasma-manager",
         "rust-overlay": "rust-overlay",
         "tangled-core": "tangled-core",
-        "vpn-confinement": "vpn-confinement"
+        "vpn-confinement": "vpn-confinement",
+        "washing-machien": "washing-machien"
       }
     },
     "rust-analyzer-src": {
@@ -1066,6 +1067,26 @@
         "owner": "Maroka-chan",
         "repo": "VPN-Confinement",
         "type": "github"
+      }
+    },
+    "washing-machien": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1782904463,
+        "narHash": "sha256-5mUrtQCltJ3eJ92zfZQdON5DHbs56mpg5XRgjaN4Ti8=",
+        "ref": "refs/heads/main",
+        "rev": "53f8f196314cdb1ada6666139573e59f8540be95",
+        "revCount": 32,
+        "type": "git",
+        "url": "https://tangled.org/coil-habdle.ebil.club/washing-machien"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://tangled.org/coil-habdle.ebil.club/washing-machien"
       }
     },
     "zig": {

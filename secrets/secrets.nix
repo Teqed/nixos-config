@@ -19,6 +19,8 @@ in {
   "wg0.age".publicKeys = allUsers ++ [systems.thoughtful];
   # GitHub PAT
   "gh.age".publicKeys = allUsers ++ allSystems;
+  # washing-machien env (IDENTIFIER + APP_PASSWORD for bsky avatar spinning)
+  "washing-machien.age".publicKeys = allUsers ++ [systems.thoughtful];
 
   # Add more secrets here as needed:
   # "example.age".publicKeys = allUsers ++ allSystems;
