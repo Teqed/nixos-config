@@ -186,7 +186,7 @@ in {
       enable = false;
       openFirewall = true;
     };
-    qdrant.enable = true;
+    qdrant.enable = false;
     nix-serve = {
       enable = true;
       secretKeyFile = "/var/lib/nix-serve/cache-priv-key.pem";
