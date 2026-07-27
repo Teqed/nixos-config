@@ -1,0 +1,234 @@
+diff --git a/src/main.rs b/src/main.rs
+index 120fa2681d..17f5841ed2 100644
+--- a/src/main.rs
++++ b/src/main.rs
+@@ -5,24 +5,24 @@
+ };
+ use jacquard::{
+     api::app_bsky::actor::profile::Profile,
+-    client::{
+-        Agent, AgentSessionExt, AtpSession, MemoryCredentialSession, MemorySessionStore,
+-        credential_session::{CredentialSession, SessionKey},
+-    },
++    client::{Agent, AgentSessionExt, AtpSession, FileAuthStore, credential_session::CredentialSession},
+     cowstr::ToCowStr,
+     identity::JacquardResolver,
+-    types::{aturi::AtUri, blob::MimeType},
++    types::{aturi::AtUri, blob::MimeType, did::Did},
+ };
+ use sha2::{Digest, Sha256};
+ use std::{
+     env,
+     io::Cursor,
+     process,
++    sync::Arc,
+     time::{SystemTime, UNIX_EPOCH},
+ };
+ 
+-type AgentType =
+-    Agent<CredentialSession<MemorySessionStore<SessionKey, AtpSession>, JacquardResolver>>;
++type SessionType = CredentialSession<FileAuthStore, JacquardResolver>;
++type AgentType = Agent<SessionType>;
++
++const SESSION_ID: &str = "session";
+ 
+ fn write_state(state_file: &str, angle: i32) {
+     std::fs::write(state_file, angle.to_string()).unwrap_or_else(|e| {
+@@ -37,6 +37,12 @@
+     Some(angle)
+ }
+ 
++fn read_did(did_file: &str) -> Option<String> {
++    let contents = std::fs::read_to_string(did_file).ok()?;
++    let did = contents.trim().to_string();
++    if did.is_empty() { None } else { Some(did) }
++}
++
+ fn print_usage(executable: &str) {
+     eprintln!("usage: {} <input> [output]", executable);
+     eprintln!("environment variables:");
+@@ -98,13 +104,50 @@
+     rotated
+ }
+ 
+-async fn update_avatar(image: image::RgbaImage, agent: &AgentType, format: &image::ImageFormat) {
++fn new_session(auth_file: &str) -> SessionType {
++    let store = FileAuthStore::new(auth_file);
++
++    #[cfg(unix)]
++    {
++        use std::os::unix::fs::PermissionsExt;
++        let _ = std::fs::set_permissions(auth_file, std::fs::Permissions::from_mode(0o600));
++    }
++
++    CredentialSession::new(Arc::new(store), Arc::new(JacquardResolver::default()))
++}
++
++async fn login(session: &SessionType, identifier: &str, password: &str, did_file: &str) -> AtpSession {
++    let auth = session
++        .login(
++            identifier.to_cowstr(),
++            password.to_cowstr(),
++            Some(SESSION_ID.to_cowstr()),
++            None,
++            None,
++            None,
++        )
++        .await
++        .unwrap_or_else(|e| {
++            eprintln!("authentication failed: {}", e);
++            process::exit(1);
++        });
++
++    let _ = std::fs::write(did_file, auth.did.as_str());
++
++    println!("authenticated as {}, hi!", auth.handle);
++    auth
++}
++
++async fn update_avatar(
++    image: image::RgbaImage,
++    agent: &AgentType,
++    format: &image::ImageFormat,
++) -> Result<(), String> {
+     let mut buf = Cursor::new(Vec::new());
+     let dyn_img = DynamicImage::ImageRgba8(image);
+-    dyn_img.write_to(&mut buf, *format).unwrap_or_else(|e| {
+-        eprintln!("failed to encode image into {:?}: {}", format, e);
+-        process::exit(1);
+-    });
++    dyn_img
++        .write_to(&mut buf, *format)
++        .map_err(|e| format!("failed to encode image into {:?}: {}", format, e))?;
+     let encoded_bytes = buf.into_inner();
+ 
+     let format_string = format!("{:?}", format);
+@@ -114,10 +157,7 @@
+     let blob = agent
+         .upload_blob(encoded_bytes, mime)
+         .await
+-        .unwrap_or_else(|e| {
+-            eprintln!("failed to upload avatar blob: {}", e);
+-            process::exit(1);
+-        });
++        .map_err(|e| format!("failed to upload avatar blob: {}", e))?;
+ 
+     let did = agent.info().await.unwrap().0;
+     let at_uri = AtUri::new_owned(format!("at://{}/app.bsky.actor.profile/self", did)).unwrap();
+@@ -127,12 +167,10 @@
+             profile.avatar = Some(blob.into());
+         })
+         .await
+-        .unwrap_or_else(|e| {
+-            eprintln!("failed to update profile: {}", e);
+-            process::exit(1);
+-        });
++        .map_err(|e| format!("failed to update profile: {}", e))?;
+ 
+     println!("successfully updated avatar");
++    Ok(())
+ }
+ 
+ fn env(var: &str, default: Option<&str>, exe: &str) -> String {
+@@ -190,21 +228,18 @@
+     let identifier = env("IDENTIFIER", None, &executable);
+     let bg_color = env("BACKGROUND", Some("00000000"), &executable);
+     let state_file = env("STATE_FILE", Some("/tmp/washing-machien"), &executable);
+-
+-    let (session, auth) = MemoryCredentialSession::authenticated(
+-        identifier.to_cowstr(),
+-        app_password.to_cowstr(),
+-        None,
+-        None,
+-    )
+-    .await
+-    .unwrap_or_else(|e| {
+-        eprintln!("authentication failed: {}", e);
+-        process::exit(1);
+-    });
+-
+-    let agent: Agent<_> = Agent::from(session);
+-    println!("authenticated as {}, hi!", auth.handle);
++    let auth_file_default = format!("{}.auth", state_file);
++    let auth_file = env("AUTH_FILE", Some(&auth_file_default), &executable);
++    let did_file = format!("{}.did", auth_file);
++
++    let cached_did = read_did(&did_file);
++    if let Some(did) = &cached_did {
++        let angle = compute_angle(did);
++        if read_state(&state_file) == Some(angle) {
++            println!("profile picture is already at {} degrees", angle);
++            return;
++        }
++    }
+ 
+     let input_path = input;
+     let reader = ImageReader::open(&input_path).unwrap_or_else(|e| {
+@@ -221,7 +256,38 @@
+         process::exit(1);
+     });
+ 
+-    let angle = compute_angle(&auth.did);
++    let session = new_session(&auth_file);
++    let mut restored = false;
++    let did = match &cached_did {
++        Some(d) => match Did::new(d.as_str()) {
++            Ok(did_ref) => match session.restore(did_ref, SESSION_ID.to_cowstr()).await {
++                Ok(()) => {
++                    restored = true;
++                    println!("restored cached session, hi!");
++                    d.clone()
++                }
++                Err(e) => {
++                    eprintln!("could not restore session ({}), logging in", e);
++                    login(&session, &identifier, &app_password, &did_file)
++                        .await
++                        .did
++                        .to_string()
++                }
++            },
++            Err(_) => {
++                login(&session, &identifier, &app_password, &did_file)
++                    .await
++                    .did
++                    .to_string()
++            }
++        },
++        None => login(&session, &identifier, &app_password, &did_file)
++            .await
++            .did
++            .to_string(),
++    };
++
++    let angle = compute_angle(&did);
+     if let Some(prev) = read_state(&state_file) {
+         if prev == angle {
+             println!("profile picture is already at {} degrees", angle);
+@@ -238,6 +304,25 @@
+         });
+     }
+ 
+-    update_avatar(rotated, &agent, &mime_type).await;
+-    write_state(&state_file, angle);
++    let agent: AgentType = Agent::from(session);
++    match update_avatar(rotated.clone(), &agent, &mime_type).await {
++        Ok(()) => write_state(&state_file, angle),
++        Err(e) if restored => {
++            eprintln!("{}", e);
++            let session = new_session(&auth_file);
++            login(&session, &identifier, &app_password, &did_file).await;
++            let agent: AgentType = Agent::from(session);
++            match update_avatar(rotated, &agent, &mime_type).await {
++                Ok(()) => write_state(&state_file, angle),
++                Err(e) => {
++                    eprintln!("{}", e);
++                    process::exit(1);
++                }
++            }
++        }
++        Err(e) => {
++            eprintln!("{}", e);
++            process::exit(1);
++        }
++    }
+ }

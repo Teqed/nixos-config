@@ -127,6 +127,9 @@ in {
   # https://tangled.org/coil-habdle.ebil.club/washing-machien
   services.washing-machien = {
     enable = true;
+    package = inputs.washing-machien.packages.${pkgs.stdenv.hostPlatform.system}.washing-machien.overrideAttrs (old: {
+      patches = (old.patches or []) ++ [../patches/washing-machien-session-cache.patch];
+    });
     input = ./assets/washing-machien-avatar.jpg;
     environmentFile = config.age.secrets."washing-machien".path;
   };
