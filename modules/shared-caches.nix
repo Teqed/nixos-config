@@ -8,7 +8,6 @@
     "https://attic.xuyh0120.win/lantian?priority=40" # CachyOS kernel
     "https://claude-code.cachix.org?priority=50" # Claude code
     "https://nixpkgs-unfree.cachix.org?priority=70" # Unfree packages
-    "https://cache.garnix.io?priority=90" # Garnix CI
     "https://ghostty.cachix.org?priority=55" # Ghostty (tip builds)
   ];
 
@@ -20,7 +19,6 @@
     "lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc="
     "claude-code.cachix.org-1:YeXf2aNu7UTX8Vwrze0za1WEDS+4DuI2kVeWEE4fsRk="
     "nixpkgs-unfree.cachix.org-1:hqvoInulhbV4nJ9yJOEr+4wxhDV4xq2d1DK7S6Nj6rs="
-    "cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g="
     "ghostty.cachix.org-1:QB389yTa6gTyneehvqG58y0WnHjQOqgnA+wBnpWWxns="
   ];
 
