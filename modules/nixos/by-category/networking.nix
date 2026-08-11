@@ -5,6 +5,11 @@
   ...
 }: let
   inherit (lib) mkDefault;
+  mosh-clean = pkgs.writeShellApplication {
+    name = "mosh-clean";
+    runtimeInputs = with pkgs; [coreutils procps gnugrep gnused];
+    text = builtins.readFile ../../../pkgs/scripts/src/mosh-clean.sh;
+  };
 in {
   config = lib.mkIf config.teq.nixos.enable {
     services = {
@@ -39,6 +44,7 @@ in {
       [
         waypipe # Wayland forwarding over SSH — useful on both ends
         cifs-utils # mount.cifs, CLI-usable
+        mosh-clean # kill orphaned mosh-server sessions
       ]
       ++ lib.optionals config.teq.nixos.gui.enable [
         openfortivpn
