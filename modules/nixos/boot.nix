@@ -66,6 +66,7 @@ in {
     services.scx.scheduler = "scx_lavd";
     services.irqbalance.enable = lib.mkDefault true;
     services.ananicy.enable = true;
+    services.ananicy.package = pkgs.ananicy-cpp; # pkgs.ananicy was removed (archived upstream)
     services.ananicy.rulesProvider = pkgs.ananicy-rules-cachyos;
   };
 }
