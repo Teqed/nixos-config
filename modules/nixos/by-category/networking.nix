@@ -10,6 +10,11 @@
     runtimeInputs = with pkgs; [coreutils procps gnugrep gnused];
     text = builtins.readFile ../../../pkgs/scripts/src/mosh-clean.sh;
   };
+  peer-sync = pkgs.writeShellApplication {
+    name = "peer-sync";
+    runtimeInputs = with pkgs; [coreutils rsync openssh];
+    text = builtins.readFile ../../../pkgs/scripts/src/peer-sync.sh;
+  };
 in {
   config = lib.mkIf config.teq.nixos.enable {
     services = {
@@ -45,6 +50,7 @@ in {
         waypipe # Wayland forwarding over SSH — useful on both ends
         cifs-utils # mount.cifs, CLI-usable
         mosh-clean # kill orphaned mosh-server sessions
+        peer-sync # two-way newest-wins sync of selected dirs (FTL saves etc.)
       ]
       ++ lib.optionals config.teq.nixos.gui.enable [
         openfortivpn
