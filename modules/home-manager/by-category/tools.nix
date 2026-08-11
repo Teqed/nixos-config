@@ -67,6 +67,7 @@
       fd.enable = lib.mkDefault true;
       zoxide.enable = lib.mkDefault true;
       fzf.enable = lib.mkDefault true;
+      fzf.historyWidget.command = ""; # atuin owns Ctrl-R; keep fzf's Ctrl-T/Alt-C
       skim = {
         enable = lib.mkDefault true;
       };
