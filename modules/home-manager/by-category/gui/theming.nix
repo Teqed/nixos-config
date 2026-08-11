@@ -7,6 +7,7 @@
   config = lib.mkIf config.teq.home-manager.gui {
     home = {
       pointerCursor = {
+        enable = true;
         name = lib.mkDefault "Bibata-Modern-Classic";
         package = lib.mkDefault pkgs.bibata-cursors;
         gtk.enable = lib.mkDefault true;
