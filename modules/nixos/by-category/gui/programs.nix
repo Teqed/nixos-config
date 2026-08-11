@@ -193,6 +193,9 @@ in {
         openFirewall = lib.mkDefault true;
         capSysAdmin = lib.mkDefault true;
       };
+      udev.extraRules = ''
+        KERNEL=="uhid", TAG+="uaccess"
+      ''; # Sunshine DualSense (DS5) gamepad emulation needs /dev/uhid; grants the active seat user access
       xrdp = {
         enable = lib.mkDefault true;
         openFirewall = lib.mkDefault true;
