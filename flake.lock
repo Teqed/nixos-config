@@ -68,11 +68,11 @@
         "systems": "systems_2"
       },
       "locked": {
-        "lastModified": 1787342590,
-        "narHash": "sha256-/eBYWSQ077ris4qTPBPMPr1ySDQc61+oXPU6s7fB9Ts=",
+        "lastModified": 1787448531,
+        "narHash": "sha256-XL0bbQUXgB5TXKWUBzAVxbNwsoII/XQmuHpwqaRI6OQ=",
         "owner": "sadjow",
         "repo": "claude-code-nix",
-        "rev": "7bcfdf12020b049dd8fa0fcaf069ef2c531de405",
+        "rev": "a652fdf13cf7ac39be23fafbca3e1d6290eff001",
         "type": "github"
       },
       "original": {
@@ -294,11 +294,11 @@
         "zon2nix": "zon2nix"
       },
       "locked": {
-        "lastModified": 1787371807,
-        "narHash": "sha256-4RJhvai5ZJwVoGMblqYwZ+xBfLkGMH0PjkkkQ0c54EU=",
+        "lastModified": 1787418429,
+        "narHash": "sha256-uIXlTqSnUfqY4+PB94UWRB9PO0E9FYFqb/iJnsRLdCM=",
         "owner": "ghostty-org",
         "repo": "ghostty",
-        "rev": "36676c5728b626738ed73d288145c50a5494971e",
+        "rev": "da5ddcb0857c0e4ddb32f7a089911e9038d040f3",
         "type": "github"
       },
       "original": {
@@ -576,11 +576,11 @@
         "nixpkgs": "nixpkgs_4"
       },
       "locked": {
-        "lastModified": 1787248950,
-        "narHash": "sha256-eq5FwprGyjytM68pitTTFT3fi0cSsF1M6v7h3rdcqj0=",
+        "lastModified": 1787421204,
+        "narHash": "sha256-8Tlb8D07EvNJ37S7wPYn/+lZ/eBRIvfLvrne3pvjd2A=",
         "owner": "xddxdd",
         "repo": "nix-cachyos-kernel",
-        "rev": "c69c33c24148defbcc34ab25456cc460bc33fdbb",
+        "rev": "8b175fd266e94395ee7b1edc4578f7c8ecc74626",
         "type": "github"
       },
       "original": {
@@ -612,11 +612,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1786852476,
-        "narHash": "sha256-IM5CYtf86W4w8eUPpKcY/LpdHElmVBtJhaKnoTKxZEA=",
+        "lastModified": 1787457452,
+        "narHash": "sha256-FJh4esFS3zqNNuKwvN3t6wrJGewqp1AUF9DAEvoKPD8=",
         "owner": "nix-community",
         "repo": "nix-index-database",
-        "rev": "c7962dc97b45129df8d751bedaf37beb5a17706e",
+        "rev": "c51d5c2ba69c907a34e90c9b6b80cd2b93811745",
         "type": "github"
       },
       "original": {
@@ -706,11 +706,11 @@
     },
     "nixpkgs_4": {
       "locked": {
-        "lastModified": 1787234702,
-        "narHash": "sha256-kvsnFCG4T5dmUj7BMcmpuPZjZNSjOZfhXUdjiBQG2xk=",
+        "lastModified": 1787374233,
+        "narHash": "sha256-VZY8AkhbcDhxBSXsdUlHK7oS8ez5nJ2vzYzkkNI35ok=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "5cca3a89405eb65d2adb43754c2af8dac7b6f2e1",
+        "rev": "731960f9bf65e7df135092590b2aa2f1407dcf0f",
         "type": "github"
       },
       "original": {
@@ -735,11 +735,11 @@
     },
     "nixpkgs_6": {
       "locked": {
-        "lastModified": 1787135253,
-        "narHash": "sha256-RD2kNWCG+Bjo6h+JVjWVNntZs2GtRoeY2xHjts/FNkA=",
+        "lastModified": 1787360063,
+        "narHash": "sha256-dt4WdcvsA8/RCe+VZZwqU0X+XMM3wBbGCWA0/sFWzGo=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "ffb3c9b700e759be2ef13237c9d8f953b32a1e46",
+        "rev": "2c423e03bbafcff28bfadc6781a4a8257f205cb5",
         "type": "github"
       },
       "original": {
@@ -865,11 +865,11 @@
         "nixpkgs": "nixpkgs_7"
       },
       "locked": {
-        "lastModified": 1787367552,
-        "narHash": "sha256-YT4Fs2k7bi+7YzuLt93EtIRgjpwHK5ZfsQEIh5dEQSk=",
+        "lastModified": 1787454509,
+        "narHash": "sha256-r4LDUF+zmJnkftvCVkCrUhSJazsf6EVJF+V2l4/MYbI=",
         "owner": "oxalica",
         "repo": "rust-overlay",
-        "rev": "fd2ebb9cc4323d0c5a1336138dab5c3c5a5d8bd9",
+        "rev": "f60c1b57ff805a46b5175c76fc981fb4f81efbcc",
         "type": "github"
       },
       "original": {
@@ -1003,11 +1003,11 @@
         "tailwindcss-animated-src": "tailwindcss-animated-src"
       },
       "locked": {
-        "lastModified": 1787328450,
-        "narHash": "sha256-+dpmUm7A/DBxsFE81KedpiE5d6a4Iylr78zZ9TIQuc4=",
+        "lastModified": 1787460526,
+        "narHash": "sha256-AX2GZGRmM1tiWP36ir9n+Bb721Ns9hn9aOGt31vwVdU=",
         "ref": "refs/heads/master",
-        "rev": "ebeb68adcb16005b9a459786266adb100987e706",
-        "revCount": 3133,
+        "rev": "c986c0b68d53812f891951ed1be57357ca881bce",
+        "revCount": 3134,
         "type": "git",
         "url": "https://tangled.org/@tangled.org/core"
       },
