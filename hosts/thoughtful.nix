@@ -123,6 +123,45 @@ in {
     file = ../secrets/washing-machien.age;
   };
 
+  services.moonshine = {
+    enable = true;
+    user = "teq";
+    firewallInterfaces = ["tailscale0"];
+    settings = {
+      name = "thoughtful (moonshine)";
+      address = "0.0.0.0";
+      webserver = {
+        port = 48989;
+        port_https = 48984;
+        certificate = "$HOME/.config/moonshine/cert.pem";
+        private_key = "$HOME/.config/moonshine/key.pem";
+      };
+      stream = {
+        port = 49010;
+        video.port = 48998;
+        control.port = 48999;
+        audio.port = 49000;
+      };
+      application = [
+        {
+          title = "Steam Big Picture";
+          command = ["/run/current-system/sw/bin/steam" "steam://open/bigpicture"];
+        }
+      ];
+      application_scanner = [
+        {
+          type = "steam";
+          library = "$HOME/.local/share/Steam";
+          command = [
+            "/run/current-system/sw/bin/steam"
+            "-bigpicture"
+            "steam://rungameid/{game_id}"
+          ];
+        }
+      ];
+    };
+  };
+
   # puts u in dhe washing machein
   # https://tangled.org/coil-habdle.ebil.club/washing-machien
   services.washing-machien = {
