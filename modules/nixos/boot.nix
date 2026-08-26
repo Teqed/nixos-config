@@ -62,11 +62,6 @@ in {
     boot.kernel.sysctl = {
       "vm.max_map_count" = 2147483642; # Required for some games
     };
-    services.scx.enable = lib.mkDefault true; # by default uses scx_rustland scheduler
-    services.scx.scheduler = "scx_lavd";
     services.irqbalance.enable = lib.mkDefault true;
-    services.ananicy.enable = true;
-    services.ananicy.package = pkgs.ananicy-cpp; # pkgs.ananicy was removed (archived upstream)
-    services.ananicy.rulesProvider = pkgs.ananicy-rules-cachyos;
   };
 }
