@@ -86,7 +86,6 @@ in {
         gtk2
         gtk3 # screeps
         libGL # Required by steam with proper errors
-        libappindicator-gtk2
         libappindicator-gtk3
         libx11 # Required by steam with proper errors
         libxscrnsaver # Dead Cells
@@ -143,7 +142,8 @@ in {
         file # called by steam's setup.sh
 
         # Without these it silently fails
-        gnome2.GConf
+        # gnome2.GConf dropped: removed from nixpkgs as long-deprecated upstream,
+        # with no replacement (gsettings/dconf are the modern equivalents).
         curlWithGnuTls
         libcap
         SDL2
@@ -178,8 +178,12 @@ in {
         SDL_mixer
         SDL2_ttf
         SDL2_mixer
-        libdbusmenu-gtk2
-        libindicator-gtk2
+        # GTK 2 variants of these were removed from nixpkgs alongside the deprecated
+        # GTK 2 engine; only the GTK 3 builds remain. Note the sonames differ
+        # (libdbusmenu-gtk3.so.4 vs libdbusmenu-gtk.so.4), so a genuinely GTK 2
+        # binary is not satisfied by these -- there is simply no longer an option.
+        libdbusmenu-gtk3
+        libindicator-gtk3
         libcaca
         libcanberra
         libgcrypt

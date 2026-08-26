@@ -16,7 +16,6 @@
   wrapGAppsHook3,
   # runtime libs (Electron / Chromium)
   glib,
-  glibc,
   nss,
   nspr,
   atk,
@@ -37,6 +36,7 @@
   libnotify,
   libpulseaudio,
   libGL,
+  libva,
   xdg-utils,
   # bundled virtiofsd (Cowork VM)
   libseccomp,
@@ -56,11 +56,11 @@
   qemu,
 }: let
   pname = "claude-desktop";
-  version = "1.18286.0";
+  version = "1.37937.1";
 
   src = fetchurl {
     url = "https://downloads.claude.ai/claude-desktop/apt/stable/pool/main/c/claude-desktop/claude-desktop_${version}_amd64.deb";
-    hash = "sha256-jzFK0agKq1JxGo6qvAaq5I+zQfCt6koNcmTbXKudBTY=";
+    hash = "sha256-ZrvGHdBGS1UMTWOBJSARnoNEtGJUHeRHlzUriRiEL08=";
   };
 
   # Runtime PATH additions. xdg-utils gives xdg-open for external links;
@@ -82,7 +82,6 @@ in
 
     buildInputs = [
       glib
-      glibc
       nss
       nspr
       atk
@@ -103,6 +102,7 @@ in
       libnotify
       libpulseaudio
       libGL
+      libva
       libseccomp
       libcap_ng
       libx11
@@ -148,8 +148,11 @@ in
       makeWrapper $out/lib/claude-desktop/claude-desktop $out/bin/claude-desktop \
         "''${gappsWrapperArgs[@]}" \
         --prefix PATH : "${runtimePath}" \
-        --prefix LD_LIBRARY_PATH : "${lib.makeLibraryPath [libGL mesa]}" \
+        --prefix LD_LIBRARY_PATH : "${lib.makeLibraryPath [libGL mesa libva]}" \
         --add-flags "--disable-setuid-sandbox" \
+        --add-flags "--ozone-platform-hint=auto" \
+        --add-flags "--enable-features=WaylandWindowDecorations" \
+        --add-flags "--enable-wayland-ime=true" \
         --set-default ELECTRON_FORCE_IS_PACKAGED 1
 
       runHook postInstall
