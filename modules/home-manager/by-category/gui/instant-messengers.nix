@@ -8,7 +8,7 @@
     home.packages = with pkgs; [
       (symlinkJoin {
         name = "vesktop-vaapi";
-        paths = [vesktop];
+        paths = [(vesktop.override {withTTS = config.teq.home-manager.tts;})];
         nativeBuildInputs = [makeWrapper];
         postBuild = ''
           wrapProgram $out/bin/vesktop \

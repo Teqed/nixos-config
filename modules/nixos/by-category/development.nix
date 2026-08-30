@@ -41,6 +41,7 @@
         enable = lib.mkDefault true;
         binfmt = lib.mkDefault true; # NixOS-specific option
       };
+      adb.enable = lib.mkDefault true;
       ### version-management
       git.enable = lib.mkDefault true;
       # ecryptfs.enable = lib.mkDefault true; # Removed from nixpkgs
@@ -63,7 +64,7 @@
         dbeaver-bin
       ];
     virtualisation.docker.enable = true;
-    users.users.teq.extraGroups = ["docker"];
+    users.users.teq.extraGroups = ["docker" "adbusers"];
     # Match the storage driver to the host's root filesystem; the btrfs
     # graphdriver fails to initialize on ext4 hosts (impermanence.btrfs = false).
     virtualisation.docker.storageDriver =

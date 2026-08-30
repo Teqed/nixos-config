@@ -16,6 +16,7 @@ in {
     enable = lib.mkEnableOption "Enable Teq's Home-Manager configuration defaults.";
     gui = lib.mkEnableOption "Enable GUI configuration.";
     dev = lib.mkEnableOption "Enable development toolchains and dev-adjacent tools.";
+    tts = lib.mkEnableOption "Enable speech synthesis (speech-dispatcher).";
   };
   config = lib.mkIf config.teq.home-manager.enable {
     home.stateVersion = "24.05"; # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion

@@ -38,6 +38,7 @@
       };
       firefox = {
         enable = true;
+        package = pkgs.firefox.override {cfg.speechSynthesisSupport = config.teq.home-manager.tts;};
         configPath = "${config.xdg.configHome}/mozilla/firefox";
         nativeMessagingHosts = [
           # pkgs.tridactyl
