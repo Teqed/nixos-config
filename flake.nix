@@ -283,6 +283,7 @@ The starlight on the Western Seas.
           overlays = [
             claude-code.overlays.default
             inputs.prime-agent.overlays.default
+            self.overlays.prime-agent-tweaks
           ];
         }; # Home-manager requires 'pkgs' instance
         extraSpecialArgs = {inherit inputs outputs;};

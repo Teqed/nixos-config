@@ -40,6 +40,7 @@ in {
           outputs.overlays.modifications
           inputs.claude-code.overlays.default
           inputs.prime-agent.overlays.default
+          outputs.overlays.prime-agent-tweaks
 
           # You can also add overlays exported from other flakes:
           # neovim-nightly-overlay.overlays.default
