@@ -85,9 +85,7 @@ in {
           experimental-features = mkDefault [
             "nix-command"
             "flakes"
-            "ca-derivations"
-            "recursive-nix"
-            "auto-allocate-uids"
+            "auto-allocate-uids" # Paired with auto-allocate-uids = true below
           ];
           accept-flake-config = mkDefault true; # Whether to accept nix configuration from a flake without prompting.
           allow-dirty = mkDefault true; # Whether to allow dirty Git/Mercurial trees.
