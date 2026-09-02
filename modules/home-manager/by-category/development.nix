@@ -11,6 +11,7 @@ in {
     (lib.mkIf config.teq.home-manager.enable {
       home.packages = with pkgs; [
         claude-code
+        prime-agent
         lazygit # small Go TUI for git
         jujutsu # jj VCS
         jjui

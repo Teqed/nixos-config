@@ -53,6 +53,10 @@ The starlight on the Western Seas.
     # parakeet.url = "git+https://tangled.sh/@quilling.dev/parakeet?rev=3f1dcc059ddc28d94caea58076458c11dfd9e6db";
     # parakeet.url = "git+file:///home/teq/.local/user-dirs/Repos/parakeet";
     claude-code.url = "github:sadjow/claude-code-nix";
+    prime-agent = {
+      url = "github:johnrichardrinehart/prime-agent-nix";
+      inputs.nixpkgs.follows = "nixpkgs"; # No upstream cache; build against our nixpkgs
+    };
     vpn-confinement.url = "github:Maroka-chan/VPN-Confinement";
     agenix = {
       url = "github:ryantm/agenix";
@@ -276,6 +280,10 @@ The starlight on the Western Seas.
         pkgs = import nixpkgs {
           system = "x86_64-linux";
           config.allowUnfree = true;
+          overlays = [
+            claude-code.overlays.default
+            inputs.prime-agent.overlays.default
+          ];
         }; # Home-manager requires 'pkgs' instance
         extraSpecialArgs = {inherit inputs outputs;};
         modules = [
