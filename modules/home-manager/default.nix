@@ -6,6 +6,7 @@ fromFlakes: let
     programs_gui_editors = import ./by-category/gui/editors.nix;
     programs_gui_fontconfig = import ./by-category/gui/fontconfig.nix;
     programs_gui_instant-messengers = import ./by-category/gui/instant-messengers.nix;
+    programs_gui_remote-open = import ./by-category/gui/remote-open.nix;
     programs_gui_terminal-emulators = import ./by-category/gui/terminal-emulators.nix;
     programs_gui_theming = import ./by-category/gui/theming.nix;
     programs_development = import ./by-category/development.nix;

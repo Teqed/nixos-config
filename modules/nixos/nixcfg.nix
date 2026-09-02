@@ -21,6 +21,7 @@ in {
   };
   config = lib.mkIf config.teq.nixos.enable ({
       system.stateVersion = lib.mkOverride 1100 "24.05"; # Weak fallback; hosts/profiles (e.g. the ISO) may mkDefault their own. https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
+      environment.enableAllTerminfo = mkDefault true;
       nixpkgs = {
         config = {
           # allowBroken = true;

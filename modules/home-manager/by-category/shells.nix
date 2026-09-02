@@ -219,6 +219,25 @@ in {
         enable = lib.mkDefault true;
         interactiveShellInit = ''
           set fish_greeting # Disable greeting
+          if not set -q COLORTERM
+            switch $TERM
+              case xterm-ghostty xterm-kitty wezterm '*-256color' '*-direct'
+                set -gx COLORTERM truecolor
+            end
+          end
+          if not set -q REMOTE_SEAT; and not set -q SSH_CONNECTION; and set -q WAYLAND_DISPLAY
+            set -gx REMOTE_SEAT (uname -n)
+          end
+          if set -q SSH_CONNECTION; and set -q WAYLAND_DISPLAY
+            set -gx XDG_SESSION_TYPE wayland
+            set -gx XDG_CURRENT_DESKTOP kde
+            set -gx XDG_SESSION_DESKTOP kde
+            set -gx DESKTOP_SESSION plasma
+            set -gx KDE_SESSION_VERSION 6
+            set -gx KDE_FULL_SESSION true
+            set -gx _JAVA_AWT_WM_NONREPARENTING 1
+            set -gx QT_WAYLAND_RECONNECT 1
+          end
         '';
         # loginShellInit = "";
         # shellInit = "";

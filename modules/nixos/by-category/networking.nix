@@ -15,6 +15,70 @@
     runtimeInputs = with pkgs; [coreutils rsync openssh];
     text = builtins.readFile ../../../pkgs/scripts/src/peer-sync.sh;
   };
+  seatDiscovery = ''
+    seat="''${REMOTE_SEAT:-}"
+    if [ -z "$seat" ] && [ -n "''${SSH_CONNECTION:-}" ]; then
+      seat="''${SSH_CONNECTION%% *}"
+    fi
+    case "$seat" in *:*) seat="[$seat]" ;; esac # IPv6 literal
+  '';
+  inSshSession = ''[ -n "''${SSH_CONNECTION:-}''${SSH_TTY:-}''${SSH_CLIENT:-}" ]'';
+  xdg-open-remote = pkgs.writeShellApplication {
+    name = "xdg-open";
+    runtimeInputs = with pkgs; [coreutils gnused socat];
+    text = ''
+      ${seatDiscovery}
+      if [ "''${REMOTE_OPEN:-1}" != 0 ] && [ -n "$seat" ] && ${inSshSession}; then
+        case "''${1:-}" in
+          http://* | https://*)
+            url="$(printf '%s' "$1" | sed -E "s#^(https?://)(localhost|127\.0\.0\.1)(:|/|$)#\1$(uname -n)\3#")"
+            if printf '%s\n' "$url" | socat -u -T5 - "TCP:$seat:46521,connect-timeout=2"; then
+              exit 0
+            fi
+            ;;
+        esac
+      fi
+      exec ${pkgs.xdg-utils}/bin/xdg-open "$@"
+    '';
+  };
+  pbcopy = pkgs.writeShellApplication {
+    name = "pbcopy";
+    runtimeInputs = with pkgs; [coreutils socat wl-clipboard];
+    text = ''
+      ${seatDiscovery}
+      if [ "''${REMOTE_OPEN:-1}" != 0 ] && [ -n "$seat" ] && ${inSshSession}; then
+        if socat -u -T10 - "TCP:$seat:46522,connect-timeout=2"; then
+          exit 0
+        fi
+      fi
+      if [ -n "''${WAYLAND_DISPLAY:-}" ]; then
+        exec wl-copy
+      fi
+      if [ -w /dev/tty ]; then
+        printf '\033]52;c;%s\007' "$(base64 -w0)" > /dev/tty
+        exit 0
+      fi
+      echo "pbcopy: no clipboard target (no seat, Wayland, or tty)" >&2
+      exit 1
+    '';
+  };
+  pbpaste = pkgs.writeShellApplication {
+    name = "pbpaste";
+    runtimeInputs = with pkgs; [coreutils socat wl-clipboard];
+    text = ''
+      ${seatDiscovery}
+      if [ "''${REMOTE_OPEN:-1}" != 0 ] && [ -n "$seat" ] && ${inSshSession}; then
+        if socat -u -T10 "TCP:$seat:46523,connect-timeout=2" -; then
+          exit 0
+        fi
+      fi
+      if [ -n "''${WAYLAND_DISPLAY:-}" ]; then
+        exec wl-paste --no-newline
+      fi
+      echo "pbpaste: no clipboard source (no seat or Wayland)" >&2
+      exit 1
+    '';
+  };
 in {
   config = lib.mkIf config.teq.nixos.enable {
     services = {
@@ -27,7 +91,7 @@ in {
           PasswordAuthentication = mkDefault false; # disable password login
           StreamLocalBindUnlink = mkDefault "yes"; # Automatically remove stale sockets
           GatewayPorts = mkDefault "clientspecified"; # Allow forwarding ports to everywhere
-          AcceptEnv = mkDefault ["WAYLAND_DISPLAY"]; # Let WAYLAND_DISPLAY be forwarded
+          AcceptEnv = mkDefault ["WAYLAND_DISPLAY" "COLORTERM" "REMOTE_SEAT"]; # waypipe, truecolor, seat identity
         };
         openFirewall = mkDefault true;
       };
@@ -44,6 +108,9 @@ in {
     };
     programs = {
       mosh.enable = mkDefault true;
+      ssh.extraConfig = ''
+        SendEnv COLORTERM REMOTE_SEAT
+      '';
     };
     environment.systemPackages = with pkgs;
       [
@@ -51,6 +118,9 @@ in {
         cifs-utils # mount.cifs, CLI-usable
         mosh-clean # kill orphaned mosh-server sessions
         peer-sync # two-way newest-wins sync of selected dirs (FTL saves etc.)
+        (lib.hiPrio xdg-open-remote) # remote-open shim over xdg-utils' xdg-open
+        pbcopy # seat/local/OSC52 clipboard write
+        pbpaste # seat/local clipboard read
       ]
       ++ lib.optionals config.teq.nixos.gui.enable [
         openfortivpn
