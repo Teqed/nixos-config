@@ -79,11 +79,11 @@ in {
         # --out-link creates GC roots so closures stay alive for nix-serve to hand to clients.
         mkdir -p result-builds
         ${lib.concatMapStringsSep "\n" (h: ''
-          echo "::: building ${h}"
-          nix build .#nixosConfigurations.${h}.config.system.build.toplevel \
-            --out-link result-builds/${h} -L
-        '')
-        cfg.hosts}
+            echo "::: building ${h}"
+            nix build .#nixosConfigurations.${h}.config.system.build.toplevel \
+              --out-link result-builds/${h} -L
+          '')
+          cfg.hosts}
 
         # First push is required, rest are best-effort (mirrors that may be flaky).
         ${let

@@ -5,27 +5,29 @@
   ...
 }: {
   config = lib.mkIf config.teq.home-manager.enable {
-    home.packages = with pkgs; [
-      lsof # Lsof lists file information about files opened by processes
-      grc # Generic text colouriser
-      trash-cli
-      hyperfine # Command-line benchmarking tool
-      ### nix:
-      nix-output-monitor
-      nix-tree
-      ### filesystems:
-      sshfs # programs.sftpman ?
-      ### text:
-      colordiff
-      ### pagers:
-      most # Supports multiple windows and can scroll left and right. "Why settle for less?"
-      moor # Nice-to-use pager for humans
-      less # More advanced file pager than 'more'. Included by default
-      ov # Feature-rich terminal-based text viewer
-    ] ++ lib.optionals config.teq.home-manager.gui [
-      catimg # Insanely fast image printing in your terminal
-      chafa # Terminal graphics for the 21st century
-    ];
+    home.packages = with pkgs;
+      [
+        lsof # Lsof lists file information about files opened by processes
+        grc # Generic text colouriser
+        trash-cli
+        hyperfine # Command-line benchmarking tool
+        ### nix:
+        nix-output-monitor
+        nix-tree
+        ### filesystems:
+        sshfs # programs.sftpman ?
+        ### text:
+        colordiff
+        ### pagers:
+        most # Supports multiple windows and can scroll left and right. "Why settle for less?"
+        moor # Nice-to-use pager for humans
+        less # More advanced file pager than 'more'. Included by default
+        ov # Feature-rich terminal-based text viewer
+      ]
+      ++ lib.optionals config.teq.home-manager.gui [
+        catimg # Insanely fast image printing in your terminal
+        chafa # Terminal graphics for the 21st century
+      ];
     programs = {
       nix-index.enable = lib.mkDefault true; # integrate with shell's command-not-found functionality
       nix-index-database.comma.enable = lib.mkDefault true; # optional to also wrap and install comma

@@ -52,16 +52,18 @@ in {
         description = "Notify ntfy on failure of %i";
         serviceConfig = {
           Type = "oneshot";
-          ExecStart = pkgs.writeShellScript "notify-fail" ''
-            unit="$1"
-            host=$(${pkgs.nettools}/bin/hostname)
-            ${pkgs.curl}/bin/curl -fsS \
-              -H "Title: $host: $unit failed" \
-              -H "Priority: high" \
-              -H "Tags: warning,$host" \
-              -d "Check journalctl -u $unit on $host for details." \
-              ${cfg.url}/${cfg.topic} >/dev/null
-          '' + " %i";
+          ExecStart =
+            pkgs.writeShellScript "notify-fail" ''
+              unit="$1"
+              host=$(${pkgs.nettools}/bin/hostname)
+              ${pkgs.curl}/bin/curl -fsS \
+                -H "Title: $host: $unit failed" \
+                -H "Priority: high" \
+                -H "Tags: warning,$host" \
+                -d "Check journalctl -u $unit on $host for details." \
+                ${cfg.url}/${cfg.topic} >/dev/null
+            ''
+            + " %i";
         };
       };
     })

@@ -2,7 +2,8 @@
   # inputs,
   lib,
   config,
-  osConfig,
+  pkgs,
+  osConfig ? null,
   outputs,
   ...
 }:
@@ -44,8 +45,10 @@ in {
     };
     # nixpkgs config disabled when using home-manager.useGlobalPkgs
     nix = {
-      registry = osConfig.nix.registry;
-      nixPath = osConfig.nix.nixPath;
+      package = mkDefault pkgs.nix; # Required in standalone home-manager
+      # osConfig is null in standalone home-manager; mkDefault avoids ISO conflict
+      registry = lib.mkIf (osConfig != null) (mkDefault osConfig.nix.registry);
+      nixPath = lib.mkIf (osConfig != null) osConfig.nix.nixPath;
 
       # channel.enable = false; # Opinionated: disable channels # Only available in NixOS
       gc = {

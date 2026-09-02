@@ -275,12 +275,18 @@ The starlight on the Western Seas.
     homeConfigurations = {
       # home-manager --flake .#teq@somewhere
       "teq@somewhere" = home-manager.lib.homeManagerConfiguration {
-        pkgs = nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
+        pkgs = import nixpkgs {
+          system = "x86_64-linux";
+          config.allowUnfree = true;
+        }; # Home-manager requires 'pkgs' instance
         extraSpecialArgs = {inherit inputs outputs;};
         modules = [
           self.homeManagerModules.default # My custom modules
           nix-index-database.homeModules.nix-index # nix-index-database (renamed from hmModules)
+          plasma-manager.homeModules.plasma-manager # plasma-manager (renamed from homeManagerModules)
           {
+            home.username = "teq";
+            home.homeDirectory = "/home/teq";
             teq.home-manager = {
               enable = true;
             };

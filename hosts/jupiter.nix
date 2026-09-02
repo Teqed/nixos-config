@@ -7,6 +7,8 @@
   ...
 }: let
   currentStateVersion = "24.05";
+  # Build with host pkgs so allowUnfree applies; the flake's own packages refuse unfree eval.
+  mkFoundry = pkgs: attrs: (pkgs.callPackage "${inputs.foundryvtt}/pkgs/foundryvtt" {}).overrideAttrs (old: old // attrs);
 in {
   imports = [
     ./profiles/common.nix
@@ -89,6 +91,7 @@ in {
     autoStart = true;
     config = {pkgs, ...}: {
       system.stateVersion = currentStateVersion;
+      nixpkgs.config.allowUnfree = true; # FoundryVTT src is unfree
       imports = [inputs.foundryvtt.nixosModules.foundryvtt];
       services.foundryvtt = {
         enable = true;
@@ -99,7 +102,10 @@ in {
         proxyPort = 443;
         proxySSL = true;
         upnp = false;
-        package = inputs.foundryvtt.packages.${pkgs.stdenv.hostPlatform.system}.foundryvtt_11;
+        package = mkFoundry pkgs {
+          majorVersion = "11";
+          releaseType = "stable";
+        };
       };
     };
   };
@@ -107,6 +113,7 @@ in {
     autoStart = true;
     config = {pkgs, ...}: {
       system.stateVersion = currentStateVersion;
+      nixpkgs.config.allowUnfree = true; # FoundryVTT src is unfree
       imports = [inputs.foundryvtt.nixosModules.foundryvtt];
       services.foundryvtt = {
         enable = true;
@@ -117,7 +124,10 @@ in {
         proxyPort = 443;
         proxySSL = true;
         upnp = false;
-        package = inputs.foundryvtt.packages.${pkgs.stdenv.hostPlatform.system}.foundryvtt_12;
+        package = mkFoundry pkgs {
+          majorVersion = "12";
+          releaseType = "stable";
+        };
       };
     };
   };
@@ -125,6 +135,7 @@ in {
     autoStart = true;
     config = {pkgs, ...}: {
       system.stateVersion = currentStateVersion;
+      nixpkgs.config.allowUnfree = true; # FoundryVTT src is unfree
       imports = [inputs.foundryvtt.nixosModules.foundryvtt];
       services.foundryvtt = {
         enable = true;
@@ -135,7 +146,10 @@ in {
         proxyPort = 443;
         proxySSL = true;
         upnp = false;
-        package = inputs.foundryvtt.packages.${pkgs.stdenv.hostPlatform.system}.foundryvtt_13;
+        package = mkFoundry pkgs {
+          majorVersion = "13";
+          releaseType = "stable";
+        };
       };
     };
   };

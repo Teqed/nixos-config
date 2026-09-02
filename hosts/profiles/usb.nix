@@ -1,6 +1,7 @@
 {
   modulesPath,
   pkgs,
+  lib,
   ...
 }:
 #  let
@@ -29,6 +30,9 @@
       max-free = ${toString (1024 * 1024 * 1024)}
     '';
     isoImage.edition = "plasma6";
+    services.openssh.settings.PermitRootLogin = lib.mkForce "yes"; # Live installer convention
+    # Avoid nixpkgs entry conflict between installer channel and flake-input registry
+    home-manager.sharedModules = [{nix.registry = lib.mkForce {};}];
     environment.systemPackages = with pkgs; [
       # using Qt5 builds of Maliit as upstream has not ported to Qt6 yet
       maliit-framework
