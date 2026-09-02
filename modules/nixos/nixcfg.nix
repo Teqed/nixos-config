@@ -123,11 +123,11 @@ in {
     # Retry transient failures (NixOS/nixpkgs#274146); idle so post-suspend wakes don't stall.
     systemd.services.nixos-upgrade = lib.mkIf config.system.autoUpgrade.enable {
       onFailure = lib.optional config.teq.nixos.notify.failureTemplate.enable "notify-fail@%n.service";
-      startLimitIntervalSec = 120;
+      startLimitIntervalSec = 3600;
       startLimitBurst = 6;
       serviceConfig = {
         Restart = "on-failure";
-        RestartSec = "20";
+        RestartSec = "60";
         CPUSchedulingPolicy = "idle";
         IOSchedulingClass = "idle";
       };
