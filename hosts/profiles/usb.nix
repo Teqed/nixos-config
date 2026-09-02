@@ -19,7 +19,6 @@
     # teq.nixos.impermanence.label_boot = label_boot;
     nix.optimise.automatic = true;
     nix.optimise.dates = ["03:45"];
-    nix.settings.auto-optimise-store = true;
     nix.gc = {
       automatic = true;
       dates = "daily";
@@ -30,6 +29,7 @@
       max-free = ${toString (1024 * 1024 * 1024)}
     '';
     isoImage.edition = "plasma6";
+    boot.zfs.forceImportRoot = false; # 26.11 default; live ISO has no ZFS root
     services.openssh.settings.PermitRootLogin = lib.mkForce "yes"; # Live installer convention
     # Avoid nixpkgs entry conflict between installer channel and flake-input registry
     home-manager.sharedModules = [{nix.registry = lib.mkForce {};}];

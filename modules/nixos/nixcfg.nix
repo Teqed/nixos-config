@@ -7,7 +7,7 @@
   ...
 }:
 with lib; let
-  flakeInputs = filterAttrs (_: isType "flake") inputs;
+  flakeInputs = filterAttrs (_: isType "flake") (removeAttrs inputs ["self"]);
   caches = import ../shared-caches.nix;
   defaultLang = "en_US.UTF-8";
   inherit (lib) mkDefault;
@@ -20,14 +20,13 @@ in {
     blocklist = lib.mkEnableOption "Enable host blocklist defaults.";
   };
   config = lib.mkIf config.teq.nixos.enable ({
-      system.stateVersion = "24.05"; # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
+      system.stateVersion = lib.mkOverride 1100 "24.05"; # Weak fallback; hosts/profiles (e.g. the ISO) may mkDefault their own. https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
       nixpkgs = {
         config = {
           # allowBroken = true;
           allowUnfree = true;
           # allowUnsupportedSystem = true;
           permittedInsecurePackages = [
-            "openssl-1.1.1w"
             # vesktop's build-time pnpm; runtime closure is unaffected. Drop after
             # the next nixpkgs bump moves vesktop's pnpmDeps off 10.29.2.
             "pnpm-10.29.2"
@@ -65,16 +64,23 @@ in {
           dates = mkDefault "weekly"; # Not present in home-manager
           options = mkDefault "--delete-older-than 1w";
         };
+        # Scheduled optimisation instead of per-write auto-optimise-store (faster builds)
+        optimise = {
+          automatic = mkDefault true;
+          dates = mkDefault ["weekly"];
+        };
         # Free up to 1GiB whenever there is less than 100MiB left.
-        extraOptions = mkDefault ''
-          min-free = ${toString (100 * 1024 * 1024)}
-          max-free = ${toString (1024 * 1024 * 1024)}
-        '';
+        extraOptions = mkDefault (''
+            min-free = ${toString (100 * 1024 * 1024)}
+            max-free = ${toString (1024 * 1024 * 1024)}
+          ''
+          # Secret must contain a full line: access-tokens = github.com=<token>
+          + lib.optionalString (options ? age) ''
+            !include ${config.age.secrets."gh".path}
+          '');
         settings = {
-          access-tokens = lib.mkIf (options ? age) config.age.secrets."gh".path;
           # nix-path = mkForce "nixpkgs=/etc/nix/inputs/nixpkgs";
           nix-path = mkDefault config.nix.nixPath; # Workaround for https://github.com/NixOS/nix/issues/9574
-          auto-optimise-store = mkDefault true;
           bash-prompt-prefix = mkDefault "(nix:$name)\040";
           experimental-features = mkDefault [
             "nix-command"
@@ -99,20 +105,18 @@ in {
           builders-use-substitutes = mkDefault true;
           substituters = caches.substituters;
           trusted-substituters = caches.substituters;
-          extra-trusted-substituters = caches.extraSubstituters;
           trusted-users = mkForce [
             "root"
             "teq"
             "@wheel"
           ];
           trusted-public-keys = caches.trustedPublicKeys;
-          extra-trusted-public-keys = caches.extraTrustedPublicKeys;
         };
       };
       # `enable` only when self has a clean revision — never clobber a host with local edits.
       system.autoUpgrade = {
         enable = mkDefault ((inputs.self.rev or "dirty") != "dirty");
-        flake = mkDefault "github:Teqed/nixos-config";
+        flake = mkDefault "git+https://tangled.org/@quilling.dev/nixos-config"; # Primary remote; GitHub is a best-effort mirror
         flags = mkDefault ["-L" "--refresh"];
         randomizedDelaySec = mkDefault "30min";
         dates = mkDefault "04:00";
@@ -152,6 +156,10 @@ in {
     }
     # Only when the agenix module is imported
     // lib.optionalAttrs (options ? age) {
-      age.secrets."gh".file = ../../secrets/gh.age;
+      age.secrets."gh" = {
+        file = ../../secrets/gh.age;
+        mode = "0440";
+        group = "wheel"; # Readable by nix clients (access-tokens is client-side)
+      };
     });
 }

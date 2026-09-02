@@ -40,8 +40,8 @@ in {
 
     pushRemotes = lib.mkOption {
       type = lib.types.listOf lib.types.str;
-      default = ["origin" "tangled"];
-      description = "Remotes to push the lockfile commit to. First is required, rest are best-effort.";
+      default = ["tangled" "origin"];
+      description = "Remotes to push the lockfile commit to. First is required (autoUpgrade pulls from it), rest are best-effort mirrors.";
     };
 
     sshIdentity = lib.mkOption {

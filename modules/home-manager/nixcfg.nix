@@ -65,7 +65,6 @@ in {
       settings = {
         # nix-path = mkForce "nixpkgs=/etc/nix/inputs/nixpkgs";
         nix-path = mkDefault config.nix.nixPath; # Workaround for https://github.com/NixOS/nix/issues/9574
-        auto-optimise-store = mkDefault true;
         bash-prompt-prefix = mkDefault "(nix:$name)\040";
         experimental-features = mkDefault [
           "nix-command"
@@ -90,15 +89,12 @@ in {
         builders-use-substitutes = mkDefault true;
         substituters = mkDefault caches.substituters;
         trusted-substituters = mkDefault caches.substituters;
-        extra-substituters = mkDefault caches.extraSubstituters;
-        extra-trusted-substituters = mkDefault caches.extraSubstituters;
         trusted-users = mkForce [
           "root"
           "teq"
           "@wheel"
         ];
         trusted-public-keys = mkDefault caches.trustedPublicKeys;
-        extra-trusted-public-keys = mkDefault caches.extraTrustedPublicKeys;
       };
     };
   };

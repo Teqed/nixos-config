@@ -8,8 +8,6 @@ The starlight on the Western Seas.
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     # chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable"; # Discontinued as of 2025-12-08
     nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel/release"; # CachyOS kernel replacement
-    alejandra.url = "github:kamadorueda/alejandra/3.0.0";
-    alejandra.inputs.nixpkgs.follows = "nixpkgs";
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     nix-flatpak.url = "github:gmodena/nix-flatpak";
@@ -59,6 +57,7 @@ The starlight on the Western Seas.
     agenix = {
       url = "github:ryantm/agenix";
       inputs.nixpkgs.follows = "nixpkgs";
+      inputs.home-manager.follows = "home-manager";
       inputs.darwin.follows = ""; # Save resources on Linux
     };
     tangled-core.url = "git+https://tangled.org/@tangled.org/core";
@@ -71,7 +70,6 @@ The starlight on the Western Seas.
     self,
     nixpkgs,
     home-manager,
-    alejandra,
     # chaotic, # Removed - discontinued
     nix-cachyos-kernel,
     nix-flatpak,

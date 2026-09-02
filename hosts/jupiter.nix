@@ -181,7 +181,9 @@ in {
         "xhci_pci"
         "virtio_scsi"
       ];
-      systemd.enable = false;
+      # Scripted initrd is removed in 26.11; was explicitly false (reason unrecorded).
+      # TODO: untested - verify the next manual reboot of jupiter comes back up.
+      systemd.enable = true;
     };
   };
   services.openssh.enable = true;
