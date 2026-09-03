@@ -326,6 +326,7 @@ The starlight on the Western Seas.
             statix
             deadnix
             shellcheck
+            bash-language-server
             just
             nix-output-monitor
             inputs.agenix.packages.${system}.default
@@ -333,9 +334,23 @@ The starlight on the Western Seas.
         };
       });
 
-      templates.rust = {
-        path = ./templates/rust;
-        description = "Rust nightly devshell (rust-analyzer, wasm target, Bevy-ready libs) with direnv";
+      templates = {
+        rust = {
+          path = ./templates/rust;
+          description = "Rust nightly devshell (rust-analyzer, wasm target, Bevy-ready libs) with direnv";
+        };
+        python = {
+          path = ./templates/python;
+          description = "Python devshell (uv, ruff, pylint) with direnv";
+        };
+        go = {
+          path = ./templates/go;
+          description = "Go devshell (gopls, golangci-lint, delve) with direnv";
+        };
+        ruby = {
+          path = ./templates/ruby;
+          description = "Ruby devshell (rubocop, solargraph) with direnv";
+        };
       };
     };
 }
