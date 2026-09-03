@@ -8,6 +8,7 @@ default:
 switch:
     #!/usr/bin/env bash
     set -euo pipefail
+    sudo true
     if [[ -t 1 ]] && command -v nom >/dev/null 2>&1; then
       sudo nixos-rebuild switch --flake ".#{{host}}" --log-format internal-json -v |& nom --json
     else
