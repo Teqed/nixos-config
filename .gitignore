@@ -3,3 +3,4 @@ result
 result-builds/
 .claude
 secrets/originals/
+.direnv/

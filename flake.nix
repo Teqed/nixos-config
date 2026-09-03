@@ -32,8 +32,6 @@ The starlight on the Western Seas.
       url = "github:reckenrode/nix-foundryvtt";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    rust-overlay.url = "github:oxalica/rust-overlay";
-    rust-overlay.inputs.nixpkgs.follows = "nixpkgs";
     # ghostty.url = "github:ghostty-org/ghostty?ref=refs/tags/v1.1.3"; # latest: v1.1.3
     ghostty = {
       url = "github:ghostty-org/ghostty?ref=refs/tags/tip";
@@ -86,7 +84,6 @@ The starlight on the Western Seas.
       nix-index-database,
       plasma-manager,
       disko,
-      rust-overlay,
       # rsky,
       claude-code,
       vpn-confinement,
@@ -113,7 +110,6 @@ The starlight on the Western Seas.
             claude-code.overlays.default
             inputs.prime-agent.overlays.default
             self.overlays.prime-agent-tweaks
-            (import rust-overlay)
           ];
         }
       );
@@ -173,8 +169,6 @@ The starlight on the Western Seas.
       #   program = "...";
       # };
 
-      # # Formatter (alejandra, nixfmt or nixpkgs-fmt)
-      # formatter."<system>" = derivation;
       formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.nixfmt-tree); # Formatter for your nix files, available through 'nix fmt'.
 
       # # Used for nixpkgs packages, also accessible via `nix build .#<name>`
@@ -324,42 +318,24 @@ The starlight on the Western Seas.
         };
       };
 
-      devShells.x86_64-linux.thoughtful =
-        let
-          pkgs = pkgsFor.x86_64-linux;
-          rust = pkgs.rust-bin.selectLatestNightlyWith (
-            toolchain:
-            toolchain.default.override {
-              extensions = [
-                "rust-src" # for rust-analyzer
-                "rust-analyzer"
-              ];
-              targets = [ "wasm32-unknown-unknown" ];
-            }
-          );
-          buildInputs = with pkgs; [
-            udev
-            alsa-lib
-            vulkan-loader
-            libx11
-            libxcursor
-            libxi
-            libxrandr # To use the x11 feature
-            libxkbcommon
-            wayland # To use the wayland feature
-            openssl
-            pkg-config
-            gcc
-            pkg-config
-            rust
-            bacon
-            clippy
+      devShells = forAllSystems (system: {
+        default = pkgsFor.${system}.mkShell {
+          packages = with pkgsFor.${system}; [
+            nixfmt
+            nixd
+            statix
+            deadnix
+            shellcheck
+            just
+            nix-output-monitor
+            inputs.agenix.packages.${system}.default
           ];
-        in
-        pkgs.mkShell {
-          inherit buildInputs;
-          LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath buildInputs;
-          RUST_BACKTRACE = 1;
         };
+      });
+
+      templates.rust = {
+        path = ./templates/rust;
+        description = "Rust nightly devshell (rust-analyzer, wasm target, Bevy-ready libs) with direnv";
+      };
     };
 }

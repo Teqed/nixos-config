@@ -59,8 +59,6 @@
         python3 # 165MB / 108MB (gcc 40MB, openssl 40MB, readline 40MB, ncurses 30MB, sqlite 30MB, bash 30MB, etc.)
         ### language-servers:
         bash-language-server # 300MB / 200MB (nodejs 200MB)
-        nil
-        nixd # Nix language server, based on nix libraries https://github.com/nix-community/nixd
         grpcurl
         # redisinsight
         goaccess
