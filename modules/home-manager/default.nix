@@ -1,5 +1,5 @@
 # Add your reusable home-manager modules to this directory, on their own file (https://nixos.wiki/wiki/Module).
-fromFlakes: let
+_: let
   modulesPerFile = {
     programs_gui_applications = import ./by-category/gui/applications.nix;
     programs_gui_browsers = import ./by-category/gui/browsers.nix;

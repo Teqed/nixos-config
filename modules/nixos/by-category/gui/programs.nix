@@ -2,24 +2,11 @@
   config,
   pkgs,
   lib,
-  inputs,
   ...
 }: let
   chromium_policy = ../../../home-manager/sources/.config/chromium/policies/managed/defaultExtensions.json;
   brave_policy = ../../../home-manager/sources/.config/brave/policies/managed/DisableBraveRewardsWalletAI.json;
 in {
-  imports = [
-    {
-      nixpkgs = {
-        overlays = [
-          (final: prev: {
-            sddm-sugar-candy =
-              inputs.sddmSugarCandy4Nix.packages.${pkgs.stdenv.hostPlatform.system}.sddm-sugar-candy;
-          })
-        ];
-      };
-    }
-  ];
   config = lib.mkIf config.teq.nixos.gui.enable {
     programs = {
       appimage = {
@@ -37,18 +24,27 @@ in {
       mouse-actions.enable = lib.mkDefault true; # Enable mouse-actions udev rules; required to use mouse gestures as non-root
     };
 
-    environment.systemPackages = with pkgs; [
-      # inputs.wezterm-flake.packages.${pkgs.system}.default # Wezterm flake
-      solaar # 600MB / 30MB (gtk+3 600MB)
-      papirus-icon-theme # Allows icons to be used in the system, like the login screen
-      bibata-cursors # Allows cursors to be used in the system, like the login screen
-      (pkgs.writeShellScriptBin "qemu-system-x86_64-uefi" ''
-        qemu-system-x86_64 \
-          -bios ${pkgs.OVMF.fd}/FV/OVMF.fd \
-          "$@"
-      '') # QEMU virtualization with UEFI firmware
-      # inputs.zen-browser.packages."${system}".default # Removed — using firefox/brave instead (~356 MiB)
-    ];
+    environment = {
+      systemPackages = with pkgs; [
+        # inputs.wezterm-flake.packages.${pkgs.system}.default # Wezterm flake
+        solaar # 600MB / 30MB (gtk+3 600MB)
+        papirus-icon-theme # Allows icons to be used in the system, like the login screen
+        bibata-cursors # Allows cursors to be used in the system, like the login screen
+        (pkgs.writeShellScriptBin "qemu-system-x86_64-uefi" ''
+          qemu-system-x86_64 \
+            -bios ${pkgs.OVMF.fd}/FV/OVMF.fd \
+            "$@"
+        '') # QEMU virtualization with UEFI firmware
+        # inputs.zen-browser.packages."${system}".default # Removed — using firefox/brave instead (~356 MiB)
+      ];
+      sessionVariables.NIXOS_OZONE_WL = "1"; # Use the Ozone Wayland support in several Electron apps
+      plasma6.excludePackages = with pkgs.kdePackages; [
+        khelpcenter # Pulls qtwebengine (~430 MiB closure); rarely used
+        # plasma-workspace-wallpapers # ~217 MiB of stock KDE wallpapers
+      ];
+      etc."chromium/policies/managed/defaultExtensions.json".source = chromium_policy;
+      etc."brave/policies/managed/DisableBraveRewardsWalletAI.json".source = brave_policy;
+    };
 
     virtualisation.waydroid.enable = lib.mkDefault false; # Android container; enable per-host if needed
     boot.binfmt.emulatedSystems = [
@@ -58,20 +54,12 @@ in {
       # "x86_64-linux" # Linux
     ];
 
-    environment.sessionVariables.NIXOS_OZONE_WL = "1"; # Use the Ozone Wayland support in several Electron apps
-
-    environment.plasma6.excludePackages = with pkgs.kdePackages; [
-      khelpcenter # Pulls qtwebengine (~430 MiB closure); rarely used
-      # plasma-workspace-wallpapers # ~217 MiB of stock KDE wallpapers
-    ];
-
-    environment.etc."chromium/policies/managed/defaultExtensions.json".source = chromium_policy;
-    environment.etc."brave/policies/managed/DisableBraveRewardsWalletAI.json".source = brave_policy;
-
     # nixpkgs.overlays = [nixpkgs-wayland.overlay]; # Automated, pre-built, (potentially) pre-release packages for Wayland (sway/wlroots) tools for NixOS.
-    hardware.graphics.enable32Bit = true; # On 64-bit systems, whether to support Direct Rendering for 32-bit applications (such as Wine). This is currently only supported for the nvidia and ati_unfree drivers, as well as Mesa.
-    hardware.enableRedistributableFirmware = true; # Whether to enable firmware with a license allowing redistribution.
-    hardware.enableAllFirmware = true; # Whether to enable all firmware regardless of license.
+    hardware = {
+      graphics.enable32Bit = true; # On 64-bit systems, whether to support Direct Rendering for 32-bit applications (such as Wine). This is currently only supported for the nvidia and ati_unfree drivers, as well as Mesa.
+      enableRedistributableFirmware = true; # Whether to enable firmware with a license allowing redistribution.
+      enableAllFirmware = true; # Whether to enable all firmware regardless of license.
+    };
 
     services = {
       xserver = {

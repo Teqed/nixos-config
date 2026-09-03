@@ -49,7 +49,7 @@ in {
         zstd
         libz
       ]
-      ++ lib.optionals (config.hardware.graphics.enable) [
+      ++ lib.optionals config.hardware.graphics.enable [
         # Only loaded on systems with graphics enabled:
         pipewire
         cups

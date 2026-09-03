@@ -4,7 +4,6 @@
   config,
   pkgs,
   osConfig ? null,
-  outputs,
   ...
 }:
 with lib; let
@@ -20,28 +19,30 @@ in {
     tts = lib.mkEnableOption "Enable speech synthesis (speech-dispatcher).";
   };
   config = lib.mkIf config.teq.home-manager.enable {
-    home.stateVersion = "24.05"; # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
-    home.extraOutputsToInstall = [
-      "info"
-      "man"
-      "share"
-      "icons"
-      "doc"
-    ];
-    home.keyboard.layout = mkDefault "us";
-    home.language = {
-      base = mkDefault "${defaultLang}";
-      ctype = mkDefault "${defaultLang}";
-      numeric = mkDefault "${defaultLang}";
-      time = mkDefault "${defaultLang}";
-      collate = mkDefault "${defaultLang}";
-      monetary = mkDefault "${defaultLang}";
-      messages = mkDefault "${defaultLang}";
-      paper = mkDefault "${defaultLang}";
-      name = mkDefault "${defaultLang}";
-      address = mkDefault "${defaultLang}";
-      telephone = mkDefault "${defaultLang}";
-      measurement = mkDefault "${defaultLang}";
+    home = {
+      stateVersion = "24.05"; # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
+      extraOutputsToInstall = [
+        "info"
+        "man"
+        "share"
+        "icons"
+        "doc"
+      ];
+      keyboard.layout = mkDefault "us";
+      language = {
+        base = mkDefault "${defaultLang}";
+        ctype = mkDefault "${defaultLang}";
+        numeric = mkDefault "${defaultLang}";
+        time = mkDefault "${defaultLang}";
+        collate = mkDefault "${defaultLang}";
+        monetary = mkDefault "${defaultLang}";
+        messages = mkDefault "${defaultLang}";
+        paper = mkDefault "${defaultLang}";
+        name = mkDefault "${defaultLang}";
+        address = mkDefault "${defaultLang}";
+        telephone = mkDefault "${defaultLang}";
+        measurement = mkDefault "${defaultLang}";
+      };
     };
     # nixpkgs config disabled when using home-manager.useGlobalPkgs
     nix = {

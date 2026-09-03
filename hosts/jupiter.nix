@@ -15,55 +15,61 @@ in {
     (modulesPath + "/installer/scan/not-detected.nix")
     (modulesPath + "/profiles/qemu-guest.nix")
   ];
-  networking.hostName = "jupiter"; # U+2643 ♃ JUPITER
   # Deployment
-  services.scx.enable = false;
-  services.caddy = {
-    enable = true;
-    virtualHosts."srd.shatteredsky.net".extraConfig = ''
-      tls internal
-      reverse_proxy http://localhost:3000
-    '';
-    # virtualHosts."another.example.org".extraConfig = ''
-    #   reverse_proxy unix//run/gunicorn.sock
-    # '';
-  };
-  networking.firewall.allowedTCPPorts = [
-    80 # HTTP Caddy
-    443 # HTTPS Caddy
-    2583 # rsky
-    3000 # HTTP Wiki.js
-    8000 # BluePDS
-    30000 # HTTP Foundry VTT - Spheres
-    30001 # HTTP Foundry VTT - Noctuae
-    30002 # HTTP Foundry VTT - Jeimuzu
-  ];
-  services.postgresql = {
-    enable = true;
-    ensureDatabases = [
-      "wiki-js"
-      "pds"
-    ];
-    ensureUsers = [
-      {
-        name = "wiki-js";
-        ensureDBOwnership = true;
-      }
-      {
-        name = "pds";
-        ensureDBOwnership = true;
-      }
-    ];
-  };
-  services.wiki-js = {
-    enable = true;
-    settings.offline = true;
-    settings.db = {
-      db = "wiki-js";
-      host = "/run/postgresql";
-      type = "postgres";
-      user = "wiki-js";
+  services = {
+    scx.enable = false;
+    caddy = {
+      enable = true;
+      virtualHosts."srd.shatteredsky.net".extraConfig = ''
+        tls internal
+        reverse_proxy http://localhost:3000
+      '';
+      # virtualHosts."another.example.org".extraConfig = ''
+      #   reverse_proxy unix//run/gunicorn.sock
+      # '';
     };
+    postgresql = {
+      enable = true;
+      ensureDatabases = [
+        "wiki-js"
+        "pds"
+      ];
+      ensureUsers = [
+        {
+          name = "wiki-js";
+          ensureDBOwnership = true;
+        }
+        {
+          name = "pds";
+          ensureDBOwnership = true;
+        }
+      ];
+    };
+    wiki-js = {
+      enable = true;
+      settings.offline = true;
+      settings.db = {
+        db = "wiki-js";
+        host = "/run/postgresql";
+        type = "postgres";
+        user = "wiki-js";
+      };
+    };
+    openssh.enable = true;
+  };
+  networking = {
+    hostName = "jupiter"; # U+2643 ♃ JUPITER
+    useDHCP = lib.mkDefault true;
+    firewall.allowedTCPPorts = [
+      80 # HTTP Caddy
+      443 # HTTPS Caddy
+      2583 # rsky
+      3000 # HTTP Wiki.js
+      8000 # BluePDS
+      30000 # HTTP Foundry VTT - Spheres
+      30001 # HTTP Foundry VTT - Noctuae
+      30002 # HTTP Foundry VTT - Jeimuzu
+    ];
   };
   systemd.services.wiki-js = {
     requires = ["postgresql.service"];
@@ -87,68 +93,70 @@ in {
   #   };
   # };
   # services.parakeet.enable = true;
-  containers.foundryvtt-spheres = {
-    autoStart = true;
-    config = {pkgs, ...}: {
-      system.stateVersion = currentStateVersion;
-      nixpkgs.config.allowUnfree = true; # FoundryVTT src is unfree
-      imports = [inputs.foundryvtt.nixosModules.foundryvtt];
-      services.foundryvtt = {
-        enable = true;
-        hostName = "foundry.shatteredsky.net";
-        routePrefix = "spheres";
-        minifyStaticFiles = true;
-        # port = 30000; # Default port
-        proxyPort = 443;
-        proxySSL = true;
-        upnp = false;
-        package = mkFoundry pkgs {
-          majorVersion = "11";
-          releaseType = "stable";
+  containers = {
+    foundryvtt-spheres = {
+      autoStart = true;
+      config = {pkgs, ...}: {
+        system.stateVersion = currentStateVersion;
+        nixpkgs.config.allowUnfree = true; # FoundryVTT src is unfree
+        imports = [inputs.foundryvtt.nixosModules.foundryvtt];
+        services.foundryvtt = {
+          enable = true;
+          hostName = "foundry.shatteredsky.net";
+          routePrefix = "spheres";
+          minifyStaticFiles = true;
+          # port = 30000; # Default port
+          proxyPort = 443;
+          proxySSL = true;
+          upnp = false;
+          package = mkFoundry pkgs {
+            majorVersion = "11";
+            releaseType = "stable";
+          };
         };
       };
     };
-  };
-  containers.foundryvtt-noctuae = {
-    autoStart = true;
-    config = {pkgs, ...}: {
-      system.stateVersion = currentStateVersion;
-      nixpkgs.config.allowUnfree = true; # FoundryVTT src is unfree
-      imports = [inputs.foundryvtt.nixosModules.foundryvtt];
-      services.foundryvtt = {
-        enable = true;
-        hostName = "foundry.shatteredsky.net";
-        routePrefix = "noct";
-        minifyStaticFiles = true;
-        port = 30001;
-        proxyPort = 443;
-        proxySSL = true;
-        upnp = false;
-        package = mkFoundry pkgs {
-          majorVersion = "12";
-          releaseType = "stable";
+    foundryvtt-noctuae = {
+      autoStart = true;
+      config = {pkgs, ...}: {
+        system.stateVersion = currentStateVersion;
+        nixpkgs.config.allowUnfree = true; # FoundryVTT src is unfree
+        imports = [inputs.foundryvtt.nixosModules.foundryvtt];
+        services.foundryvtt = {
+          enable = true;
+          hostName = "foundry.shatteredsky.net";
+          routePrefix = "noct";
+          minifyStaticFiles = true;
+          port = 30001;
+          proxyPort = 443;
+          proxySSL = true;
+          upnp = false;
+          package = mkFoundry pkgs {
+            majorVersion = "12";
+            releaseType = "stable";
+          };
         };
       };
     };
-  };
-  containers.foundryvtt-jeimuzu = {
-    autoStart = true;
-    config = {pkgs, ...}: {
-      system.stateVersion = currentStateVersion;
-      nixpkgs.config.allowUnfree = true; # FoundryVTT src is unfree
-      imports = [inputs.foundryvtt.nixosModules.foundryvtt];
-      services.foundryvtt = {
-        enable = true;
-        hostName = "foundry.shatteredsky.net";
-        routePrefix = "jei";
-        minifyStaticFiles = true;
-        port = 30002;
-        proxyPort = 443;
-        proxySSL = true;
-        upnp = false;
-        package = mkFoundry pkgs {
-          majorVersion = "13";
-          releaseType = "stable";
+    foundryvtt-jeimuzu = {
+      autoStart = true;
+      config = {pkgs, ...}: {
+        system.stateVersion = currentStateVersion;
+        nixpkgs.config.allowUnfree = true; # FoundryVTT src is unfree
+        imports = [inputs.foundryvtt.nixosModules.foundryvtt];
+        services.foundryvtt = {
+          enable = true;
+          hostName = "foundry.shatteredsky.net";
+          routePrefix = "jei";
+          minifyStaticFiles = true;
+          port = 30002;
+          proxyPort = 443;
+          proxySSL = true;
+          upnp = false;
+          package = mkFoundry pkgs {
+            majorVersion = "13";
+            releaseType = "stable";
+          };
         };
       };
     };
@@ -160,7 +168,6 @@ in {
       "${u}".initialHashedPassword = "$2b$05$2ckfv7WhD4dCuDK9DZi1MuDT6lOLJI9xDVZEAze2/sjw0lODXYCh6";
     })
   );
-  networking.useDHCP = lib.mkDefault true;
   nixpkgs = {
     config.allowUnsupportedSystem = true;
     hostPlatform = lib.mkForce "aarch64-linux";
@@ -186,7 +193,6 @@ in {
       systemd.enable = true;
     };
   };
-  services.openssh.enable = true;
   environment.systemPackages = map lib.lowPrio [
     pkgs.curl
     pkgs.gitMinimal

@@ -3,9 +3,7 @@
   lib,
   config,
   ...
-}: let
-  # XDG_CONFIG_HOME = "${config.xdg.configHome}";
-in {
+}: {
   config = lib.mkMerge [
     (lib.mkIf config.teq.home-manager.enable {
       programs = {

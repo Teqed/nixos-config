@@ -63,17 +63,19 @@
       ++ lib.optionals config.teq.nixos.gui.enable [
         dbeaver-bin
       ];
-    virtualisation.docker.enable = true;
     users.users.teq.extraGroups = ["docker"];
-    # Match the storage driver to the host's root filesystem; the btrfs
-    # graphdriver fails to initialize on ext4 hosts (impermanence.btrfs = false).
-    virtualisation.docker.storageDriver =
-      if config.teq.nixos.impermanence.btrfs
-      then "btrfs"
-      else "overlay2";
-    virtualisation.docker.rootless = {
+    virtualisation.docker = {
       enable = true;
-      setSocketVariable = true;
+      # Match the storage driver to the host's root filesystem; the btrfs
+      # graphdriver fails to initialize on ext4 hosts (impermanence.btrfs = false).
+      storageDriver =
+        if config.teq.nixos.impermanence.btrfs
+        then "btrfs"
+        else "overlay2";
+      rootless = {
+        enable = true;
+        setSocketVariable = true;
+      };
     };
   };
 }

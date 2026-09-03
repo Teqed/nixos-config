@@ -61,9 +61,11 @@ The starlight on the Western Seas.
     vpn-confinement.url = "github:Maroka-chan/VPN-Confinement";
     agenix = {
       url = "github:ryantm/agenix";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.home-manager.follows = "home-manager";
-      inputs.darwin.follows = ""; # Save resources on Linux
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        home-manager.follows = "home-manager";
+        darwin.follows = ""; # Save resources on Linux
+      };
     };
     tangled-core.url = "git+https://tangled.org/@tangled.org/core";
     tangled-core.inputs.nixpkgs.follows = "nixpkgs";
@@ -83,9 +85,7 @@ The starlight on the Western Seas.
     nix-index-database,
     plasma-manager,
     disko,
-    foundryvtt,
     rust-overlay,
-    ghostty,
     # rsky,
     claude-code,
     vpn-confinement,
@@ -128,8 +128,22 @@ The starlight on the Western Seas.
     # <flake> is a flake name like "nixpkgs".
     # <store-path> is a /nix/store.. path
   in {
-    # # Executed by `nix flake check`
-    # checks."<system>"."<name>" = derivation;
+    checks = forAllSystems (system: let
+      pkgs = nixpkgs.legacyPackages.${system};
+    in {
+      fmt = pkgs.runCommand "check-fmt" {nativeBuildInputs = [pkgs.alejandra];} ''
+        alejandra --check ${self} && touch $out
+      '';
+      statix = pkgs.runCommand "check-statix" {nativeBuildInputs = [pkgs.statix];} ''
+        statix check ${self} && touch $out
+      '';
+      deadnix = pkgs.runCommand "check-deadnix" {nativeBuildInputs = [pkgs.deadnix];} ''
+        deadnix --fail ${self} && touch $out
+      '';
+      shellcheck = pkgs.runCommand "check-shellcheck" {nativeBuildInputs = [pkgs.shellcheck];} ''
+        shellcheck ${self}/pkgs/scripts/src/*.sh && touch $out
+      '';
+    });
 
     # # Executed by `nix build .#<name>`
     # packages."<system>"."<name>" = derivation;
@@ -272,7 +286,7 @@ The starlight on the Western Seas.
     # };
 
     homeManagerModules = import ./modules/home-manager {flakes = inputs;}; # Reusable home-manager modules.
-    homeManagerConfig = {...}: {
+    homeManagerConfig = _: {
       nixpkgs.hostPlatform = nixpkgs.lib.mkDefault "x86_64-linux";
       home-manager.extraSpecialArgs = inheritSpecialArgs;
       home-manager.sharedModules = [
@@ -333,7 +347,7 @@ The starlight on the Western Seas.
       ];
     in
       pkgs.mkShell {
-        buildInputs = buildInputs;
+        inherit buildInputs;
         LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath buildInputs;
         RUST_BACKTRACE = 1;
       };

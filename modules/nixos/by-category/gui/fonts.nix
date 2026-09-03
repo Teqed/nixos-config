@@ -73,7 +73,7 @@ in {
         # meslo-lgs-nf
       ];
 
-      fontDir.enable = mkDefault (!pkgs.stdenv.isDarwin);
+      fontDir.enable = mkDefault (!pkgs.stdenv.hostPlatform.isDarwin);
     };
   };
 }

@@ -1,9 +1,11 @@
-{...}: {
-  home-manager.users.teq.teq.home-manager.gui = true;
-  home-manager.users.teq.teq.home-manager.dev = true;
-  teq.nixos = {
-    gui.enable = true;
-    gui.amd = true;
-    gui.steam = true;
+_: {
+  home-manager.users.teq.teq.home-manager = {
+    gui = true;
+    dev = true;
+  };
+  teq.nixos.gui = {
+    enable = true;
+    amd = true;
+    steam = true;
   };
 }

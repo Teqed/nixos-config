@@ -14,9 +14,11 @@ with lib; let
 in {
   options.teq.nixos = {
     enable = lib.mkEnableOption "Teq's NixOS configuration defaults.";
-    gui.enable = lib.mkEnableOption "Teq's NixOS GUI configuration defaults.";
-    gui.amd = lib.mkEnableOption "Teq's NixOS AMD configuration defaults.";
-    gui.steam = lib.mkEnableOption "Teq's NixOS Steam configuration defaults.";
+    gui = {
+      enable = lib.mkEnableOption "Teq's NixOS GUI configuration defaults.";
+      amd = lib.mkEnableOption "Teq's NixOS AMD configuration defaults.";
+      steam = lib.mkEnableOption "Teq's NixOS Steam configuration defaults.";
+    };
     blocklist = lib.mkEnableOption "Enable host blocklist defaults.";
     samba = lib.mkEnableOption "Enable Samba/SMB interop (server, WS-Discovery, NetBIOS name resolution).";
   };
@@ -105,7 +107,7 @@ in {
           ];
           max-jobs = mkDefault "auto"; # default
           builders-use-substitutes = mkDefault true;
-          substituters = caches.substituters;
+          inherit (caches) substituters;
           trusted-substituters = caches.substituters;
           trusted-users = mkForce [
             "root"

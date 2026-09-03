@@ -3,9 +3,7 @@
   lib,
   config,
   ...
-}: let
-  # XDG_CONFIG_HOME = "${config.xdg.configHome}";
-in {
+}: {
   config = lib.mkMerge [
     # Universal CLI — useful on any host, including headless servers over SSH.
     (lib.mkIf config.teq.home-manager.enable {

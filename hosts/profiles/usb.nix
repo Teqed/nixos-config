@@ -17,12 +17,14 @@
     # Plasma6 theming is handled by home-manager
     # teq.nixos.impermanence.label_nixos = label_nixos;
     # teq.nixos.impermanence.label_boot = label_boot;
-    nix.optimise.automatic = true;
-    nix.optimise.dates = ["03:45"];
-    nix.gc = {
-      automatic = true;
-      dates = "daily";
-      options = "--delete-older-than 2d";
+    nix = {
+      optimise.automatic = true;
+      optimise.dates = ["03:45"];
+      gc = {
+        automatic = true;
+        dates = "daily";
+        options = "--delete-older-than 2d";
+      };
     };
     nix.extraOptions = ''
       min-free = ${toString (100 * 1024 * 1024)}

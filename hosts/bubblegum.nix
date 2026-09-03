@@ -1,40 +1,31 @@
 {
-  nixos-hardware,
   lib,
   config,
   pkgs,
   inputs,
   ...
-}: let
-  currentStateVersion = "24.05";
-in {
+}: {
   imports = [
     ./profiles/common.nix
     inputs.nixos-hardware.nixosModules.common-pc-ssd
     inputs.nixos-hardware.nixosModules.common-pc-laptop
     # inputs.nixos-hardware.nixosModules.framework-12-13th-gen-intel # the kmod module doesn't work right for me so we manually impl below
   ];
-  networking.hostName = "bubblegum";
-  networking.hostId = "48919130"; # head -c 8 /etc/machine-id
   nixpkgs = {
     buildPlatform = "x86_64-linux";
   };
-  # From https://github.com/NixOS/nixos-hardware/blob/master/framework/12-inch/common/default.nix a9a7323a067284b5546beef7221ce49a1f3b8d24
-  # Fix TRRS headphones missing a mic
-  # https://github.com/torvalds/linux/commit/7b509910b3ad6d7aacead24c8744de10daf8715d
-  boot.extraModprobeConfig = lib.mkIf (lib.versionOlder config.boot.kernelPackages.kernel.version "6.13.0") ''
-    options snd-hda-intel model=dell-headset-multi
-  '';
-
-  # Needed for desktop environments to detect display orientation
-  hardware.sensor.iio.enable = lib.mkDefault true;
-
   environment.systemPackages = [
     pkgs.framework-tool
     pkgs.btop-cuda
   ];
-  # / From
   boot = {
+    # From https://github.com/NixOS/nixos-hardware/blob/master/framework/12-inch/common/default.nix a9a7323a067284b5546beef7221ce49a1f3b8d24
+    # Fix TRRS headphones missing a mic
+    # https://github.com/torvalds/linux/commit/7b509910b3ad6d7aacead24c8744de10daf8715d
+    extraModprobeConfig = lib.mkIf (lib.versionOlder config.boot.kernelPackages.kernel.version "6.13.0") ''
+      options snd-hda-intel model=dell-headset-multi
+    '';
+    resumeDevice = "/dev/disk/by-uuid/8fd5400e-0dad-4ebc-ac53-7cc2120fbc6e";
     loader = {
       systemd-boot.enable = true;
       systemd-boot.configurationLimit = 12;
@@ -70,20 +61,27 @@ in {
   swapDevices = [
     {device = "/dev/disk/by-uuid/8fd5400e-0dad-4ebc-ac53-7cc2120fbc6e";}
   ];
-  boot.resumeDevice = "/dev/disk/by-uuid/8fd5400e-0dad-4ebc-ac53-7cc2120fbc6e";
-  home-manager.users.teq.teq.home-manager.gui = true;
-  home-manager.users.teq.teq.home-manager.dev = true;
-  hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
-  hardware.graphics.extraPackages = with pkgs; [
-    vpl-gpu-rt
-    intel-vaapi-driver
-    intel-media-driver
-  ];
+  home-manager.users.teq.teq.home-manager = {
+    gui = true;
+    dev = true;
+  };
+  hardware = {
+    # Needed for desktop environments to detect display orientation
+    sensor.iio.enable = lib.mkDefault true;
+    cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+    graphics.extraPackages = with pkgs; [
+      vpl-gpu-rt
+      intel-vaapi-driver
+      intel-media-driver
+    ];
+  };
   teq.nixos = {
     samba = true;
-    gui.enable = true;
-    gui.amd = false;
-    gui.steam = true;
+    gui = {
+      enable = true;
+      amd = false;
+      steam = true;
+    };
     media = false;
     cachyos = true;
     blocklist = false;
@@ -93,6 +91,8 @@ in {
     };
   };
   networking = {
+    hostName = "bubblegum";
+    hostId = "48919130"; # head -c 8 /etc/machine-id
     firewall = {
       allowedTCPPorts = [
       ];

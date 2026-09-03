@@ -31,15 +31,15 @@
     # NAME = "Timothy Quilling"; # Used by: ??? dpkg-buildpackage (unless overridden by $DEBFULLNAME), git (unless overridden by 'user.name'), hg (via ~/.hgrc 'ui.username'), makepkg (via ~/.makepkg.conf $PACKAGER)
     # EMAIL = "teqed@shatteredsky.net"; # Used by: dpkg-buildpackage (unless overridden by $DEBEMAIL), git (unless overridden by 'user.email'), hg (via ~/.hgrc 'ui.username'), makepkg (via ~/.makepkg.conf $PACKAGER)
     # LD_LIBRARY_PATH = "${XDG_LOCAL_HOME}/lib"; TODO: Prepend to the existing value / LIBPATH
-    XDG_LOCAL_HOME = XDG_LOCAL_HOME; # ~/.local
+    inherit XDG_LOCAL_HOME; # ~/.local
     # XDG_BIN_HOME = XDG_BIN_HOME; # ~/.local/bin
     # XDG_LIB_HOME = XDG_LIB_HOME; # ~/.local/lib
-    XDG_GAMES_HOME = XDG_GAMES_HOME; # ~/.local/games
-    XDG_OPT_HOME = XDG_OPT_HOME; # ~/.local/opt
-    XDG_USER_DIRS = XDG_USER_DIRS; # ~/.local/user-dirs
-    XDG_MISC_DIR = XDG_MISC_DIR; # ~/.local/user-dirs/Misc
-    XDG_REPOS_DIR = XDG_REPOS_DIR; # ~/.local/user-dirs/Repos
-    XDG_SCREENSHOTS_DIR = XDG_SCREENSHOTS_DIR; # ~/.local/user-dirs/Pictures/Screenshots
+    inherit XDG_GAMES_HOME; # ~/.local/games
+    inherit XDG_OPT_HOME; # ~/.local/opt
+    inherit XDG_USER_DIRS; # ~/.local/user-dirs
+    inherit XDG_MISC_DIR; # ~/.local/user-dirs/Misc
+    inherit XDG_REPOS_DIR; # ~/.local/user-dirs/Repos
+    inherit XDG_SCREENSHOTS_DIR; # ~/.local/user-dirs/Pictures/Screenshots
     # XDG_RUNTIME_DIR = XDG_RUNTIME_DIR; # /run/user/$UID
     # ENVVAR config
     MANPAGER = "sh -c 'col -bx | bat -l man -p'";
@@ -162,12 +162,12 @@ in {
         templates = XDG_TEMPLATES_DIR; # ~/.local/user-dirs/Templates
         videos = XDG_VIDEOS_DIR; # ~/.local/user-dirs/Videos
         extraConfig = {
-          XDG_LOCAL_HOME = XDG_LOCAL_HOME; # ~/.local
+          inherit XDG_LOCAL_HOME; # ~/.local
           # XDG_BIN_HOME = XDG_BIN_HOME; # ~/.local/bin
           # XDG_LIB_HOME = XDG_LIB_HOME; # ~/.local/lib
-          XDG_GAMES_HOME = XDG_GAMES_HOME; # ~/.local/games
-          XDG_OPT_HOME = XDG_OPT_HOME; # ~/.local/opt
-          XDG_USER_DIRS = XDG_USER_DIRS; # ~/.local/user-dirs
+          inherit XDG_GAMES_HOME; # ~/.local/games
+          inherit XDG_OPT_HOME; # ~/.local/opt
+          inherit XDG_USER_DIRS; # ~/.local/user-dirs
           MISC = XDG_MISC_DIR; # ~/.local/user-dirs/Misc
           REPOS = XDG_REPOS_DIR; # ~/.local/user-dirs/Repos
           SCREENSHOTS = XDG_SCREENSHOTS_DIR; # ~/.local/user-dirs/Pictures/Screenshots

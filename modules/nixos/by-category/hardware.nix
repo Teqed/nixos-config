@@ -24,10 +24,12 @@
       earlyoom.enable = lib.mkDefault true; # RAM is a kind of hardware
       hardware.bolt.enable = lib.mkDefault true; # Thunderbolt 3 device manager
     };
-    hardware.bluetooth.enable = lib.mkDefault true; # enables support for Bluetooth
-    # hardware.bluetooth.package = pkgs.bluez; # selects the Bluetooth package to use
-    hardware.bluetooth.powerOnBoot = lib.mkDefault true; # powers up the default Bluetooth controller on boot
-    hardware.logitech.wireless.enable = lib.mkDefault true; # Linux devices manager for the Logitech Unifying Receiver
+    hardware = {
+      bluetooth.enable = lib.mkDefault true; # enables support for Bluetooth
+      # bluetooth.package = pkgs.bluez; # selects the Bluetooth package to use
+      bluetooth.powerOnBoot = lib.mkDefault true; # powers up the default Bluetooth controller on boot
+      logitech.wireless.enable = lib.mkDefault true; # Linux devices manager for the Logitech Unifying Receiver
+    };
     # programs = {
     # };
     environment.systemPackages = with pkgs; [

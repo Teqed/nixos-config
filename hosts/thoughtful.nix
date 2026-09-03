@@ -4,9 +4,7 @@
   pkgs,
   inputs,
   ...
-}: let
-  currentStateVersion = "24.05";
-in {
+}: {
   imports = [
     ./profiles/common.nix
     ./profiles/gui.nix
@@ -15,8 +13,6 @@ in {
     nixos-hardware.nixosModules.common-cpu-amd
     nixos-hardware.nixosModules.common-gpu-amd
   ];
-  networking.hostName = "thoughtful"; # /dev/disk/by-partuuid/032b15fe-6dc7-473e-b1a5-d51f4df7ffd6
-  networking.hostId = "9936699a";
   nixpkgs = {
     # hostPlatform = "aarch64-linux";
     buildPlatform = "x86_64-linux";
@@ -69,10 +65,14 @@ in {
 
   # VM
   programs.dconf.enable = true;
-  users.users.gcis.extraGroups = ["libvirtd"];
-  users.users.gcis.group = "gcis";
-  users.groups.gcis = {};
-  users.users.gcis.isSystemUser = true;
+  users = {
+    users.gcis = {
+      extraGroups = ["libvirtd"];
+      group = "gcis";
+      isSystemUser = true;
+    };
+    groups.gcis = {};
+  };
   environment.systemPackages = with pkgs; [
     virt-manager
     virt-viewer
@@ -95,13 +95,8 @@ in {
     };
     spiceUSBRedirection.enable = true;
   };
-  services.spice-vdagentd.enable = true;
   # /VM
 
-  # GameCube adapter udev rule
-  services.udev.extraRules = ''
-    SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ATTRS{idVendor}=="057e", ATTRS{idProduct}=="0337", MODE="0666"
-  '';
   teq.nixos = {
     samba = true;
     media = false;
@@ -122,56 +117,6 @@ in {
   };
   age.secrets."washing-machien" = {
     file = ../secrets/washing-machien.age;
-  };
-
-  services.moonshine = {
-    enable = true;
-    user = "teq";
-    firewallInterfaces = ["tailscale0"];
-    settings = {
-      name = "thoughtful (moonshine)";
-      address = "0.0.0.0";
-      webserver = {
-        port = 48989;
-        port_https = 48984;
-        certificate = "$HOME/.config/moonshine/cert.pem";
-        private_key = "$HOME/.config/moonshine/key.pem";
-      };
-      stream = {
-        port = 49010;
-        video.port = 48998;
-        control.port = 48999;
-        audio.port = 49000;
-      };
-      application = [
-        {
-          title = "Steam Big Picture";
-          command = ["/run/current-system/sw/bin/steam" "steam://open/bigpicture"];
-        }
-      ];
-      application_scanner = [
-        {
-          type = "steam";
-          library = "$HOME/.local/share/Steam";
-          command = [
-            "/run/current-system/sw/bin/steam"
-            "-bigpicture"
-            "steam://rungameid/{game_id}"
-          ];
-        }
-      ];
-    };
-  };
-
-  # puts u in dhe washing machein
-  # https://tangled.org/coil-habdle.ebil.club/washing-machien
-  services.washing-machien = {
-    enable = true;
-    package = inputs.washing-machien.packages.${pkgs.stdenv.hostPlatform.system}.washing-machien.overrideAttrs (old: {
-      patches = (old.patches or []) ++ [../patches/washing-machien-session-cache.patch];
-    });
-    input = ./assets/washing-machien-avatar.jpg;
-    environmentFile = config.age.secrets."washing-machien".path;
   };
 
   vpnNamespaces.wg = {
@@ -200,6 +145,59 @@ in {
   };
 
   services = {
+    spice-vdagentd.enable = true;
+    # GameCube adapter udev rule
+    udev.extraRules = ''
+      SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ATTRS{idVendor}=="057e", ATTRS{idProduct}=="0337", MODE="0666"
+    '';
+    moonshine = {
+      enable = true;
+      user = "teq";
+      firewallInterfaces = ["tailscale0"];
+      settings = {
+        name = "thoughtful (moonshine)";
+        address = "0.0.0.0";
+        webserver = {
+          port = 48989;
+          port_https = 48984;
+          certificate = "$HOME/.config/moonshine/cert.pem";
+          private_key = "$HOME/.config/moonshine/key.pem";
+        };
+        stream = {
+          port = 49010;
+          video.port = 48998;
+          control.port = 48999;
+          audio.port = 49000;
+        };
+        application = [
+          {
+            title = "Steam Big Picture";
+            command = ["/run/current-system/sw/bin/steam" "steam://open/bigpicture"];
+          }
+        ];
+        application_scanner = [
+          {
+            type = "steam";
+            library = "$HOME/.local/share/Steam";
+            command = [
+              "/run/current-system/sw/bin/steam"
+              "-bigpicture"
+              "steam://rungameid/{game_id}"
+            ];
+          }
+        ];
+      };
+    };
+    # puts u in dhe washing machein
+    # https://tangled.org/coil-habdle.ebil.club/washing-machien
+    washing-machien = {
+      enable = true;
+      package = inputs.washing-machien.packages.${pkgs.stdenv.hostPlatform.system}.washing-machien.overrideAttrs (old: {
+        patches = (old.patches or []) ++ [../patches/washing-machien-session-cache.patch];
+      });
+      input = builtins.path {path = ./assets/washing-machien-avatar.jpg;};
+      environmentFile = config.age.secrets."washing-machien".path;
+    };
     tangled.spindle = {
       enable = true;
       package = inputs.tangled-core.packages.${pkgs.stdenv.hostPlatform.system}.spindle;
@@ -236,6 +234,8 @@ in {
     };
   };
   networking = {
+    hostName = "thoughtful"; # /dev/disk/by-partuuid/032b15fe-6dc7-473e-b1a5-d51f4df7ffd6
+    hostId = "9936699a";
     firewall = {
       allowedTCPPorts = [
         5000 # Nix-Serve

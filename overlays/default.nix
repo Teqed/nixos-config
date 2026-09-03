@@ -1,4 +1,4 @@
-{...}: {
+_: {
   additions = final: _prev: import ../pkgs final.pkgs;
   modifications = final: prev: {
     # jdrouhard/mosh fork: adds SSH agent forwarding (enabled by default),

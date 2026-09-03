@@ -1,4 +1,4 @@
-fromFlakes: let
+_: let
   modulesPerFile = {
     # nyx-cache = import ./nyx-cache.nix fromFlakes;
     # nyx-overlay = import ../common/nyx-overlay.nix fromFlakes;

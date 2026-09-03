@@ -11,20 +11,22 @@ in {
     documentation.doc.enable = lib.mkDefault false; # /share/doc HTML/PDF docs (~50-100 MiB); per-package docs still readable via `nix-shell -p <pkg>` if needed
     # documentation.man.generateCaches = false; # fish tab completion uses `man -k` for argument descriptions
     # documentation.man.enable = false; # Used for for `man <cmd>` lookups
-    environment.etc."nix/inputs/nixpkgs".source = "${inputs.nixpkgs}";
-    environment.pathsToLink = [
-      "/share/man"
-      "/share/doc"
-      "/share/info"
-      "/share/zsh"
-      "/share/bash-completion"
-      "/share/fish"
-      "/share/xdg-desktop-portal"
-      "/share/applications"
-      "/bin"
-      "/etc"
-    ];
-    environment.extraOutputsToInstall = ["man" "share" "icons"]; # Removed "info" and "doc" — rarely browsed; man pages still kept
+    environment = {
+      etc."nix/inputs/nixpkgs".source = "${inputs.nixpkgs}";
+      pathsToLink = [
+        "/share/man"
+        "/share/doc"
+        "/share/info"
+        "/share/zsh"
+        "/share/bash-completion"
+        "/share/fish"
+        "/share/xdg-desktop-portal"
+        "/share/applications"
+        "/bin"
+        "/etc"
+      ];
+      extraOutputsToInstall = ["man" "share" "icons"]; # Removed "info" and "doc" — rarely browsed; man pages still kept
+    };
     nixpkgs.config.allowUnfree = mkDefault true; # TODO: Move all unfree packages into allowUnfreePredicate
     nixpkgs.config.allowUnfreePredicate = pkg:
       builtins.elem (lib.getName pkg) [
