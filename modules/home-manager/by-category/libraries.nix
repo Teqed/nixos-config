@@ -3,7 +3,8 @@
   lib,
   config,
   ...
-}: {
+}:
+{
   config = lib.mkMerge [
     (lib.mkIf config.teq.home-manager.enable {
       programs = {

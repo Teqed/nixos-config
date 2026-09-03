@@ -1,4 +1,5 @@
-_: let
+_:
+let
   modulesPerFile = {
     # nyx-cache = import ./nyx-cache.nix fromFlakes;
     # nyx-overlay = import ../common/nyx-overlay.nix fromFlakes;
@@ -21,8 +22,8 @@ _: let
     impermanence = import ./impermanence.nix;
     nixcfg = import ./nixcfg.nix;
   };
-  default = {...}: {
+  default = { ... }: {
     imports = builtins.attrValues modulesPerFile;
   };
 in
-  modulesPerFile // {inherit default;}
+modulesPerFile // { inherit default; }

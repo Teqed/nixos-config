@@ -3,10 +3,12 @@
   pkgs,
   lib,
   ...
-}: let
+}:
+let
   chromium_policy = ../../../home-manager/sources/.config/chromium/policies/managed/defaultExtensions.json;
   brave_policy = ../../../home-manager/sources/.config/brave/policies/managed/DisableBraveRewardsWalletAI.json;
-in {
+in
+{
   config = lib.mkIf config.teq.nixos.gui.enable {
     programs = {
       appimage = {
@@ -173,7 +175,7 @@ in {
               "pcsc" # Expose smart cards (i.e. YubiKey)
             ];
           };
-          "org.onlyoffice.desktopeditors".Context.sockets = lib.mkDefault ["x11"]; # No Wayland support
+          "org.onlyoffice.desktopeditors".Context.sockets = lib.mkDefault [ "x11" ]; # No Wayland support
         };
       };
       sunshine = {

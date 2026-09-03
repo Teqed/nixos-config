@@ -3,7 +3,8 @@
   config,
   pkgs,
   ...
-}: let
+}:
+let
   XDG_LOCAL_HOME = "${config.home.homeDirectory}/.local"; # ~/.local
   XDG_CACHE_HOME = "${config.home.homeDirectory}/.cache"; # ~/.cache
   XDG_CONFIG_HOME = "${config.home.homeDirectory}/.config"; # ~/.config # $XDG_CONFIG_HOME defines the base directory relative to which user-specific configuration files should be stored.
@@ -128,13 +129,14 @@
     TMUX_TMPDIR = "${XDG_RUNTIME_DIR}/tmux";
     ICEAUTHORITY = "${XDG_RUNTIME_DIR}/ICEauthority"; # ~/.ICEauthority
   };
-in {
+in
+{
   config = lib.mkIf config.teq.home-manager.enable {
     programs.bash.sessionVariables = global_variables;
     programs.zsh.sessionVariables = global_variables;
     systemd.user.sessionVariables = global_variables;
     home = {
-      packages = with pkgs; [xdg-ninja]; # A shell script which checks your $HOME for unwanted files and directories.
+      packages = with pkgs; [ xdg-ninja ]; # A shell script which checks your $HOME for unwanted files and directories.
       preferXdgDirectories = true;
       # sessionPath = [XDG_BIN_HOME];
       sessionVariables = lib.mkDefault global_variables;
@@ -148,7 +150,7 @@ in {
       # configHome = XDG_CONFIG_HOME; # ~/.config
       # dataHome = XDG_DATA_HOME; # ~/.local/share
       # stateHome = XDG_STATE_HOME; # ~/.local/state
-      configFile."user-dirs.dirs" = lib.mkIf config.xdg.userDirs.enable {force = true;};
+      configFile."user-dirs.dirs" = lib.mkIf config.xdg.userDirs.enable { force = true; };
       userDirs = {
         enable = true;
         createDirectories = true;

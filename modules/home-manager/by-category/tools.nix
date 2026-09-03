@@ -3,9 +3,11 @@
   lib,
   config,
   ...
-}: {
+}:
+{
   config = lib.mkIf config.teq.home-manager.enable {
-    home.packages = with pkgs;
+    home.packages =
+      with pkgs;
       [
         lsof # Lsof lists file information about files opened by processes
         grc # Generic text colouriser
@@ -103,7 +105,12 @@
           pager = "less -FR";
           theme = "TwoDark";
         };
-        extraPackages = with pkgs.bat-extras; [batdiff batman batgrep batwatch];
+        extraPackages = with pkgs.bat-extras; [
+          batdiff
+          batman
+          batgrep
+          batwatch
+        ];
         # syntaxes = {
         #   gleam = {
         #     src = pkgs.fetchFromGitHub {

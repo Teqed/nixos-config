@@ -1,5 +1,6 @@
 # Add your reusable home-manager modules to this directory, on their own file (https://nixos.wiki/wiki/Module).
-_: let
+_:
+let
   modulesPerFile = {
     programs_gui_applications = import ./by-category/gui/applications.nix;
     programs_gui_browsers = import ./by-category/gui/browsers.nix;
@@ -23,8 +24,8 @@ _: let
     nixcfg = import ./nixcfg.nix;
     vars = import ./vars.nix;
   };
-  default = {...}: {
+  default = { ... }: {
     imports = builtins.attrValues modulesPerFile;
   };
 in
-  modulesPerFile // {inherit default;}
+modulesPerFile // { inherit default; }

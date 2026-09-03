@@ -3,9 +3,11 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   inherit (lib) mkDefault;
-in {
+in
+{
   config = lib.mkIf config.teq.nixos.gui.enable {
     nixpkgs.config.joypixels.acceptLicense = mkDefault true;
     fonts = {
@@ -43,7 +45,10 @@ in {
           "Noto Color Emoji"
           "Noto Emoji"
         ];
-        emoji = mkDefault ["Noto Color Emoji" "Noto Emoji"];
+        emoji = mkDefault [
+          "Noto Color Emoji"
+          "Noto Emoji"
+        ];
       };
       enableDefaultPackages = mkDefault true; # Enable a basic set of fonts providing several styles and families and reasonable coverage of Unicode.
 

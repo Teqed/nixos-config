@@ -3,9 +3,11 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   inherit (lib) mkDefault;
-in {
+in
+{
   options.teq.nixos = {
     cachyos = lib.mkEnableOption "Enable CachyOS kernel.";
   };
@@ -44,7 +46,7 @@ in {
       ];
       #      consoleLogLevel = mkDefault 3; # Silence dmesg
     };
-    fonts.packages = [pkgs.noto-fonts-lgc-plus];
+    fonts.packages = [ pkgs.noto-fonts-lgc-plus ];
     services.kmscon = {
       #      enable = mkDefault true; # Use kmscon as the virtual console instead of gettys.
       extraOptions = mkDefault "--term xterm-256color";
@@ -56,9 +58,10 @@ in {
     };
     nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
     boot.kernelPackages =
-      if config.teq.nixos.cachyos
-      then pkgs.cachyosKernels.linuxPackages-cachyos-latest # Use the CachyOS kernel from xddxdd/nix-cachyos-kernel
-      else pkgs.linuxPackages_latest; # Use the default kernel # linux-6.11 500MB
+      if config.teq.nixos.cachyos then
+        pkgs.cachyosKernels.linuxPackages-cachyos-latest # Use the CachyOS kernel from xddxdd/nix-cachyos-kernel
+      else
+        pkgs.linuxPackages_latest; # Use the default kernel # linux-6.11 500MB
     boot.kernel.sysctl = {
       "vm.max_map_count" = 2147483642; # Required for some games
     };

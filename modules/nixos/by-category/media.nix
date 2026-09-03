@@ -3,9 +3,11 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   profile = "media";
-in {
+in
+{
   options.teq.nixos = {
     media = lib.mkEnableOption "Teq's NixOS Media configuration defaults.";
   };
@@ -74,45 +76,47 @@ in {
         enable = true;
         openFirewall = true; # 9696
       };
-      plex = let
-        plexpass = pkgs.plex.override {
-          plexRaw = pkgs.plexRaw.overrideAttrs (_: rec {
-            version = "1.41.0.8994-f2c27da23";
-            src = pkgs.fetchurl {
-              url = "https://downloads.plex.tv/plex-media-server-new/${version}/debian/plexmediaserver_${version}_amd64.deb";
-              sha256 = "sha256-e1COeawdR0pCF+qQ/xkTn/716iM9kB/fXom5MWHQ0YI=";
-            };
-          });
+      plex =
+        let
+          plexpass = pkgs.plex.override {
+            plexRaw = pkgs.plexRaw.overrideAttrs (_: rec {
+              version = "1.41.0.8994-f2c27da23";
+              src = pkgs.fetchurl {
+                url = "https://downloads.plex.tv/plex-media-server-new/${version}/debian/plexmediaserver_${version}_amd64.deb";
+                sha256 = "sha256-e1COeawdR0pCF+qQ/xkTn/716iM9kB/fXom5MWHQ0YI=";
+              };
+            });
+          };
+        in
+        {
+          package = plexpass;
+          enable = false;
+          openFirewall = true; # 32400
+          user = profile; # defaults to "plex"
+          group = profile; # defaults to "plex"
+          dataDir = "/home/media/.local/state/plex";
+          # dataDir = "/home/media/.local/state/plex/.config/Plex Media Server";
+          # accelerationDevices = ["*"];
+          # extraPlugins = [
+          #   (builtins.path {
+          #     name = "Audnexus.bundle";
+          #     path = pkgs.fetchFromGitHub {
+          #       owner = "djdembeck";
+          #       repo = "Audnexus.bundle";
+          #       rev = "v0.2.8";
+          #       sha256 = "sha256-IWOSz3vYL7zhdHan468xNc6C/eQ2C2BukQlaJNLXh7E=";
+          #     };
+          #   })
+          # ];
+          # extraScanners = [
+          #   (lib.fetchFromGitHub {
+          #     owner = "ZeroQI";
+          #     repo = "Absolute-Series-Scanner";
+          #     rev = "773a39f502a1204b0b0255903cee4ed02c46fde0";
+          #     sha256 = "4l+vpiDdC8L/EeJowUgYyB3JPNTZ1sauN8liFAcK+PY=";
+          #   })
+          # ];
         };
-      in {
-        package = plexpass;
-        enable = false;
-        openFirewall = true; # 32400
-        user = profile; # defaults to "plex"
-        group = profile; # defaults to "plex"
-        dataDir = "/home/media/.local/state/plex";
-        # dataDir = "/home/media/.local/state/plex/.config/Plex Media Server";
-        # accelerationDevices = ["*"];
-        # extraPlugins = [
-        #   (builtins.path {
-        #     name = "Audnexus.bundle";
-        #     path = pkgs.fetchFromGitHub {
-        #       owner = "djdembeck";
-        #       repo = "Audnexus.bundle";
-        #       rev = "v0.2.8";
-        #       sha256 = "sha256-IWOSz3vYL7zhdHan468xNc6C/eQ2C2BukQlaJNLXh7E=";
-        #     };
-        #   })
-        # ];
-        # extraScanners = [
-        #   (lib.fetchFromGitHub {
-        #     owner = "ZeroQI";
-        #     repo = "Absolute-Series-Scanner";
-        #     rev = "773a39f502a1204b0b0255903cee4ed02c46fde0";
-        #     sha256 = "4l+vpiDdC8L/EeJowUgYyB3JPNTZ1sauN8liFAcK+PY=";
-        #   })
-        # ];
-      };
     };
     # programs = {
     # };

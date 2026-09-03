@@ -3,7 +3,8 @@
   lib,
   config,
   ...
-}: {
+}:
+{
   config = lib.mkMerge [
     # Universal CLI — useful on any host, including headless servers over SSH.
     (lib.mkIf config.teq.home-manager.enable {

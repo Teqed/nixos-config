@@ -3,7 +3,8 @@
   nixos-hardware,
   lib,
   ...
-}: {
+}:
+{
   imports = [
     nixos-hardware.nixosModules.common-cpu-amd
     nixos-hardware.nixosModules.common-gpu-amd
@@ -44,8 +45,8 @@
         "virtio_console"
         "virtio_rng"
       ];
-      kernelModules = ["kvm-amd"];
-      extraModulePackages = [];
+      kernelModules = [ "kvm-amd" ];
+      extraModulePackages = [ ];
     };
   };
 }

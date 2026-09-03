@@ -4,9 +4,11 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   inherit (lib) mkDefault;
-in {
+in
+{
   config = lib.mkIf config.teq.nixos.enable {
     documentation.doc.enable = lib.mkDefault false; # /share/doc HTML/PDF docs (~50-100 MiB); per-package docs still readable via `nix-shell -p <pkg>` if needed
     # documentation.man.generateCaches = false; # fish tab completion uses `man -k` for argument descriptions
@@ -25,10 +27,15 @@ in {
         "/bin"
         "/etc"
       ];
-      extraOutputsToInstall = ["man" "share" "icons"]; # Removed "info" and "doc" — rarely browsed; man pages still kept
+      extraOutputsToInstall = [
+        "man"
+        "share"
+        "icons"
+      ]; # Removed "info" and "doc" — rarely browsed; man pages still kept
     };
     nixpkgs.config.allowUnfree = mkDefault true; # TODO: Move all unfree packages into allowUnfreePredicate
-    nixpkgs.config.allowUnfreePredicate = pkg:
+    nixpkgs.config.allowUnfreePredicate =
+      pkg:
       builtins.elem (lib.getName pkg) [
         # TODO: Add additional package names here
       ];

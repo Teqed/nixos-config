@@ -3,12 +3,14 @@
   pkgs,
   lib,
   ...
-}: let
+}:
+let
   wine_package = pkgs.wineWow64Packages.staging;
-in {
+in
+{
   config = lib.mkIf config.teq.nixos.gui.steam {
     programs.steam = {
-      enable = lib.mkDefault true; #11.8GB / 300MB (mostly mesa libraries)
+      enable = lib.mkDefault true; # 11.8GB / 300MB (mostly mesa libraries)
       remotePlay.openFirewall = true;
       dedicatedServer.openFirewall = true;
       gamescopeSession.enable = true;

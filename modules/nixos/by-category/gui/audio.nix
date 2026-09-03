@@ -2,7 +2,8 @@
   lib,
   config,
   ...
-}: {
+}:
+{
   config = lib.mkIf config.teq.nixos.gui.enable {
     services = {
       pipewire = {

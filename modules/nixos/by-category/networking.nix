@@ -3,16 +3,26 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   inherit (lib) mkDefault;
   mosh-clean = pkgs.writeShellApplication {
     name = "mosh-clean";
-    runtimeInputs = with pkgs; [coreutils procps gnugrep gnused];
+    runtimeInputs = with pkgs; [
+      coreutils
+      procps
+      gnugrep
+      gnused
+    ];
     text = builtins.readFile ../../../pkgs/scripts/src/mosh-clean.sh;
   };
   peer-sync = pkgs.writeShellApplication {
     name = "peer-sync";
-    runtimeInputs = with pkgs; [coreutils rsync openssh];
+    runtimeInputs = with pkgs; [
+      coreutils
+      rsync
+      openssh
+    ];
     text = builtins.readFile ../../../pkgs/scripts/src/peer-sync.sh;
   };
   seatDiscovery = ''
@@ -25,7 +35,11 @@
   inSshSession = ''[ -n "''${SSH_CONNECTION:-}''${SSH_TTY:-}''${SSH_CLIENT:-}" ]'';
   xdg-open-remote = pkgs.writeShellApplication {
     name = "xdg-open";
-    runtimeInputs = with pkgs; [coreutils gnused socat];
+    runtimeInputs = with pkgs; [
+      coreutils
+      gnused
+      socat
+    ];
     text = ''
       ${seatDiscovery}
       if [ "''${REMOTE_OPEN:-1}" != 0 ] && [ -n "$seat" ] && ${inSshSession}; then
@@ -43,7 +57,11 @@
   };
   pbcopy = pkgs.writeShellApplication {
     name = "pbcopy";
-    runtimeInputs = with pkgs; [coreutils socat wl-clipboard];
+    runtimeInputs = with pkgs; [
+      coreutils
+      socat
+      wl-clipboard
+    ];
     text = ''
       ${seatDiscovery}
       if [ "''${REMOTE_OPEN:-1}" != 0 ] && [ -n "$seat" ] && ${inSshSession}; then
@@ -64,7 +82,11 @@
   };
   pbpaste = pkgs.writeShellApplication {
     name = "pbpaste";
-    runtimeInputs = with pkgs; [coreutils socat wl-clipboard];
+    runtimeInputs = with pkgs; [
+      coreutils
+      socat
+      wl-clipboard
+    ];
     text = ''
       ${seatDiscovery}
       if [ "''${REMOTE_OPEN:-1}" != 0 ] && [ -n "$seat" ] && ${inSshSession}; then
@@ -79,7 +101,8 @@
       exit 1
     '';
   };
-in {
+in
+{
   config = lib.mkIf config.teq.nixos.enable {
     services = {
       tailscale.enable = true;
@@ -90,10 +113,14 @@ in {
           PermitRootLogin = mkDefault "no"; # disable root login
           PasswordAuthentication = mkDefault false; # disable password login
           KbdInteractiveAuthentication = mkDefault false;
-          AllowUsers = mkDefault ["teq"];
+          AllowUsers = mkDefault [ "teq" ];
           StreamLocalBindUnlink = mkDefault "yes"; # Automatically remove stale sockets
           GatewayPorts = mkDefault "clientspecified"; # Allow forwarding ports to everywhere
-          AcceptEnv = mkDefault ["WAYLAND_DISPLAY" "COLORTERM" "REMOTE_SEAT"]; # waypipe, truecolor, seat identity
+          AcceptEnv = mkDefault [
+            "WAYLAND_DISPLAY"
+            "COLORTERM"
+            "REMOTE_SEAT"
+          ]; # waypipe, truecolor, seat identity
         };
         openFirewall = mkDefault true;
         hostKeys = mkDefault [
@@ -121,7 +148,8 @@ in {
         SendEnv COLORTERM REMOTE_SEAT
       '';
     };
-    environment.systemPackages = with pkgs;
+    environment.systemPackages =
+      with pkgs;
       [
         waypipe # Wayland forwarding over SSH — useful on both ends
         cifs-utils # mount.cifs, CLI-usable
@@ -184,7 +212,7 @@ in {
       firewall = {
         enable = true;
         checkReversePath = "loose";
-        trustedInterfaces = ["tailscale0"];
+        trustedInterfaces = [ "tailscale0" ];
         allowedUDPPorts = [
           9000
           config.services.tailscale.port
@@ -206,7 +234,7 @@ in {
             to = 1764;
           } # KDE Connect
         ];
-        extraCommands = lib.optionalString config.teq.nixos.samba ''iptables -t raw -A OUTPUT -p udp -m udp --dport 137 -j CT --helper netbios-ns'';
+        extraCommands = lib.optionalString config.teq.nixos.samba "iptables -t raw -A OUTPUT -p udp -m udp --dport 137 -j CT --helper netbios-ns";
       };
       hosts = {
         "10.0.0.12" = [

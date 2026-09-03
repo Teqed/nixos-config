@@ -4,7 +4,8 @@
   pkgs,
   inputs,
   ...
-}: {
+}:
+{
   imports = [
     ./profiles/common.nix
     ./profiles/gui.nix
@@ -17,7 +18,7 @@
     # hostPlatform = "aarch64-linux";
     buildPlatform = "x86_64-linux";
   };
-  boot.binfmt.emulatedSystems = ["aarch64-linux"];
+  boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
   hardware.cpu.amd.updateMicrocode = true;
   boot = {
     loader = {
@@ -33,8 +34,8 @@
       "usbhid"
       "sd_mod"
     ];
-    initrd.kernelModules = ["amdgpu"];
-    kernelModules = ["kvm-amd"];
+    initrd.kernelModules = [ "amdgpu" ];
+    kernelModules = [ "kvm-amd" ];
     kernelParams = [
       # "video=DP-1:1920x1080@144" # /sys/class/drm/card0-DP-1/status 143.85 Hz
       # "video=DP-2:1920x1080@144" # /sys/class/drm/card0-DP-2/status
@@ -67,11 +68,11 @@
   programs.dconf.enable = true;
   users = {
     users.gcis = {
-      extraGroups = ["libvirtd"];
+      extraGroups = [ "libvirtd" ];
       group = "gcis";
       isSystemUser = true;
     };
-    groups.gcis = {};
+    groups.gcis = { };
   };
   environment.systemPackages = with pkgs; [
     virt-manager
@@ -153,7 +154,7 @@
     moonshine = {
       enable = true;
       user = "teq";
-      firewallInterfaces = ["tailscale0"];
+      firewallInterfaces = [ "tailscale0" ];
       settings = {
         name = "thoughtful (moonshine)";
         address = "0.0.0.0";
@@ -172,7 +173,10 @@
         application = [
           {
             title = "Steam Big Picture";
-            command = ["/run/current-system/sw/bin/steam" "steam://open/bigpicture"];
+            command = [
+              "/run/current-system/sw/bin/steam"
+              "steam://open/bigpicture"
+            ];
           }
         ];
         application_scanner = [
@@ -192,10 +196,12 @@
     # https://tangled.org/coil-habdle.ebil.club/washing-machien
     washing-machien = {
       enable = true;
-      package = inputs.washing-machien.packages.${pkgs.stdenv.hostPlatform.system}.washing-machien.overrideAttrs (old: {
-        patches = (old.patches or []) ++ [../patches/washing-machien-session-cache.patch];
-      });
-      input = builtins.path {path = ./assets/washing-machien-avatar.jpg;};
+      package =
+        inputs.washing-machien.packages.${pkgs.stdenv.hostPlatform.system}.washing-machien.overrideAttrs
+          (old: {
+            patches = (old.patches or [ ]) ++ [ ../patches/washing-machien-session-cache.patch ];
+          });
+      input = builtins.path { path = ./assets/washing-machien-avatar.jpg; };
       environmentFile = config.age.secrets."washing-machien".path;
     };
     tangled.spindle = {
@@ -218,7 +224,7 @@
       # enable = true;
       package = pkgs.ollama-rocm; # Use ROCm-accelerated package instead of deprecated acceleration option
       # Optional: preload models, see https://ollama.com/library
-      loadModels = [];
+      loadModels = [ ];
       port = 11434;
       host = "0.0.0.0";
       openFirewall = true;

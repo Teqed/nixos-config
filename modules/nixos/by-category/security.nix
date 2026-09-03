@@ -2,7 +2,8 @@
   lib,
   config,
   ...
-}: {
+}:
+{
   config = lib.mkIf config.teq.nixos.enable {
     security = {
       sudo.enable = false;

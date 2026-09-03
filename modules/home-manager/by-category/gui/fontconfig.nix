@@ -3,9 +3,11 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   inherit (lib) mkDefault mkForce;
-in {
+in
+{
   config = lib.mkIf config.teq.home-manager.gui {
     home.packages = with pkgs; [
       inter
@@ -55,7 +57,10 @@ in {
           "Noto Color Emoji"
           "Noto Emoji"
         ];
-        emoji = mkDefault ["Noto Color Emoji" "Noto Emoji"];
+        emoji = mkDefault [
+          "Noto Color Emoji"
+          "Noto Emoji"
+        ];
       };
     };
   };

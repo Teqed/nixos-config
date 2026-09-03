@@ -3,7 +3,8 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   # XDG_CONFIG_HOME = "${config.xdg.configHome}";
   yaziFlavors = pkgs.fetchFromGitHub {
     owner = "yazi-rs";
@@ -11,7 +12,8 @@
     rev = "main";
     sha256 = "sha256-VSlays/D5FtiI8vsj2Eu19lxY8Mkgu0+7K6OAhzc+30=";
   };
-in {
+in
+{
   config = lib.mkMerge [
     (lib.mkIf config.teq.home-manager.enable {
       programs.eza = {

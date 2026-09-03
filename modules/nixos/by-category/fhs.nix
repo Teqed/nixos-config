@@ -3,9 +3,11 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   inherit (lib) mkDefault;
-in {
+in
+{
   config = lib.mkIf config.teq.nixos.enable {
     services.envfs = {
       enable = mkDefault true; # Fuse filesystem that returns symlinks to executables based on the PATH of the requesting process. This is useful to execute shebangs on NixOS that assume hard coded locations in locations like /bin or /usr/bin etc.
@@ -18,7 +20,8 @@ in {
     };
     programs.nix-ld.enable = mkDefault true;
 
-    programs.nix-ld.libraries = with pkgs;
+    programs.nix-ld.libraries =
+      with pkgs;
       [
         # Libraries to include on headless systems:
         acl

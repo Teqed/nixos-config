@@ -3,9 +3,11 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   cfg = config.teq.nixos.notify;
-in {
+in
+{
   options.teq.nixos.notify = {
     server.enable = lib.mkEnableOption "ntfy-sh server";
 
@@ -44,7 +46,7 @@ in {
           behind-proxy = true;
         };
       };
-      networking.firewall.allowedTCPPorts = [cfg.server.port];
+      networking.firewall.allowedTCPPorts = [ cfg.server.port ];
     })
 
     (lib.mkIf cfg.failureTemplate.enable {

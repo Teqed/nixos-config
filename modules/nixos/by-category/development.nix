@@ -3,7 +3,8 @@
   lib,
   config,
   ...
-}: {
+}:
+{
   config = lib.mkIf config.teq.nixos.enable {
     services = {
       postgresql = {
@@ -52,7 +53,8 @@
         };
       };
     };
-    environment.systemPackages = with pkgs;
+    environment.systemPackages =
+      with pkgs;
       [
         # blender # blender-hip ?
         android-tools # replaces removed programs.adb
@@ -63,15 +65,12 @@
       ++ lib.optionals config.teq.nixos.gui.enable [
         dbeaver-bin
       ];
-    users.users.teq.extraGroups = ["docker"];
+    users.users.teq.extraGroups = [ "docker" ];
     virtualisation.docker = {
       enable = true;
       # Match the storage driver to the host's root filesystem; the btrfs
       # graphdriver fails to initialize on ext4 hosts (impermanence.btrfs = false).
-      storageDriver =
-        if config.teq.nixos.impermanence.btrfs
-        then "btrfs"
-        else "overlay2";
+      storageDriver = if config.teq.nixos.impermanence.btrfs then "btrfs" else "overlay2";
       rootless = {
         enable = true;
         setSocketVariable = true;

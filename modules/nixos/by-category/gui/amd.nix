@@ -3,7 +3,8 @@
   config,
   pkgs,
   ...
-}: {
+}:
+{
   config = lib.mkIf config.teq.nixos.gui.amd {
     environment.systemPackages = with pkgs; [
       clinfo # For confirming OpenCL support

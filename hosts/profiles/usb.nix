@@ -19,7 +19,7 @@
     # teq.nixos.impermanence.label_boot = label_boot;
     nix = {
       optimise.automatic = true;
-      optimise.dates = ["03:45"];
+      optimise.dates = [ "03:45" ];
       gc = {
         automatic = true;
         dates = "daily";
@@ -34,7 +34,7 @@
     boot.zfs.forceImportRoot = false; # 26.11 default; live ISO has no ZFS root
     services.openssh.settings.PermitRootLogin = lib.mkForce "yes"; # Live installer convention
     # Avoid nixpkgs entry conflict between installer channel and flake-input registry
-    home-manager.sharedModules = [{nix.registry = lib.mkForce {};}];
+    home-manager.sharedModules = [ { nix.registry = lib.mkForce { }; } ];
     environment.systemPackages = with pkgs; [
       # using Qt5 builds of Maliit as upstream has not ported to Qt6 yet
       maliit-framework
@@ -47,7 +47,7 @@
       # Get list of locales
       glibcLocales
     ];
-    i18n.supportedLocales = ["all"]; # Support choosing from any locale
+    i18n.supportedLocales = [ "all" ]; # Support choosing from any locale
     # disko.devices = {
     #   disk = {
     #     main = {

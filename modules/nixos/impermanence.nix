@@ -3,7 +3,8 @@
   config,
   impermanence,
   ...
-}: let
+}:
+let
   cfg = config.teq.nixos;
   label_nixos = cfg.impermanence.label_nixos;
   label_swap = cfg.impermanence.label_swap;
@@ -37,10 +38,10 @@
     ];
   };
   ext4_persist = {
-    depends = ["/nix"];
+    depends = [ "/nix" ];
     device = "/nix/persist";
     fsType = "none";
-    options = ["bind"];
+    options = [ "bind" ];
   };
   btrfs_home = {
     device = "/dev/disk/by-label/${label_nixos}";
@@ -54,12 +55,13 @@
     ];
   };
   ext4_home = {
-    depends = ["/nix"];
+    depends = [ "/nix" ];
     device = "/nix/home";
     fsType = "none";
-    options = ["bind"];
+    options = [ "bind" ];
   };
-in {
+in
+{
   imports = [
     impermanence.nixosModules.impermanence
   ];
@@ -87,30 +89,31 @@ in {
       "/" = {
         device = "none";
         fsType = "tmpfs";
-        options = ["noatime" "mode=755" "uid=0" "gid=0" "size=25%"];
+        options = [
+          "noatime"
+          "mode=755"
+          "uid=0"
+          "gid=0"
+          "size=25%"
+        ];
       };
       "/boot" = {
         device = "/dev/disk/by-label/${label_boot}";
         fsType = "vfat";
-        options = ["fmask=0022" "dmask=0022" "noatime"];
+        options = [
+          "fmask=0022"
+          "dmask=0022"
+          "noatime"
+        ];
       };
-      "/nix" =
-        if cfg.impermanence.btrfs
-        then btrfs_nix
-        else ext4_nix;
-      "/persist" =
-        if cfg.impermanence.btrfs
-        then btrfs_persist
-        else ext4_persist;
-      "/home" =
-        if cfg.impermanence.btrfs
-        then btrfs_home
-        else ext4_home;
+      "/nix" = if cfg.impermanence.btrfs then btrfs_nix else ext4_nix;
+      "/persist" = if cfg.impermanence.btrfs then btrfs_persist else ext4_persist;
+      "/home" = if cfg.impermanence.btrfs then btrfs_home else ext4_home;
     };
     swapDevices = [
       {
         label = label_swap;
-        options = ["nofail"];
+        options = [ "nofail" ];
       }
     ];
     environment.variables.NIX_REMOTE = "daemon";
@@ -121,22 +124,22 @@ in {
       tmpfiles.rules = [
         "d /nix/tmp 0755 root root 1d"
       ];
-      suppressedSystemUnits = ["systemd-machine-id-commit.service"];
+      suppressedSystemUnits = [ "systemd-machine-id-commit.service" ];
     };
     users.mutableUsers = false;
     users.users = lib.mkMerge (
-      [{root.hashedPasswordFile = "/persist/etc/auth/root";}]
-      ++ lib.forEach config.userinfo.users (
-        u: {"${u}".hashedPasswordFile = "/persist/etc/auth/${u}";}
-      )
+      [ { root.hashedPasswordFile = "/persist/etc/auth/root"; } ]
+      ++ lib.forEach config.userinfo.users (u: {
+        "${u}".hashedPasswordFile = "/persist/etc/auth/${u}";
+      })
     );
     boot.initrd.systemd = {
       enable = lib.mkForce true;
       services.rollback = lib.mkIf cfg.impermanence.btrfs {
         description = "Rollback BTRFS root subvolume to a pristine state";
-        wantedBy = ["initrd.target"];
-        requires = ["dev-disk-by\\x2dlabel-${label_nixos}.device"];
-        wants = ["dev-disk-by\\x2dlabel-${label_nixos}.device"];
+        wantedBy = [ "initrd.target" ];
+        requires = [ "dev-disk-by\\x2dlabel-${label_nixos}.device" ];
+        wants = [ "dev-disk-by\\x2dlabel-${label_nixos}.device" ];
         after = [
           "dev-disk-by\\x2dlabel-${label_nixos}.device"
           # "systemd-cryptsetup@enc.service" # LUKS/TPM process
@@ -170,7 +173,7 @@ in {
       };
 
       # TODO: remove workaround ; https://github.com/nix-community/impermanence/issues/229
-      suppressedUnits = ["systemd-machine-id-commit.service"];
+      suppressedUnits = [ "systemd-machine-id-commit.service" ];
     };
     environment.persistence."/persist" = {
       enable = true; # Defaults to true
@@ -273,4 +276,3 @@ in {
 # reboot
 # Additional imperative notes:
 # - mkdir .local/state/history # else history files can't be written
-

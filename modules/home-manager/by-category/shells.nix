@@ -3,7 +3,8 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   XDG_CONFIG_HOME = "${config.xdg.configHome}";
   aliases = {
     dir = "dir --color=auto";
@@ -108,7 +109,8 @@
     blkid = "colourify blkid";
     ant = "colourify ant";
   };
-in {
+in
+{
   config = lib.mkIf config.teq.home-manager.enable {
     xdg.configFile."atuin/config.toml".force = lib.mkForce true;
     home.shellAliases = aliases;
@@ -137,7 +139,16 @@ in {
         # HISTIGNORE is a colon-delimited list of patterns which should be excluded.
         # The '&' is a special pattern which suppresses duplicate entries.
         # export HISTIGNORE=$'[ \t]*:&:[fb]g:exit'
-        historyIgnore = lib.mkDefault ["[ \t]*" "&" "[fb]g" "rm *" "pkill *" "ls" "cd" "exit"];
+        historyIgnore = lib.mkDefault [
+          "[ \t]*"
+          "&"
+          "[fb]g"
+          "rm *"
+          "pkill *"
+          "ls"
+          "cd"
+          "exit"
+        ];
         # blesh, a full-featured line editor written in pure Bash
         initExtra = lib.mkBefore ''
           source ${pkgs.blesh}/share/blesh/ble.sh
@@ -181,7 +192,10 @@ in {
           append = lib.mkDefault true;
           expireDuplicatesFirst = lib.mkDefault true;
           extended = lib.mkDefault true;
-          ignorePatterns = lib.mkDefault ["rm *" "pkill *"];
+          ignorePatterns = lib.mkDefault [
+            "rm *"
+            "pkill *"
+          ];
           path = lib.mkDefault "$HOME/.local/share/history/zsh_history"; # "${config.xdg.dataHome}/zsh/zsh_history"
           save = lib.mkDefault 1000000;
           size = lib.mkDefault 1000000;

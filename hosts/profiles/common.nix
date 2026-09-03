@@ -3,11 +3,13 @@
   config,
   pkgs,
   ...
-}: let
-  userinfo.users = ["teq"];
-  userinfo.service_users = ["media"];
+}:
+let
+  userinfo.users = [ "teq" ];
+  userinfo.service_users = [ "media" ];
   inherit (lib) mkDefault mkForce;
-in {
+in
+{
   options = {
     userinfo = {
       users = lib.mkOption {
@@ -45,7 +47,14 @@ in {
             isNormalUser = mkForce true;
             description = mkForce "Teq";
             shell = pkgs.fish;
-            extraGroups = mkForce ["networkmanager" "wheel" "audio" "docker" "input" "dialout"];
+            extraGroups = mkForce [
+              "networkmanager"
+              "wheel"
+              "audio"
+              "docker"
+              "input"
+              "dialout"
+            ];
             openssh.authorizedKeys.keys = mkForce [
               "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICRc7d7TBl5Y43KsLQZgP9ewJSmyAbC2xXDnASIa1T5B teq@thoughtful"
             ];
@@ -56,7 +65,12 @@ in {
         "${u}" = {
           isNormalUser = mkDefault true;
           description = mkDefault u;
-          extraGroups = mkDefault ["networkmanager" "wheel" "audio" "docker"];
+          extraGroups = mkDefault [
+            "networkmanager"
+            "wheel"
+            "audio"
+            "docker"
+          ];
         };
       })
       ++ lib.forEach config.userinfo.service_users (u: {
@@ -73,7 +87,7 @@ in {
     users.groups = lib.mkMerge (
       lib.forEach config.userinfo.service_users (u: {
         "${u}" = {
-          members = mkDefault [u]; # Add service user to their own group (default is empty list)
+          members = mkDefault [ u ]; # Add service user to their own group (default is empty list)
         };
       })
     );

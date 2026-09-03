@@ -3,9 +3,11 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   cfg = config.teq.nixos.buildServer;
-in {
+in
+{
   options.teq.nixos.buildServer = {
     enable = lib.mkEnableOption "nightly flake update + build all hosts to warm the local binary cache";
 
@@ -23,7 +25,10 @@ in {
 
     hosts = lib.mkOption {
       type = lib.types.listOf lib.types.str;
-      default = ["thoughtful" "bubblegum"];
+      default = [
+        "thoughtful"
+        "bubblegum"
+      ];
       description = "nixosConfigurations to build. Excluded: eris (USB installer), sedna (incomplete fileSystems), jupiter (aarch64).";
     };
 
@@ -40,7 +45,10 @@ in {
 
     pushRemotes = lib.mkOption {
       type = lib.types.listOf lib.types.str;
-      default = ["tangled" "origin"];
+      default = [
+        "tangled"
+        "origin"
+      ];
       description = "Remotes to push the lockfile commit to. First is required (autoUpgrade pulls from it), rest are best-effort mirrors.";
     };
 
@@ -54,10 +62,15 @@ in {
   config = lib.mkIf cfg.enable {
     systemd.services.flake-update = {
       description = "Update flake.lock, build all hosts to warm cache, and push";
-      after = ["network-online.target"];
-      wants = ["network-online.target"];
+      after = [ "network-online.target" ];
+      wants = [ "network-online.target" ];
       onFailure = lib.optional config.teq.nixos.notify.failureTemplate.enable "notify-fail@%n.service";
-      path = with pkgs; [git nix openssh coreutils];
+      path = with pkgs; [
+        git
+        nix
+        openssh
+        coreutils
+      ];
       # NixOS `environment` attr writes a properly-quoted Environment= line in the unit.
       environment.GIT_SSH_COMMAND = "ssh -i ${cfg.sshIdentity} -o IdentitiesOnly=yes";
       serviceConfig = {
@@ -79,26 +92,30 @@ in {
         # --out-link creates GC roots so closures stay alive for nix-serve to hand to clients.
         mkdir -p result-builds
         ${lib.concatMapStringsSep "\n" (h: ''
-            echo "::: building ${h}"
-            nix build .#nixosConfigurations.${h}.config.system.build.toplevel \
-              --out-link result-builds/${h} -L
-          '')
-          cfg.hosts}
+          echo "::: building ${h}"
+          nix build .#nixosConfigurations.${h}.config.system.build.toplevel \
+            --out-link result-builds/${h} -L
+        '') cfg.hosts}
 
         # First push is required, rest are best-effort (mirrors that may be flaky).
-        ${let
-          first = lib.head cfg.pushRemotes;
-          rest = lib.tail cfg.pushRemotes;
-        in ''
-          git push ${first} main
-          ${lib.concatMapStringsSep "\n" (r: ''git push ${r} main || echo "WARN: push to ${r} failed (non-fatal)"'') rest}
-        ''}
+        ${
+          let
+            first = lib.head cfg.pushRemotes;
+            rest = lib.tail cfg.pushRemotes;
+          in
+          ''
+            git push ${first} main
+            ${lib.concatMapStringsSep "\n" (
+              r: ''git push ${r} main || echo "WARN: push to ${r} failed (non-fatal)"''
+            ) rest}
+          ''
+        }
       '';
     };
 
     systemd.timers.flake-update = {
       description = "Nightly flake-update timer";
-      wantedBy = ["timers.target"];
+      wantedBy = [ "timers.target" ];
       timerConfig = {
         OnCalendar = cfg.dates;
         Persistent = true;

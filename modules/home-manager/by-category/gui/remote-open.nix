@@ -3,11 +3,12 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   cfg = config.teq.home-manager;
   remote-open-handler = pkgs.writeShellApplication {
     name = "remote-open-handler";
-    runtimeInputs = with pkgs; [xdg-utils];
+    runtimeInputs = with pkgs; [ xdg-utils ];
     text = ''
       while IFS= read -r url; do
         case "$url" in
@@ -18,21 +19,30 @@
   };
   remote-open-listener = pkgs.writeShellApplication {
     name = "remote-open-listener";
-    runtimeInputs = [pkgs.socat remote-open-handler];
+    runtimeInputs = [
+      pkgs.socat
+      remote-open-handler
+    ];
     text = ''
       exec socat -u "TCP-LISTEN:46521,fork,reuseaddr" EXEC:remote-open-handler
     '';
   };
   remote-copy-listener = pkgs.writeShellApplication {
     name = "remote-copy-listener";
-    runtimeInputs = with pkgs; [socat wl-clipboard];
+    runtimeInputs = with pkgs; [
+      socat
+      wl-clipboard
+    ];
     text = ''
       exec socat -u "TCP-LISTEN:46522,fork,reuseaddr" EXEC:wl-copy
     '';
   };
   remote-paste-listener = pkgs.writeShellApplication {
     name = "remote-paste-listener";
-    runtimeInputs = with pkgs; [socat wl-clipboard];
+    runtimeInputs = with pkgs; [
+      socat
+      wl-clipboard
+    ];
     text = ''
       exec socat -U "TCP-LISTEN:46523,fork,reuseaddr" EXEC:"wl-paste --no-newline"
     '';
@@ -43,9 +53,10 @@
       ExecStart = lib.getExe exe;
       Restart = "on-failure";
     };
-    Install.WantedBy = ["default.target"];
+    Install.WantedBy = [ "default.target" ];
   };
-in {
+in
+{
   config = lib.mkIf (cfg.enable && cfg.gui) {
     systemd.user.services = {
       remote-open-listener = mkListener "open" remote-open-listener;

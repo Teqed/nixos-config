@@ -3,7 +3,8 @@
   lib,
   config,
   ...
-}: {
+}:
+{
   config = lib.mkIf config.teq.home-manager.gui {
     home.packages = with pkgs; [
       bibata-cursors # 160MB
@@ -36,9 +37,9 @@
       teams-for-linux
       # Official Claude desktop app (.deb repackaged for Nix); see pkgs/by-name/cl/claude-desktop.
       # Chat/Code work out of the box; Cowork's sandbox VM needs qemu (bundled via withCowork).
-      (callPackage ../../../../pkgs/by-name/cl/claude-desktop/package.nix {})
+      (callPackage ../../../../pkgs/by-name/cl/claude-desktop/package.nix { })
       # GooeyPi desktop workspace for Pi/OMP/Prime Agent; see pkgs/by-name/go/gooey-pi.
-      (callPackage ../../../../pkgs/by-name/go/gooey-pi/package.nix {})
+      (callPackage ../../../../pkgs/by-name/go/gooey-pi/package.nix { })
     ];
     services = {
       ### kde:
@@ -57,7 +58,7 @@
           ];
 
           "~/_/Downloads" = {
-            "skippedNames+" = ["*.iso"];
+            "skippedNames+" = [ "*.iso" ];
           };
 
           "~/_/Repos" = {

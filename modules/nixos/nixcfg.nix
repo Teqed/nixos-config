@@ -6,12 +6,14 @@
   outputs,
   ...
 }:
-with lib; let
-  flakeInputs = filterAttrs (_: isType "flake") (removeAttrs inputs ["self"]);
+with lib;
+let
+  flakeInputs = filterAttrs (_: isType "flake") (removeAttrs inputs [ "self" ]);
   caches = import ../shared-caches.nix;
   defaultLang = "en_US.UTF-8";
   inherit (lib) mkDefault;
-in {
+in
+{
   options.teq.nixos = {
     enable = lib.mkEnableOption "Teq's NixOS configuration defaults.";
     gui = {
@@ -22,7 +24,8 @@ in {
     blocklist = lib.mkEnableOption "Enable host blocklist defaults.";
     samba = lib.mkEnableOption "Enable Samba/SMB interop (server, WS-Discovery, NetBIOS name resolution).";
   };
-  config = lib.mkIf config.teq.nixos.enable ({
+  config = lib.mkIf config.teq.nixos.enable (
+    {
       system.stateVersion = lib.mkOverride 1100 "24.05"; # Weak fallback; hosts/profiles (e.g. the ISO) may mkDefault their own. https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
       environment.enableAllTerminfo = mkDefault true;
       nixpkgs = {
@@ -58,7 +61,7 @@ in {
         ];
       };
       nix = {
-        registry = mapAttrs (_: flake: {inherit flake;}) flakeInputs; # Opinionated: make flake registry and nix path match flake inputs
+        registry = mapAttrs (_: flake: { inherit flake; }) flakeInputs; # Opinionated: make flake registry and nix path match flake inputs
         nixPath = mkDefault (mapAttrsToList (key: value: "${key}=${value.to.path}") config.nix.registry); # Add inputs to the system's legacy channels Making legacy nix commands consistent
 
         # registry.nixpkgs.flake = inputs.nixpkgs;
@@ -73,17 +76,19 @@ in {
         # Scheduled optimisation instead of per-write auto-optimise-store (faster builds)
         optimise = {
           automatic = mkDefault true;
-          dates = mkDefault ["weekly"];
+          dates = mkDefault [ "weekly" ];
         };
         # Free up to 1GiB whenever there is less than 100MiB left.
-        extraOptions = mkDefault (''
+        extraOptions = mkDefault (
+          ''
             min-free = ${toString (100 * 1024 * 1024)}
             max-free = ${toString (1024 * 1024 * 1024)}
           ''
           # Secret must contain a full line: access-tokens = github.com=<token>
           + lib.optionalString (options ? age) ''
             !include ${config.age.secrets."gh".path}
-          '');
+          ''
+        );
         settings = {
           # nix-path = mkForce "nixpkgs=/etc/nix/inputs/nixpkgs";
           nix-path = mkDefault config.nix.nixPath; # Workaround for https://github.com/NixOS/nix/issues/9574
@@ -121,7 +126,10 @@ in {
       system.autoUpgrade = {
         enable = mkDefault ((inputs.self.rev or "dirty") != "dirty");
         flake = mkDefault "git+https://tangled.org/@quilling.dev/nixos-config"; # Primary remote; GitHub is a best-effort mirror
-        flags = mkDefault ["-L" "--refresh"];
+        flags = mkDefault [
+          "-L"
+          "--refresh"
+        ];
         randomizedDelaySec = mkDefault "30min";
         dates = mkDefault "04:00";
         allowReboot = mkDefault false;
@@ -144,7 +152,10 @@ in {
       };
       i18n = {
         defaultLocale = mkDefault "${defaultLang}";
-        supportedLocales = mkDefault ["${defaultLang}/UTF-8" "C.UTF-8/UTF-8"]; # Saves ~200 MiB vs "all"; usb.nix overrides to "all" for installer
+        supportedLocales = mkDefault [
+          "${defaultLang}/UTF-8"
+          "C.UTF-8/UTF-8"
+        ]; # Saves ~200 MiB vs "all"; usb.nix overrides to "all" for installer
         extraLocaleSettings = {
           LC_ADDRESS = mkDefault "${defaultLang}";
           LC_IDENTIFICATION = mkDefault "${defaultLang}";
@@ -165,5 +176,6 @@ in {
         mode = "0440";
         group = "wheel"; # Readable by nix clients (access-tokens is client-side)
       };
-    });
+    }
+  );
 }

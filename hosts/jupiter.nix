@@ -5,11 +5,15 @@
   config,
   inputs,
   ...
-}: let
+}:
+let
   currentStateVersion = "24.05";
   # Build with host pkgs so allowUnfree applies; the flake's own packages refuse unfree eval.
-  mkFoundry = pkgs: attrs: (pkgs.callPackage "${inputs.foundryvtt}/pkgs/foundryvtt" {}).overrideAttrs (old: old // attrs);
-in {
+  mkFoundry =
+    pkgs: attrs:
+    (pkgs.callPackage "${inputs.foundryvtt}/pkgs/foundryvtt" { }).overrideAttrs (old: old // attrs);
+in
+{
   imports = [
     ./profiles/common.nix
     (modulesPath + "/installer/scan/not-detected.nix")
@@ -72,8 +76,8 @@ in {
     ];
   };
   systemd.services.wiki-js = {
-    requires = ["postgresql.service"];
-    after = ["postgresql.service"];
+    requires = [ "postgresql.service" ];
+    after = [ "postgresql.service" ];
   };
   # containers.rsky = {
   #   autoStart = true;
@@ -96,10 +100,10 @@ in {
   containers = {
     foundryvtt-spheres = {
       autoStart = true;
-      config = {pkgs, ...}: {
+      config = { pkgs, ... }: {
         system.stateVersion = currentStateVersion;
         nixpkgs.config.allowUnfree = true; # FoundryVTT src is unfree
-        imports = [inputs.foundryvtt.nixosModules.foundryvtt];
+        imports = [ inputs.foundryvtt.nixosModules.foundryvtt ];
         services.foundryvtt = {
           enable = true;
           hostName = "foundry.shatteredsky.net";
@@ -118,10 +122,10 @@ in {
     };
     foundryvtt-noctuae = {
       autoStart = true;
-      config = {pkgs, ...}: {
+      config = { pkgs, ... }: {
         system.stateVersion = currentStateVersion;
         nixpkgs.config.allowUnfree = true; # FoundryVTT src is unfree
-        imports = [inputs.foundryvtt.nixosModules.foundryvtt];
+        imports = [ inputs.foundryvtt.nixosModules.foundryvtt ];
         services.foundryvtt = {
           enable = true;
           hostName = "foundry.shatteredsky.net";
@@ -140,10 +144,10 @@ in {
     };
     foundryvtt-jeimuzu = {
       autoStart = true;
-      config = {pkgs, ...}: {
+      config = { pkgs, ... }: {
         system.stateVersion = currentStateVersion;
         nixpkgs.config.allowUnfree = true; # FoundryVTT src is unfree
-        imports = [inputs.foundryvtt.nixosModules.foundryvtt];
+        imports = [ inputs.foundryvtt.nixosModules.foundryvtt ];
         services.foundryvtt = {
           enable = true;
           hostName = "foundry.shatteredsky.net";
@@ -163,7 +167,7 @@ in {
   };
   # Implementation
   users.users = lib.mkMerge (
-    [{root.initialHashedPassword = "$2b$05$2ckfv7WhD4dCuDK9DZi1MuDT6lOLJI9xDVZEAze2/sjw0lODXYCh6";}]
+    [ { root.initialHashedPassword = "$2b$05$2ckfv7WhD4dCuDK9DZi1MuDT6lOLJI9xDVZEAze2/sjw0lODXYCh6"; } ]
     ++ lib.forEach config.userinfo.users (u: {
       "${u}".initialHashedPassword = "$2b$05$2ckfv7WhD4dCuDK9DZi1MuDT6lOLJI9xDVZEAze2/sjw0lODXYCh6";
     })
@@ -217,20 +221,20 @@ in {
                 type = "filesystem";
                 format = "vfat";
                 mountpoint = "/boot";
-                mountOptions = ["umask=0077"];
+                mountOptions = [ "umask=0077" ];
               };
             };
             root = {
               size = "100%";
               content = {
                 type = "btrfs";
-                extraArgs = ["-f"];
+                extraArgs = [ "-f" ];
                 subvolumes = {
                   "/@" = {
                     mountpoint = "/";
                   };
                   "/@home" = {
-                    mountOptions = ["compress=zstd"];
+                    mountOptions = [ "compress=zstd" ];
                     mountpoint = "/home";
                   };
                   "/@nix" = {

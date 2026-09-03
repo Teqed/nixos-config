@@ -1,4 +1,4 @@
-{...}: {
+{ ... }: {
   imports = [
     ./profiles/usb.nix
     ./profiles/common.nix

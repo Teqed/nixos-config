@@ -74,282 +74,292 @@ The starlight on the Western Seas.
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
-  outputs = {
-    self,
-    nixpkgs,
-    home-manager,
-    nix-cachyos-kernel,
-    nix-flatpak,
-    nixos-hardware,
-    impermanence,
-    nix-index-database,
-    plasma-manager,
-    disko,
-    rust-overlay,
-    # rsky,
-    claude-code,
-    vpn-confinement,
-    agenix,
-    tangled-core,
-    ...
-  } @ inputs: let
-    inherit (self) outputs;
-    systems = [
-      "aarch64-linux"
-      # "i686-linux"
-      "x86_64-linux"
-      # "aarch64-darwin"
-      # "x86_64-darwin"
-    ];
-    forAllSystems = nixpkgs.lib.genAttrs systems; # This is a function that generates an attribute by calling a function you pass to it, with each system as an argument
-    pkgsFor = forAllSystems (system:
-      import nixpkgs {
-        inherit system;
-        config.allowUnfree = true;
-        overlays = [
-          claude-code.overlays.default
-          inputs.prime-agent.overlays.default
-          self.overlays.prime-agent-tweaks
-          (import rust-overlay)
-        ];
-      });
-    inheritSpecialArgs = {
-      inherit
-        self
-        inputs
-        outputs
-        nixos-hardware
-        impermanence
-        nix-flatpak
-        ;
-    };
-    # <system> is something like "x86_64-linux", "aarch64-linux", "i686-linux", "x86_64-darwin"
-    # <name> is an attribute name like "hello".
-    # <flake> is a flake name like "nixpkgs".
-    # <store-path> is a /nix/store.. path
-  in {
-    checks = forAllSystems (system: let
-      pkgs = nixpkgs.legacyPackages.${system};
-    in {
-      fmt = pkgs.runCommand "check-fmt" {nativeBuildInputs = [pkgs.alejandra];} ''
-        alejandra --check ${self} && touch $out
-      '';
-      statix = pkgs.runCommand "check-statix" {nativeBuildInputs = [pkgs.statix];} ''
-        statix check ${self} && touch $out
-      '';
-      deadnix = pkgs.runCommand "check-deadnix" {nativeBuildInputs = [pkgs.deadnix];} ''
-        deadnix --fail ${self} && touch $out
-      '';
-      shellcheck = pkgs.runCommand "check-shellcheck" {nativeBuildInputs = [pkgs.shellcheck];} ''
-        shellcheck ${self}/pkgs/scripts/src/*.sh && touch $out
-      '';
-    });
-
-    # # Executed by `nix build .#<name>`
-    # packages."<system>"."<name>" = derivation;
-    packages = forAllSystems (system: import ./pkgs pkgsFor.${system}); # Custom packages accessible through 'nix build', 'nix shell', etc
-
-    # # Executed by `nix build .`
-    # packages."<system>".default = derivation;
-
-    # # Executed by `nix run .#<name>`
-    # apps."<system>"."<name>" = {
-    #   type = "app";
-    #   program = "<store-path>";
-    # };
-
-    # # Executed by `nix run . -- <args?>`
-    # apps."<system>".default = {
-    #   type = "app";
-    #   program = "...";
-    # };
-
-    # # Formatter (alejandra, nixfmt or nixpkgs-fmt)
-    # formatter."<system>" = derivation;
-    formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.alejandra); # Formatter for your nix files, available through 'nix fmt'.
-
-    # # Used for nixpkgs packages, also accessible via `nix build .#<name>`
-    # legacyPackages."<system>"."<name>" = derivation;
-
-    # # Overlay, consumed by other flakes
-    # overlays."<name>" = final: prev: {};
-
-    # # Default overlay
-    # overlays.default = final: prev: {};
-
-    overlays = import ./overlays {inherit inputs;};
-
-    # # Nixos module, consumed by other flakes
-    # nixosModules."<name>" = {config, ...}: {
-    #   options = {};
-    #   config = {};
-    # };
-
-    # # Default module
-    # nixosModules.default = {config, ...}: {
-    #   options = {};
-    #   config = {};
-    # };
-    nixosModules = import ./modules/nixos {flakes = inputs;}; # Reusable nixos modules.
-
-    # # Used with `nixos-rebuild switch --flake .#<hostname>`
-    # # nixosConfigurations."<hostname>".config.system.build.toplevel must be a derivation
-    # nixosConfigurations."<hostname>" = {};
-    nixosConfigurations = {
-      eris = nixpkgs.lib.nixosSystem {
-        specialArgs = inheritSpecialArgs;
-        modules = [
-          ./hosts/eris.nix
-          self.nixosModules.default
-          home-manager.nixosModules.home-manager
-          nix-flatpak.nixosModules.nix-flatpak
-          self.homeManagerConfig
-          disko.nixosModules.disko
-        ];
-      };
-      # NixOS configuration entrypoint. Available through 'nixos-rebuild --flake .#sedna'
-      sedna = nixpkgs.lib.nixosSystem {
-        specialArgs = inheritSpecialArgs;
-        modules = [
-          ./hosts/sedna.nix
-          self.nixosModules.default
-          home-manager.nixosModules.home-manager
-          nix-flatpak.nixosModules.nix-flatpak
-          self.homeManagerConfig
-        ];
-      };
-      thoughtful = nixpkgs.lib.nixosSystem {
-        specialArgs = inheritSpecialArgs;
-        system = "x86_64-linux";
-        modules = [
-          ./hosts/thoughtful.nix
-          self.nixosModules.default
-          home-manager.nixosModules.home-manager
-          nix-flatpak.nixosModules.nix-flatpak
-          self.homeManagerConfig
-          # inputs.parakeet.nixosModules.default
-          vpn-confinement.nixosModules.default
-          agenix.nixosModules.default
-          tangled-core.nixosModules.spindle
-          inputs.washing-machien.nixosModules.default
-          {nixpkgs.overlays = [nix-cachyos-kernel.overlays.pinned];} # CachyOS kernel
-        ];
-      };
-      bubblegum = nixpkgs.lib.nixosSystem {
-        specialArgs = inheritSpecialArgs;
-        system = "x86_64-linux";
-        modules = [
-          ./hosts/bubblegum.nix
-          self.nixosModules.default
-          home-manager.nixosModules.home-manager
-          nix-flatpak.nixosModules.nix-flatpak
-          self.homeManagerConfig
-          agenix.nixosModules.default
-          {nixpkgs.overlays = [nix-cachyos-kernel.overlays.pinned];} # CachyOS kernel
-        ];
-      };
-      jupiter = nixpkgs.lib.nixosSystem {
-        specialArgs = inheritSpecialArgs;
-        system = "aarch64-linux";
-        modules = [
-          ./hosts/jupiter.nix
-          self.nixosModules.default
-          home-manager.nixosModules.home-manager
-          nix-flatpak.nixosModules.nix-flatpak
-          self.homeManagerConfig
-          disko.nixosModules.disko
-          inputs.foundryvtt.nixosModules.foundryvtt
-          # inputs.rsky.nixosModules.default
-          # inputs.parakeet.nixosModules.default
-        ];
-      };
-    };
-
-    # # Used by `nix develop .#<name>`
-    # devShells."<system>"."<name>" = derivation;
-
-    # # Used by `nix develop`
-    # devShells."<system>".default = derivation;
-
-    # # Hydra build jobs
-    # hydraJobs."<attr>"."<system>" = derivation;
-
-    # # Used by `nix flake init -t <flake>#<name>`
-    # templates."<name>" = {
-    #   path = "<store-path>";
-    #   description = "template description goes here?";
-    # };
-    # # Used by `nix flake init -t <flake>`
-    # templates.default = {
-    #   path = "<store-path>";
-    #   description = "";
-    # };
-
-    homeManagerModules = import ./modules/home-manager {flakes = inputs;}; # Reusable home-manager modules.
-    homeManagerConfig = _: {
-      nixpkgs.hostPlatform = nixpkgs.lib.mkDefault "x86_64-linux";
-      home-manager.extraSpecialArgs = inheritSpecialArgs;
-      home-manager.sharedModules = [
-        self.homeManagerModules.default # My custom modules
-        nix-index-database.homeModules.nix-index # nix-index-database (renamed from hmModules)
-        plasma-manager.homeModules.plasma-manager # plasma-manager (renamed from homeManagerModules)
+  outputs =
+    {
+      self,
+      nixpkgs,
+      home-manager,
+      nix-cachyos-kernel,
+      nix-flatpak,
+      nixos-hardware,
+      impermanence,
+      nix-index-database,
+      plasma-manager,
+      disko,
+      rust-overlay,
+      # rsky,
+      claude-code,
+      vpn-confinement,
+      agenix,
+      tangled-core,
+      ...
+    }@inputs:
+    let
+      inherit (self) outputs;
+      systems = [
+        "aarch64-linux"
+        # "i686-linux"
+        "x86_64-linux"
+        # "aarch64-darwin"
+        # "x86_64-darwin"
       ];
-    };
-    homeConfigurations = {
-      # home-manager --flake .#teq@somewhere
-      "teq@somewhere" = home-manager.lib.homeManagerConfiguration {
-        pkgs = pkgsFor.x86_64-linux; # Home-manager requires 'pkgs' instance
-        extraSpecialArgs = {inherit inputs outputs;};
-        modules = [
+      forAllSystems = nixpkgs.lib.genAttrs systems; # This is a function that generates an attribute by calling a function you pass to it, with each system as an argument
+      pkgsFor = forAllSystems (
+        system:
+        import nixpkgs {
+          inherit system;
+          config.allowUnfree = true;
+          overlays = [
+            claude-code.overlays.default
+            inputs.prime-agent.overlays.default
+            self.overlays.prime-agent-tweaks
+            (import rust-overlay)
+          ];
+        }
+      );
+      inheritSpecialArgs = {
+        inherit
+          self
+          inputs
+          outputs
+          nixos-hardware
+          impermanence
+          nix-flatpak
+          ;
+      };
+      # <system> is something like "x86_64-linux", "aarch64-linux", "i686-linux", "x86_64-darwin"
+      # <name> is an attribute name like "hello".
+      # <flake> is a flake name like "nixpkgs".
+      # <store-path> is a /nix/store.. path
+    in
+    {
+      checks = forAllSystems (
+        system:
+        let
+          pkgs = nixpkgs.legacyPackages.${system};
+        in
+        {
+          fmt = pkgs.runCommand "check-fmt" { nativeBuildInputs = [ pkgs.nixfmt ]; } ''
+            find ${self} -name '*.nix' -exec nixfmt --check {} + && touch $out
+          '';
+          statix = pkgs.runCommand "check-statix" { nativeBuildInputs = [ pkgs.statix ]; } ''
+            statix check ${self} && touch $out
+          '';
+          deadnix = pkgs.runCommand "check-deadnix" { nativeBuildInputs = [ pkgs.deadnix ]; } ''
+            deadnix --fail ${self} && touch $out
+          '';
+          shellcheck = pkgs.runCommand "check-shellcheck" { nativeBuildInputs = [ pkgs.shellcheck ]; } ''
+            shellcheck ${self}/pkgs/scripts/src/*.sh && touch $out
+          '';
+        }
+      );
+
+      # # Executed by `nix build .#<name>`
+      # packages."<system>"."<name>" = derivation;
+      packages = forAllSystems (system: import ./pkgs pkgsFor.${system}); # Custom packages accessible through 'nix build', 'nix shell', etc
+
+      # # Executed by `nix build .`
+      # packages."<system>".default = derivation;
+
+      # # Executed by `nix run .#<name>`
+      # apps."<system>"."<name>" = {
+      #   type = "app";
+      #   program = "<store-path>";
+      # };
+
+      # # Executed by `nix run . -- <args?>`
+      # apps."<system>".default = {
+      #   type = "app";
+      #   program = "...";
+      # };
+
+      # # Formatter (alejandra, nixfmt or nixpkgs-fmt)
+      # formatter."<system>" = derivation;
+      formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.nixfmt-tree); # Formatter for your nix files, available through 'nix fmt'.
+
+      # # Used for nixpkgs packages, also accessible via `nix build .#<name>`
+      # legacyPackages."<system>"."<name>" = derivation;
+
+      # # Overlay, consumed by other flakes
+      # overlays."<name>" = final: prev: {};
+
+      # # Default overlay
+      # overlays.default = final: prev: {};
+
+      overlays = import ./overlays { inherit inputs; };
+
+      # # Nixos module, consumed by other flakes
+      # nixosModules."<name>" = {config, ...}: {
+      #   options = {};
+      #   config = {};
+      # };
+
+      # # Default module
+      # nixosModules.default = {config, ...}: {
+      #   options = {};
+      #   config = {};
+      # };
+      nixosModules = import ./modules/nixos { flakes = inputs; }; # Reusable nixos modules.
+
+      # # Used with `nixos-rebuild switch --flake .#<hostname>`
+      # # nixosConfigurations."<hostname>".config.system.build.toplevel must be a derivation
+      # nixosConfigurations."<hostname>" = {};
+      nixosConfigurations = {
+        eris = nixpkgs.lib.nixosSystem {
+          specialArgs = inheritSpecialArgs;
+          modules = [
+            ./hosts/eris.nix
+            self.nixosModules.default
+            home-manager.nixosModules.home-manager
+            nix-flatpak.nixosModules.nix-flatpak
+            self.homeManagerConfig
+            disko.nixosModules.disko
+          ];
+        };
+        # NixOS configuration entrypoint. Available through 'nixos-rebuild --flake .#sedna'
+        sedna = nixpkgs.lib.nixosSystem {
+          specialArgs = inheritSpecialArgs;
+          modules = [
+            ./hosts/sedna.nix
+            self.nixosModules.default
+            home-manager.nixosModules.home-manager
+            nix-flatpak.nixosModules.nix-flatpak
+            self.homeManagerConfig
+          ];
+        };
+        thoughtful = nixpkgs.lib.nixosSystem {
+          specialArgs = inheritSpecialArgs;
+          system = "x86_64-linux";
+          modules = [
+            ./hosts/thoughtful.nix
+            self.nixosModules.default
+            home-manager.nixosModules.home-manager
+            nix-flatpak.nixosModules.nix-flatpak
+            self.homeManagerConfig
+            # inputs.parakeet.nixosModules.default
+            vpn-confinement.nixosModules.default
+            agenix.nixosModules.default
+            tangled-core.nixosModules.spindle
+            inputs.washing-machien.nixosModules.default
+            { nixpkgs.overlays = [ nix-cachyos-kernel.overlays.pinned ]; } # CachyOS kernel
+          ];
+        };
+        bubblegum = nixpkgs.lib.nixosSystem {
+          specialArgs = inheritSpecialArgs;
+          system = "x86_64-linux";
+          modules = [
+            ./hosts/bubblegum.nix
+            self.nixosModules.default
+            home-manager.nixosModules.home-manager
+            nix-flatpak.nixosModules.nix-flatpak
+            self.homeManagerConfig
+            agenix.nixosModules.default
+            { nixpkgs.overlays = [ nix-cachyos-kernel.overlays.pinned ]; } # CachyOS kernel
+          ];
+        };
+        jupiter = nixpkgs.lib.nixosSystem {
+          specialArgs = inheritSpecialArgs;
+          system = "aarch64-linux";
+          modules = [
+            ./hosts/jupiter.nix
+            self.nixosModules.default
+            home-manager.nixosModules.home-manager
+            nix-flatpak.nixosModules.nix-flatpak
+            self.homeManagerConfig
+            disko.nixosModules.disko
+            inputs.foundryvtt.nixosModules.foundryvtt
+            # inputs.rsky.nixosModules.default
+            # inputs.parakeet.nixosModules.default
+          ];
+        };
+      };
+
+      # # Used by `nix develop .#<name>`
+      # devShells."<system>"."<name>" = derivation;
+
+      # # Used by `nix develop`
+      # devShells."<system>".default = derivation;
+
+      # # Hydra build jobs
+      # hydraJobs."<attr>"."<system>" = derivation;
+
+      # # Used by `nix flake init -t <flake>#<name>`
+      # templates."<name>" = {
+      #   path = "<store-path>";
+      #   description = "template description goes here?";
+      # };
+      # # Used by `nix flake init -t <flake>`
+      # templates.default = {
+      #   path = "<store-path>";
+      #   description = "";
+      # };
+
+      homeManagerModules = import ./modules/home-manager { flakes = inputs; }; # Reusable home-manager modules.
+      homeManagerConfig = _: {
+        nixpkgs.hostPlatform = nixpkgs.lib.mkDefault "x86_64-linux";
+        home-manager.extraSpecialArgs = inheritSpecialArgs;
+        home-manager.sharedModules = [
           self.homeManagerModules.default # My custom modules
           nix-index-database.homeModules.nix-index # nix-index-database (renamed from hmModules)
           plasma-manager.homeModules.plasma-manager # plasma-manager (renamed from homeManagerModules)
-          {
-            home.username = "teq";
-            home.homeDirectory = "/home/teq";
-            teq.home-manager = {
-              enable = true;
-            };
-          }
         ];
       };
-    };
-
-    devShells.x86_64-linux.thoughtful = let
-      pkgs = pkgsFor.x86_64-linux;
-      rust = pkgs.rust-bin.selectLatestNightlyWith (
-        toolchain:
-          toolchain.default.override {
-            extensions = [
-              "rust-src" # for rust-analyzer
-              "rust-analyzer"
-            ];
-            targets = ["wasm32-unknown-unknown"];
-          }
-      );
-      buildInputs = with pkgs; [
-        udev
-        alsa-lib
-        vulkan-loader
-        libx11
-        libxcursor
-        libxi
-        libxrandr # To use the x11 feature
-        libxkbcommon
-        wayland # To use the wayland feature
-        openssl
-        pkg-config
-        gcc
-        pkg-config
-        rust
-        bacon
-        clippy
-      ];
-    in
-      pkgs.mkShell {
-        inherit buildInputs;
-        LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath buildInputs;
-        RUST_BACKTRACE = 1;
+      homeConfigurations = {
+        # home-manager --flake .#teq@somewhere
+        "teq@somewhere" = home-manager.lib.homeManagerConfiguration {
+          pkgs = pkgsFor.x86_64-linux; # Home-manager requires 'pkgs' instance
+          extraSpecialArgs = { inherit inputs outputs; };
+          modules = [
+            self.homeManagerModules.default # My custom modules
+            nix-index-database.homeModules.nix-index # nix-index-database (renamed from hmModules)
+            plasma-manager.homeModules.plasma-manager # plasma-manager (renamed from homeManagerModules)
+            {
+              home.username = "teq";
+              home.homeDirectory = "/home/teq";
+              teq.home-manager = {
+                enable = true;
+              };
+            }
+          ];
+        };
       };
-  };
+
+      devShells.x86_64-linux.thoughtful =
+        let
+          pkgs = pkgsFor.x86_64-linux;
+          rust = pkgs.rust-bin.selectLatestNightlyWith (
+            toolchain:
+            toolchain.default.override {
+              extensions = [
+                "rust-src" # for rust-analyzer
+                "rust-analyzer"
+              ];
+              targets = [ "wasm32-unknown-unknown" ];
+            }
+          );
+          buildInputs = with pkgs; [
+            udev
+            alsa-lib
+            vulkan-loader
+            libx11
+            libxcursor
+            libxi
+            libxrandr # To use the x11 feature
+            libxkbcommon
+            wayland # To use the wayland feature
+            openssl
+            pkg-config
+            gcc
+            pkg-config
+            rust
+            bacon
+            clippy
+          ];
+        in
+        pkgs.mkShell {
+          inherit buildInputs;
+          LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath buildInputs;
+          RUST_BACKTRACE = 1;
+        };
+    };
 }

@@ -8,6 +8,11 @@
 }:
 writeShellApplication {
   name = "impermanence-rollback";
-  runtimeInputs = [coreutils util-linux btrfs-progs findutils];
+  runtimeInputs = [
+    coreutils
+    util-linux
+    btrfs-progs
+    findutils
+  ];
   text = builtins.readFile ./src/impermanence_rollback.sh;
 }

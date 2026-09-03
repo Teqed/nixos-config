@@ -3,7 +3,8 @@
   config,
   pkgs,
   ...
-}: {
+}:
+{
   config = lib.mkIf config.teq.home-manager.gui {
     home = {
       pointerCursor = {
@@ -185,14 +186,38 @@
         kwin = {
           "Alt+" = "Meta+,"; # Show all windows; Related: Expose, ExposeAll
           # Use HJKL for window switching
-          "Switch Window Down" = ["Meta+Alt+J" "Meta+Alt+Down"];
-          "Switch Window Left" = ["Meta+Alt+H" "Meta+Alt+Left"];
-          "Switch Window Right" = ["Meta+Alt+L" "Meta+Alt+Right"];
-          "Switch Window Up" = ["Meta+Alt+K" "Meta+Alt+Up"];
-          "Window Quick Tile Bottom" = ["Meta+J" "Meta+Down"];
-          "Window Quick Tile Left" = ["Meta+H" "Meta+Left"];
-          "Window Quick Tile Right" = ["Meta+L" "Meta+Right"];
-          "Window Quick Tile Top" = ["Meta+K" "Meta+Up"];
+          "Switch Window Down" = [
+            "Meta+Alt+J"
+            "Meta+Alt+Down"
+          ];
+          "Switch Window Left" = [
+            "Meta+Alt+H"
+            "Meta+Alt+Left"
+          ];
+          "Switch Window Right" = [
+            "Meta+Alt+L"
+            "Meta+Alt+Right"
+          ];
+          "Switch Window Up" = [
+            "Meta+Alt+K"
+            "Meta+Alt+Up"
+          ];
+          "Window Quick Tile Bottom" = [
+            "Meta+J"
+            "Meta+Down"
+          ];
+          "Window Quick Tile Left" = [
+            "Meta+H"
+            "Meta+Left"
+          ];
+          "Window Quick Tile Right" = [
+            "Meta+L"
+            "Meta+Right"
+          ];
+          "Window Quick Tile Top" = [
+            "Meta+K"
+            "Meta+Up"
+          ];
         };
       };
     };

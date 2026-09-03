@@ -1,4 +1,4 @@
-{...}: {
+{ ... }: {
   imports = [
     ./profiles/vm.nix
     ./profiles/common.nix

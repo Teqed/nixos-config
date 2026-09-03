@@ -32,7 +32,7 @@ check:
 
 # Format nix files
 fmt:
-    nix fmt .
+    nix fmt
 
 # Update flake inputs
 update *inputs:
