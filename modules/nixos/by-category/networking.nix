@@ -89,25 +89,34 @@ in {
           X11Forwarding = mkDefault true;
           PermitRootLogin = mkDefault "no"; # disable root login
           PasswordAuthentication = mkDefault false; # disable password login
+          KbdInteractiveAuthentication = mkDefault false;
+          AllowUsers = mkDefault ["teq"];
           StreamLocalBindUnlink = mkDefault "yes"; # Automatically remove stale sockets
           GatewayPorts = mkDefault "clientspecified"; # Allow forwarding ports to everywhere
           AcceptEnv = mkDefault ["WAYLAND_DISPLAY" "COLORTERM" "REMOTE_SEAT"]; # waypipe, truecolor, seat identity
         };
         openFirewall = mkDefault true;
+        hostKeys = mkDefault [
+          {
+            path = "/etc/ssh/ssh_host_ed25519_key";
+            type = "ed25519";
+          }
+        ];
       };
       samba = {
-        enable = mkDefault true; # Samba, the SMB/CIFS protocol.
+        enable = mkDefault config.teq.nixos.samba;
         openFirewall = mkDefault true;
-        nsswins = mkDefault true; # nss_wins, allows applications to resolve WINS/NetBIOS names (a.k.a. Windows machine names) by transparently querying the winbindd daemon .
-        nmbd.enable = mkDefault true; # nmbd, which replies to NetBIOS over IP name service requests. It also participates in the browsing protocols which make up the Windows “Network Neighborhood” view.
+        nsswins = mkDefault config.teq.nixos.samba;
+        nmbd.enable = mkDefault config.teq.nixos.samba;
       };
       samba-wsdd = {
         openFirewall = mkDefault true;
-        discovery = mkDefault true; # Enable discovery operation mode.
+        discovery = mkDefault true;
       };
     };
     programs = {
       mosh.enable = mkDefault true;
+      mosh.openFirewall = mkDefault false;
       ssh.extraConfig = ''
         SendEnv COLORTERM REMOTE_SEAT
       '';
@@ -197,7 +206,7 @@ in {
             to = 1764;
           } # KDE Connect
         ];
-        extraCommands = ''iptables -t raw -A OUTPUT -p udp -m udp --dport 137 -j CT --helper netbios-ns'';
+        extraCommands = lib.optionalString config.teq.nixos.samba ''iptables -t raw -A OUTPUT -p udp -m udp --dport 137 -j CT --helper netbios-ns'';
       };
       hosts = {
         "10.0.0.12" = [

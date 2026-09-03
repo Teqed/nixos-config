@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+# shellcheck shell=bash
 # mosh-clean: find and kill orphaned mosh-server sessions.
 #
 # A session counts as orphaned when utmp (who -u) shows no client address

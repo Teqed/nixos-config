@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+# shellcheck shell=bash
 # peer-sync: two-way newest-wins sync of selected directories with a peer host.
 #
 # Each set is synced with two rsync --update passes (pull, then push), so for

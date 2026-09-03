@@ -6,7 +6,6 @@ The starlight on the Western Seas.
 ";
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    # chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable"; # Discontinued as of 2025-12-08
     nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel/release"; # CachyOS kernel replacement
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
@@ -74,7 +73,6 @@ The starlight on the Western Seas.
     self,
     nixpkgs,
     home-manager,
-    # chaotic, # Removed - discontinued
     nix-cachyos-kernel,
     nix-flatpak,
     nixos-hardware,
@@ -121,7 +119,11 @@ The starlight on the Western Seas.
 
     # # Executed by `nix build .#<name>`
     # packages."<system>"."<name>" = derivation;
-    packages = forAllSystems (system: import ./pkgs nixpkgs.legacyPackages.${system}); # Custom packages accessible through 'nix build', 'nix shell', etc
+    packages = forAllSystems (system:
+      import ./pkgs (import nixpkgs {
+        inherit system;
+        config.allowUnfree = true;
+      })); # Custom packages accessible through 'nix build', 'nix shell', etc
 
     # # Executed by `nix build .`
     # packages."<system>".default = derivation;
@@ -175,7 +177,6 @@ The starlight on the Western Seas.
         modules = [
           ./hosts/eris.nix
           self.nixosModules.default
-          # chaotic.nixosModules.default # Removed - discontinued
           home-manager.nixosModules.home-manager
           nix-flatpak.nixosModules.nix-flatpak
           self.homeManagerConfig
@@ -188,7 +189,6 @@ The starlight on the Western Seas.
         modules = [
           ./hosts/sedna.nix
           self.nixosModules.default
-          # chaotic.nixosModules.default # Removed - discontinued
           home-manager.nixosModules.home-manager
           nix-flatpak.nixosModules.nix-flatpak
           self.homeManagerConfig
@@ -200,7 +200,6 @@ The starlight on the Western Seas.
         modules = [
           ./hosts/thoughtful.nix
           self.nixosModules.default
-          # chaotic.nixosModules.default # Removed - discontinued
           home-manager.nixosModules.home-manager
           nix-flatpak.nixosModules.nix-flatpak
           self.homeManagerConfig
@@ -218,7 +217,6 @@ The starlight on the Western Seas.
         modules = [
           ./hosts/bubblegum.nix
           self.nixosModules.default
-          # chaotic.nixosModules.default # Removed - discontinued
           home-manager.nixosModules.home-manager
           nix-flatpak.nixosModules.nix-flatpak
           self.homeManagerConfig
@@ -232,7 +230,6 @@ The starlight on the Western Seas.
         modules = [
           ./hosts/jupiter.nix
           self.nixosModules.default
-          # chaotic.nixosModules.default # Removed - discontinued
           home-manager.nixosModules.home-manager
           nix-flatpak.nixosModules.nix-flatpak
           self.homeManagerConfig

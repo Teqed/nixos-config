@@ -70,6 +70,7 @@ in {
   swapDevices = [
     {device = "/dev/disk/by-uuid/8fd5400e-0dad-4ebc-ac53-7cc2120fbc6e";}
   ];
+  boot.resumeDevice = "/dev/disk/by-uuid/8fd5400e-0dad-4ebc-ac53-7cc2120fbc6e";
   home-manager.users.teq.teq.home-manager.gui = true;
   home-manager.users.teq.teq.home-manager.dev = true;
   hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
@@ -79,6 +80,7 @@ in {
     intel-media-driver
   ];
   teq.nixos = {
+    samba = true;
     gui.enable = true;
     gui.amd = false;
     gui.steam = true;

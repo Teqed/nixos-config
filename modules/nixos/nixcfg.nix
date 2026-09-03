@@ -18,6 +18,7 @@ in {
     gui.amd = lib.mkEnableOption "Teq's NixOS AMD configuration defaults.";
     gui.steam = lib.mkEnableOption "Teq's NixOS Steam configuration defaults.";
     blocklist = lib.mkEnableOption "Enable host blocklist defaults.";
+    samba = lib.mkEnableOption "Enable Samba/SMB interop (server, WS-Discovery, NetBIOS name resolution).";
   };
   config = lib.mkIf config.teq.nixos.enable ({
       system.stateVersion = lib.mkOverride 1100 "24.05"; # Weak fallback; hosts/profiles (e.g. the ISO) may mkDefault their own. https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
