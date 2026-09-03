@@ -12,9 +12,9 @@ The starlight on the Western Seas.
     nix-flatpak.url = "github:gmodena/nix-flatpak";
     # nix-flatpak.inputs.nixpkgs.follows = "nixpkgs"; #
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
-    # nixos-hardware.inputs.nixpkgs.follows = "nixpkgs"; #
+    nixos-hardware.inputs.nixpkgs.follows = "nixpkgs";
     impermanence.url = "github:nix-community/impermanence";
-    # impermanence.inputs.nixpkgs.follows = "nixpkgs"; #
+    impermanence.inputs.nixpkgs.follows = "nixpkgs";
     nix-index-database.url = "github:nix-community/nix-index-database";
     nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
     plasma-manager = {
@@ -33,6 +33,7 @@ The starlight on the Western Seas.
       inputs.nixpkgs.follows = "nixpkgs";
     };
     rust-overlay.url = "github:oxalica/rust-overlay";
+    rust-overlay.inputs.nixpkgs.follows = "nixpkgs";
     # ghostty.url = "github:ghostty-org/ghostty?ref=refs/tags/v1.1.3"; # latest: v1.1.3
     ghostty = {
       url = "github:ghostty-org/ghostty?ref=refs/tags/tip";
@@ -52,6 +53,7 @@ The starlight on the Western Seas.
     # parakeet.url = "git+https://tangled.sh/@quilling.dev/parakeet?rev=3f1dcc059ddc28d94caea58076458c11dfd9e6db";
     # parakeet.url = "git+file:///home/teq/.local/user-dirs/Repos/parakeet";
     claude-code.url = "github:sadjow/claude-code-nix";
+    claude-code.inputs.nixpkgs.follows = "nixpkgs";
     prime-agent = {
       url = "github:johnrichardrinehart/prime-agent-nix";
       inputs.nixpkgs.follows = "nixpkgs"; # No upstream cache; build against our nixpkgs
@@ -64,6 +66,7 @@ The starlight on the Western Seas.
       inputs.darwin.follows = ""; # Save resources on Linux
     };
     tangled-core.url = "git+https://tangled.org/@tangled.org/core";
+    tangled-core.inputs.nixpkgs.follows = "nixpkgs";
     washing-machien = {
       url = "git+https://tangled.org/coil-habdle.ebil.club/washing-machien";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -99,6 +102,17 @@ The starlight on the Western Seas.
       # "x86_64-darwin"
     ];
     forAllSystems = nixpkgs.lib.genAttrs systems; # This is a function that generates an attribute by calling a function you pass to it, with each system as an argument
+    pkgsFor = forAllSystems (system:
+      import nixpkgs {
+        inherit system;
+        config.allowUnfree = true;
+        overlays = [
+          claude-code.overlays.default
+          inputs.prime-agent.overlays.default
+          self.overlays.prime-agent-tweaks
+          (import rust-overlay)
+        ];
+      });
     inheritSpecialArgs = {
       inherit
         self
@@ -119,11 +133,7 @@ The starlight on the Western Seas.
 
     # # Executed by `nix build .#<name>`
     # packages."<system>"."<name>" = derivation;
-    packages = forAllSystems (system:
-      import ./pkgs (import nixpkgs {
-        inherit system;
-        config.allowUnfree = true;
-      })); # Custom packages accessible through 'nix build', 'nix shell', etc
+    packages = forAllSystems (system: import ./pkgs pkgsFor.${system}); # Custom packages accessible through 'nix build', 'nix shell', etc
 
     # # Executed by `nix build .`
     # packages."<system>".default = derivation;
@@ -274,15 +284,7 @@ The starlight on the Western Seas.
     homeConfigurations = {
       # home-manager --flake .#teq@somewhere
       "teq@somewhere" = home-manager.lib.homeManagerConfiguration {
-        pkgs = import nixpkgs {
-          system = "x86_64-linux";
-          config.allowUnfree = true;
-          overlays = [
-            claude-code.overlays.default
-            inputs.prime-agent.overlays.default
-            self.overlays.prime-agent-tweaks
-          ];
-        }; # Home-manager requires 'pkgs' instance
+        pkgs = pkgsFor.x86_64-linux; # Home-manager requires 'pkgs' instance
         extraSpecialArgs = {inherit inputs outputs;};
         modules = [
           self.homeManagerModules.default # My custom modules
@@ -300,11 +302,7 @@ The starlight on the Western Seas.
     };
 
     devShells.x86_64-linux.thoughtful = let
-      system = "x86_64-linux";
-      overlays = [(import rust-overlay)];
-      pkgs = import nixpkgs {
-        inherit system overlays;
-      };
+      pkgs = pkgsFor.x86_64-linux;
       rust = pkgs.rust-bin.selectLatestNightlyWith (
         toolchain:
           toolchain.default.override {
@@ -334,15 +332,9 @@ The starlight on the Western Seas.
         clippy
       ];
     in
-      nixpkgs.legacyPackages.x86_64-linux.mkShell {
-        nativeBuildInputs = with nixpkgs.legacyPackages.x86_64-linux; [
-          # cargo
-          # rustfmt
-          # bacon
-          # clippy
-        ];
+      pkgs.mkShell {
         buildInputs = buildInputs;
-        LD_LIBRARY_PATH = nixpkgs.legacyPackages.x86_64-linux.lib.makeLibraryPath buildInputs;
+        LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath buildInputs;
         RUST_BACKTRACE = 1;
       };
   };
