@@ -25,6 +25,7 @@
       # kde:
       kdePackages.filelight # Disk usage analyzer
       moonlight-qt
+      gg-jj # GUI jj client (webkit)
       prismlauncher
       qalculate-qt
       kdePackages.kalk

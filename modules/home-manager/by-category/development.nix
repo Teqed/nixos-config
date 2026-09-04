@@ -15,7 +15,6 @@
         jujutsu # jj VCS
         jjui
         lazyjj
-        gg-jj
         just # task runner
         tokei # code stats
         scc # code counter

@@ -310,6 +310,8 @@ The starlight on the Western Seas.
             {
               home.username = "teq";
               home.homeDirectory = "/home/teq";
+              targets.genericLinux.enable = true;
+              targets.genericLinux.gpu.enable = false;
               teq.home-manager = {
                 enable = true;
               };
