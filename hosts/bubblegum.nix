@@ -29,7 +29,7 @@
     resumeDevice = "/dev/disk/by-uuid/8fd5400e-0dad-4ebc-ac53-7cc2120fbc6e";
     loader = {
       systemd-boot.enable = true;
-      systemd-boot.configurationLimit = 12;
+      systemd-boot.configurationLimit = 5;
       efi.canTouchEfiVariables = true;
     };
     initrd = {
