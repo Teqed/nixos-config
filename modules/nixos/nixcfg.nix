@@ -44,8 +44,7 @@ in
           # Add overlays your own flake exports (from overlays and pkgs dir):
           # outputs.overlays.additions
           outputs.overlays.modifications
-          inputs.claude-code.overlays.default
-          inputs.prime-agent.overlays.default
+          outputs.overlays.llm-agents
           outputs.overlays.prime-agent-tweaks
 
           # You can also add overlays exported from other flakes:

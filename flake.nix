@@ -50,12 +50,7 @@ The starlight on the Western Seas.
     # };
     # parakeet.url = "git+https://tangled.sh/@quilling.dev/parakeet?rev=3f1dcc059ddc28d94caea58076458c11dfd9e6db";
     # parakeet.url = "git+file:///home/teq/.local/user-dirs/Repos/parakeet";
-    claude-code.url = "github:sadjow/claude-code-nix";
-    claude-code.inputs.nixpkgs.follows = "nixpkgs";
-    prime-agent = {
-      url = "github:johnrichardrinehart/prime-agent-nix";
-      inputs.nixpkgs.follows = "nixpkgs"; # No upstream cache; build against our nixpkgs
-    };
+    llm-agents.url = "github:numtide/llm-agents.nix";
     vpn-confinement.url = "github:Maroka-chan/VPN-Confinement";
     agenix = {
       url = "github:ryantm/agenix";
@@ -85,7 +80,6 @@ The starlight on the Western Seas.
       plasma-manager,
       disko,
       # rsky,
-      claude-code,
       vpn-confinement,
       agenix,
       tangled-core,
@@ -107,8 +101,7 @@ The starlight on the Western Seas.
           inherit system;
           config.allowUnfree = true;
           overlays = [
-            claude-code.overlays.default
-            inputs.prime-agent.overlays.default
+            self.overlays.llm-agents
             self.overlays.prime-agent-tweaks
           ];
         }

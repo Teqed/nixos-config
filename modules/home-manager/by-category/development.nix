@@ -9,9 +9,9 @@
     # Universal CLI — useful on any host, including headless servers over SSH.
     (lib.mkIf config.teq.home-manager.enable {
       home.packages = with pkgs; [
-        claude-code
-        prime-agent
-        codex
+        llm-agents.claude-code
+        llm-agents.prime-agent
+        llm-agents.codex
         lazygit # small Go TUI for git
         jujutsu # jj VCS
         jjui
