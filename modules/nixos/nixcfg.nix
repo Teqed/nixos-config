@@ -70,7 +70,7 @@ in
           automatic = mkDefault true;
           persistent = mkDefault true;
           dates = mkDefault "weekly"; # Not present in home-manager
-          options = mkDefault "--delete-older-than 1w";
+          options = mkDefault "--delete-older-than 7d";
         };
         # Scheduled optimisation instead of per-write auto-optimise-store (faster builds)
         optimise = {

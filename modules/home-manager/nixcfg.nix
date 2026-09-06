@@ -58,7 +58,7 @@ in
         automatic = mkDefault true;
         persistent = mkDefault true;
         # dates = mkDefault "weekly"; # Not present in home-manager
-        options = mkDefault "--delete-older-than 1w";
+        options = mkDefault "--delete-older-than 7d";
       };
       # Free up to 1GiB whenever there is less than 100MiB left.
       extraOptions = mkDefault ''
