@@ -37,3 +37,17 @@ fmt:
 # Update flake inputs
 update *inputs:
     nix flake update {{inputs}}
+
+# Build a cachePull host here and have it pull the result now
+deploy target:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    attr=".#nixosConfigurations.{{target}}.config.system.build.toplevel"
+    mkdir -p result-builds
+    if [[ -t 1 ]] && command -v nom >/dev/null 2>&1; then
+      nom build "$attr" --out-link "result-builds/{{target}}"
+    else
+      nix build "$attr" --out-link "result-builds/{{target}}"
+    fi
+    ssh -t "{{target}}" sudo systemctl start cache-pull
+    ssh "{{target}}" journalctl -u cache-pull -n 3 --no-pager
