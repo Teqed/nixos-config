@@ -11,6 +11,7 @@
       home.packages = with pkgs; [
         claude-code
         prime-agent
+        codex
         lazygit # small Go TUI for git
         jujutsu # jj VCS
         jjui

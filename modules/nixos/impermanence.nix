@@ -234,8 +234,19 @@ in
           ".local"
           ".mozilla" # Issue opened 20 years ago (2004): https://bugzilla.mozilla.org/show_bug.cgi?id=259356
           ".vscode-oss"
+          ".barony"
+          ".pki"
+          "Zomboid"
+          {
+            directory = ".android";
+            mode = "0700";
+          }
           {
             directory = ".gnupg";
+            mode = "0700";
+          }
+          {
+            directory = ".prime";
             mode = "0700";
           }
           {

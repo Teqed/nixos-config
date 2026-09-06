@@ -84,6 +84,7 @@ let
     # Data
     WINEPREFIX = "${XDG_DATA_HOME}/wine";
     WAKATIME_HOME = "${XDG_DATA_HOME}/wakatime";
+    CODEX_HOME = "${XDG_CONFIG_HOME}/codex";
     # XCURSOR_PATH = "/usr/share/icons:${XDG_DATA_HOME}/icons";
     # TERMINFO = "${XDG_DATA_HOME}/terminfo";
     # TERMINFO_DIRS = "${XDG_DATA_HOME}/terminfo";
