@@ -128,6 +128,16 @@ The starlight on the Western Seas.
           pkgs = nixpkgs.legacyPackages.${system};
         in
         {
+          deploy-guard = pkgs.runCommand "check-deploy-guard" { nativeBuildInputs = [ pkgs.just ]; } ''
+            script=$(just --justfile ${./justfile} --dry-run deploy example 2>&1)
+            for needle in 'teq.nixos.cachePull' '.enable' '.buildServer' 'uname -n' 'exit 1'; do
+              grep -qF "$needle" <<<"$script" || { echo "deploy recipe lost its execution-host guard ($needle)" >&2; exit 1; }
+            done
+            guard=$(grep -nF 'uname -n' <<<"$script" | head -1 | cut -d: -f1)
+            build=$(grep -nF -- '--out-link' <<<"$script" | head -1 | cut -d: -f1)
+            [ "$guard" -lt "$build" ] || { echo "deploy recipe builds before checking the execution host" >&2; exit 1; }
+            touch $out
+          '';
           fmt = pkgs.runCommand "check-fmt" { nativeBuildInputs = [ pkgs.nixfmt ]; } ''
             find ${self} -name '*.nix' -exec nixfmt --check {} + && touch $out
           '';
