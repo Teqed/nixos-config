@@ -4,12 +4,28 @@
   config,
   options,
   outputs,
+  pkgs,
   ...
 }:
 with lib;
 let
   flakeInputs = filterAttrs (_: isType "flake") (removeAttrs inputs [ "self" ]);
   caches = import ../shared-caches.nix;
+  cacheUrls = map (u: lib.head (lib.splitString "?" u)) (
+    lib.filter (u: lib.hasInfix "binarycache" u) caches.substituters
+  );
+  cacheHost = u: lib.head (lib.splitString "/" (lib.last (lib.splitString "://" u)));
+  firstLabel = h: lib.head (lib.splitString "." h);
+  labelsUnique = lib.allUnique (map (u: firstLabel (cacheHost u)) cacheUrls);
+  cacheEndpointName =
+    u:
+    "cache-"
+    + (
+      if labelsUnique then
+        firstLabel (cacheHost u)
+      else
+        lib.replaceStrings [ "." ":" ] [ "-" "-" ] (cacheHost u)
+    );
   defaultLang = "en_US.UTF-8";
   inherit (lib) mkDefault;
 in
@@ -26,6 +42,27 @@ in
   };
   config = lib.mkIf config.teq.nixos.enable (
     {
+      assertions = [
+        {
+          assertion = lib.allUnique (map cacheEndpointName cacheUrls);
+          message = "Binary cache endpoints in shared-caches.nix produce duplicate health check names: ${lib.concatStringsSep " " (map cacheEndpointName cacheUrls)}";
+        }
+      ];
+      teq.nixos.health = {
+        jobs.nix-gc = lib.mkIf config.nix.gc.automatic { maxSuccessAge = 192 * 3600; };
+        jobs.nixos-upgrade = lib.mkIf config.system.autoUpgrade.enable { };
+        checks."github.token".command = [
+          "${pkgs.python3}/bin/python3"
+          "${../../pkgs/health/check-github.py}"
+          "${pkgs.nix}/bin/nix"
+        ];
+        endpoints = builtins.listToAttrs (
+          map (url: {
+            name = cacheEndpointName url;
+            value = url + "/nix-cache-info";
+          }) cacheUrls
+        );
+      };
       system.stateVersion = lib.mkOverride 1100 "24.05"; # Weak fallback; hosts/profiles (e.g. the ISO) may mkDefault their own. https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
       environment.enableAllTerminfo = mkDefault true;
       nixpkgs = {

@@ -69,6 +69,51 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    teq.nixos.health.jobs.flake-update.maxRuntime = 21600;
+    teq.nixos.health.checks =
+      (lib.genAttrs [ "repo.dirty" "repo.sync" "repo.inputs" ] (name: {
+        report = name == "repo.inputs";
+        command = [
+          "${pkgs.python3}/bin/python3"
+          "${../../../pkgs/health/check-repo.py}"
+          (lib.removePrefix "repo." name)
+          "--repo"
+          cfg.repoPath
+          "--git"
+          "${pkgs.git}/bin/git"
+          "--remote"
+          (lib.head cfg.pushRemotes)
+        ];
+      }))
+      // lib.genAttrs (map (host: "build.${host}") cfg.hosts) (name: {
+        command = [
+          "${pkgs.python3}/bin/python3"
+          "${../../../pkgs/health/check-repo.py}"
+          "build"
+          "--repo"
+          cfg.repoPath
+          "--host"
+          (lib.removePrefix "build." name)
+        ];
+      })
+      //
+        lib.genAttrs
+          (map (host: "remote.${host}") (lib.filter (host: host != config.networking.hostName) cfg.hosts))
+          (name: {
+            remote = true;
+            command = [
+              "${pkgs.python3}/bin/python3"
+              "${../../../pkgs/health/check-repo.py}"
+              "build"
+              "--repo"
+              cfg.repoPath
+              "--host"
+              (lib.removePrefix "remote." name)
+              "--ssh"
+              "${pkgs.openssh}/bin/ssh"
+              "--remote-probe"
+            ];
+          });
     users.users.${cfg.user}.openssh.authorizedKeys.keys = lib.mapAttrsToList (
       h: key:
       ''command="${pkgs.coreutils}/bin/readlink -f ${cfg.repoPath}/result-builds/${h}",restrict ${key}''

@@ -93,6 +93,10 @@
       btrfs = false;
     };
     cachePull.enable = true;
+    health.jobs.cache-pull = {
+      bootGrace = 3600;
+      resumeGrace = 3600;
+    };
   };
   networking = {
     hostName = "bubblegum";

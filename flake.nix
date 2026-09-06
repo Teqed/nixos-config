@@ -128,6 +128,10 @@ The starlight on the Western Seas.
           pkgs = nixpkgs.legacyPackages.${system};
         in
         {
+          health = pkgs.runCommand "check-health" { nativeBuildInputs = [ pkgs.python3 ]; } ''
+            python3 -B -m unittest discover -s ${./pkgs/health} -v
+            touch $out
+          '';
           deploy-guard = pkgs.runCommand "check-deploy-guard" { nativeBuildInputs = [ pkgs.just ]; } ''
             script=$(just --justfile ${./justfile} --dry-run deploy example 2>&1)
             for needle in 'teq.nixos.cachePull' '.enable' '.buildServer' 'uname -n' 'exit 1'; do

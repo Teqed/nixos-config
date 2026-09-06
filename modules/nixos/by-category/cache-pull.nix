@@ -62,6 +62,14 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    teq.nixos.health.jobs.cache-pull.maxRuntime = 7200;
+    teq.nixos.health.checks."net.ssh.build-server".command = [
+      "${pkgs.monitoring-plugins}/bin/check_ssh"
+      "-H"
+      (lib.last (lib.splitString "@" cfg.buildServer))
+      "-t"
+      "5"
+    ];
     system.autoUpgrade.enable = lib.mkForce false;
 
     programs.ssh.knownHosts.cache-pull-build-server = {
@@ -87,7 +95,7 @@ in
       script = ''
         set -euo pipefail
 
-        target=$(ssh -i ${cfg.identityFile} -o IdentitiesOnly=yes -o BatchMode=yes ${cfg.buildServer})
+        target=$(ssh -T -i ${cfg.identityFile} -o IdentitiesOnly=yes -o BatchMode=yes ${cfg.buildServer})
 
         case "$target" in
           /nix/store/*-nixos-system-${host}-*) ;;

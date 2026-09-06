@@ -37,6 +37,7 @@ in
   };
 
   config = lib.mkMerge [
+    { teq.nixos.health.endpoints.ntfy = cfg.url; }
     (lib.mkIf cfg.server.enable {
       services.ntfy-sh = {
         enable = true;
