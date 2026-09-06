@@ -92,6 +92,7 @@
       enable = false;
       btrfs = false;
     };
+    cachePull.enable = true;
   };
   networking = {
     hostName = "bubblegum";

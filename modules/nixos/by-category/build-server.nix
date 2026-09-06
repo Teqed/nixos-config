@@ -57,9 +57,23 @@ in
       default = "/home/teq/.ssh/id_ed25519";
       description = "Path to key for git push.";
     };
+
+    pullKeys = lib.mkOption {
+      type = lib.types.attrsOf lib.types.str;
+      default = { };
+      example = {
+        bubblegum = "ssh-ed25519 AAAA... root@bubblegum";
+      };
+      description = "Per-host public keys allowed to read only that host's built toplevel path (used by cachePull clients).";
+    };
   };
 
   config = lib.mkIf cfg.enable {
+    users.users.${cfg.user}.openssh.authorizedKeys.keys = lib.mapAttrsToList (
+      h: key:
+      ''command="${pkgs.coreutils}/bin/readlink -f ${cfg.repoPath}/result-builds/${h}",restrict ${key}''
+    ) cfg.pullKeys;
+
     systemd.services.flake-update = {
       description = "Update flake.lock, build all hosts to warm cache, and push";
       after = [ "network-online.target" ];

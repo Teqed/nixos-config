@@ -17,6 +17,7 @@ let
     programs_networking = import ./by-category/networking.nix;
     programs_security = import ./by-category/security.nix;
     build_server = import ./by-category/build-server.nix;
+    cache_pull = import ./by-category/cache-pull.nix;
     notify = import ./by-category/notify.nix;
     boot = import ./boot.nix;
     impermanence = import ./impermanence.nix;

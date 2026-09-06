@@ -107,7 +107,10 @@
       enable = true;
       btrfs = true;
     };
-    buildServer.enable = true;
+    buildServer = {
+      enable = true;
+      pullKeys.bubblegum = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIL3IZpWJ13UifP6520LBn8+DA28XPBycCaupUxMP54m/ root@bubblegum";
+    };
     notify.server.enable = true;
   };
 
