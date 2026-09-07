@@ -22,6 +22,7 @@ in
 
   services = {
     scx.enable = false;
+    smartd.enable = false;
     caddy = {
       enable = true;
       virtualHosts."srd.shatteredsky.net".extraConfig = ''
