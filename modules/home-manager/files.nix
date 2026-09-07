@@ -12,6 +12,7 @@
       file = {
         "_".source = config.lib.file.mkOutOfStoreSymlink "/home/teq/.local/user-dirs";
         ".hushlogin".source = ./sources/.hushlogin;
+        ".claude/skills/reader".source = ../../pkgs/harness/skills/reader;
         ".config/readline/inputrc".source = ./sources/.config/readline/inputrc;
         ".config/dircolors/dircolors".source = ./sources/.config/dircolors/dircolors;
         ".config/nano/nanorc".source = ./sources/.config/nano/nanorc;

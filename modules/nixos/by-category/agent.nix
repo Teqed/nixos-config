@@ -105,13 +105,72 @@ let
         exec /etc/profiles/per-user/agent/bin/${name} "$@"
       fi
       if [ "$(id -u)" != "${toString cfg.uid}" ] && ! /run/wrappers/bin/sudo -n -u agent ${pkgs.coreutils}/bin/test -r "$PWD" -a -x "$PWD" 2>/dev/null; then
-        echo "${name}: the agent user cannot read $PWD" >&2
-        echo "  move the project into the shared tree:  agent-src-adopt $PWD" >&2
-        echo "  or run as yourself:                      AGENT_SELF=1 ${name}" >&2
-        exit 77
+        here=$PWD
+        if [ -t 0 ] && [ -t 1 ]; then
+          echo "${name}: the agent user cannot read $here" >&2
+          if [ -d "$here/.git" ]; then
+            printf '  1) run as yourself   2) adopt into ${srcTree} and run as agent   3) cancel  [1/2/3] ' >&2
+          else
+            printf '  1) run as yourself   3) cancel  [1/3] ' >&2
+          fi
+          read -r choice
+          case "$choice" in
+            1) exec /etc/profiles/per-user/agent/bin/${name} "$@" ;;
+            2)
+              [ -d "$here/.git" ] || exit 77
+              (cd / && ${srcAdopt}/bin/agent-src-adopt "$here") || exit 77
+              cd "$here" || exit 77
+              ;;
+            *) exit 77 ;;
+          esac
+        else
+          echo "${name}: the agent user cannot read $here" >&2
+          echo "  move the project into the shared tree:  agent-src-adopt $here" >&2
+          echo "  or run as yourself:                      AGENT_SELF=1 ${name}" >&2
+          exit 77
+        fi
       fi
       exec ${agentRun}/bin/agent-run /etc/profiles/per-user/agent/bin/${name} "$@"
     '';
+
+  statusLine = pkgs.writeShellApplication {
+    name = "claude-statusline";
+    runtimeInputs = [
+      pkgs.coreutils
+      pkgs.jq
+      pkgs.git
+    ];
+    text = builtins.readFile ../../../pkgs/harness/statusline.sh;
+  };
+
+  harnessSkills = ../../../pkgs/harness/skills;
+
+  managedSettings = pkgs.writeText "claude-managed-settings.json" (
+    builtins.toJSON {
+      permissions.deny = [
+        "Bash(git push:*)"
+        "Bash(git push :*)"
+        "Bash(cargo publish:*)"
+      ];
+      env = {
+        CLAUDE_BASH_MAINTAIN_PROJECT_WORKING_DIR = "1";
+        DISABLE_BUG_COMMAND = "1";
+        DISABLE_ERROR_REPORTING = "1";
+        MAX_MCP_OUTPUT_TOKENS = "40000";
+        RUST_BACKTRACE = "1";
+      };
+      attribution = {
+        commit = "";
+        pr = "";
+        sessionUrl = false;
+      };
+      statusLine = {
+        type = "command";
+        command = "${statusLine}/bin/claude-statusline";
+        padding = 0;
+      };
+    }
+  );
 
   srcTree = cfg.sourceTree.path;
   memoryRoot = "${srcTree}/.claude/memory";
@@ -281,6 +340,7 @@ in
         ripgrep
         python3
         curl
+        reader
       ];
     };
     launchers = lib.mkOption {
@@ -439,6 +499,8 @@ in
             "A+ ${srcTree}/.claude - - - - g:agents:rwx,d:g:agents:rwx"
             "d ${agentHome}/.claude 0750 agent agents -"
             "d ${agentHome}/.claude/projects 0750 agent agents -"
+            "d ${agentHome}/.claude/skills 0750 agent agents -"
+            "L+ ${agentHome}/.claude/skills/reader - - - - ${harnessSkills}/reader"
           ]
           ++ lib.optional (builtins.pathExists ../../../secrets/gh-agent.age) "f+ ${agentHome}/.config/nix/nix.conf 0640 agent agents - !include /run/agenix/gh-agent\\n";
 
@@ -485,6 +547,7 @@ in
           ++ lib.optional cfg.sourceTree.enable srcAdopt
           ++ map harnessWrapper cfg.harnesses;
           etc."agent-mail/config.json".source = agentMailConfig;
+          etc."claude-code/managed-settings.json".source = managedSettings;
           persistence."/persist".users = lib.mkIf (config.teq.nixos.impermanence.enable && isHub) (
             lib.genAttrs cfg.mailParticipants (_: {
               directories = [ "Maildir" ];
