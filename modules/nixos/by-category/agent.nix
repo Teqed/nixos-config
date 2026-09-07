@@ -405,6 +405,7 @@ in
             inet_interfaces = "loopback-only";
             smtp_dns_support_level = "disabled";
             message_size_limit = 10240000;
+            agentmail_destination_recipient_limit = 1;
           };
           extraAliases = lib.concatStringsSep "\n" aliasLines;
           transport = "agent@${cfg.hub.host} agentmail:";
