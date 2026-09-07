@@ -117,6 +117,21 @@ class ProxyRewriteTests(unittest.TestCase):
                 with patch.dict(os.environ, {"SSH_ORIGINAL_COMMAND": cmd}), contextlib.redirect_stderr(io.StringIO()):
                     self.assertEqual(am.proxy_main(["agent+codex@bubblegum"]), 2, cmd)
 
+    def test_proxy_bare_send_reads_recipients_from_message(self):
+        wire = am.compose(CFG, ["repo-nixos-config"], "hi", "body", task="repo-nixos-config#5ae51b5d")
+        with patch.object(am, "current_user", return_value="agent"), patch.object(am, "load_config", return_value=CFG), \
+                patch.object(am, "submit", return_value=(0, "<x@thoughtful>")) as submit, \
+                patch.dict(os.environ, {"SSH_ORIGINAL_COMMAND": "send"}), patch.object(am.sys, "stdin") as stdin:
+            stdin.buffer.read.return_value = wire.as_bytes()
+            self.assertEqual(am.proxy_main(["agent@bubblegum"]), 0)
+        sent = submit.call_args[0][0]
+        self.assertEqual(sent["To"], "repo-nixos-config@thoughtful")
+        self.assertEqual(sent["X-Task-ID"], "repo-nixos-config#5ae51b5d")
+        self.assertIn("(bubblegum)", sent["From"])
+        with patch.object(am, "load_config", return_value={**CFG, "mode": "client"}), \
+                contextlib.redirect_stderr(io.StringIO()):
+            self.assertEqual(am.main(["send"]), am.EX_USAGE)
+
     def test_proxy_identity_must_match_account(self):
         with patch.object(am, "current_user", return_value="teq"), \
                 patch.dict(os.environ, {"SSH_ORIGINAL_COMMAND": "list"}), contextlib.redirect_stderr(io.StringIO()):

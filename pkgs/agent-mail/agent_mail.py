@@ -323,7 +323,7 @@ def build_parser():
     p.add_argument("--json", action="store_true")
     sub = p.add_subparsers(dest="verb", required=True)
     s = sub.add_parser("send", help="body on stdin")
-    s.add_argument("to", nargs="+")
+    s.add_argument("to", nargs="*")
     s.add_argument("-s", "--subject", default="")
     s.add_argument("-r", "--reply-to", help="Message-ID being answered")
     s.add_argument("--task", help="existing X-Task-ID")
@@ -348,6 +348,8 @@ def run_local(args, config, principal=None, origin_host=None, raw_stdin=None):
         if principal is not None:
             msg = strip_untrusted_headers(raw_stdin, principal, origin_host, config)
         else:
+            if not args.to:
+                raise ValueError("send needs at least one recipient")
             body = sys.stdin.read()
             msg = compose(config, args.to, args.subject, body, reply_to=args.reply_to, task=args.task,
                           new_task=args.new_task, model=args.model or os.environ.get("AGENT_MAIL_MODEL"))
@@ -368,6 +370,9 @@ def main(argv=None):
     args = build_parser().parse_args(argv)
     if config.get("mode") == "client":
         if args.verb == "send":
+            if not args.to:
+                print("send needs at least one recipient", file=sys.stderr)
+                return EX_USAGE
             body = sys.stdin.read()
             msg = compose(config, args.to, args.subject, body, reply_to=args.reply_to, task=args.task,
                           new_task=args.new_task, model=args.model or os.environ.get("AGENT_MAIL_MODEL"))
