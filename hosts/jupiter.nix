@@ -172,6 +172,24 @@ in
   ];
   system.stateVersion = currentStateVersion;
   documentation.man.cache.enable = false;
+  system.extraDependencies =
+    let
+      versions = builtins.fromJSON (
+        builtins.readFile "${inputs.foundryvtt}/pkgs/foundryvtt/versions.json"
+      );
+      zip =
+        v:
+        pkgs.requireFile {
+          name = "FoundryVTT${lib.optionalString (lib.versionAtLeast v "13.338") "-Linux"}-${v}.zip";
+          inherit (versions.${v}) hash;
+          url = "https://foundryvtt.com";
+        };
+    in
+    map zip [
+      "11.315"
+      "12.343"
+      "13.351"
+    ];
   disko.devices = {
     disk = {
       main = {
