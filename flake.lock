@@ -702,6 +702,19 @@
         "type": "github"
       }
     },
+    "nixpkgs_5": {
+      "locked": {
+        "lastModified": 1784176690,
+        "narHash": "sha256-UCyrwrMqHxfvgEJBdqVUYg18mjf+HZtT+A5AxWNEmu8=",
+        "rev": "6368bc923cec55a5f78960ade0cb4dd99580e087",
+        "type": "tarball",
+        "url": "https://releases.nixos.org/nixpkgs/nixpkgs-26.11pre1035778.6368bc923cec/nixexprs.tar.xz"
+      },
+      "original": {
+        "type": "tarball",
+        "url": "https://channels.nixos.org/nixpkgs-unstable/nixexprs.tar.xz"
+      }
+    },
     "plasma-manager": {
       "inputs": {
         "home-manager": [
@@ -741,6 +754,7 @@
         "nixpkgs": "nixpkgs_4",
         "plasma-manager": "plasma-manager",
         "tangled-core": "tangled-core",
+        "tranquil": "tranquil",
         "vpn-confinement": "vpn-confinement",
         "washing-machien": "washing-machien"
       }
@@ -900,6 +914,24 @@
       "original": {
         "type": "git",
         "url": "https://tangled.org/@tangled.org/core"
+      }
+    },
+    "tranquil": {
+      "inputs": {
+        "nixpkgs": "nixpkgs_5"
+      },
+      "locked": {
+        "lastModified": 1788632216,
+        "narHash": "sha256-ikx62Zblmhd8iGbh388sZG0M0zTtsYdo3r36gucLzGQ=",
+        "ref": "refs/heads/main",
+        "rev": "09ba5e4521ee2649f113da281ad150c08e48f9dd",
+        "revCount": 546,
+        "type": "git",
+        "url": "https://tangled.org/tranquil.farm/tranquil-pds"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://tangled.org/tranquil.farm/tranquil-pds"
       }
     },
     "treefmt-nix": {

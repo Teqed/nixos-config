@@ -20,6 +20,14 @@ in
     (modulesPath + "/profiles/qemu-guest.nix")
   ];
 
+  teq.nixos.tranquil = {
+    enable = true;
+    hostname = "tran.quilling.dev";
+  };
+  services.tranquil-pds = {
+    package = lib.mkForce inputs.tranquil.packages.x86_64-linux.tranquil-pds-aarch64;
+    settings.frontend.dir = lib.mkForce inputs.tranquil.packages.x86_64-linux.tranquil-frontend;
+  };
   teq.nixos.headscale = {
     enable = true;
     domain = "headscale-secondary.shatteredsky.net";

@@ -44,6 +44,7 @@ The starlight on the Western Seas.
         darwin.follows = "";
       };
     };
+    tranquil.url = "git+https://tangled.org/tranquil.farm/tranquil-pds";
     tangled-core.url = "git+https://tangled.org/@tangled.org/core";
     tangled-core.inputs.nixpkgs.follows = "nixpkgs";
     washing-machien = {
@@ -241,6 +242,7 @@ The starlight on the Western Seas.
             ./hosts/jupiter.nix
             self.nixosModules.default
             agenix.nixosModules.default
+            inputs.tranquil.nixosModules.default
             home-manager.nixosModules.home-manager
             nix-flatpak.nixosModules.nix-flatpak
             self.homeManagerConfig
