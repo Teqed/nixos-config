@@ -89,14 +89,40 @@ def validate_msgid(mid):
     return mid if mid.startswith("<") else f"<{mid}>"
 
 
-def new_task_id(list_name):
-    return f"{list_name}#{secrets.token_hex(4)}"
+def new_task_id(project):
+    return f"{project}#{secrets.token_hex(4)}"
+
+
+def project_name(cwd=None, env=os.environ):
+    cwd = Path(cwd or os.getcwd())
+    name = env.get("AGENT_MAIL_PROJECT")
+    if not name:
+        try:
+            top = subprocess.run(["git", "-C", str(cwd), "rev-parse", "--show-toplevel"],
+                                 capture_output=True, text=True, timeout=5)
+            name = Path(top.stdout.strip()).name if top.returncode == 0 and top.stdout.strip() else ""
+        except (OSError, subprocess.SubprocessError):
+            name = ""
+    name = re.sub(r"[^a-z0-9-]", "-", (name or cwd.name).lower()).strip("-")
+    return name or "misc"
+
+
+def peers(config, harness=None):
+    own = harness if harness is not None else detect_harness()
+    boxes = [f"agent+{h}" for h in config.get("harnesses", []) if h != own]
+    return boxes + [h for h in config.get("humans", []) if h != current_user()]
+
+
+SUBJECT_TASK_RE = re.compile(r"^\[([a-z0-9-]+#[a-z0-9]{6,12})\]")
 
 
 def compose(config, to, subject, body, reply_to=None, task=None, new_task=False,
-            principal=None, origin_host=None, model=None, extra_headers=None, claimed_harness=None):
+            principal=None, origin_host=None, model=None, extra_headers=None, claimed_harness=None,
+            project=None):
     msg = EmailMessage(policy=POLICY)
     name, address, harness = sender_identity(config, principal, origin_host, claimed_harness)
+    if not to:
+        raise ValueError("send needs at least one recipient")
     msg["From"] = email.utils.formataddr((name, address))
     msg["To"] = ", ".join(f"{validate_address(t)}@{config['domain']}" if "@" not in t else t for t in to)
     msg["Date"] = email.utils.formatdate(localtime=True)
@@ -106,7 +132,10 @@ def compose(config, to, subject, body, reply_to=None, task=None, new_task=False,
         msg["In-Reply-To"] = reply_to
         msg["References"] = reply_to
     if new_task:
-        task = new_task_id(to[0].split("@")[0])
+        task = new_task_id(project or project_name())
+    if not task:
+        found = SUBJECT_TASK_RE.match(subject or "")
+        task = found.group(1) if found else None
     if task:
         task = validate_task(task)
         msg["X-Task-ID"] = task
@@ -228,6 +257,15 @@ def box_matches(m, box_name):
     return f"+{box_name}@" in delivered or delivered.startswith(f"{box_name}@")
 
 
+def task_matches(m, project=None, task=None):
+    tid = (m.get("X-Task-ID") or "").strip()
+    if task:
+        return tid == task
+    if project:
+        return tid.split("#")[0] == project
+    return True
+
+
 def find_by_msgid(box, mid):
     for p, m in iter_messages(box):
         if (m.get("Message-ID") or "").strip() == mid:
@@ -235,10 +273,10 @@ def find_by_msgid(box, mid):
     return None, None
 
 
-def cmd_list(box, unread, box_name, as_json=False):
+def cmd_list(box, unread, box_name, as_json=False, project=None, task=None):
     rows = []
     for p, m in iter_messages(box, unread_only=unread):
-        if not box_matches(m, box_name):
+        if not box_matches(m, box_name) or not task_matches(m, project, task):
             continue
         rows.append({"id": (m.get("Message-ID") or "").strip(), "from": m.get("From", ""),
                      "subject": m.get("Subject", ""), "date": m.get("Date", ""),
@@ -267,12 +305,12 @@ def cmd_show(box, mid, as_json=False):
     return 0
 
 
-def cmd_watch(box, box_name, since=None, poll=1.0, once=False):
+def cmd_watch(box, box_name, since=None, poll=1.0, once=False, project=None, task=None):
     announced = set()
     while True:
         for p, m in iter_messages(box, unread_only=True):
             mid = (m.get("Message-ID") or "").strip()
-            if not mid or mid in announced or not box_matches(m, box_name):
+            if not mid or mid in announced or not box_matches(m, box_name) or not task_matches(m, project, task):
                 continue
             announced.add(mid)
             print(f"{mid}\t{m.get('From', '')}\t{m.get('Subject', '')}", flush=True)
@@ -327,19 +365,34 @@ def build_parser():
     s.add_argument("-s", "--subject", default="")
     s.add_argument("-r", "--reply-to", help="Message-ID being answered")
     s.add_argument("--task", help="existing X-Task-ID")
-    s.add_argument("--new-task", action="store_true", help="mint an X-Task-ID for the first recipient/list")
+    s.add_argument("--new-task", action="store_true", help="mint an X-Task-ID for the current project")
+    s.add_argument("--peers", action="store_true", help="add every other harness box and the humans")
+    s.add_argument("--project", help="task prefix for --new-task (default: git toplevel name)")
     s.add_argument("--model", help="model name for X-Agent-Model")
     s.add_argument("--no-wait", action="store_true", help="do not wait for the delivery DSN (reports 'queued')")
     l = sub.add_parser("list")
     l.add_argument("--unread", action="store_true")
     l.add_argument("--box", help="harness box (Delivered-To extension), e.g. claude")
+    l.add_argument("--project")
+    l.add_argument("--task")
     sh = sub.add_parser("show")
     sh.add_argument("message_id")
     w = sub.add_parser("watch")
     w.add_argument("--box")
     w.add_argument("--since", help="accepted for compatibility; replay is always all unread")
     w.add_argument("--once", action="store_true")
+    w.add_argument("--project")
+    w.add_argument("--task")
     return p
+
+
+def compose_from_args(args, config):
+    to = list(args.to) + (peers(config) if args.peers else [])
+    to = list(dict.fromkeys(to))
+    body = sys.stdin.read()
+    return compose(config, to, args.subject, body, reply_to=args.reply_to, task=args.task,
+                   new_task=args.new_task, model=args.model or os.environ.get("AGENT_MAIL_MODEL"),
+                   project=args.project)
 
 
 def run_local(args, config, principal=None, origin_host=None, raw_stdin=None):
@@ -348,19 +401,15 @@ def run_local(args, config, principal=None, origin_host=None, raw_stdin=None):
         if principal is not None:
             msg = strip_untrusted_headers(raw_stdin, principal, origin_host, config)
         else:
-            if not args.to:
-                raise ValueError("send needs at least one recipient")
-            body = sys.stdin.read()
-            msg = compose(config, args.to, args.subject, body, reply_to=args.reply_to, task=args.task,
-                          new_task=args.new_task, model=args.model or os.environ.get("AGENT_MAIL_MODEL"))
+            msg = compose_from_args(args, config)
         code, _ = submit(msg, config, wait_dsn=not args.no_wait)
         return code
     if args.verb == "list":
-        return cmd_list(box, args.unread, args.box, args.json)
+        return cmd_list(box, args.unread, args.box, args.json, project=args.project, task=args.task)
     if args.verb == "show":
         return cmd_show(box, args.message_id, args.json)
     if args.verb == "watch":
-        return cmd_watch(box, args.box, once=args.once)
+        return cmd_watch(box, args.box, once=args.once, project=args.project, task=args.task)
     return EX_USAGE
 
 
@@ -370,12 +419,11 @@ def main(argv=None):
     args = build_parser().parse_args(argv)
     if config.get("mode") == "client":
         if args.verb == "send":
-            if not args.to:
-                print("send needs at least one recipient", file=sys.stderr)
+            try:
+                msg = compose_from_args(args, config)
+            except ValueError as error:
+                print(str(error), file=sys.stderr)
                 return EX_USAGE
-            body = sys.stdin.read()
-            msg = compose(config, args.to, args.subject, body, reply_to=args.reply_to, task=args.task,
-                          new_task=args.new_task, model=args.model or os.environ.get("AGENT_MAIL_MODEL"))
             return proxy_call(config, ["send"], msg.as_bytes())
         return proxy_call(config, argv)
     try:

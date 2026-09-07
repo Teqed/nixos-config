@@ -97,7 +97,7 @@
       enable = true;
       hub.enable = true;
       lists = {
-        "repo-nixos-config" = [
+        "nixos-config" = [
           "teq"
           "agent+claude"
           "agent+codex"

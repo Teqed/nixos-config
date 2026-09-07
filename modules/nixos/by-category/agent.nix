@@ -65,6 +65,8 @@ let
       hub = cfg.hub.address;
       domain = cfg.hub.host;
       identities = lib.optionalAttrs (!isHub && cfg.mailKeyFile != null) { agent = cfg.mailKeyFile; };
+      harnesses = cfg.harnesses;
+      humans = cfg.mailParticipants;
       dsn_timeout = 15;
     }
   );

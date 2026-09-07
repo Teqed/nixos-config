@@ -6,6 +6,7 @@ import tempfile
 import threading
 import unittest
 from pathlib import Path
+import unittest.mock
 from unittest.mock import patch
 
 import agent_mail as am
@@ -64,6 +65,40 @@ class ComposeTests(unittest.TestCase):
         self.assertEqual(am.detect_harness({"PRIME_AGENT_KERNEL_PYTHON": "x"}), "prime")
         self.assertEqual(am.detect_harness({"AGENT_MAIL_HARNESS": "luna"}), "luna")
 
+
+    def test_project_name_sources(self):
+        self.assertEqual(am.project_name("/tmp/x", env={"AGENT_MAIL_PROJECT": "My Proj"}), "my-proj")
+        fake = unittest.mock.Mock(returncode=0, stdout="/home/teq/Repos/Foo_Bar\n")
+        with patch.object(am.subprocess, "run", return_value=fake):
+            self.assertEqual(am.project_name("/tmp/x", env={}), "foo-bar")
+        with patch.object(am.subprocess, "run", side_effect=OSError):
+            self.assertEqual(am.project_name("/tmp/plain.dir", env={}), "plain-dir")
+
+    def test_new_task_and_subject_lift(self):
+        m = am.compose(CFG, ["agent+claude"], "hi", "b", new_task=True, project="foo")
+        self.assertRegex(m["X-Task-ID"], r"^foo#[0-9a-f]{8}$")
+        self.assertTrue(m["Subject"].startswith("[foo#"))
+        m = am.compose(CFG, ["teq"], "[foo#abc12345] reply", "b")
+        self.assertEqual(m["X-Task-ID"], "foo#abc12345")
+        self.assertEqual(m["Subject"], "[foo#abc12345] reply")
+        with self.assertRaises(ValueError):
+            am.compose(CFG, [], "x", "b")
+
+    def test_peers_excludes_self(self):
+        cfg = {**CFG, "harnesses": ["claude", "codex", "prime"], "humans": ["teq"]}
+        with patch.object(am, "current_user", return_value="agent"):
+            self.assertEqual(am.peers(cfg, harness="codex"), ["agent+claude", "agent+prime", "teq"])
+        with patch.object(am, "current_user", return_value="teq"):
+            self.assertEqual(am.peers(cfg, harness=None), ["agent+claude", "agent+codex", "agent+prime"])
+
+    def test_task_filters(self):
+        m = am.compose(CFG, ["teq"], "x", "b", task="foo#abc12345")
+        self.assertTrue(am.task_matches(m, project="foo"))
+        self.assertFalse(am.task_matches(m, project="bar"))
+        self.assertTrue(am.task_matches(m, task="foo#abc12345"))
+        self.assertFalse(am.task_matches(m, task="foo#abc12346"))
+        self.assertTrue(am.task_matches(m))
+        self.assertFalse(am.task_matches(am.compose(CFG, ["teq"], "y", "b"), project="foo"))
 
 class ProxyRewriteTests(unittest.TestCase):
     def test_from_is_rewritten_from_identity_not_wire(self):
