@@ -180,6 +180,23 @@ class MaildirTests(unittest.TestCase):
         self.assertTrue(all("\t" in l for l in lines))
 
 
+    def test_deliver_command_writes_maildir_atomically(self):
+        raw = b"Delivered-To: agent+claude@thoughtful\nMessage-ID: <cmd@thoughtful>\nSubject: via command\n\nbody\n"
+        dest = am.deliver(self.box, raw)
+        self.assertEqual(dest.parent, self.box / "new")
+        self.assertEqual(dest.read_bytes(), raw)
+        self.assertEqual(list((self.box / "tmp").iterdir()), [])
+        self.assertEqual(dest.stat().st_mode & 0o777, 0o600)
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            am.cmd_watch(self.box, "claude", once=True)
+        self.assertIn("via command", out.getvalue())
+        with patch.object(am, "maildir", return_value=self.box), patch.object(am.sys, "stdin") as stdin:
+            stdin.buffer.read.return_value = raw
+            self.assertEqual(am.deliver_main(), 0)
+        self.assertEqual(len(list((self.box / "new").iterdir())), 4)
+
+
 class DsnTests(unittest.TestCase):
     def dsn(self, mid, action):
         return (f"From: MAILER-DAEMON@thoughtful\nTo: agent@thoughtful\nSubject: Successful Mail Delivery Report\n"

@@ -51,6 +51,8 @@ let
       makeWrapper ${pkgs.python3}/bin/python3 $out/bin/agent-mail-proxy \
         --add-flags "-c 'import sys; sys.path.insert(0, \"$out/lib/agent-mail\"); import agent_mail; sys.exit(agent_mail.proxy_main())'" \
         --prefix PATH : /run/wrappers/bin
+      makeWrapper ${pkgs.python3}/bin/python3 $out/bin/agent-mail-deliver \
+        --add-flags "-c 'import sys; sys.path.insert(0, \"$out/lib/agent-mail\"); import agent_mail; sys.exit(agent_mail.deliver_main())'"
     '';
     nativeBuildInputs = [ pkgs.makeWrapper ];
     doCheck = true;
@@ -402,7 +404,7 @@ in
               "localhost.localdomain"
             ];
             mynetworks = [ "127.0.0.0/8" ];
-            home_mailbox = "Maildir/";
+            mailbox_command = "${agentMail}/bin/agent-mail-deliver";
             recipient_delimiter = "+";
             inet_interfaces = "loopback-only";
             smtp_dns_support_level = "disabled";

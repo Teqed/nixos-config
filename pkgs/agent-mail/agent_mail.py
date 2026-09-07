@@ -413,5 +413,29 @@ def proxy_main(argv=None):
         return EX_USAGE
 
 
+def deliver(box, raw):
+    for d in ("tmp", "new", "cur"):
+        (box / d).mkdir(mode=0o700, parents=True, exist_ok=True)
+    name = f"{time.time_ns() // 1000}.P{os.getpid()}Q{secrets.token_hex(4)}.{socket.gethostname()}"
+    tmp, dest = box / "tmp" / name, box / "new" / name
+    fd = os.open(tmp, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+    with os.fdopen(fd, "wb") as fh:
+        fh.write(raw)
+        fh.flush()
+        os.fsync(fh.fileno())
+    os.link(tmp, dest)
+    os.unlink(tmp)
+    return dest
+
+
+def deliver_main():
+    try:
+        deliver(maildir(), sys.stdin.buffer.read())
+    except OSError as error:
+        print(f"delivery failed: {error}", file=sys.stderr)
+        return EX_TEMPFAIL
+    return 0
+
+
 if __name__ == "__main__":
     sys.exit(main())
