@@ -7,13 +7,14 @@
 }:
 let
   agentEnabled = osConfig != null && (osConfig.teq.nixos.agent.enable or false);
+  desktop = osConfig != null && (osConfig.teq.nixos.gui.enable or false);
 in
 {
   config = lib.mkMerge [
     (lib.mkIf config.teq.home-manager.enable {
       home.packages =
         with pkgs;
-        lib.optionals (!agentEnabled) [
+        lib.optionals (desktop && !agentEnabled) [
           llm-agents.claude-code
           llm-agents.prime-agent
           llm-agents.codex
