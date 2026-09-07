@@ -82,6 +82,9 @@ in
       after = [ "network-online.target" ];
       wants = [ "network-online.target" ];
       onFailure = lib.optional config.teq.nixos.notify.failureTemplate.enable "notify-fail@%n.service";
+      restartIfChanged = false;
+      stopIfChanged = false;
+      unitConfig.X-StopOnRemoval = false;
       path = with pkgs; [
         nix
         openssh
