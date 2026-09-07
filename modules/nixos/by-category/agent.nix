@@ -411,6 +411,19 @@ in
             message_size_limit = 10240000;
           };
           extraAliases = lib.concatStringsSep "\n" aliasLines;
+          transport = "agent@${cfg.hub.host} agentmail:";
+          settings.master.agentmail = {
+            type = "unix";
+            private = true;
+            privileged = true;
+            command = "pipe";
+            args = [
+              "flags=R"
+              "user=agent:agents"
+              "argv=${agentMail}/bin/agent-mail-deliver"
+              "\${mailbox}@\${domain}"
+            ];
+          };
         };
       }
     ]
