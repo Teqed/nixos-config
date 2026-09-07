@@ -207,9 +207,13 @@ class MaildirTests(unittest.TestCase):
             am.cmd_watch(self.box, "claude", once=True)
         self.assertIn("via command", out.getvalue())
         with patch.object(am, "maildir", return_value=self.box), patch.object(am.sys, "stdin") as stdin:
-            stdin.buffer.read.return_value = raw
-            self.assertEqual(am.deliver_main(), 0)
+            stdin.buffer.read.return_value = b"Delivered-To: repo-nixos-config@thoughtful\nMessage-ID: <list@thoughtful>\nSubject: via list\n\nbody\n"
+            self.assertEqual(am.deliver_main(["agent+codex@thoughtful"]), 0)
         self.assertEqual(len(list((self.box / "new").iterdir())), 4)
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            am.cmd_watch(self.box, "codex", once=True)
+        self.assertEqual(sorted(l.split("\t")[-1] for l in out.getvalue().splitlines()), ["two", "via list"])
 
 
 class DsnTests(unittest.TestCase):
@@ -228,6 +232,8 @@ class DsnTests(unittest.TestCase):
             self.assertIsNone(am.wait_for_dsn(box, mid, 0.3))
             deliver(box, self.dsn(mid, "delivered"), "1.d")
             self.assertEqual(am.wait_for_dsn(box, mid, 1), "delivered")
+            deliver(box, self.dsn("<list@thoughtful>", "expanded"), "2.e")
+            self.assertEqual(am.wait_for_dsn(box, "<list@thoughtful>", 1), "delivered")
             self.assertTrue(any(p.name.endswith(":2,S") for p in (box / "cur").iterdir()))
             deliver(box, self.dsn("<x2@thoughtful>", "failed"), "2.f")
             self.assertEqual(am.wait_for_dsn(box, "<x2@thoughtful>", 1), "failed")

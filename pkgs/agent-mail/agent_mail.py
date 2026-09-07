@@ -175,7 +175,7 @@ def classify_dsn(path, mid):
     if m.get_content_type() != "multipart/report":
         return None
     text = raw.decode(errors="replace")
-    if re.search(r"^Action:\s*delivered", text, re.M | re.I):
+    if re.search(r"^Action:\s*(delivered|expanded)", text, re.M | re.I):
         return "delivered"
     if re.search(r"^Action:\s*(failed|delayed)", text, re.M | re.I):
         return "failed"
@@ -433,9 +433,14 @@ def deliver(box, raw):
     return dest
 
 
-def deliver_main():
+def deliver_main(argv=None, env=os.environ):
+    argv = list(sys.argv[1:] if argv is None else argv)
+    recipient = (argv[0] if argv else env.get("RECIPIENT", "")).strip()
+    raw = sys.stdin.buffer.read()
+    if recipient and ADDRESS_RE.match(recipient.split("@")[0]):
+        raw = f"Delivered-To: {recipient}\n".encode() + raw
     try:
-        deliver(maildir(), sys.stdin.buffer.read())
+        deliver(maildir(), raw)
     except OSError as error:
         print(f"delivery failed: {error}", file=sys.stderr)
         return EX_TEMPFAIL

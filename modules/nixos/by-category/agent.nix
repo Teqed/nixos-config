@@ -404,7 +404,7 @@ in
               "localhost.localdomain"
             ];
             mynetworks = [ "127.0.0.0/8" ];
-            mailbox_command = "${agentMail}/bin/agent-mail-deliver";
+            mailbox_command = "${agentMail}/bin/agent-mail-deliver $RECIPIENT";
             recipient_delimiter = "+";
             inet_interfaces = "loopback-only";
             smtp_dns_support_level = "disabled";
