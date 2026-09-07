@@ -65,7 +65,7 @@ let
       hub = cfg.hub.address;
       domain = cfg.hub.host;
       identities = lib.optionalAttrs (!isHub && cfg.mailKeyFile != null) { agent = cfg.mailKeyFile; };
-      harnesses = cfg.harnesses;
+      inherit (cfg) harnesses;
       humans = cfg.mailParticipants;
       dsn_timeout = 15;
     }
@@ -104,8 +104,70 @@ let
       if [ "''${AGENT_SELF:-0}" = 1 ]; then
         exec /etc/profiles/per-user/agent/bin/${name} "$@"
       fi
+      if [ "$(id -u)" != "${toString cfg.uid}" ] && ! /run/wrappers/bin/sudo -n -u agent ${pkgs.coreutils}/bin/test -r "$PWD" -a -x "$PWD" 2>/dev/null; then
+        echo "${name}: the agent user cannot read $PWD" >&2
+        echo "  move the project into the shared tree:  agent-src-adopt $PWD" >&2
+        echo "  or run as yourself:                      AGENT_SELF=1 ${name}" >&2
+        exit 77
+      fi
       exec ${agentRun}/bin/agent-run /etc/profiles/per-user/agent/bin/${name} "$@"
     '';
+
+  srcTree = cfg.sourceTree.path;
+  memoryRoot = "${srcTree}/.claude/memory";
+
+  srcAdopt = pkgs.writeShellApplication {
+    name = "agent-src-adopt";
+    runtimeInputs = [
+      pkgs.coreutils
+      pkgs.acl
+      pkgs.git
+      pkgs.findutils
+    ];
+    text = ''
+      die() { echo "agent-src-adopt: $*" >&2; exit 1; }
+      [ $# -eq 1 ] || die "usage: agent-src-adopt <repo-dir>"
+      src=$(realpath "$1")
+      name=$(basename "$src")
+      dest=${srcTree}/$name
+      [ -d "$src/.git" ] || die "$src is not a git working tree"
+      case "$src" in ${srcTree}/*) die "$src is already in ${srcTree}" ;; esac
+      [ -e "$dest" ] && die "$dest already exists"
+      case "$(realpath "$PWD")" in "$src"|"$src"/*) die "run this from outside $src" ;; esac
+      id -nG | tr ' ' '\n' | grep -qx agents || die "you are not in group agents yet; switch the system first"
+      mv "$src" "$dest"
+      ln -s "$dest" "$src"
+      chgrp -R agents "$dest"
+      chmod -R g+rwX "$dest"
+      find "$dest" -type d -exec chmod g+s {} +
+      setfacl -R -m g:agents:rwX -m d:g:agents:rwX "$dest"
+      git -C "$dest" config core.sharedRepository group
+      key=$(printf '%s' "$dest" | tr '/.' '--')
+      oldkey=$(printf '%s' "$src" | tr '/.' '--')
+      mem=${memoryRoot}/$key
+      install -d -m 2770 -g agents "$mem"
+      setfacl -m g:agents:rwX -m d:g:agents:rwX "$mem"
+      link_memory() {
+        local projects=$1 k
+        for k in "$oldkey" "$key"; do
+          if [ -d "$projects/$k/memory" ] && [ ! -L "$projects/$k/memory" ]; then
+            cp -an "$projects/$k/memory/." "$mem/"
+            rm -rf "$projects/$k/memory"
+          fi
+        done
+        mkdir -p "$projects/$key"
+        ln -sfn "$mem" "$projects/$key/memory"
+      }
+      link_memory "$HOME/.claude/projects"
+      /run/wrappers/bin/sudo -n -u agent -H ${pkgs.bash}/bin/bash -c "$(declare -f link_memory); oldkey=$oldkey; key=$key; mem=$mem; link_memory ${agentHome}/.claude/projects"
+      chgrp -R agents "$mem"
+      chmod -R g+rwX "$mem"
+      if [ -f "$dest/.envrc" ]; then
+        /run/wrappers/bin/sudo -n -u agent -H ${pkgs.direnv}/bin/direnv allow "$dest"
+      fi
+      echo "adopted: $dest  (old path is now a symlink; shared memory at $mem)"
+    '';
+  };
 
   launchTest = pkgs.writeShellApplication {
     name = "agent-launch-test";
@@ -206,6 +268,17 @@ in
       type = lib.types.listOf lib.types.str;
       default = [ "teq" ];
       description = "Human users allowed to become `agent` (sudo, NOPASSWD, only as agent).";
+    };
+    sourceTree = {
+      enable = lib.mkOption {
+        type = lib.types.bool;
+        default = true;
+        description = "Group-shared working tree where humans and the agent edit the same checkouts.";
+      };
+      path = lib.mkOption {
+        type = lib.types.str;
+        default = "/usr/local/src";
+      };
     };
     mailParticipants = lib.mkOption {
       type = lib.types.listOf lib.types.str;
@@ -325,6 +398,11 @@ in
               };
             }
             (lib.mkIf isHub (lib.mapAttrs (_: keys: { openssh.authorizedKeys.keys = keys; }) proxyKeyEntries))
+            (lib.mkIf cfg.sourceTree.enable (
+              lib.genAttrs cfg.launchers (_: {
+                extraGroups = [ "agents" ];
+              })
+            ))
           ];
         };
 
@@ -333,6 +411,15 @@ in
             "d ${agentHome}/.config 0750 agent agents -"
             "d ${agentHome}/.config/nix 0750 agent agents -"
             "d ${agentHome}/.ssh 0700 agent agents -"
+          ]
+          ++ lib.optionals cfg.sourceTree.enable [
+            "d ${srcTree} 2775 root agents -"
+            "a+ ${srcTree} - - - - g:agents:rwx,d:g:agents:rwx"
+            "d ${srcTree}/.claude 2770 agent agents -"
+            "d ${memoryRoot} 2770 agent agents -"
+            "A+ ${srcTree}/.claude - - - - g:agents:rwx,d:g:agents:rwx"
+            "d ${agentHome}/.claude 0750 agent agents -"
+            "d ${agentHome}/.claude/projects 0750 agent agents -"
           ]
           ++ lib.optional (builtins.pathExists ../../../secrets/gh-agent.age) "f+ ${agentHome}/.config/nix/nix.conf 0640 agent agents - !include /run/agenix/gh-agent\\n";
 
@@ -376,6 +463,7 @@ in
             launchTest
             agentMail
           ]
+          ++ lib.optional cfg.sourceTree.enable srcAdopt
           ++ map harnessWrapper cfg.harnesses;
           etc."agent-mail/config.json".source = agentMailConfig;
           persistence."/persist".users = lib.mkIf (config.teq.nixos.impermanence.enable && isHub) (
@@ -383,9 +471,23 @@ in
               directories = [ "Maildir" ];
             })
           );
+          persistence."/persist".directories =
+            lib.mkIf (config.teq.nixos.impermanence.enable && cfg.sourceTree.enable)
+              [
+                srcTree
+              ];
         };
 
         services.openssh.settings.AllowUsers = lib.mkIf isHub [ "agent" ];
+
+        programs.git = lib.mkIf cfg.sourceTree.enable {
+          enable = true;
+          config = {
+            safe.directory = [ "${srcTree}/*" ];
+            includeIf."gitdir:${srcTree}/".path =
+              pkgs.writeText "gitconfig-shared" "[core]\n\tsharedRepository = group\n";
+          };
+        };
 
         services.postfix = lib.mkIf isHub {
           enable = true;
