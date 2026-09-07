@@ -109,6 +109,46 @@ The starlight on the Western Seas.
             python3 -B -m unittest discover -s ${./pkgs/health} -v
             touch $out
           '';
+          mail-no-listener = pkgs.runCommand "check-mail-no-listener" { } ''
+            setup=${pkgs.writeText "postfix-setup.sh" self.nixosConfigurations.thoughtful.config.systemd.services.postfix-setup.script}
+            master=$(grep -oE '/nix/store/[^ ]*-postfix-master\.cf' "$setup" | head -1)
+            [ -r "$master" ] || { echo "could not locate the generated master.cf" >&2; exit 1; }
+            if grep -E '^[a-z0-9._:-]+[[:space:]]+inet' "$master"; then
+              echo "hub postfix has a network listener" >&2; exit 1
+            fi
+            grep -q '^pickup' "$master" && grep -q '^local' "$master" && touch $out
+          '';
+          agent-proxy-mapping =
+            let
+              hub = self.nixosConfigurations.thoughtful.config;
+              keys = hub.teq.nixos.agent.proxyKeys;
+              accountOf =
+                ph: builtins.head (nixpkgs.lib.splitString "+" (builtins.head (nixpkgs.lib.splitString "@" ph)));
+              entryFor =
+                ph: key:
+                nixpkgs.lib.any (
+                  k: nixpkgs.lib.hasInfix "agent-mail-proxy ${ph}\"" k && nixpkgs.lib.hasSuffix key k
+                ) hub.users.users.${accountOf ph}.openssh.authorizedKeys.keys;
+              wrongAccount =
+                ph:
+                nixpkgs.lib.any (
+                  acct:
+                  acct != accountOf ph
+                  && nixpkgs.lib.any (k: nixpkgs.lib.hasInfix "agent-mail-proxy ${ph}\"" k) (
+                    hub.users.users.${acct}.openssh.authorizedKeys.keys or [ ]
+                  )
+                ) (builtins.attrNames hub.users.users);
+              problems = nixpkgs.lib.filterAttrs (ph: key: !(entryFor ph key) || wrongAccount ph) keys;
+            in
+            pkgs.runCommand "check-agent-proxy-mapping" { } ''
+              ${
+                if problems == { } then
+                  "echo 'every proxy key is a forced command in exactly its principal account (${toString (builtins.length (builtins.attrNames keys))} keys)'"
+                else
+                  "echo 'proxy keys not mapped to their principal account: ${toString (builtins.attrNames problems)}' >&2; exit 1"
+              }
+              touch $out
+            '';
           deploy-guard = pkgs.runCommand "check-deploy-guard" { nativeBuildInputs = [ pkgs.just ]; } ''
             script=$(just --justfile ${./justfile} --dry-run deploy example 2>&1)
             for needle in 'teq.nixos.cachePull' '.enable' '.buildServer' 'uname -n' 'exit 1'; do
@@ -129,7 +169,7 @@ The starlight on the Western Seas.
             deadnix --fail ${self} && touch $out
           '';
           shellcheck = pkgs.runCommand "check-shellcheck" { nativeBuildInputs = [ pkgs.shellcheck ]; } ''
-            shellcheck ${self}/pkgs/scripts/src/*.sh && touch $out
+            shellcheck --shell=bash ${self}/pkgs/scripts/src/*.sh && touch $out
           '';
         }
       );

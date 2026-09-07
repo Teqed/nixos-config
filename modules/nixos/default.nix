@@ -17,6 +17,7 @@ let
     build_server = import ./by-category/build-server.nix;
     cache_pull = import ./by-category/cache-pull.nix;
     health = import ./by-category/health.nix;
+    agent = import ./by-category/agent.nix;
     notify = import ./by-category/notify.nix;
     boot = import ./boot.nix;
     impermanence = import ./impermanence.nix;

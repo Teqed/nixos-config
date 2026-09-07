@@ -93,6 +93,24 @@
       enable = true;
       pullKeys.bubblegum = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIL3IZpWJ13UifP6520LBn8+DA28XPBycCaupUxMP54m/ root@bubblegum";
     };
+    agent = {
+      enable = true;
+      hub.enable = true;
+      lists = {
+        "repo-nixos-config" = [
+          "teq"
+          "agent+claude"
+          "agent+codex"
+        ];
+        ops = [
+          "teq"
+          "agent+claude"
+          "agent+codex"
+        ];
+      };
+      proxyKeys."agent@bubblegum" =
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILl2Uuhv5q5X1rcncx3k1+z3Rld46HNUBaNR1eNdgzSe mail:agent@bubblegum";
+    };
     notify.server.enable = true;
   };
 

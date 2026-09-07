@@ -15,4 +15,10 @@ in
   "wg0.age".publicKeys = allUsers ++ [ systems.thoughtful ];
   "gh.age".publicKeys = allUsers ++ allSystems;
   "washing-machien.age".publicKeys = allUsers ++ [ systems.thoughtful ];
+  "mail-key-agent-bubblegum.age".publicKeys = allUsers ++ [ systems.bubblegum ];
+  "gh-agent.age".publicKeys = allUsers ++ allSystems;
+  "openai-agent-thoughtful.age".publicKeys = allUsers ++ [ systems.thoughtful ];
+  "openai-agent-bubblegum.age".publicKeys = allUsers ++ [ systems.bubblegum ];
+  "prime-agent-thoughtful.age".publicKeys = allUsers ++ [ systems.thoughtful ];
+  "prime-agent-bubblegum.age".publicKeys = allUsers ++ [ systems.bubblegum ];
 }
