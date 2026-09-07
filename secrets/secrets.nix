@@ -20,6 +20,7 @@ in
   "gh-agent.age".publicKeys = allUsers ++ allSystems;
   "tailscale-auth.age".publicKeys = allUsers ++ allSystems;
   "cloudflare-ro.age".publicKeys = allUsers;
+  "cloudflare-dns.age".publicKeys = allUsers ++ [ systems.jupiter ];
   "tranquil-env.age".publicKeys = allUsers ++ [ systems.jupiter ];
   "claude-agent.age".publicKeys = allUsers ++ allSystems;
   "codex-auth.age".publicKeys = allUsers ++ allSystems;
