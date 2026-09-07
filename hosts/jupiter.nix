@@ -22,7 +22,33 @@ in
 
   services = {
     scx.enable = false;
-    caddy.enable = true;
+    caddy = {
+      enable = true;
+      virtualHosts."srd.shatteredsky.net".extraConfig = ''
+        tls internal
+        reverse_proxy http://localhost:3000
+      '';
+    };
+    postgresql = {
+      enable = true;
+      ensureDatabases = [ "wiki-js" ];
+      ensureUsers = [
+        {
+          name = "wiki-js";
+          ensureDBOwnership = true;
+        }
+      ];
+    };
+    wiki-js = {
+      enable = true;
+      settings.offline = true;
+      settings.db = {
+        db = "wiki-js";
+        host = "/run/postgresql";
+        type = "postgres";
+        user = "wiki-js";
+      };
+    };
     openssh.enable = true;
   };
   networking = {
@@ -35,6 +61,10 @@ in
       30001
       30002
     ];
+  };
+  systemd.services.wiki-js = {
+    requires = [ "postgresql.service" ];
+    after = [ "postgresql.service" ];
   };
 
   containers = {
