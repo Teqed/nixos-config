@@ -16,10 +16,10 @@ let
       mode = "0400";
     };
   };
-  hostSecret =
+  fleetSecret =
     name:
-    lib.optionalAttrs (builtins.pathExists (secretsDir + "/${name}-${hostName}.age")) (
-      agentSecret name (secretsDir + "/${name}-${hostName}.age")
+    lib.optionalAttrs (builtins.pathExists (secretsDir + "/${name}.age")) (
+      agentSecret name (secretsDir + "/${name}.age")
     );
   hostName = config.networking.hostName;
   isHub = cfg.hub.enable;
@@ -84,7 +84,13 @@ let
         XDG_RUNTIME_DIR=${runtimeDir} DBUS_SESSION_BUS_ADDRESS=unix:path=${runtimeDir}/bus \
         PATH=/etc/profiles/per-user/agent/bin:/run/current-system/sw/bin:/run/wrappers/bin \
         AGENT_LAUNCHED_BY="$(id -un)" \
-        ${pkgs.systemd}/bin/systemd-run --user --scope --quiet --collect --unit="$unit" -- "$@"
+        ${pkgs.bashInteractive}/bin/bash -c '
+          if [ -r /run/agenix/claude-agent ]; then
+            CLAUDE_CODE_OAUTH_TOKEN=$(${pkgs.coreutils}/bin/tr -d "[:space:]" < /run/agenix/claude-agent)
+            export CLAUDE_CODE_OAUTH_TOKEN
+          fi
+          exec ${pkgs.systemd}/bin/systemd-run --user --scope --quiet --collect --unit="$0" -- "$@"
+        ' "$unit" "$@"
     '';
   };
 
@@ -269,8 +275,9 @@ in
           // lib.optionalAttrs (builtins.pathExists (secretsDir + "/gh-agent.age")) (
             agentSecret "gh-agent" (secretsDir + "/gh-agent.age")
           )
-          // hostSecret "openai-agent"
-          // hostSecret "prime-agent";
+          // fleetSecret "claude-agent"
+          // fleetSecret "codex-auth"
+          // fleetSecret "prime-auth";
       })
       {
         assertions = [
@@ -339,15 +346,16 @@ in
             };
             script = ''
               set -eu
-              install -d -m 0750 -o agent -g agents ${agentHome}/.codex ${agentHome}/.prime
-              if [ -r /run/agenix/openai-agent ]; then
-                ${pkgs.jq}/bin/jq -n --rawfile k /run/agenix/openai-agent '{OPENAI_API_KEY: ($k | rtrimstr("\n"))}' \
-                  | install -m 0600 -o agent -g agents /dev/stdin ${agentHome}/.codex/auth.json
-              fi
-              if [ -r /run/agenix/prime-agent ]; then
-                ${pkgs.jq}/bin/jq -n --rawfile k /run/agenix/prime-agent '{api_key: ($k | rtrimstr("\n"))}' \
-                  | install -m 0600 -o agent -g agents /dev/stdin ${agentHome}/.prime/config.json
-              fi
+              install -d -m 0750 -o agent -g agents ${agentHome}/.codex ${agentHome}/.prime ${agentHome}/.prime/agent
+              seed() {
+                if [ -r "$1" ] && [ ! -e "$2" ]; then
+                  ${pkgs.jq}/bin/jq -e . "$1" >/dev/null
+                  install -m 0600 -o agent -g agents "$1" "$2"
+                  echo "seeded $2"
+                fi
+              }
+              seed /run/agenix/codex-auth ${agentHome}/.codex/auth.json
+              seed /run/agenix/prime-auth ${agentHome}/.prime/agent/auth.json
             '';
           };
 

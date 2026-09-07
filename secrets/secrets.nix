@@ -17,8 +17,8 @@ in
   "washing-machien.age".publicKeys = allUsers ++ [ systems.thoughtful ];
   "mail-key-agent-bubblegum.age".publicKeys = allUsers ++ [ systems.bubblegum ];
   "gh-agent.age".publicKeys = allUsers ++ allSystems;
-  "openai-agent-thoughtful.age".publicKeys = allUsers ++ [ systems.thoughtful ];
-  "openai-agent-bubblegum.age".publicKeys = allUsers ++ [ systems.bubblegum ];
-  "prime-agent-thoughtful.age".publicKeys = allUsers ++ [ systems.thoughtful ];
-  "prime-agent-bubblegum.age".publicKeys = allUsers ++ [ systems.bubblegum ];
+  "tailscale-auth.age".publicKeys = allUsers ++ allSystems;
+  "claude-agent.age".publicKeys = allUsers ++ allSystems;
+  "codex-auth.age".publicKeys = allUsers ++ allSystems;
+  "prime-auth.age".publicKeys = allUsers ++ allSystems;
 }
