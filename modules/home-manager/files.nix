@@ -14,7 +14,6 @@
         ".hushlogin".source = ./sources/.hushlogin;
         ".config/readline/inputrc".source = ./sources/.config/readline/inputrc;
         ".config/dircolors/dircolors".source = ./sources/.config/dircolors/dircolors;
-        ".config/blesh/init.sh".source = ./sources/.config/blesh/init.sh;
         ".config/nano/nanorc".source = ./sources/.config/nano/nanorc;
         ".config/vim/.vimrc".source = ./sources/.config/vim/.vimrc;
         ".config/wezterm/wezterm.lua".source = ./sources/.config/wezterm/wezterm.lua;

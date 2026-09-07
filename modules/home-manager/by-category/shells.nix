@@ -151,7 +151,6 @@ in
         ];
         # blesh, a full-featured line editor written in pure Bash
         initExtra = lib.mkBefore ''
-          source ${pkgs.blesh}/share/blesh/ble.sh
           # set -h # Enable 'hash' builtin
           source "${XDG_CONFIG_HOME}/bash/functions.sh"; # Functions
           if [[ $(${pkgs.procps}/bin/ps --no-header --pid=$PPID --format=comm) != "fish" && -z ''${BASH_EXECUTION_STRING} ]]
