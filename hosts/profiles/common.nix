@@ -44,7 +44,7 @@ in
             isNormalUser = mkForce true;
             description = mkForce "Teq";
             shell = pkgs.fish;
-            extraGroups = mkForce [
+            extraGroups = [
               "networkmanager"
               "wheel"
               "audio"
