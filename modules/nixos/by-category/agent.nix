@@ -236,11 +236,7 @@ in
     };
     aliases = lib.mkOption {
       type = lib.types.attrsOf lib.types.str;
-      default = {
-        fable = "agent+claude";
-        luna = "agent+codex";
-        astra = "agent+codex";
-      };
+      default = { };
     };
     proxyKeys = lib.mkOption {
       type = lib.types.attrsOf lib.types.str;
