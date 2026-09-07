@@ -474,7 +474,12 @@ in
           persistence."/persist".directories =
             lib.mkIf (config.teq.nixos.impermanence.enable && cfg.sourceTree.enable)
               [
-                srcTree
+                {
+                  directory = srcTree;
+                  user = "root";
+                  group = "agents";
+                  mode = "2775";
+                }
               ];
         };
 
