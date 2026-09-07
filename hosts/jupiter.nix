@@ -20,6 +20,11 @@ in
     (modulesPath + "/profiles/qemu-guest.nix")
   ];
 
+  teq.nixos.headscale = {
+    enable = true;
+    domain = "headscale-secondary.shatteredsky.net";
+    users = [ "teq" ];
+  };
   services = {
     scx.enable = false;
     smartd.enable = false;
@@ -28,6 +33,9 @@ in
       virtualHosts."srd.shatteredsky.net".extraConfig = ''
         tls internal
         reverse_proxy http://localhost:3000
+      '';
+      virtualHosts."jupiter.shatteredsky.net".extraConfig = ''
+        respond "jupiter"
       '';
     };
     postgresql = {

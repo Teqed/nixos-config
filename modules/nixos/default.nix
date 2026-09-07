@@ -19,6 +19,7 @@ let
     health = import ./by-category/health.nix;
     agent = import ./by-category/agent.nix;
     tailscale = import ./by-category/tailscale.nix;
+    headscale = import ./by-category/headscale.nix;
     notify = import ./by-category/notify.nix;
     boot = import ./boot.nix;
     impermanence = import ./impermanence.nix;
