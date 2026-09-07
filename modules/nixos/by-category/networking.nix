@@ -113,7 +113,7 @@ in
           PermitRootLogin = mkDefault "no";
           PasswordAuthentication = mkDefault false;
           KbdInteractiveAuthentication = mkDefault false;
-          AllowUsers = mkDefault [ "teq" ];
+          AllowUsers = [ "teq" ];
           StreamLocalBindUnlink = mkDefault "yes";
           GatewayPorts = mkDefault "clientspecified";
           AcceptEnv = mkDefault [

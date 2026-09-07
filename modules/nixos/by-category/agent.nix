@@ -385,6 +385,8 @@ in
           );
         };
 
+        services.openssh.settings.AllowUsers = lib.mkIf isHub [ "agent" ];
+
         services.postfix = lib.mkIf isHub {
           enable = true;
           enableSmtp = false;
