@@ -240,6 +240,7 @@ The starlight on the Western Seas.
           modules = [
             ./hosts/jupiter.nix
             self.nixosModules.default
+            agenix.nixosModules.default
             home-manager.nixosModules.home-manager
             nix-flatpak.nixosModules.nix-flatpak
             self.homeManagerConfig
