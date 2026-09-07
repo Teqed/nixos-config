@@ -19,7 +19,7 @@
     gtk = {
       enable = lib.mkDefault true;
       cursorTheme.name = lib.mkDefault "Bibata-Modern-Classic";
-      cursorTheme.size = lib.mkDefault 24; # Default 16
+      cursorTheme.size = lib.mkDefault 24;
       font = {
         name = "Inter";
         size = 10;
@@ -29,13 +29,11 @@
         name = "Papirus-Dark";
         package = pkgs.papirus-icon-theme;
       };
-      gtk4.theme = null; # Opt into 26.05+ default (null) instead of legacy default (config.gtk.theme)
+      gtk4.theme = null;
     };
 
-    # xdg.configFile."gtk-2.0/gtkrc".force = lib.mkForce true;
-
     programs.plasma = {
-      enable = lib.mkDefault false; # Only needs to be enabled on fresh+live installs (disabled by default)
+      enable = lib.mkDefault false;
 
       fonts = {
         general = {
@@ -70,7 +68,7 @@
           size = 24;
         };
         iconTheme = "Papirus-Dark";
-        # wallpaperPictureOfTheDay.provider = "bing";
+
         wallpaper = "${pkgs.kdePackages.plasma-workspace-wallpapers}/share/wallpapers/MilkyWay/contents/images/5120x2880.png";
       };
       panels = [
@@ -93,20 +91,16 @@
             {
               iconTasks = {
                 appearance = {
-                  showTooltips = false; # Whether to show tooltips when hovering task buttons.
+                  showTooltips = false;
                 };
                 behavior = {
-                  grouping.clickAction = "showTextualList"; # What happens when clicking on a grouped task.
-                  middleClickAction = "toggleGrouping"; # What to do on middle-mouse click on a task button.
-                  showTasks.onlyInCurrentScreen = true; # Whether to show only window tasks that are on the same screen as the widget.
+                  grouping.clickAction = "showTextualList";
+                  middleClickAction = "toggleGrouping";
+                  showTasks.onlyInCurrentScreen = true;
                 };
                 launchers = [
-                  # "applications:${terminal}.desktop"
                   "preferred://filemanager"
-                  # "applications:krita.desktop" # TODO: Properly set
-                  "preferred://browser" # TODO: Properly set
-                  # "applications:emacsclient.desktop"
-                  # "applications:writer.desktop"
+                  "preferred://browser"
                 ];
               };
             }
@@ -116,7 +110,6 @@
               systemTray = {
                 items = {
                   hidden = [
-                    # "sunshine" # TODO: Properly set
                     "org.kde.plasma.networkmanagement"
                     "org.kde.plasma.devicenotifier"
                   ];
@@ -135,8 +128,6 @@
         }
       ];
       kscreenlocker.appearance = {
-        # alwaysShowClock = false;
-        # showMediaControls = false;
         wallpaperPictureOfTheDay.provider = "bing";
       };
 
@@ -161,31 +152,16 @@
         };
       };
 
-      # kwin = {
-      #   edgeBarrier = 0; # Disables the edge-barriers introduced in plasma 6.1
-      #   cornerBarrier = false;
-
-      #   # scripts.polonium = {
-      #   #   enable = true;
-      #   #   settings.layout.engine = "kwin";
-      #   # };
-      # };
-
-      # kscreenlocker = {
-      #   lockOnResume = true;
-      #   timeout = 10;
-      # };
-
       shortcuts = {
         ksmserver = {
           "Lock Session" = [
             "Screensaver"
-            "Meta+Ctrl+Alt+L" # Rebind default lock shortcut Meta+L to prevent conflicts with window switching
+            "Meta+Ctrl+Alt+L"
           ];
         };
         kwin = {
-          "Alt+" = "Meta+,"; # Show all windows; Related: Expose, ExposeAll
-          # Use HJKL for window switching
+          "Alt+" = "Meta+,";
+
           "Switch Window Down" = [
             "Meta+Alt+J"
             "Meta+Alt+Down"

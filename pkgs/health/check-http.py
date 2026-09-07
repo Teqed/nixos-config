@@ -1,4 +1,3 @@
-"""Translate a configured HTTP URL into monitoring-plugin arguments."""
 import os
 import sys
 from urllib.parse import urlsplit

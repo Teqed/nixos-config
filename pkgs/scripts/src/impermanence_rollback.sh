@@ -1,5 +1,3 @@
-# shellcheck shell=bash
-# impermanence-rollback: snapshot @home/@persist then reset @home.
 snapshot_dir="/mnt/nixos/@snapshots"
 root_dir="/mnt/nixos/root"
 mkdir -p /mnt /mnt/nixos "$root_dir"
@@ -18,7 +16,6 @@ if [[ -e "$root_dir/@snapshots" ]]; then
     mkdir -p "$snapshot_dir/@persist"
     btrfs subvolume snapshot "$root_dir/@persist" "$snapshot_dir/@persist/$timestamp"
   fi
-  # Keep only the 10 newest snapshots per subvolume.
   for keep_dir in "$snapshot_dir/@home" "$snapshot_dir/@persist"; do
     if [[ ! -d "$keep_dir" ]]; then
       continue

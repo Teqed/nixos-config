@@ -1,8 +1,6 @@
 _:
 let
   modulesPerFile = {
-    # nyx-cache = import ./nyx-cache.nix fromFlakes;
-    # nyx-overlay = import ../common/nyx-overlay.nix fromFlakes;
     gui_amd = import ./by-category/gui/amd.nix;
     gui_audio = import ./by-category/gui/audio.nix;
     gui_fonts = import ./by-category/gui/fonts.nix;

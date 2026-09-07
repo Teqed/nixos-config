@@ -1,4 +1,3 @@
-"""Validate the GitHub token configured for this Nix invocation without exposing it."""
 import json
 import subprocess
 import sys
@@ -7,7 +6,6 @@ import urllib.request
 
 
 def github_token(value):
-    """Extract the github.com token from any shape `nix config show --json` uses for access-tokens.value."""
     if isinstance(value, dict):
         token = value.get('github.com')
         return token if isinstance(token, str) and token else None

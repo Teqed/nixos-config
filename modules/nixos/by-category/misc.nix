@@ -10,9 +10,8 @@ let
 in
 {
   config = lib.mkIf config.teq.nixos.enable {
-    documentation.doc.enable = lib.mkDefault false; # /share/doc HTML/PDF docs (~50-100 MiB); per-package docs still readable via `nix-shell -p <pkg>` if needed
-    # documentation.man.generateCaches = false; # fish tab completion uses `man -k` for argument descriptions
-    # documentation.man.enable = false; # Used for for `man <cmd>` lookups
+    documentation.doc.enable = lib.mkDefault false;
+
     environment = {
       etc."nix/inputs/nixpkgs".source = "${inputs.nixpkgs}";
       pathsToLink = [
@@ -31,28 +30,24 @@ in
         "man"
         "share"
         "icons"
-      ]; # Removed "info" and "doc" — rarely browsed; man pages still kept
+      ];
     };
-    nixpkgs.config.allowUnfree = mkDefault true; # TODO: Move all unfree packages into allowUnfreePredicate
+    nixpkgs.config.allowUnfree = mkDefault true;
     nixpkgs.config.allowUnfreePredicate =
       pkg:
       builtins.elem (lib.getName pkg) [
-        # TODO: Add additional package names here
       ];
     environment.systemPackages = with pkgs; [
-      nix-output-monitor # Processes output of Nix commands to show helpful and pretty information
+      nix-output-monitor
     ];
     programs = {
       fzf = {
-        fuzzyCompletion = mkDefault true; # fuzzy completion
-        keybindings = mkDefault true; # NixOS-specific option
+        fuzzyCompletion = mkDefault true;
+        keybindings = mkDefault true;
       };
     };
     services = {
-      # error: lint `box_pointers` has been removed: it does not detect other kinds of allocations, and existed only for historical reasons
-      # error: could not compile `clipcat-base` (lib) due to 1 previous error
-      # clipcat.enable = lib.mkDefault true; # Clipcat clipboard daemon.
-      languagetool.enable = lib.mkIf config.teq.nixos.gui.enable (mkDefault false); # LanguageTool server, a multilingual spelling, style, and grammar checker that helps correct or paraphrase texts. Default off — saves ~390 MiB closure; enable per-host if needed.
+      languagetool.enable = lib.mkIf config.teq.nixos.gui.enable (mkDefault false);
     };
   };
 }

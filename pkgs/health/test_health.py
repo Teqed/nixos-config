@@ -97,7 +97,6 @@ class GithubTokenTests(unittest.TestCase):
 
 
 class RunnerSelectionTests(unittest.TestCase):
-    """Exercise the real argument path: runner.main(argv) against a manifest on disk."""
 
     def setUp(self):
         self.dir = tempfile.TemporaryDirectory()
@@ -225,11 +224,9 @@ class ReportTransitionTests(unittest.TestCase):
         self.assertNotIn('DROPPED', body)
         self.assertNotIn('NEW', body)
         self.assertEqual(current, delivered)
-        # next complete run with the same incident: ONGOING, never NEW, no DROPPED for the runner condition
         current2, body = report.summarize(doc([res('job.cache-pull', 1)]), current)
         self.assertEqual(body, 'ONGOING WARNING job.cache-pull: job.cache-pull WARNING')
         self.assertEqual(set(current2), {'job.cache-pull'})
-        # a runner failure with no prior incidents still reports the condition, saves nothing
         current3, body = report.summarize(failed, {})
         self.assertEqual((current3, body), ({}, 'RUNNER INCOMPLETE: manifest unreadable'))
 
@@ -319,11 +316,11 @@ class ReportDeliveryTests(unittest.TestCase):
             original = {'version': 2, 'incidents': {'job.cache-pull': res('job.cache-pull', 1)}}
             state.write_text(json.dumps(original))
             offline = {'side_effect': OSError('offline')}
-            for document in (doc([res('job.cache-pull', 0)]),                       # would resolve
-                             doc([res('job.cache-pull', 0, deferred=True)]),        # deferred
-                             doc([res('runner', 3)], complete=False),               # runner failure
-                             doc([res('disk', 0)]),                                  # would drop
-                             doc([res('job.cache-pull', 2)])):                       # would change
+            for document in (doc([res('job.cache-pull', 0)]),
+                             doc([res('job.cache-pull', 0, deferred=True)]),
+                             doc([res('runner', 3)], complete=False),
+                             doc([res('disk', 0)]),
+                             doc([res('job.cache-pull', 2)])):
                 with self.assertRaises(OSError):
                     self.deliver(state, document, offline)
                 self.assertEqual(json.loads(state.read_text()), original)
@@ -418,24 +415,21 @@ class JobFreshnessTests(unittest.TestCase):
         self.assertEqual(self.probe(None, resume_age=1800)[0], 3)
 
     def test_grace_is_bounded_by_grace_limit(self):
-        # max_age 93600 + grace_limit 86400 = 180000 s of eligibility; resume_age is always inside grace here
         def at(age, uptime=5000):
             record = None if age is None else {'version': 1, 'success': 100000 - age}
             return job.evaluate(dict(SERVICE_OK), dict(TIMER_OK), record, 100000, uptime,
                                 93600, 7200, 3600, 60, 1800, 86400)
-        self.assertEqual(at(100000)[::2], (0, True))       # stale but within bound: deferred
-        self.assertEqual(at(180000)[::2], (0, True))       # exactly at bound: still deferred
-        self.assertEqual(at(180001)[::2], (1, False))      # beyond bound: reported despite resume grace
+        self.assertEqual(at(100000)[::2], (0, True))
+        self.assertEqual(at(180000)[::2], (0, True))
+        self.assertEqual(at(180001)[::2], (1, False))
         self.assertEqual(at(7 * 86400)[::2], (1, False))
         self.assertEqual(at(30 * 86400)[::2], (1, False))
-        self.assertEqual(at(180001, uptime=10)[::2], (1, False))   # boot grace is bounded the same way
-        # missing history: bounded by time since boot (CLOCK_BOOTTIME includes sleep)
+        self.assertEqual(at(180001, uptime=10)[::2], (1, False))
         self.assertEqual(at(None, uptime=100000)[::2], (0, True))
         self.assertEqual(at(None, uptime=180001)[::2], (3, False))
         self.assertEqual(at(None, uptime=10)[::2], (0, True))
 
     def test_multiday_reports_during_resume_grace_eventually_notify(self):
-        """Every daily report happens 5 minutes after a resume and the job never succeeds again."""
         day = 86400
         last_success = 0
         state, transcript = {}, []
@@ -446,13 +440,11 @@ class JobFreshnessTests(unittest.TestCase):
             result = {'id': 'job.cache-pull', 'state': st, 'message': msg, 'perfdata': '', 'report': True, 'deferred': deferred}
             state, body = report.summarize(doc([result]), state)
             transcript.append((d, st, deferred, body.split(' ')[0] if body else ''))
-        # bound = maxSuccessAge 26h + graceLimit 24h = 50h after the last success
-        self.assertEqual(transcript[0][1:], (0, True, ''))             # day 1 (~28h): deferred, nothing to report
-        self.assertEqual(transcript[1][1:], (1, False, 'NEW'))         # day 2 (~52h): reported despite resume grace
+        self.assertEqual(transcript[0][1:], (0, True, ''))
+        self.assertEqual(transcript[1][1:], (1, False, 'NEW'))
         self.assertEqual(transcript[2][1:], (1, False, 'ONGOING'))
         self.assertEqual(transcript[3][1:], (1, False, 'ONGOING'))
         self.assertEqual(transcript[4][1:], (1, False, 'ONGOING'))
-        # a later deferred day keeps the incident; actual success resolves it
         deferred_day = {'id': 'job.cache-pull', 'state': 0, 'message': 'grace', 'perfdata': '', 'report': True, 'deferred': True}
         state, body = report.summarize(doc([deferred_day]), state)
         self.assertTrue(body.startswith('DEFERRED WARNING'))
@@ -464,7 +456,6 @@ class JobFreshnessTests(unittest.TestCase):
         self.assertEqual((state, body), ({}, 'RESOLVED job.cache-pull'))
 
     def test_missing_history_deadline_survives_reboots(self):
-        """Daily reboot, every check 5 minutes after boot (inside boot grace), never a success record."""
         day = 86400
         first_attempt = 0
         states = []
@@ -473,15 +464,13 @@ class JobFreshnessTests(unittest.TestCase):
             st, msg, deferred = job.evaluate(dict(SERVICE_OK), dict(TIMER_OK), None, now, 300,
                                              93600, 7200, 3600, None, 1800, 86400, first_attempt)
             states.append((st, deferred))
-        self.assertEqual(states[0], (0, True))     # day 1: inside bound, boot grace defers
-        self.assertEqual(states[1], (0, True))     # day 2 (~48h): still inside 50h bound
-        self.assertEqual(states[2], (3, False))    # day 3: UNKNOWN despite boot grace
+        self.assertEqual(states[0], (0, True))
+        self.assertEqual(states[1], (0, True))
+        self.assertEqual(states[2], (3, False))
         self.assertEqual(states[3], (3, False))
         self.assertEqual(states[4], (3, False))
-        # without a baseline the old per-boot fallback still applies (documented weaker bound)
         self.assertEqual(job.evaluate(dict(SERVICE_OK), dict(TIMER_OK), None, 30 * day, 300,
                                       93600, 7200, 3600, None, 1800, 86400, None)[::2], (0, True))
-        # a success afterwards establishes normal freshness behaviour, baseline no longer matters
         record = {'version': 1, 'success': 6 * day}
         self.assertEqual(job.evaluate(dict(SERVICE_OK), dict(TIMER_OK), record, 6 * day + 3600, 300,
                                       93600, 7200, 3600, None, 1800, 86400, first_attempt)[::2], (0, False))
@@ -508,7 +497,6 @@ class JobFreshnessTests(unittest.TestCase):
             path = Path(directory) / 'baseline.json'
             job.record_baseline(path, 100)
             before = path.read_bytes()
-            # interrupted JSON write: existing baseline untouched, no temp file left behind
             with patch.object(job.json, 'dump', side_effect=KeyboardInterrupt):
                 with self.assertRaises(KeyboardInterrupt):
                     job.record_baseline(Path(directory) / 'other.json', 200)
@@ -517,13 +505,11 @@ class JobFreshnessTests(unittest.TestCase):
                     job.record_baseline(Path(directory) / 'other.json', 200)
             self.assertEqual(path.read_bytes(), before)
             self.assertEqual(sorted(p.name for p in Path(directory).iterdir()), ['baseline.json'])
-            # interrupted write toward an ABSENT baseline never produces a truncated one
             with patch.object(job.json, 'dump', side_effect=KeyboardInterrupt):
                 with self.assertRaises(KeyboardInterrupt):
                     job.record_baseline(Path(directory) / 'fresh.json', 300)
             self.assertFalse((Path(directory) / 'fresh.json').exists())
             self.assertEqual(sorted(p.name for p in Path(directory).iterdir()), ['baseline.json'])
-            # a concurrent writer that installs first wins: link fails, temp removed, existing kept
             path.unlink()
             real_link = job.os.link
             def racing_link(src, dst):
@@ -533,7 +519,6 @@ class JobFreshnessTests(unittest.TestCase):
                 self.assertFalse(job.record_baseline(path, 500))
             self.assertEqual(job.load_baseline(path), 42)
             self.assertEqual(sorted(p.name for p in Path(directory).iterdir()), ['baseline.json'])
-            # a stray partial temp file is never mistaken for the baseline
             (Path(directory) / '.baseline-partial').write_text('{"version": 1, "first_')
             self.assertEqual(job.load_baseline(path), 42)
 
@@ -589,7 +574,7 @@ class JobFreshnessTests(unittest.TestCase):
     def test_check_output_carries_deferred_perfdata(self):
         with tempfile.TemporaryDirectory() as directory:
             record = Path(directory) / 'success.json'
-            job.record_success(record, time.time() - 100000)  # stale, inside the grace bound
+            job.record_success(record, time.time() - 100000)
             service = 'LoadState=loaded\nActiveState=inactive\nResult=success\n'
             timer = 'LoadState=loaded\nActiveState=active\n'
             outputs = {'.service': service, '.timer': timer}

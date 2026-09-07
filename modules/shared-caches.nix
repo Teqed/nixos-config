@@ -1,14 +1,13 @@
 {
-  # Lower priority = checked first
   substituters = [
-    "https://cache.nixos.org?priority=10" # Official nixpkgs
-    "https://thoughtful.binarycache.shatteredsky.net?priority=20" # Local cache
-    "https://teq.cachix.org?priority=60" # Personal cachix
-    "https://nix-community.cachix.org?priority=80" # Community packages
-    "https://attic.xuyh0120.win/lantian?priority=40" # CachyOS kernel
-    "https://cache.numtide.com?priority=50" # llm-agents.nix
-    "https://nixpkgs-unfree.cachix.org?priority=70" # Unfree packages
-    "https://ghostty.cachix.org?priority=55" # Ghostty (tip builds)
+    "https://cache.nixos.org?priority=10"
+    "https://thoughtful.binarycache.shatteredsky.net?priority=20"
+    "https://teq.cachix.org?priority=60"
+    "https://nix-community.cachix.org?priority=80"
+    "https://attic.xuyh0120.win/lantian?priority=40"
+    "https://cache.numtide.com?priority=50"
+    "https://nixpkgs-unfree.cachix.org?priority=70"
+    "https://ghostty.cachix.org?priority=55"
   ];
 
   trustedPublicKeys = [

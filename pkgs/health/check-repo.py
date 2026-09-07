@@ -1,4 +1,3 @@
-"""Repository diagnostics, input freshness and published closure comparison."""
 import argparse
 from pathlib import Path
 import socket
@@ -36,7 +35,7 @@ def probe(args):
 
 
 if __name__ == '__main__':
-    p = argparse.ArgumentParser(description=__doc__)
+    p = argparse.ArgumentParser(description='Repository diagnostics, input freshness and published closure comparison.')
     p.add_argument('kind', choices=['dirty', 'sync', 'inputs', 'build'])
     p.add_argument('--repo', required=True)
     p.add_argument('--git')

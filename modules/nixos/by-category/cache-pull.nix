@@ -94,9 +94,7 @@ in
       };
       script = ''
         set -euo pipefail
-
         target=$(ssh -T -i ${cfg.identityFile} -o IdentitiesOnly=yes -o BatchMode=yes ${cfg.buildServer})
-
         case "$target" in
           /nix/store/*-nixos-system-${host}-*) ;;
           *)
@@ -104,12 +102,10 @@ in
             exit 1
             ;;
         esac
-
         if [ "$target" = "$(readlink -f /run/current-system)" ]; then
           echo "already running $target"
           exit 0
         fi
-
         nix build --no-link "$target"
         nix-env -p /nix/var/nix/profiles/system --set "$target"
         "$target/bin/switch-to-configuration" ${cfg.operation}

@@ -13,145 +13,75 @@ in
     programs = {
       appimage = {
         enable = lib.mkDefault true;
-        binfmt = lib.mkDefault true; # NixOS-specific option
-        # No `package` override — use stock pkgs.appimage-run so it cache-hits.
-        # If a future AppImage needs ffmpeg/imagemagick, re-add via:
-        #   package = pkgs.appimage-run.override { extraPkgs = pkgs: [ pkgs.ffmpeg pkgs.imagemagick ]; };
+        binfmt = lib.mkDefault true;
       };
       fuse = {
-        userAllowOther = lib.mkDefault true; # Allow non-root users to specify the allow_other or allow_root mount options, see mount.fuse3(8). Might not be needed
-        mountMax = lib.mkDefault 32000; # Set the maximum number of FUSE mounts allowed to non-root users. Integer between 0 and 32767, default 1000
+        userAllowOther = lib.mkDefault true;
+        mountMax = lib.mkDefault 32000;
       };
-      virt-manager.enable = lib.mkDefault false; # Pulls qemu (~1 GiB); enable per-host if VMs needed
-      mouse-actions.enable = lib.mkDefault true; # Enable mouse-actions udev rules; required to use mouse gestures as non-root
+      virt-manager.enable = lib.mkDefault false;
+      mouse-actions.enable = lib.mkDefault true;
     };
 
     environment = {
       systemPackages = with pkgs; [
-        # inputs.wezterm-flake.packages.${pkgs.system}.default # Wezterm flake
-        solaar # 600MB / 30MB (gtk+3 600MB)
-        papirus-icon-theme # Allows icons to be used in the system, like the login screen
-        bibata-cursors # Allows cursors to be used in the system, like the login screen
+        solaar
+        papirus-icon-theme
+        bibata-cursors
         (pkgs.writeShellScriptBin "qemu-system-x86_64-uefi" ''
           qemu-system-x86_64 \
             -bios ${pkgs.OVMF.fd}/FV/OVMF.fd \
             "$@"
-        '') # QEMU virtualization with UEFI firmware
-        # inputs.zen-browser.packages."${system}".default # Removed — using firefox/brave instead (~356 MiB)
+        '')
       ];
-      sessionVariables.NIXOS_OZONE_WL = "1"; # Use the Ozone Wayland support in several Electron apps
+      sessionVariables.NIXOS_OZONE_WL = "1";
       plasma6.excludePackages = with pkgs.kdePackages; [
-        khelpcenter # Pulls qtwebengine (~430 MiB closure); rarely used
-        # plasma-workspace-wallpapers # ~217 MiB of stock KDE wallpapers
+        khelpcenter
       ];
       etc."chromium/policies/managed/defaultExtensions.json".source = chromium_policy;
       etc."brave/policies/managed/DisableBraveRewardsWalletAI.json".source = brave_policy;
     };
 
-    virtualisation.waydroid.enable = lib.mkDefault false; # Android container; enable per-host if needed
+    virtualisation.waydroid.enable = lib.mkDefault false;
     boot.binfmt.emulatedSystems = [
-      "aarch64-linux" # ARM
-      # "riscv64-linux" # RISC-V
-      # "x86_64-windows" # Windows
-      # "x86_64-linux" # Linux
+      "aarch64-linux"
     ];
 
-    # nixpkgs.overlays = [nixpkgs-wayland.overlay]; # Automated, pre-built, (potentially) pre-release packages for Wayland (sway/wlroots) tools for NixOS.
     hardware = {
-      graphics.enable32Bit = true; # On 64-bit systems, whether to support Direct Rendering for 32-bit applications (such as Wine). This is currently only supported for the nvidia and ati_unfree drivers, as well as Mesa.
-      enableRedistributableFirmware = true; # Whether to enable firmware with a license allowing redistribution.
-      enableAllFirmware = true; # Whether to enable all firmware regardless of license.
+      graphics.enable32Bit = true;
+      enableRedistributableFirmware = true;
+      enableAllFirmware = true;
     };
 
     services = {
       xserver = {
-        enable = true; # You can disable the X11 windowing system if you're only using the Wayland session.
+        enable = true;
         xkb = {
-          # Configure keymap in X11
           layout = "us";
           variant = "";
         };
-        # libinput.enable = true; # Enable touchpad support (enabled default in most desktopManager).
       };
-      # Enable the KDE Plasma Desktop Environment.
+
       displayManager.sddm = {
         enable = true;
         wayland.enable = true;
         wayland.compositor = "kwin";
-        #        theme = ''${ # <-- string interpolation and nix expression inside {}
-        #            pkgs.sddm-sugar-candy.override {
-        #              settings = {
-        #                # Background = image_mountains;
-        #                DimBackgroundImage = "0.0";
-        #                ScaleImageCropped = true;
-        #                ScreenWidth = "1920";
-        #                ScreenHeight = "1080";
-        #                FullBlur = false;
-        #                PartialBlur = true;
-        #                BlurRadius = "100";
-        #                HaveFormBackground = false;
-        #                FormPosition = "center";
-        #                BackgroundImageHAlignment = "center";
-        #                BackgroundImageVAlignment = "center";
-        #                MainColor = "white";
-        #                AccentColor = "#fb884f";
-        #                BackgroundColor = "#444";
-        #                OverrideLoginButtonTextColor = "";
-        #                InterfaceShadowSize = "6";
-        #                InterfaceShadowOpacity = "0.6";
-        #                RoundCorners = "20";
-        #                ScreenPadding = "0";
-        #                # Font = "Noto Sans";
-        #                FontSize = "";
-        #                ForceRightToLeft = false;
-        #                ForceLastUser = true;
-        #                ForcePasswordFocus = true;
-        #                ForceHideCompletePassword = true;
-        #                ForceHideVirtualKeyboardButton = false;
-        #                ForceHideSystemButtons = false;
-        #                AllowEmptyPassword = false;
-        #                AllowBadUsernames = false;
-        #                Locale = "";
-        #                HourFormat = "HH:mm";
-        #                DateFormat = "dddd, d of MMMM";
-        #                HeaderText = "${config.networking.hostName}";
-        #                TranslatePlaceholderUsername = "";
-        #                TranslatePlaceholderPassword = "";
-        #                TranslateShowPassword = "";
-        #                TranslateLogin = "";
-        #                TranslateLoginFailedWarning = "";
-        #                TranslateCapslockWarning = "";
-        #                TranslateSession = "";
-        #                TranslateSuspend = "";
-        #                TranslateHibernate = "";
-        #                TranslateReboot = "";
-        #                TranslateShutdown = "";
-        #                TranslateVirtualKeyboardButton = "";
-        #              };
-        #            }
-        #          }'';
-        # package = lib.mkForce pkgs.libsForQt5.sddm;
-        # extraPackages =
-        #   with pkgs;
-        #   lib.mkForce [
-        #     libsForQt5.qt5.qtgraphicaleffects
-        #   ];
+
         settings = {
           Theme = {
             CursorTheme = "Bibata-Modern-Classic";
-            # CursorSize = 29;
           };
         };
       };
       desktopManager.plasma6.enable = true;
-      orca.enable = lib.mkForce false; # Plasma6 force-enables; mkForce overrides. Pulls speech-dispatcher → mbrola-voices (~645 MiB); enable per-host if screen reader needed
-      speechd.enable = lib.mkForce false; # Force-enabled by graphical-desktop module; mkForce overrides
-      colord.enable = lib.mkDefault true; # color management daemon
+      orca.enable = lib.mkForce false;
+      speechd.enable = lib.mkForce false;
+      colord.enable = lib.mkDefault true;
       flatpak = {
-        enable = lib.mkDefault false; # No flatpaks installed currently; enable per-host if you start using them
+        enable = lib.mkDefault false;
         update.auto = {
           enable = lib.mkDefault true;
-          onCalendar = lib.mkDefault "weekly"; # Default value
+          onCalendar = lib.mkDefault "weekly";
         };
         overrides = {
           global = {
@@ -159,23 +89,23 @@ in
               "wayland"
               "!x11"
               "!fallback-x11"
-            ]; # Force Wayland by default
+            ];
             Environment = {
-              XCURSOR_PATH = lib.mkDefault "/run/host/user-share/icons:/run/host/share/icons"; # Fix un-themed cursor in some Wayland apps
-              GTK_THEME = lib.mkDefault "Adwaita:dark"; # Force correct theme for some GTK apps
+              XCURSOR_PATH = lib.mkDefault "/run/host/user-share/icons:/run/host/share/icons";
+              GTK_THEME = lib.mkDefault "Adwaita:dark";
             };
           };
           "com.visualstudio.code".Context = {
             filesystems = lib.mkDefault [
-              "xdg-config/git:ro" # Expose user Git config
-              "/run/current-system/sw/bin:ro" # Expose NixOS managed software
+              "xdg-config/git:ro"
+              "/run/current-system/sw/bin:ro"
             ];
             sockets = lib.mkDefault [
-              "gpg-agent" # Expose GPG agent
-              "pcsc" # Expose smart cards (i.e. YubiKey)
+              "gpg-agent"
+              "pcsc"
             ];
           };
-          "org.onlyoffice.desktopeditors".Context.sockets = lib.mkDefault [ "x11" ]; # No Wayland support
+          "org.onlyoffice.desktopeditors".Context.sockets = lib.mkDefault [ "x11" ];
         };
       };
       sunshine = {
@@ -185,7 +115,7 @@ in
       };
       udev.extraRules = ''
         KERNEL=="uhid", TAG+="uaccess"
-      ''; # Sunshine DualSense (DS5) gamepad emulation needs /dev/uhid; grants the active seat user access
+      '';
       xrdp = {
         enable = lib.mkDefault true;
         openFirewall = lib.mkDefault true;

@@ -1,13 +1,3 @@
-"""Execute a Nix-generated manifest of standalone monitoring plugins.
-
-JSON output contract (--json):
-  {"version": 1, "complete": bool, "excluded": {id: reason}, "results": [result...]}
-complete=false means the run itself failed (manifest unreadable, internal error) and
-results only describe that failure; consumers must not treat absent checks as removed.
-Each result: {"id", "state", "message", "perfdata", "report", "deferred"}.
-deferred=true (probe printed perfdata token deferred=1) means "OK for now, outcome not
-yet established" (grace, in-progress retry) and must not count as recovery.
-"""
 import argparse
 import concurrent.futures
 import json
@@ -26,7 +16,6 @@ def severity(results):
 
 
 def exclusion_reason(check, remote=False, scheduled=False):
-    """Why a manifest entry is not eligible for this invocation, or None if it is."""
     if check.get("remote", False):
         if scheduled:
             return "remote checks never run in scheduled reports"
@@ -38,7 +27,6 @@ def exclusion_reason(check, remote=False, scheduled=False):
 
 
 def select(checks, remote=False, scheduled=False):
-    """Return (eligible, excluded) where excluded maps id -> reason."""
     eligible, excluded = {}, {}
     for name, check in checks.items():
         reason = exclusion_reason(check, remote=remote, scheduled=scheduled)
@@ -91,7 +79,6 @@ def failure(message):
 
 
 def execute(manifest_path, remote=False, scheduled=False, only=None):
-    """Run the eligible checks. Returns the JSON output document."""
     try:
         with open(manifest_path) as source:
             manifest = json.load(source)
@@ -124,7 +111,7 @@ def failure_for(name, message):
 
 
 def main(argv=None):
-    parser = argparse.ArgumentParser(description=__doc__)
+    parser = argparse.ArgumentParser(description='Execute a Nix-generated manifest of standalone monitoring plugins.')
     parser.add_argument("--manifest", required=True)
     parser.add_argument("--json", action="store_true")
     parser.add_argument("--remote", action="store_true", help="Include optional remote diagnostics")

@@ -10,7 +10,6 @@
     ./profiles/common.nix
     inputs.nixos-hardware.nixosModules.common-pc-ssd
     inputs.nixos-hardware.nixosModules.common-pc-laptop
-    # inputs.nixos-hardware.nixosModules.framework-12-13th-gen-intel # the kmod module doesn't work right for me so we manually impl below
   ];
   nixpkgs = {
     buildPlatform = "x86_64-linux";
@@ -20,9 +19,6 @@
     pkgs.btop-cuda
   ];
   boot = {
-    # From https://github.com/NixOS/nixos-hardware/blob/master/framework/12-inch/common/default.nix a9a7323a067284b5546beef7221ce49a1f3b8d24
-    # Fix TRRS headphones missing a mic
-    # https://github.com/torvalds/linux/commit/7b509910b3ad6d7aacead24c8744de10daf8715d
     extraModprobeConfig = lib.mkIf (lib.versionOlder config.boot.kernelPackages.kernel.version "6.13.0") ''
       options snd-hda-intel model=dell-headset-multi
     '';
@@ -69,7 +65,6 @@
     dev = true;
   };
   hardware = {
-    # Needed for desktop environments to detect display orientation
     sensor.iio.enable = lib.mkDefault true;
     cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
     graphics.extraPackages = with pkgs; [
@@ -100,7 +95,7 @@
   };
   networking = {
     hostName = "bubblegum";
-    hostId = "48919130"; # head -c 8 /etc/machine-id
+    hostId = "48919130";
     firewall = {
       allowedTCPPorts = [
       ];

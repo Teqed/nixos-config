@@ -1,10 +1,3 @@
-# shellcheck shell=bash
-# mosh-clean: find and kill orphaned mosh-server sessions.
-#
-# A session counts as orphaned when utmp (who -u) shows no client address
-# for it — "(mosh [PID])" instead of "(1.2.3.4 via mosh [PID])". Sessions
-# with a connected client and the session this script runs inside are
-# always kept.
 set -euo pipefail
 
 dry_run=0
@@ -37,7 +30,6 @@ while [[ $# -gt 0 ]]; do
   shift
 done
 
-# PIDs in our own ancestry — never kill the session we are running inside.
 declare -A ancestors=()
 p=$$
 while [[ -n "$p" && "$p" != 1 ]]; do

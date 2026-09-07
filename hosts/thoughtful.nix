@@ -15,7 +15,6 @@
     nixos-hardware.nixosModules.common-gpu-amd
   ];
   nixpkgs = {
-    # hostPlatform = "aarch64-linux";
     buildPlatform = "x86_64-linux";
   };
   boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
@@ -37,34 +36,18 @@
     initrd.kernelModules = [ "amdgpu" ];
     kernelModules = [ "kvm-amd" ];
     kernelParams = [
-      # "video=DP-1:1920x1080@144" # /sys/class/drm/card0-DP-1/status 143.85 Hz
-      # "video=DP-2:1920x1080@144" # /sys/class/drm/card0-DP-2/status
-      # # "video=DP-3:1920x1080@144" # /sys/class/drm/card0-DP-3/status disconnected
-      # "video=HDMI-A-1:1920x1080@60" # /sys/class/drm/card0-HDMI-A-1/status
-      # To figure out the connector names, execute the following command while your monitors are connected:
-      # head /sys/class/drm/*/status
-      #      "quiet" # Silences boot messages
-      #      "rd.systemd.show_status=false" # Silences successful systemd messages from the initrd
-      #      "rd.udev.log_level=3" # Silence systemd version number in initrd
-      #      "udev.log_priority=3" # Silence systemd version number
-      #      "boot.shell_on_fail" # If booting fails drop us into a shell where we can investigate
-      #      "splash" # Show a splash screen
-      #      "bgrt_disable" # Don't display the OEM logo after loading the ACPI tables
-      #      "plymouth.use-simpledrm" # Use simple DRM backend for Plymouth
     ];
   };
-  # Samsung 990 PRO data drive (/dev/nvme0n1, GPT + single ext4 partition).
-  # Intended as a base for mapping service storage out of /var/lib via binds/symlinks.
+
   fileSystems."/mnt/nvme0n1" = {
     device = "/dev/disk/by-label/samsung-990-pro";
     fsType = "ext4";
     options = [
-      "nofail" # Don't block boot if the drive is absent.
+      "nofail"
       "noatime"
     ];
   };
 
-  # VM
   programs.dconf.enable = true;
   users = {
     users.gcis = {
@@ -83,8 +66,8 @@
     virtio-win
     win-spice
     adwaita-icon-theme
-    btop-rocm # Not related to VM -- ROCM support for AMD GPUs
-    inputs.agenix.packages.${pkgs.stdenv.hostPlatform.system}.default # agenix CLI tool
+    btop-rocm
+    inputs.agenix.packages.${pkgs.stdenv.hostPlatform.system}.default
     wireguard-tools
   ];
   virtualisation = {
@@ -96,12 +79,11 @@
     };
     spiceUSBRedirection.enable = true;
   };
-  # /VM
 
   teq.nixos = {
     samba = true;
     media = false;
-    cachyos = true; # Now using xddxdd/nix-cachyos-kernel
+    cachyos = true;
     blocklist = false;
     impermanence = {
       enable = true;
@@ -114,10 +96,8 @@
     notify.server.enable = true;
   };
 
-  # Agenix secret management
   age.secrets."wg0" = {
     file = ../secrets/wg0.age;
-    # The decrypted file will be available at config.age.secrets."wg0".path
   };
   age.secrets."washing-machien" = {
     file = ../secrets/washing-machien.age;
@@ -150,7 +130,7 @@
 
   services = {
     spice-vdagentd.enable = true;
-    # GameCube adapter udev rule
+
     udev.extraRules = ''
       SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ATTRS{idVendor}=="057e", ATTRS{idProduct}=="0337", MODE="0666"
     '';
@@ -195,8 +175,7 @@
         ];
       };
     };
-    # puts u in dhe washing machein
-    # https://tangled.org/coil-habdle.ebil.club/washing-machien
+
     washing-machien = {
       enable = true;
       package =
@@ -222,11 +201,10 @@
       torrentingPort = 6881;
       openFirewall = false;
     };
-    # parakeet.enable = true;
+
     ollama = {
-      # enable = true;
-      package = pkgs.ollama-rocm; # Use ROCm-accelerated package instead of deprecated acceleration option
-      # Optional: preload models, see https://ollama.com/library
+      package = pkgs.ollama-rocm;
+
       loadModels = [ ];
       port = 11434;
       host = "0.0.0.0";
@@ -243,35 +221,19 @@
     };
   };
   networking = {
-    hostName = "thoughtful"; # /dev/disk/by-partuuid/032b15fe-6dc7-473e-b1a5-d51f4df7ffd6
+    hostName = "thoughtful";
     hostId = "9936699a";
     firewall = {
       allowedTCPPorts = [
-        5000 # Nix-Serve
-        6555 # Spindle
-        8283 # Letta
-        11434 # Ollama
+        5000
+        6555
+        8283
+        11434
       ];
       allowedUDPPorts = [
-        8283 # Letta
-        11434 # Ollama
+        8283
+        11434
       ];
     };
   };
-  # containers.rsky = {
-  #   autoStart = true;
-  #   config = { pkgs, ... }: {
-  #     system.stateVersion = currentStateVersion;
-  #     imports = [ inputs.rsky.nixosModules.default ];
-  #     services.rsky-pds = {
-  #       enable = true;
-  #       environmentFiles = [ "/var/lib/rsky-pds/pds.env" ];
-  #       settings = {
-  #         PDS_PORT = 2583;
-  #         PDS_HOSTNAME = "psi.shatteredsky.net";
-  #         PDS_DEV_MODE = "true";
-  #       };
-  #     };
-  #   };
-  # };
 }

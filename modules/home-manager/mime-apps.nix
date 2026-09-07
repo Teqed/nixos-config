@@ -28,15 +28,15 @@ in
 {
   options.teq.home-manager.mime-apps = {
     enable = lib.mkEnableOption "Teq's NixOS Mime-Apps configuration defaults.";
-    browser = mkPreferenceOptions "browser" "firefox" "firefox.desktop"; # TODO: Add commandline browser? (lynx, w3m, etc)
+    browser = mkPreferenceOptions "browser" "firefox" "firefox.desktop";
     terminalEmulator = mkPreferenceOptions "terminal emulator" "ghostty" "ghostty.desktop";
-    textEditor = mkPreferenceOptions "editor" "zeditor" "zed.desktop"; # TODO: Change to Codium? or other dedicated editor
+    textEditor = mkPreferenceOptions "editor" "zeditor" "zed.desktop";
     fileManager = mkPreferenceOptions "file manager" "dolphin" "dolphin.desktop";
     imageViewer = mkPreferenceOptions "image viewer" "gwenview" "gwenview.desktop";
     mediaPlayer = mkPreferenceOptions "media player" "elisa" "elisa.desktop";
     archiveManager = mkPreferenceOptions "archive manager" "ark" "org.kde.ark.desktop";
-    documentViewer = mkPreferenceOptions "document viewer" "firefox" "firefox.desktop"; # TODO: Change to Okular? or other dedicated docviewer
-    emailClient = mkPreferenceOptions "email client" "firefox" "firefox.desktop"; # TODO: Change to Thunderbird
+    documentViewer = mkPreferenceOptions "document viewer" "firefox" "firefox.desktop";
+    emailClient = mkPreferenceOptions "email client" "firefox" "firefox.desktop";
     launcher.command = mkPreferenceCmdOption "launcher" "krunner";
   };
   config = lib.mkIf config.teq.home-manager.enable {
@@ -53,7 +53,6 @@ in
         mediaPlayer = cfg.mediaPlayer.desktop;
 
         associations = {
-          # Browser
           "text/html" = [ browser ];
           "x-scheme-handler/http" = [ browser ];
           "x-scheme-handler/https" = [ browser ];
@@ -67,8 +66,7 @@ in
           "application/xhtml+xml" = [ browser ];
           "application/xhtml_xml" = [ browser ];
 
-          # Image viewer
-          "image/*" = [ imageViewer ]; # wildcard associations don't work everywhere
+          "image/*" = [ imageViewer ];
           "image/bmp" = [ imageViewer ];
           "image/gif" = [ imageViewer ];
           "image/jpeg" = [ imageViewer ];
@@ -86,9 +84,8 @@ in
           "image/svg+xml" = [ imageViewer ];
           "image/svg_xml" = [ imageViewer ];
 
-          # Media Player (video + audio)
-          "video/*" = [ mediaPlayer ]; # wildcard associations don't work everywhere
-          "audio/*" = [ mediaPlayer ]; # -||-
+          "video/*" = [ mediaPlayer ];
+          "audio/*" = [ mediaPlayer ];
           "video/mpeg" = [ mediaPlayer ];
           "video/x-mpeg2" = [ mediaPlayer ];
           "video/x-mpeg3" = [ mediaPlayer ];
@@ -206,28 +203,23 @@ in
           "audio/x-pls" = [ mediaPlayer ];
           "audio/x-wav" = [ mediaPlayer ];
 
-          # Document Viewer
           "application/pdf" = [ documentViewer ];
           "application/epub" = [ documentViewer ];
           "application/djvu" = [ documentViewer ];
           "application/mobi" = [ documentViewer ];
 
-          # File & archive manager(s)
           "inode/directory" = [ fileManager ];
           "application/zip" = [ archiveManager ];
           "application/x-xz-compressed-tar" = [ archiveManager ];
 
-          # Plain-text
           "text/plain" = [ textEditor ];
           "application/json" = [ textEditor ];
 
-          # Application specific schemes
           "x-scheme-handler/spotify" = [ "spotify.desktop" ];
           "x-scheme-handler/tg" = [ "telegramdesktop.desktop" ];
           "x-scheme-handler/discord" = [ "vesktop.desktop" ];
           "x-scheme-handler/msteams" = [ "teams.desktop" ];
 
-          # Misc
           "x-scheme-handler/mailto" = [ emailClient ];
         };
       in

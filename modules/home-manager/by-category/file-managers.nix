@@ -5,7 +5,7 @@
   ...
 }:
 let
-  # XDG_CONFIG_HOME = "${config.xdg.configHome}";
+
   yaziFlavors = pkgs.fetchFromGitHub {
     owner = "yazi-rs";
     repo = "flavors";
@@ -36,12 +36,10 @@ in
       programs = {
         xplr = {
           enable = lib.mkDefault true;
-          # extraConfig =
-          # plugins =
         };
         yazi = {
-          enable = lib.mkDefault true; # 426MB / 20MB (imagemagick, ffmegthumbnailer)
-          shellWrapperName = "y"; # Use new default
+          enable = lib.mkDefault true;
+          shellWrapperName = "y";
           settings.theme = {
             flavor = {
               use = lib.mkDefault "catppuccin-mocha";

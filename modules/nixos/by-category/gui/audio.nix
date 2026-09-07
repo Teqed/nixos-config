@@ -7,18 +7,18 @@
   config = lib.mkIf config.teq.nixos.gui.enable {
     services = {
       pipewire = {
-        enable = true; # Enable sound with pipewire.
+        enable = true;
         alsa.enable = true;
-        alsa.support32Bit = true; # Whether to enable 32-bit ALSA support on 64-bit systems.
+        alsa.support32Bit = true;
         pulse.enable = true;
-        # jack.enable = true; # If you want to use JACK applications
-        socketActivation = true; # Automatically run PipeWire when connections are made to the PipeWire socket.
+
+        socketActivation = true;
       };
     };
     services.pulseaudio = {
-      enable = false; # Explicitly disabled (default: false) - using PipeWire instead
-      support32Bit = true; # Enable 32-bit support for PulseAudio, if being used.
+      enable = false;
+      support32Bit = true;
     };
-    security.rtkit.enable = true; # Whether to enable the RealtimeKit system service, which hands out realtime scheduling priority to user processes on demand. The PulseAudio server uses this to acquire realtime priority.
+    security.rtkit.enable = true;
   };
 }

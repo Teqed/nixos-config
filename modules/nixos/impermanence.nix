@@ -14,9 +14,9 @@ let
     fsType = "btrfs";
     neededForBoot = true;
     options = [
-      "subvol=@nix" # BTRFS subvolume for Nix store.
-      "compress-force=zstd:1" # ZSTD Compression level 1 -- Suitable for NVMe SSDs.
-      "noatime" # Under read intensive work-loads, specifying noatime significantly improves performance
+      "subvol=@nix"
+      "compress-force=zstd:1"
+      "noatime"
     ];
   };
   ext4_nix = {
@@ -32,7 +32,7 @@ let
     fsType = "btrfs";
     neededForBoot = true;
     options = [
-      "subvol=@persist" # BTRFS subvolume for persistent data.
+      "subvol=@persist"
       "compress-force=zstd:1"
       "noatime"
     ];
@@ -49,7 +49,6 @@ let
     neededForBoot = true;
     options = [
       "subvol=@home"
-      # BTRFS subvolume for user home directories. Replaced with empty subvolume on boot.
       "compress-force=zstd:1"
       "noatime"
     ];
@@ -118,8 +117,6 @@ in
     ];
     environment.variables.NIX_REMOTE = "daemon";
     systemd = {
-      # Move temporary build artifacts from /tmp to /nix/tmp
-      # Otherwise, a larger build could result in No enough space left on device errors.
       services.nix-daemon.environment.TMPDIR = "/nix/tmp";
       tmpfiles.rules = [
         "d /nix/tmp 0755 root root 1d"
@@ -142,7 +139,6 @@ in
         wants = [ "dev-disk-by\\x2dlabel-${label_nixos}.device" ];
         after = [
           "dev-disk-by\\x2dlabel-${label_nixos}.device"
-          # "systemd-cryptsetup@enc.service" # LUKS/TPM process
         ];
         before = [
           "sysroot.mount"
@@ -172,12 +168,11 @@ in
           fi'';
       };
 
-      # TODO: remove workaround ; https://github.com/nix-community/impermanence/issues/229
       suppressedUnits = [ "systemd-machine-id-commit.service" ];
     };
     environment.persistence."/persist" = {
-      enable = true; # Defaults to true
-      # hideMounts = true; # If enabled, it sets the mount option x-gvfs-hide on all the bind mounts.
+      enable = true;
+
       directories = [
         "/etc/auth"
         "/etc/nixos"
@@ -199,12 +194,10 @@ in
         "/usr/systemd-placeholder"
       ];
       files = [
-        "/etc/machine-id" # machine-id is used by systemd for the journal
-        "/etc/adjtime" # Contains descriptive information about the hardware clock.
+        "/etc/machine-id"
+        "/etc/adjtime"
       ];
       users.media = {
-        # TODO: Make generic to userconfig.service_profiles
-        # hideMounts = true;
         directories = [
           ".cache"
           ".config"
@@ -224,15 +217,13 @@ in
         ];
       };
       users.teq = {
-        # TODO: Make generic to userconfig
-        # hideMounts = true;
         directories = [
           ".cache"
-          ".claude" # https://github.com/anthropics/claude-code/issues/1455
+          ".claude"
           ".config"
           ".factorio"
           ".local"
-          ".mozilla" # Issue opened 20 years ago (2004): https://bugzilla.mozilla.org/show_bug.cgi?id=259356
+          ".mozilla"
           ".vscode-oss"
           ".barony"
           ".pki"
@@ -257,33 +248,14 @@ in
             directory = ".ssh";
             mode = "0700";
           }
-          # ".pki" # ?
-          # ".rbenv" # ? Move
-          ".zen" # Zen browser XDG dir spec on roadmap: https://github.com/zen-browser/desktop/issues/1074
+
+          ".zen"
         ];
         files = [
-          ".claude.json" # https://github.com/anthropics/claude-code/issues/1455
+          ".claude.json"
           ".face.icon"
         ];
-        # allowOther = true;
       };
     };
   };
 }
-# Assumptions: 512MB FAT32 EFI "BOOT", 32GB "swap", BTRFS "nixos"
-# sudo su -; swapon -L swap; mkdir -p {/mnt,/mnt/nixos,/mnt/nixos/root,/mnt/tmpfs}; mount -t btrfs -L nixos /mnt/nixos/root;
-# for subvol in home nix snapshots persist; do btrfs subvolume create /mnt/nixos/root/@$subvol ; done
-# umount /mnt/nixos/root/; mount -t tmpfs -o noatime,mode=755 none /mnt/tmpfs;
-# mkdir -p /mnt/tmpfs/{boot,nix,home,persist,var,var/log,etc,etc/{nixos,ssh,auth}}; mount -t vfat -L BOOT /mnt/tmpfs/boot;
-# for subvol in nix home persist; do mount -t btrfs -o noatime,compress-force=zstd:1,subvol=@$subvol -L nixos /mnt/tmpfs/$subvol ; done
-# mkdir -p /mnt/tmpfs/persist/{var,var/log,etc,etc/{nixos,ssh,auth}};
-# for dir in var/log etc/nixos etc/ssh etc/auth; do mount --bind /mnt/tmpfs/persist/$dir /mnt/tmpfs/$dir ; done
-# nixos-generate-config --root /mnt/tmpfs # Inspect boot configuration
-# mkpasswd -m bcrypt -s >> /mnt/tmpfs/persist/etc/auth/root
-# mkpasswd -m bcrypt -s >> /mnt/tmpfs/persist/etc/auth/teq
-# git clone https://github.com/Teqed/nixos-config; cd nixos-config
-# # enable plasma theming for intial load
-# nixos-install --root /mnt/tmpfs --flake .#thoughtful --no-root-passwd
-# reboot
-# Additional imperative notes:
-# - mkdir .local/state/history # else history files can't be written

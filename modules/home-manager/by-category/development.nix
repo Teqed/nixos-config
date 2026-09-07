@@ -6,28 +6,27 @@
 }:
 {
   config = lib.mkMerge [
-    # Universal CLI — useful on any host, including headless servers over SSH.
     (lib.mkIf config.teq.home-manager.enable {
       home.packages = with pkgs; [
         llm-agents.claude-code
         llm-agents.prime-agent
         llm-agents.codex
-        lazygit # small Go TUI for git
-        jujutsu # jj VCS
+        lazygit
+        jujutsu
         jjui
         lazyjj
-        just # task runner
-        tokei # code stats
-        scc # code counter
-        ast-grep # structural grep
+        just
+        tokei
+        scc
+        ast-grep
       ];
       programs = {
         jq.enable = lib.mkDefault true;
-        gh.enable = lib.mkDefault true; # GitHub CLI
+        gh.enable = lib.mkDefault true;
         git = {
-          enable = lib.mkDefault true; # 300MB / 70MB (python3 200MB, perl 100MB)
-          # prompt = true; # NixOS-specific option
-          signing.format = null; # Explicitly use 26.05+ default format
+          enable = lib.mkDefault true;
+
+          signing.format = null;
           settings = {
             init = {
               defaultBranch = lib.mkDefault "main";
@@ -51,8 +50,6 @@
         };
       };
     })
-    # Dev-adjacent utilities. Language toolchains live in per-project
-    # devshells; see templates/ for starters.
     (lib.mkIf config.teq.home-manager.dev {
       home.packages = with pkgs; [
         grpcurl

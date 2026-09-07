@@ -7,34 +7,31 @@
 {
   config = lib.mkIf config.teq.nixos.gui.enable {
     services = {
-      printing.enable = lib.mkDefault true; # Enable CUPS to print documents.
+      printing.enable = lib.mkDefault true;
       hardware.openrgb = {
         enable = lib.mkDefault true;
         package = pkgs.openrgb-with-all-plugins;
       };
       keyd = {
-        # A key remapping daemon for linux. https://github.com/rvaiya/keyd
         enable = lib.mkDefault true;
         keyboards.default.settings = {
           main = {
-            # overloads the capslock key to function as both escape (when tapped) and capslock (when held)
             capslock = lib.mkDefault "overload(capslock, esc)";
           };
         };
       };
-      earlyoom.enable = lib.mkDefault true; # RAM is a kind of hardware
-      hardware.bolt.enable = lib.mkDefault true; # Thunderbolt 3 device manager
+      earlyoom.enable = lib.mkDefault true;
+      hardware.bolt.enable = lib.mkDefault true;
     };
     hardware = {
-      bluetooth.enable = lib.mkDefault true; # enables support for Bluetooth
-      # bluetooth.package = pkgs.bluez; # selects the Bluetooth package to use
-      bluetooth.powerOnBoot = lib.mkDefault true; # powers up the default Bluetooth controller on boot
-      logitech.wireless.enable = lib.mkDefault true; # Linux devices manager for the Logitech Unifying Receiver
+      bluetooth.enable = lib.mkDefault true;
+
+      bluetooth.powerOnBoot = lib.mkDefault true;
+      logitech.wireless.enable = lib.mkDefault true;
     };
-    # programs = {
-    # };
+
     environment.systemPackages = with pkgs; [
-      logiops # Unofficial userspace driver for HID++ Logitech devices
+      logiops
     ];
   };
 }

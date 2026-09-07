@@ -65,34 +65,27 @@ buildNpmPackage' rec {
 
   env = {
     ELECTRON_SKIP_BINARY_DOWNLOAD = "1";
-    # use our own node headers since we skip downloading them
+
     NIX_CFLAGS_COMPILE = "-I${nodejs}/include/node";
-    # disable code signing on Darwin
+
     CSC_IDENTITY_AUTO_DISCOVERY = lib.optionalString stdenv.hostPlatform.isDarwin "false";
   };
 
   postConfigure = ''
-    # electron files need to be writable on Darwin
     cp -r ${electron.dist} electron-dist
     chmod -R u+w electron-dist
-
     pushd electron-dist
     zip -0Xqr ../electron.zip .
     popd
-
     rm -r electron-dist
 
-    # force @electron/packager to use our electron instead of downloading it, even if it is a different version
     substituteInPlace node_modules/@electron/packager/dist/packager.js \
         --replace-fail 'await this.getElectronZipPath(downloadOpts)' '"electron.zip"'
 
-    # don't fetch node headers
     substituteInPlace node_modules/cmake-js/lib/dist.js \
         --replace-fail '!this.downloaded' 'false'
   '';
 
-  # we used --ignore-scripts to have time to patch the dependencies
-  # now we'll have to call npm rebuild manually
   preBuild = ''
     npm rebuild --verbose
   '';
@@ -101,13 +94,11 @@ buildNpmPackage' rec {
 
   installPhase = ''
     runHook preInstall
-
     ${lib.optionalString stdenv.hostPlatform.isLinux ''
       mkdir -p $out/share/lib/kando
       cp -r out/*/{locales,resources{,.pak}} $out/share/lib/kando
 
       install -Dm644 assets/icons/icon.svg $out/share/icons/hicolor/scalable/apps/kando.svg
-
       makeWrapper ${lib.getExe electron} $out/bin/kando \
           --add-flags $out/share/lib/kando/resources/app \
           --add-flags "\''${NIXOS_OZONE_WL:+\''${WAYLAND_DISPLAY:+--ozone-platform-hint=auto --enable-features=WaylandWindowDecorations}}" \

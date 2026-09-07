@@ -13,9 +13,9 @@ let
     fgrep = "LC_ALL=C fgrep --color=auto";
     egrep = "egrep --color=auto";
     ncdu = "ncdu --color dark";
-    # bat = "bat --paging=never --style=plain";
+
     rm = "rm -i";
-    tn5250 = "tn5250 env.TERM=IBM-3477-FC"; # ssl:localhost
+    tn5250 = "tn5250 env.TERM=IBM-3477-FC";
     colourify = "grc -es  --colour=auto";
     docker = "colourify docker";
     docker-compose = "colourify docker-compose";
@@ -117,28 +117,22 @@ in
     programs = {
       home-manager.enable = lib.mkDefault true;
       atuin = {
-        # Replacement for a shell history
         enable = lib.mkDefault true;
-        # settings = { };
       };
       starship = {
-        # Minimal, blazing fast, and extremely customizable prompt for any shell
         enable = true;
-        # enableTransience = true;
+
         settings = pkgs.lib.importTOML ../sources/.config/starship.toml;
       };
       nushell.enable = lib.mkDefault true;
       bash = {
         enable = lib.mkDefault true;
         enableVteIntegration = lib.mkDefault true;
-        # historyControl = # one of "erasedups", "ignoredups", "ignorespace", "ignoreboth"
-        historyFile = lib.mkDefault "$HOME/.local/share/history/bash_history"; # "${config.xdg.dataHome}/zsh/zsh_history"
+
+        historyFile = lib.mkDefault "$HOME/.local/share/history/bash_history";
         historyFileSize = lib.mkDefault 1000000;
         historySize = lib.mkDefault 1000000;
-        # Ignore some controlling instructions
-        # HISTIGNORE is a colon-delimited list of patterns which should be excluded.
-        # The '&' is a special pattern which suppresses duplicate entries.
-        # export HISTIGNORE=$'[ \t]*:&:[fb]g:exit'
+
         historyIgnore = lib.mkDefault [
           "[ \t]*"
           "&"
@@ -149,44 +143,37 @@ in
           "cd"
           "exit"
         ];
-        # blesh, a full-featured line editor written in pure Bash
+
         initExtra = lib.mkBefore ''
-          # set -h # Enable 'hash' builtin
-          source "${XDG_CONFIG_HOME}/bash/functions.sh"; # Functions
+          source "${XDG_CONFIG_HOME}/bash/functions.sh"
           if [[ $(${pkgs.procps}/bin/ps --no-header --pid=$PPID --format=comm) != "fish" && -z ''${BASH_EXECUTION_STRING} ]]
           then
             shopt -q login_shell && LOGIN_OPTION='--login' || LOGIN_OPTION=""
             exec ${pkgs.fish}/bin/fish $LOGIN_OPTION
           fi
         '';
-        # shellAliases = aliases;
+
         shellOptions = [
           "checkjobs"
-          "checkwinsize" # check the window size after each command and, if necessary, update the values of LINES and COLUMNS.
-          "globstar" # If set, the pattern "**" used in a pathname expansion context will match all files and zero or more directories and subdirectories.
-          "cdspell" # If set, minor errors in the spelling of a directory component in a cd command will be corrected. The errors checked for are transposed characters, a missing character, and a character too many.
-          "dirspell" # If set, Bash attempts spelling correction on directory names during word completion if the directory name initially supplied does not exist.
-          "dotglob" # If set, Bash includes filenames beginning with a ‘.’ in the results of filename expansion.
-          "extglob" # If set, the extended pattern matching features are enabled.
-          "nocaseglob" # Use case-insensitive filename globbing
-          "histappend" # Make bash append rather than overwrite the history on disk
+          "checkwinsize"
+          "globstar"
+          "cdspell"
+          "dirspell"
+          "dotglob"
+          "extglob"
+          "nocaseglob"
+          "histappend"
         ];
       };
-      # ssh.enable = true; # Enabled elsewhere
-      # dircolors.enable = true; # Enabled elsewhere
+
       zsh = {
         enable = lib.mkDefault true;
         autosuggestion.enable = lib.mkDefault true;
-        # Add to your system configuration to get completion for system packages (e.g. systemd).
-        # environment.pathsToLink = [ "/share/zsh" ];
+
         enableVteIntegration = lib.mkDefault true;
-        # dirHashes = {
-        #   docs  = "$XDG_DOCUMENTS_DIR";
-        #   vids  = "$XDG_VIDEOS_DIR";
-        #   dl    = "$XDG_DOWNLOADS_DIR";
-        # };
+
         dotDir = lib.mkDefault "${config.xdg.configHome}/zsh";
-        # envExtra = "" # Extra commands that should be added to .zshenv.
+
         history = {
           append = lib.mkDefault true;
           expireDuplicatesFirst = lib.mkDefault true;
@@ -195,43 +182,18 @@ in
             "rm *"
             "pkill *"
           ];
-          path = lib.mkDefault "$HOME/.local/share/history/zsh_history"; # "${config.xdg.dataHome}/zsh/zsh_history"
+          path = lib.mkDefault "$HOME/.local/share/history/zsh_history";
           save = lib.mkDefault 1000000;
           size = lib.mkDefault 1000000;
         };
         historySubstringSearch.enable = lib.mkDefault true;
-        # initExtraFirst = "" # Commands that should be added to top of .zshrc.
-        # initExtra = "" # Extra commands that should be added to .zshrc.
-        # localVariables = {} # Extra local variables defined at the top of .zshrc.
-        # loginExtra = " " # Extra commands that should be added to .zlogin.
-        # logoutExtra = " " # Extra commands that should be added to .zlogout.
-        # oh-my-zsh ... Options to configure oh-my-zsh.
-        # plugins = [] # Plugins to source in .zshrc.
-        # prezto ... Options to configure prezto.
-        # profileExtra = " " # Extra commands that should be added to .zprofile.
-        # sessionVariables = { } # Environment variables that will be set for zsh session.
-        # shellAliases = aliases;
-        # shellGlobalAliases # Similar to programs.zsh.shellAliases, but are substituted anywhere on a line.
-        syntaxHighlighting.enable = lib.mkDefault true;
-        # zplug ... Options to configure zplug.
-        # zprof.enable = true; # zsh manager for profiling.
-        # zsh-abbr.enable = true; # zsh manager for auto-expanding abbreviations.
 
-        # Use XDG
-        # interactiveShellInit = ''
-        #   export HISTFILE=$HOME/.local/share/history/zsh_history
-        #   export HISTSIZE=100000
-        #   export SAVEHIST=100000
-        # '';
-        # loginShellInit
-        # ohMyZsh ...
-        # promptInit
-        # setOptions
+        syntaxHighlighting.enable = lib.mkDefault true;
       };
       fish = {
         enable = lib.mkDefault true;
         interactiveShellInit = ''
-          set fish_greeting # Disable greeting
+          set fish_greeting
           if not set -q COLORTERM
             switch $TERM
               case xterm-ghostty xterm-kitty wezterm '*-256color' '*-direct'
@@ -252,19 +214,9 @@ in
             set -gx QT_WAYLAND_RECONNECT 1
           end
         '';
-        # loginShellInit = "";
-        # shellInit = "";
-        # useBabelfish = true; NixOS-only option
-        # preferAbbrs = true; # If enabled, abbreviations will be preferred over aliases when other modules define aliases for fish.
-        # shellAbbrs = { };
-        # shellAliases = aliases;
-        # functions = { };
-        # plugins = [ ]; # The plugins to source in conf.d/99plugins.fish.
       };
       ion = {
         enable = lib.mkDefault true;
-        # initExtra
-        # shellAliases = aliases;
       };
     };
   };

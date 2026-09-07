@@ -4,19 +4,11 @@
   lib,
   ...
 }:
-#  let
-# label_nixos = "usb_nixos";
-# label_boot = "usb_boot";
-# in
 {
   imports = [
-    # ./impermanence.nix
     (modulesPath + "/installer/cd-dvd/installation-cd-graphical-base.nix")
   ];
   config = {
-    # Plasma6 theming is handled by home-manager
-    # teq.nixos.impermanence.label_nixos = label_nixos;
-    # teq.nixos.impermanence.label_boot = label_boot;
     nix = {
       optimise.automatic = true;
       optimise.dates = [ "03:45" ];
@@ -31,74 +23,18 @@
       max-free = ${toString (1024 * 1024 * 1024)}
     '';
     isoImage.edition = "plasma6";
-    boot.zfs.forceImportRoot = false; # 26.11 default; live ISO has no ZFS root
-    services.openssh.settings.PermitRootLogin = lib.mkForce "yes"; # Live installer convention
-    # Avoid nixpkgs entry conflict between installer channel and flake-input registry
+    boot.zfs.forceImportRoot = false;
+    services.openssh.settings.PermitRootLogin = lib.mkForce "yes";
+
     home-manager.sharedModules = [ { nix.registry = lib.mkForce { }; } ];
     environment.systemPackages = with pkgs; [
-      # using Qt5 builds of Maliit as upstream has not ported to Qt6 yet
       maliit-framework
       maliit-keyboard
-      # Calamares for graphical installation
-      # libsForQt5.kpmcore
       kdePackages.kpmcore
       calamares-nixos
       calamares-nixos-extensions
-      # Get list of locales
       glibcLocales
     ];
-    i18n.supportedLocales = [ "all" ]; # Support choosing from any locale
-    # disko.devices = {
-    #   disk = {
-    #     main = {
-    #       device = "/dev/_sdb_/"; # When using disko-install, we will overwrite this value from the commandline
-    #       type = "disk";
-    #       content = {
-    #         type = "gpt";
-    #         partitions = {
-    #           MBR = {
-    #             type = "EF02"; # for grub MBR
-    #             size = "1M";
-    #             priority = 1; # Needs to be first partition
-    #           };
-    #           ESP = {
-    #             type = "EF00";
-    #             size = "500M";
-    #             extraArgs = ["-Lusb_boot"];
-    #             content = {
-    #               type = "filesystem";
-    #               format = "vfat";
-    #               mountpoint = "/boot";
-    #               mountOptions = ["umask=0077"];
-    #               label = label_boot; # name?
-    #             };
-    #           };
-    #           root = {
-    #             size = "100%";
-    #             content = {
-    #               type = "btrfs";
-    #               extraArgs = ["-f" "-Lusb_nixos"]; # Override existing partition
-    #               subvolumes = {
-    #                 "/@home" = {
-    #                   mountOptions = ["compress=zstd" "noatime"];
-    #                   mountpoint = "/home";
-    #                 };
-    #                 "/@nix" = {
-    #                   mountOptions = ["compress=zstd" "noatime"];
-    #                   mountpoint = "/nix";
-    #                 };
-    #                 "/@persist" = {
-    #                   mountOptions = ["compress=zstd" "noatime"];
-    #                   mountpoint = "/persist";
-    #                 };
-    #               };
-    #               label = label_nixos;
-    #             };
-    #           };
-    #         };
-    #       };
-    #     };
-    #   };
-    # };
+    i18n.supportedLocales = [ "all" ];
   };
 }

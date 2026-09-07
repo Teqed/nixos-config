@@ -4,7 +4,6 @@ host := `uname -n`
 default:
     @just --list
 
-# Rebuild and switch this host
 switch:
     #!/usr/bin/env bash
     set -euo pipefail
@@ -15,7 +14,6 @@ switch:
       sudo nixos-rebuild switch --flake ".#{{host}}"
     fi
 
-# Build a host without switching
 build target=host:
     #!/usr/bin/env bash
     set -euo pipefail
@@ -26,19 +24,15 @@ build target=host:
       nix build "$attr"
     fi
 
-# Run flake checks
 check:
     nix flake check
 
-# Format nix files
 fmt:
     nix fmt
 
-# Update flake inputs
 update *inputs:
     nix flake update {{inputs}}
 
-# Build a cachePull host and have it pull the result now; must run on that host's configured build server
 deploy target:
     #!/usr/bin/env bash
     set -euo pipefail
@@ -68,6 +62,5 @@ deploy target:
     ssh -t "{{target}}" sudo systemctl start cache-pull
     ssh "{{target}}" journalctl -u cache-pull -n 3 --no-pager
 
-# Report whether nightly update/build/switch is working (--remote also asks cache clients)
 health *args:
     flake-health {{args}}

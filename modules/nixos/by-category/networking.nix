@@ -30,7 +30,7 @@ let
     if [ -z "$seat" ] && [ -n "''${SSH_CONNECTION:-}" ]; then
       seat="''${SSH_CONNECTION%% *}"
     fi
-    case "$seat" in *:*) seat="[$seat]" ;; esac # IPv6 literal
+    case "$seat" in *:*) seat="[$seat]" ;; esac
   '';
   inSshSession = ''[ -n "''${SSH_CONNECTION:-}''${SSH_TTY:-}''${SSH_CLIENT:-}" ]'';
   xdg-open-remote = pkgs.writeShellApplication {
@@ -110,17 +110,17 @@ in
         enable = mkDefault true;
         settings = {
           X11Forwarding = mkDefault true;
-          PermitRootLogin = mkDefault "no"; # disable root login
-          PasswordAuthentication = mkDefault false; # disable password login
+          PermitRootLogin = mkDefault "no";
+          PasswordAuthentication = mkDefault false;
           KbdInteractiveAuthentication = mkDefault false;
           AllowUsers = mkDefault [ "teq" ];
-          StreamLocalBindUnlink = mkDefault "yes"; # Automatically remove stale sockets
-          GatewayPorts = mkDefault "clientspecified"; # Allow forwarding ports to everywhere
+          StreamLocalBindUnlink = mkDefault "yes";
+          GatewayPorts = mkDefault "clientspecified";
           AcceptEnv = mkDefault [
             "WAYLAND_DISPLAY"
             "COLORTERM"
             "REMOTE_SEAT"
-          ]; # waypipe, truecolor, seat identity
+          ];
         };
         openFirewall = mkDefault true;
         hostKeys = mkDefault [
@@ -151,62 +151,32 @@ in
     environment.systemPackages =
       with pkgs;
       [
-        waypipe # Wayland forwarding over SSH — useful on both ends
-        cifs-utils # mount.cifs, CLI-usable
-        mosh-clean # kill orphaned mosh-server sessions
-        peer-sync # two-way newest-wins sync of selected dirs (FTL saves etc.)
-        (lib.hiPrio xdg-open-remote) # remote-open shim over xdg-utils' xdg-open
-        pbcopy # seat/local/OSC52 clipboard write
-        pbpaste # seat/local clipboard read
+        waypipe
+        cifs-utils
+        mosh-clean
+        peer-sync
+        (lib.hiPrio xdg-open-remote)
+        pbcopy
+        pbpaste
       ]
       ++ lib.optionals config.teq.nixos.gui.enable [
         openfortivpn
-        kdePackages.kio-fuse # to mount remote filesystems via FUSE
-        kdePackages.kio-extras # extra protocols support (sftp, fish and more)
-        kdePackages.qtsvg # support for svg icons
+        kdePackages.kio-fuse
+        kdePackages.kio-extras
+        kdePackages.qtsvg
       ];
-    # systemd.services.openfortivpn = {
-    #   description = "OpenFortiVPN Service";
-    #   after = [ "network.target" ];
-    #   wants = [ "network-online.target" "systemd-networkd-wait-online.service" ];
-    #   documentation = ["https://github.com/adrienverge/openfortivpn#readme"];
-    #   wantedBy = [ "multi-user.target" ];
-    #   serviceConfig = {
-    #     Type = "notify";
-    #     PrivateTmp = true;
-    #     ExecStart = "${pkgs.openfortivpn}/bin/openfortivpn";
-    #     Restart = "no";
-    #     RestartSec = "30s";
-    #     User = "root";
-    #     Sockets = [ "openfortivpn.socket" ];
-    #     StandardInput = "socket";
-    #     StandardOutput = "journal";
-    #     StandardError = "journal";
-    #   };
-    # };
-    # systemd.sockets.openfortivpn = {
-    #   description = "OpenFortiVPN Socket";
-    #   socketConfig = {
-    #     ListenFIFO = "/run/openfortivpn.stdin";
-    #     Service = "openfortivpn.service";
-    #     Accept = "false";
-    #     RemoveOnStop = "yes";
-    #     SocketMode = "0660";
-    #   };
-    # };
+
     networking = {
-      # nftables.enable = true; # Attempt to get ipv6 forwarding for tailscale exit nodes working
       networkmanager.enable = lib.mkIf config.teq.nixos.gui.enable (lib.mkDefault true);
-      useDHCP = lib.mkDefault true; # Attempt to enable DHCP on all interfaces
-      wireless.enable = lib.mkDefault false; # Enables wireless support via wpa_supplicant.
-      wireless.userControlled = lib.mkDefault true; # Allow normal users to control wpa_supplicant through wpa_gui or wpa_cli.
+      useDHCP = lib.mkDefault true;
+      wireless.enable = lib.mkDefault false;
+      wireless.userControlled = lib.mkDefault true;
       stevenblack = lib.mkIf config.teq.nixos.blocklist {
         enable = true;
         block = [
           "fakenews"
           "gambling"
           "porn"
-          # "social"
         ];
       };
       firewall = {
@@ -226,13 +196,13 @@ in
           {
             from = 1714;
             to = 1764;
-          } # KDE Connect
+          }
         ];
         allowedUDPPortRanges = lib.optionals config.teq.nixos.gui.enable [
           {
             from = 1714;
             to = 1764;
-          } # KDE Connect
+          }
         ];
         extraCommands = lib.optionalString config.teq.nixos.samba "iptables -t raw -A OUTPUT -p udp -m udp --dport 137 -j CT --helper netbios-ns";
       };

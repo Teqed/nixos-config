@@ -8,7 +8,7 @@
 }:
 let
   currentStateVersion = "24.05";
-  # Build with host pkgs so allowUnfree applies; the flake's own packages refuse unfree eval.
+
   mkFoundry =
     pkgs: attrs:
     (pkgs.callPackage "${inputs.foundryvtt}/pkgs/foundryvtt" { }).overrideAttrs (old: old // attrs);
@@ -19,7 +19,7 @@ in
     (modulesPath + "/installer/scan/not-detected.nix")
     (modulesPath + "/profiles/qemu-guest.nix")
   ];
-  # Deployment
+
   services = {
     scx.enable = false;
     caddy = {
@@ -28,9 +28,6 @@ in
         tls internal
         reverse_proxy http://localhost:3000
       '';
-      # virtualHosts."another.example.org".extraConfig = ''
-      #   reverse_proxy unix//run/gunicorn.sock
-      # '';
     };
     postgresql = {
       enable = true;
@@ -62,54 +59,37 @@ in
     openssh.enable = true;
   };
   networking = {
-    hostName = "jupiter"; # U+2643 ♃ JUPITER
+    hostName = "jupiter";
     useDHCP = lib.mkDefault true;
     firewall.allowedTCPPorts = [
-      80 # HTTP Caddy
-      443 # HTTPS Caddy
-      2583 # rsky
-      3000 # HTTP Wiki.js
-      8000 # BluePDS
-      30000 # HTTP Foundry VTT - Spheres
-      30001 # HTTP Foundry VTT - Noctuae
-      30002 # HTTP Foundry VTT - Jeimuzu
+      80
+      443
+      2583
+      3000
+      8000
+      30000
+      30001
+      30002
     ];
   };
   systemd.services.wiki-js = {
     requires = [ "postgresql.service" ];
     after = [ "postgresql.service" ];
   };
-  # containers.rsky = {
-  #   autoStart = true;
-  #   config = { lib, pkgs, ... }: {
-  #       system.stateVersion = currentStateVersion;
-  #       imports = [ inputs.rsky.nixosModules.default ];
-  #       services.postgresql.enable = lib.mkForce false;
-  # services.rsky-pds = {
-  #   enable = true;
-  #   environmentFiles = [ "/var/lib/rsky-pds/pds.env" ];
-  #   settings = {
-  #     PDS_PORT = 2583;
-  #     PDS_HOSTNAME = "psi.shatteredsky.net";
-  #     PDS_DEV_MODE = "true";
-  #   };
-  # };
-  #   };
-  # };
-  # services.parakeet.enable = true;
+
   containers = {
     foundryvtt-spheres = {
       autoStart = true;
       config = { pkgs, ... }: {
         system.stateVersion = currentStateVersion;
-        nixpkgs.config.allowUnfree = true; # FoundryVTT src is unfree
+        nixpkgs.config.allowUnfree = true;
         imports = [ inputs.foundryvtt.nixosModules.foundryvtt ];
         services.foundryvtt = {
           enable = true;
           hostName = "foundry.shatteredsky.net";
           routePrefix = "spheres";
           minifyStaticFiles = true;
-          # port = 30000; # Default port
+
           proxyPort = 443;
           proxySSL = true;
           upnp = false;
@@ -124,7 +104,7 @@ in
       autoStart = true;
       config = { pkgs, ... }: {
         system.stateVersion = currentStateVersion;
-        nixpkgs.config.allowUnfree = true; # FoundryVTT src is unfree
+        nixpkgs.config.allowUnfree = true;
         imports = [ inputs.foundryvtt.nixosModules.foundryvtt ];
         services.foundryvtt = {
           enable = true;
@@ -146,7 +126,7 @@ in
       autoStart = true;
       config = { pkgs, ... }: {
         system.stateVersion = currentStateVersion;
-        nixpkgs.config.allowUnfree = true; # FoundryVTT src is unfree
+        nixpkgs.config.allowUnfree = true;
         imports = [ inputs.foundryvtt.nixosModules.foundryvtt ];
         services.foundryvtt = {
           enable = true;
@@ -165,7 +145,7 @@ in
       };
     };
   };
-  # Implementation
+
   users.users = lib.mkMerge (
     [ { root.initialHashedPassword = "$2b$05$2ckfv7WhD4dCuDK9DZi1MuDT6lOLJI9xDVZEAze2/sjw0lODXYCh6"; } ]
     ++ lib.forEach config.userinfo.users (u: {
@@ -185,15 +165,14 @@ in
         efiInstallAsRemovable = true;
         configurationLimit = 2;
       };
-      efi.canTouchEfiVariables = false; # efiInstallAsRemovable doesn't touch NVRAM
+      efi.canTouchEfiVariables = false;
     };
     initrd = {
       availableKernelModules = [
         "xhci_pci"
         "virtio_scsi"
       ];
-      # Scripted initrd is removed in 26.11; was explicitly false (reason unrecorded).
-      # TODO: untested - verify the next manual reboot of jupiter comes back up.
+
       systemd.enable = true;
     };
   };

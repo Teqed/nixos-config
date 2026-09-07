@@ -25,14 +25,11 @@ in
     };
   };
   config = {
-    teq.nixos.enable = true; # Enables my NixOS options -- see /modules/nixos
-    programs.fish.enable = true; # Enable fish shell system-wide
-    # TODO: For each user, create a home-manager configuration.
-    # home-manager.users = lib.forEach userinfo.users (u: {
-    #   "${u}" = {};
-    # });
+    teq.nixos.enable = true;
+    programs.fish.enable = true;
+
     home-manager = {
-      users.teq.teq.home-manager.enable = true; # Enables my home-manager options -- see /modules/home-manager
+      users.teq.teq.home-manager.enable = true;
       backupFileExtension = "backup-hm";
       useGlobalPkgs = lib.mkDefault true;
       useUserPackages = lib.mkDefault true;
@@ -87,7 +84,7 @@ in
     users.groups = lib.mkMerge (
       lib.forEach config.userinfo.service_users (u: {
         "${u}" = {
-          members = mkDefault [ u ]; # Add service user to their own group (default is empty list)
+          members = mkDefault [ u ];
         };
       })
     );

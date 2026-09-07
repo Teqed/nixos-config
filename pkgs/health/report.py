@@ -1,18 +1,3 @@
-"""Daily incident summary. Persist delivered state only after a successful POST.
-
-State file: <state-dir>/delivered.json = {"version": 2, "incidents": {id: result}}.
-A missing file, or one that is not version 2, is never treated as prior delivery:
-every current incident is reported as NEW and a note says why. The Bash-era
-"last-nonok" file in the same directory is ignored (and mentioned once).
-
-Transitions (per check id, given the previous delivered incidents):
-  non-OK result            -> NEW / CHANGED / ONGOING, kept in state
-  OK, not deferred          -> RESOLVED if previously an incident, removed from state
-  OK, deferred              -> DEFERRED if previously an incident (kept, unchanged); otherwise silent
-  absent, runner complete   -> DROPPED once with the runner's exclusion reason, removed from state
-  runner incomplete         -> RUNNER INCOMPLETE line (a condition of the run, not an incident id);
-                               every delivered incident is listed UNVERIFIED and kept unchanged
-"""
 import argparse
 import fcntl
 import json
@@ -29,7 +14,6 @@ STATE_VERSION = 2
 
 
 def load_state(state_file):
-    """Return (incidents, note). incidents is {} whenever prior delivery cannot be trusted."""
     legacy = state_file.parent / "last-nonok"
     if not state_file.exists():
         if legacy.exists():
@@ -45,7 +29,6 @@ def load_state(state_file):
 
 
 def validate(document):
-    """Reject any document whose control fields do not follow the runner contract, before state is touched."""
     if not isinstance(document, dict) or document.get("version") != OUTPUT_VERSION:
         raise ValueError("Unsupported runner output")
     if not isinstance(document.get("complete"), bool):
@@ -69,10 +52,7 @@ def validate(document):
 
 
 def summarize(document, previous):
-    """Return (incidents_to_save, body_lines)."""
     if not document.get("complete"):
-        # Execution failed: nothing was evaluated. Report the failure as a condition of this run,
-        # never as an incident id, and carry every delivered incident forward untouched.
         lines = [f"RUNNER INCOMPLETE: {r['message']}" for r in document["results"]]
         lines.extend(f"UNVERIFIED {LABELS[previous[name]['state']]} {name}: not re-evaluated, runner incomplete"
                      for name in sorted(previous))
@@ -126,7 +106,7 @@ def deliver(args, state_file):
 
 
 def main():
-    parser = argparse.ArgumentParser(description=__doc__)
+    parser = argparse.ArgumentParser(description='Daily incident summary. Persist delivered state only after a successful POST.')
     parser.add_argument("--runner", required=True)
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--state-dir", default="/var/lib/flake-health")

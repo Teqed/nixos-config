@@ -7,25 +7,18 @@
 {
   config = lib.mkIf config.teq.home-manager.gui {
     home.packages = with pkgs; [
-      bibata-cursors # 160MB
-      papirus-icon-theme # 200MB / 130MB
-      ### emulators:
-      # mgba # 800MB / 10MB (ffmpeg)
-      ### video:
+      bibata-cursors
+      papirus-icon-theme
       plex-desktop
-      handbrake # 1.5GB / 64MB (ffmpeg 1.3GB / 35MB)
-      ### misc:
-      obsidian # 1.8GB / 20MB
-      parsec-bin # Parsec Remote Desktop client
-      # lan-mouse_git # 900MB / 10MB (libadwaita 900MB)
-      ### tools - wayland
+      handbrake
+      obsidian
+      parsec-bin
       wl-clipboard
-      wl-clipboard-x11 # Wrapper to use wl-clipboard as a drop-in replacement for X11 clipboard tools
+      wl-clipboard-x11
       kdePackages.wayland-protocols
-      # kde:
-      kdePackages.filelight # Disk usage analyzer
+      kdePackages.filelight
       moonlight-qt
-      gg-jj # GUI jj client (webkit)
+      gg-jj
       prismlauncher
       qalculate-qt
       kdePackages.kalk
@@ -36,18 +29,14 @@
       kdePackages.kcharselect
       dolphin-emu
       teams-for-linux
-      # Official Claude desktop app (.deb repackaged for Nix); see pkgs/by-name/cl/claude-desktop.
-      # Chat/Code work out of the box; Cowork's sandbox VM needs qemu (bundled via withCowork).
       (callPackage ../../../../pkgs/by-name/cl/claude-desktop/package.nix { })
-      # GooeyPi desktop workspace for Pi/OMP/Prime Agent; see pkgs/by-name/go/gooey-pi.
       (callPackage ../../../../pkgs/by-name/go/gooey-pi/package.nix { })
     ];
     services = {
-      ### kde:
-      kdeconnect.enable = lib.mkDefault true; # 1GB / 23MB
-      ### search:
+      kdeconnect.enable = lib.mkDefault true;
+
       recoll = {
-        enable = lib.mkDefault false; # CPU spikes; pulls akonadi/mariadb (~270 MiB)
+        enable = lib.mkDefault false;
         configDir = "${config.xdg.configHome}/recoll";
         settings = {
           nocjk = true;
@@ -55,7 +44,6 @@
           topdirs = [
             "~/_/Downloads"
             "~/_/Documents"
-            # "~/_/Repos"
           ];
 
           "~/_/Downloads" = {

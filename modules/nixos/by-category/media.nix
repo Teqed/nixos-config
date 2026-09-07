@@ -15,35 +15,33 @@ in
     services = {
       jellyseerr = {
         enable = false;
-        openFirewall = true; # 5055
-        # port = 5055; # Default
+        openFirewall = true;
       };
       bazarr = {
         enable = true;
-        openFirewall = true; # 6767
-        user = profile; # defaults to "bazarr"
-        group = profile; # defaults to "bazarr"
-        # listenPort = 6767; # Default
+        openFirewall = true;
+        user = profile;
+        group = profile;
       };
       sabnzbd = {
         enable = false;
-        openFirewall = true; # 7080
-        user = profile; # defaults to "sabnzbd"
-        group = profile; # defaults to "sabnzbd"
+        openFirewall = true;
+        user = profile;
+        group = profile;
         configFile = "/home/media/.local/state/sabnzbd/sabnzbd.ini";
       };
       radarr = {
         enable = true;
-        openFirewall = true; # 7878
-        user = profile; # defaults to "radarr"
-        group = profile; # defaults to "radarr"
+        openFirewall = true;
+        user = profile;
+        group = profile;
         dataDir = "/home/media/.local/state/radarr/.config/Radarr";
       };
       jellyfin = {
         enable = false;
-        openFirewall = true; # 8096 # The HTTP/HTTPS ports can be changed in the Web UI, so this option should only be used if they are unchanged, see Port Bindings.
-        user = profile; # defaults to "jellyfin"
-        group = profile; # defaults to "jellyfin"
+        openFirewall = true;
+        user = profile;
+        group = profile;
         dataDir = "/home/media/.local/state/jellyfin";
         configDir = "/home/media/.local/state/jellyfin/config";
         logDir = "/home/media/.local/state/jellyfin/log";
@@ -51,30 +49,30 @@ in
       };
       tautulli = {
         enable = true;
-        openFirewall = true; # 8181
-        user = profile; # defaults to "tautulli"
-        group = profile; # defaults to "tautulli"
+        openFirewall = true;
+        user = profile;
+        group = profile;
         dataDir = "/home/media/.local/state/plexpy";
-        port = 8181; # Default
+        port = 8181;
         configFile = "/home/media/.local/state/plexpy/config.ini";
       };
       readarr = {
         enable = true;
-        openFirewall = true; # 8787
-        user = profile; # defaults to "readarr"
-        group = profile; # defaults to "readarr"
+        openFirewall = true;
+        user = profile;
+        group = profile;
         dataDir = "/home/media/.local/state/readarr/.config/Readarr";
       };
       sonarr = {
         enable = true;
-        openFirewall = true; # 8989
-        user = profile; # defaults to "sonarr"
-        group = profile; # defaults to "sonarr"
+        openFirewall = true;
+        user = profile;
+        group = profile;
         dataDir = "/home/media/.local/state/sonarr/.config/NzbDrone";
       };
       prowlarr = {
         enable = true;
-        openFirewall = true; # 9696
+        openFirewall = true;
       };
       plex =
         let
@@ -91,36 +89,11 @@ in
         {
           package = plexpass;
           enable = false;
-          openFirewall = true; # 32400
-          user = profile; # defaults to "plex"
-          group = profile; # defaults to "plex"
+          openFirewall = true;
+          user = profile;
+          group = profile;
           dataDir = "/home/media/.local/state/plex";
-          # dataDir = "/home/media/.local/state/plex/.config/Plex Media Server";
-          # accelerationDevices = ["*"];
-          # extraPlugins = [
-          #   (builtins.path {
-          #     name = "Audnexus.bundle";
-          #     path = pkgs.fetchFromGitHub {
-          #       owner = "djdembeck";
-          #       repo = "Audnexus.bundle";
-          #       rev = "v0.2.8";
-          #       sha256 = "sha256-IWOSz3vYL7zhdHan468xNc6C/eQ2C2BukQlaJNLXh7E=";
-          #     };
-          #   })
-          # ];
-          # extraScanners = [
-          #   (lib.fetchFromGitHub {
-          #     owner = "ZeroQI";
-          #     repo = "Absolute-Series-Scanner";
-          #     rev = "773a39f502a1204b0b0255903cee4ed02c46fde0";
-          #     sha256 = "4l+vpiDdC8L/EeJowUgYyB3JPNTZ1sauN8liFAcK+PY=";
-          #   })
-          # ];
         };
     };
-    # programs = {
-    # };
-    # environment.systemPackages = with pkgs; [
-    # ];
   };
 }

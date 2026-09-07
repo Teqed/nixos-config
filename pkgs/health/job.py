@@ -1,10 +1,3 @@
-"""Persistent job completion records and freshness evaluation.
-
-evaluate() returns (state, message, deferred). deferred=True means the job's outcome
-is not established yet (boot/resume grace, in-progress run or retry): the state is OK
-so no new alert is raised, but the check prints perfdata "deferred=1" so the reporter
-does not treat it as recovery of an existing incident.
-"""
 import argparse
 import json
 import math
@@ -14,17 +7,10 @@ import subprocess
 import tempfile
 import time
 
-# systemd's SD_MESSAGE_SLEEP_STOP: "System returned from sleep operation".
 SLEEP_STOP_MESSAGE_ID = "8811e6df2a8e40f58a94cea26f8ebf14"
 
 
 def record_baseline(path, now=None):
-    """Create the first-attempt marker once. Returns True if this call created it.
-
-    Crash-safe and first-writer-wins: the JSON is written and fsynced to a temporary file in the
-    same directory, then installed with os.link(), which fails atomically if a baseline already
-    exists and never replaces one. An interrupted write leaves at most a temporary file, never a
-    truncated baseline that would read as absent after reboot."""
     path = Path(path)
     if path.exists():
         return False
@@ -53,7 +39,6 @@ def record_baseline(path, now=None):
 
 
 def load_baseline(path):
-    """Seconds-since-epoch of the first attempt, or None when absent or unreadable."""
     try:
         data = json.loads(Path(path).read_text())
         stamp = data.get("first_attempt") if isinstance(data, dict) and data.get("version") == 1 else None
@@ -73,7 +58,6 @@ def record_success(path, now=None):
 
 
 def last_resume_age(journalctl, now=None):
-    """Seconds since the last resume this boot, or None when no resume is recorded or the journal is unreadable."""
     if not journalctl:
         return None
     try:
@@ -92,14 +76,6 @@ def last_resume_age(journalctl, now=None):
 
 def evaluate(service, timer, record, now, uptime, max_age, max_runtime, boot_grace,
              resume_age=None, resume_grace=0, grace_limit=86400, first_attempt=None):
-    """Failures, inactive timers and runtime overruns are never suppressed by grace.
-
-    Grace (boot or resume) is bounded: a stale record is only eligible while it is at most
-    max_age + grace_limit old; missing history is only eligible while the job's first recorded
-    attempt (durable baseline written by the unit itself) is at most max_age + grace_limit old.
-    Without a baseline the bound falls back to time since boot (CLOCK_BOOTTIME, includes sleep).
-    Beyond the bound the overdue/missing state is reported even if every probe happens right
-    after a boot or resume."""
     if service.get("LoadState") != "loaded" or timer.get("LoadState") != "loaded":
         return 2, "Expected service or timer is missing", False
     if timer.get("ActiveState") != "active":
@@ -143,7 +119,7 @@ def evaluate(service, timer, record, now, uptime, max_age, max_runtime, boot_gra
 
 
 def main():
-    parser = argparse.ArgumentParser(description=__doc__)
+    parser = argparse.ArgumentParser(description='Persistent job completion records and freshness evaluation.')
     parser.add_argument("action", choices=["record", "baseline", "check"])
     parser.add_argument("--record", required=True)
     parser.add_argument("--baseline", help="First-attempt marker; written only by the 'baseline' action")

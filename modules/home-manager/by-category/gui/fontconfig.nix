@@ -12,13 +12,13 @@ in
     home.packages = with pkgs; [
       inter
       ibm-plex
-      dejavu_fonts # 10MB
-      noto-fonts-lgc-plus # 11MB
-      noto-fonts-cjk-sans # 62MB
-      noto-fonts-cjk-serif # 54MB
-      noto-fonts-monochrome-emoji # 2MB
-      noto-fonts-color-emoji # 10MB
-      liberation_ttf # 4MB
+      dejavu_fonts
+      noto-fonts-lgc-plus
+      noto-fonts-cjk-sans
+      noto-fonts-cjk-serif
+      noto-fonts-monochrome-emoji
+      noto-fonts-color-emoji
+      liberation_ttf
       nerd-fonts.symbols-only
       nerd-fonts.jetbrains-mono
     ];

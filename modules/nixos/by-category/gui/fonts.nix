@@ -50,7 +50,7 @@ in
           "Noto Emoji"
         ];
       };
-      enableDefaultPackages = mkDefault true; # Enable a basic set of fonts providing several styles and families and reasonable coverage of Unicode.
+      enableDefaultPackages = mkDefault true;
 
       packages = with pkgs; [
         nerd-fonts.symbols-only
@@ -65,17 +65,6 @@ in
         noto-fonts-color-emoji
         liberation_ttf
         winePackages.fonts
-        # mplus-outline-fonts.githubRelease
-        # jigmo
-        # font-awesome
-        # twemoji-color-font
-        # joypixels
-        # whatsapp-emoji-font
-        # powerline-symbols
-        # symbola
-        # material-icons
-        # weather-icons
-        # meslo-lgs-nf
       ];
 
       fontDir.enable = mkDefault (!pkgs.stdenv.hostPlatform.isDarwin);

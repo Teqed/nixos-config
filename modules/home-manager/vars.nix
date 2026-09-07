@@ -5,14 +5,14 @@
   ...
 }:
 let
-  XDG_LOCAL_HOME = "${config.home.homeDirectory}/.local"; # ~/.local
-  XDG_CACHE_HOME = "${config.home.homeDirectory}/.cache"; # ~/.cache
-  XDG_CONFIG_HOME = "${config.home.homeDirectory}/.config"; # ~/.config # $XDG_CONFIG_HOME defines the base directory relative to which user-specific configuration files should be stored.
-  XDG_STATE_HOME = "${XDG_LOCAL_HOME}/state"; # ~/.local/state # $XDG_STATE_HOME defines the base directory relative to which user-specific state files should be stored.
-  XDG_DATA_HOME = "${XDG_LOCAL_HOME}/share"; # ~/.local/share # $XDG_DATA_HOME defines the base directory relative to which user-specific data files should be stored.
-  # XDG_BIN_HOME = "${XDG_LOCAL_HOME}/bin"; # ~/.local/bin # $XDG_BIN_HOME defines the base directory relative to which user specific executable files should be stored.
-  XDG_RUNTIME_DIR = "/run/user/$UID"; # /run/user/$UID # If $XDG_RUNTIME_DIR is not set applications should fall back to a replacement directory with similar capabilities and print a warning message.
-  XDG_USER_DIRS = "${XDG_LOCAL_HOME}/user-dirs"; # ~/.local/user-dirs
+  XDG_LOCAL_HOME = "${config.home.homeDirectory}/.local";
+  XDG_CACHE_HOME = "${config.home.homeDirectory}/.cache";
+  XDG_CONFIG_HOME = "${config.home.homeDirectory}/.config";
+  XDG_STATE_HOME = "${XDG_LOCAL_HOME}/state";
+  XDG_DATA_HOME = "${XDG_LOCAL_HOME}/share";
+
+  XDG_RUNTIME_DIR = "/run/user/$UID";
+  XDG_USER_DIRS = "${XDG_LOCAL_HOME}/user-dirs";
   XDG_DESKTOP_DIR = "${XDG_USER_DIRS}/Desktop";
   XDG_DOCUMENTS_DIR = "${XDG_USER_DIRS}/Documents";
   XDG_DOWNLOAD_DIR = "${XDG_USER_DIRS}/Downloads";
@@ -21,28 +21,22 @@ let
   XDG_PUBLICSHARE_DIR = "${XDG_USER_DIRS}/Public";
   XDG_TEMPLATES_DIR = "${XDG_USER_DIRS}/Templates";
   XDG_VIDEOS_DIR = "${XDG_USER_DIRS}/Videos";
-  # Extra XDG-like directories
-  # XDG_LIB_HOME = "${XDG_LOCAL_HOME}/lib"; # ~/.local/lib
-  XDG_OPT_HOME = "${XDG_LOCAL_HOME}/opt"; # ~/.local/opt
-  XDG_GAMES_HOME = "${XDG_OPT_HOME}/games"; # ~/.local/opt/games
-  XDG_MISC_DIR = "${XDG_USER_DIRS}/Misc"; # ~/.local/user-dirs/Misc
-  XDG_REPOS_DIR = "${XDG_USER_DIRS}/Repos"; # ~/.local/user-dirs/Repos
-  XDG_SCREENSHOTS_DIR = "${XDG_USER_DIRS}/Pictures/Screenshots"; # ~/.local/user-dirs/Pictures/Screenshots
+
+  XDG_OPT_HOME = "${XDG_LOCAL_HOME}/opt";
+  XDG_GAMES_HOME = "${XDG_OPT_HOME}/games";
+  XDG_MISC_DIR = "${XDG_USER_DIRS}/Misc";
+  XDG_REPOS_DIR = "${XDG_USER_DIRS}/Repos";
+  XDG_SCREENSHOTS_DIR = "${XDG_USER_DIRS}/Pictures/Screenshots";
   global_variables = {
-    # NAME = "Timothy Quilling"; # Used by: ??? dpkg-buildpackage (unless overridden by $DEBFULLNAME), git (unless overridden by 'user.name'), hg (via ~/.hgrc 'ui.username'), makepkg (via ~/.makepkg.conf $PACKAGER)
-    # EMAIL = "teqed@shatteredsky.net"; # Used by: dpkg-buildpackage (unless overridden by $DEBEMAIL), git (unless overridden by 'user.email'), hg (via ~/.hgrc 'ui.username'), makepkg (via ~/.makepkg.conf $PACKAGER)
-    # LD_LIBRARY_PATH = "${XDG_LOCAL_HOME}/lib"; TODO: Prepend to the existing value / LIBPATH
-    inherit XDG_LOCAL_HOME; # ~/.local
-    # XDG_BIN_HOME = XDG_BIN_HOME; # ~/.local/bin
-    # XDG_LIB_HOME = XDG_LIB_HOME; # ~/.local/lib
-    inherit XDG_GAMES_HOME; # ~/.local/games
-    inherit XDG_OPT_HOME; # ~/.local/opt
-    inherit XDG_USER_DIRS; # ~/.local/user-dirs
-    inherit XDG_MISC_DIR; # ~/.local/user-dirs/Misc
-    inherit XDG_REPOS_DIR; # ~/.local/user-dirs/Repos
-    inherit XDG_SCREENSHOTS_DIR; # ~/.local/user-dirs/Pictures/Screenshots
-    # XDG_RUNTIME_DIR = XDG_RUNTIME_DIR; # /run/user/$UID
-    # ENVVAR config
+    inherit XDG_LOCAL_HOME;
+
+    inherit XDG_GAMES_HOME;
+    inherit XDG_OPT_HOME;
+    inherit XDG_USER_DIRS;
+    inherit XDG_MISC_DIR;
+    inherit XDG_REPOS_DIR;
+    inherit XDG_SCREENSHOTS_DIR;
+
     MANPAGER = "sh -c 'col -bx | bat -l man -p'";
     EDITOR = "micro";
     VISUAL = "micro";
@@ -50,7 +44,7 @@ let
     LESS = "-RF";
     MOOR = "--statusbar=bold --no-linenumbers";
     DICPATH = "/run/current-system/sw/share/hunspell";
-    # COLORTERM = "truecolor";
+
     CLICOLOR = "1";
     LESS_TERMCAP_mb = "\e[01;31m";
     LESS_TERMCAP_md = "\e[01;38;5;74m";
@@ -66,55 +60,51 @@ let
     WARNING_COLOR = ";35";
     INFO_COLOR = ";36";
     GCC_COLORS = "error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01";
-    # General applications / tools
+
     INPUTRC = "${XDG_CONFIG_HOME}/readline/inputrc";
-    # GTK2_RC_FILES = lib.mkForce "${XDG_CONFIG_HOME}/gtk-2.0/gtkrc"; # Override upstream home-manager/modules/misc/gtk.nix
-    XCOMPOSEFILE = "${XDG_CONFIG_HOME}/X11/XCompose"; # ~/.config/X11/XCompose
-    VIMINIT = ":so ${XDG_CONFIG_HOME}/vim/.vimrc"; # ~/.vimrc
-    GVIMINIT = ":so ${XDG_CONFIG_HOME}/vim/.gvimrc"; # ~/.gvimrc
+
+    XCOMPOSEFILE = "${XDG_CONFIG_HOME}/X11/XCompose";
+    VIMINIT = ":so ${XDG_CONFIG_HOME}/vim/.vimrc";
+    GVIMINIT = ":so ${XDG_CONFIG_HOME}/vim/.gvimrc";
     MPLAYER_HOME = "${XDG_CONFIG_HOME}/mplayer";
     PARALLEL_HOME = "${XDG_CONFIG_HOME}/parallel";
-    AWS_SHARED_CREDENTIALS_FILE = "${XDG_CONFIG_HOME}/aws/credentials"; # ~/.aws/credentials
-    AWS_CONFIG_FILE = "${XDG_CONFIG_HOME}/aws/config"; # ~/.aws/config
-    ANSIBLE_HOME = "${XDG_CONFIG_HOME}/ansible"; # ~/.ansible
-    # ZDOTDIR = "${XDG_CONFIG_HOME}/zsh"; # ~/.zsh
-    # Cache
-    XCOMPOSECACHE = "${XDG_CACHE_HOME}/X11/XCompose"; # ~/.XCompose
+    AWS_SHARED_CREDENTIALS_FILE = "${XDG_CONFIG_HOME}/aws/credentials";
+    AWS_CONFIG_FILE = "${XDG_CONFIG_HOME}/aws/config";
+    ANSIBLE_HOME = "${XDG_CONFIG_HOME}/ansible";
+
+    XCOMPOSECACHE = "${XDG_CACHE_HOME}/X11/XCompose";
     LESSHISTFILE = "${XDG_CACHE_HOME}/less/history";
-    # Data
+
     WINEPREFIX = "${XDG_DATA_HOME}/wine";
     WAKATIME_HOME = "${XDG_DATA_HOME}/wakatime";
     CODEX_HOME = "${XDG_CONFIG_HOME}/codex";
-    # XCURSOR_PATH = "/usr/share/icons:${XDG_DATA_HOME}/icons";
-    # TERMINFO = "${XDG_DATA_HOME}/terminfo";
-    # TERMINFO_DIRS = "${XDG_DATA_HOME}/terminfo";
-    # History
-    HISTFILE = "${XDG_STATE_HOME}/history/histfile"; # ~/.bash_history , ~/.zsh_history -- overwritten later by specific shell
-    HISTSIZE = 1000000; # Number of commands to remember in the history
-    HISTFILESIZE = 1000000; # Should be controlled by actual shell later
-    HISTCONTROL = "ignoreboth"; # Don't put duplicate lines or lines starting with space in the history
-    MYSQL_HISTFILE = "${XDG_STATE_HOME}/history/mysql_history"; # ~/.mysql_history
+
+    HISTFILE = "${XDG_STATE_HOME}/history/histfile";
+    HISTSIZE = 1000000;
+    HISTFILESIZE = 1000000;
+    HISTCONTROL = "ignoreboth";
+    MYSQL_HISTFILE = "${XDG_STATE_HOME}/history/mysql_history";
     SQLITE_HISTORY = "${XDG_STATE_HOME}/history/sqlite_history";
-    # Programming languages / tools / package managers
+
     ANDROID_HOME = "${XDG_DATA_HOME}/android";
     DOCKER_CONFIG = "${XDG_CONFIG_HOME}/docker";
     GRADLE_USER_HOME = "${XDG_DATA_HOME}/gradle";
     GOPATH = "${XDG_DATA_HOME}/go";
     M2_HOME = "${XDG_DATA_HOME}/m2";
     _JAVA_OPTIONS = "-Djava.util.prefs.userRoot=${XDG_CONFIG_HOME}/java";
-    CARGO_HOME = "${XDG_DATA_HOME}/cargo"; # Rust
-    RUSTUP_HOME = "${XDG_DATA_HOME}/rustup"; # Rust
-    RBENV_ROOT = "${XDG_DATA_HOME}/rbenv"; # Ruby
-    ## npm/node
+    CARGO_HOME = "${XDG_DATA_HOME}/cargo";
+    RUSTUP_HOME = "${XDG_DATA_HOME}/rustup";
+    RBENV_ROOT = "${XDG_DATA_HOME}/rbenv";
+
     NODE_REPL_HISTORY = "${XDG_DATA_HOME}/node_repl_history";
     NPM_CONFIG_USERCONFIG = "${XDG_CONFIG_HOME}/npm/npmrc";
     NPM_CONFIG_PREFIX = "${XDG_DATA_HOME}/npm";
     NPM_CONFIG_CACHE = "${XDG_CACHE_HOME}/npm";
     NPM_CONFIG_TMP = "${XDG_RUNTIME_DIR}/npm";
-    ## dotnet
+
     DOTNET_CLI_HOME = "${XDG_DATA_HOME}/dotnet";
     NUGET_PACKAGES = "${XDG_CACHE_HOME}/NuGetPackages";
-    ## Python
+
     PYTHONSTARTUP = "${XDG_CONFIG_HOME}/python/pythonrc.py";
     PYTHONPYCACHEPREFIX = "${XDG_CACHE_HOME}/python";
     PYTHONUSERBASE = "${XDG_DATA_HOME}/python";
@@ -124,11 +114,11 @@ let
     MYPY_CACHE_DIR = "${XDG_CACHE_HOME}/mypy";
     IPYTHONDIR = "${XDG_CONFIG_HOME}/ipython";
     JUPYTER_CONFIG_DIR = "${XDG_CONFIG_HOME}/jupyter";
-    # To relocate runtime data & IPC sockets:
+
     XAUTHORITY = "${XDG_RUNTIME_DIR}/Xauthority";
     SCREENDIR = "${XDG_RUNTIME_DIR}/screen";
     TMUX_TMPDIR = "${XDG_RUNTIME_DIR}/tmux";
-    ICEAUTHORITY = "${XDG_RUNTIME_DIR}/ICEauthority"; # ~/.ICEauthority
+    ICEAUTHORITY = "${XDG_RUNTIME_DIR}/ICEauthority";
   };
 in
 {
@@ -137,9 +127,9 @@ in
     programs.zsh.sessionVariables = global_variables;
     systemd.user.sessionVariables = global_variables;
     home = {
-      packages = with pkgs; [ xdg-ninja ]; # A shell script which checks your $HOME for unwanted files and directories.
+      packages = with pkgs; [ xdg-ninja ];
       preferXdgDirectories = true;
-      # sessionPath = [XDG_BIN_HOME];
+
       sessionVariables = lib.mkDefault global_variables;
       shellAliases = {
         wget = "wget --hsts-file='\${XDG_STATE_HOME}/history/wget_history'";
@@ -147,34 +137,29 @@ in
     };
     xdg = {
       enable = true;
-      # cacheHome = XDG_CACHE_HOME; # ~/.cache
-      # configHome = XDG_CONFIG_HOME; # ~/.config
-      # dataHome = XDG_DATA_HOME; # ~/.local/share
-      # stateHome = XDG_STATE_HOME; # ~/.local/state
+
       configFile."user-dirs.dirs" = lib.mkIf config.xdg.userDirs.enable { force = true; };
       userDirs = {
         enable = true;
         createDirectories = true;
-        setSessionVariables = false; # Opt into 26.05+ default (false) instead of legacy default (true for stateVersion 24.05)
-        desktop = XDG_DESKTOP_DIR; # ~/.local/user-dirs/Desktop
-        documents = XDG_DOCUMENTS_DIR; # ~/.local/user-dirs/Documents
-        download = XDG_DOWNLOAD_DIR; # ~/.local/user-dirs/Downloads
-        music = XDG_MUSIC_DIR; # ~/.local/user-dirs/Music
-        pictures = XDG_PICTURES_DIR; # ~/.local/user-dirs/Pictures
-        publicShare = XDG_PUBLICSHARE_DIR; # ~/.local/user-dirs/Public
-        templates = XDG_TEMPLATES_DIR; # ~/.local/user-dirs/Templates
-        videos = XDG_VIDEOS_DIR; # ~/.local/user-dirs/Videos
+        setSessionVariables = false;
+        desktop = XDG_DESKTOP_DIR;
+        documents = XDG_DOCUMENTS_DIR;
+        download = XDG_DOWNLOAD_DIR;
+        music = XDG_MUSIC_DIR;
+        pictures = XDG_PICTURES_DIR;
+        publicShare = XDG_PUBLICSHARE_DIR;
+        templates = XDG_TEMPLATES_DIR;
+        videos = XDG_VIDEOS_DIR;
         extraConfig = {
-          inherit XDG_LOCAL_HOME; # ~/.local
-          # XDG_BIN_HOME = XDG_BIN_HOME; # ~/.local/bin
-          # XDG_LIB_HOME = XDG_LIB_HOME; # ~/.local/lib
-          inherit XDG_GAMES_HOME; # ~/.local/games
-          inherit XDG_OPT_HOME; # ~/.local/opt
-          inherit XDG_USER_DIRS; # ~/.local/user-dirs
-          MISC = XDG_MISC_DIR; # ~/.local/user-dirs/Misc
-          REPOS = XDG_REPOS_DIR; # ~/.local/user-dirs/Repos
-          SCREENSHOTS = XDG_SCREENSHOTS_DIR; # ~/.local/user-dirs/Pictures/Screenshots
-          # XDG_RUNTIME_DIR = XDG_RUNTIME_DIR; # /run/user/$UID
+          inherit XDG_LOCAL_HOME;
+
+          inherit XDG_GAMES_HOME;
+          inherit XDG_OPT_HOME;
+          inherit XDG_USER_DIRS;
+          MISC = XDG_MISC_DIR;
+          REPOS = XDG_REPOS_DIR;
+          SCREENSHOTS = XDG_SCREENSHOTS_DIR;
         };
       };
     };

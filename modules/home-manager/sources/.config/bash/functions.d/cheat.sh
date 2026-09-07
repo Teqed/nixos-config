@@ -1,4 +1,4 @@
 #!/usr/bin/env sh
-cheat() { # Get manpage-like help for a command (e.g. cheat wget)
+cheat() {
     curl cheat.sh/"$1"
 }

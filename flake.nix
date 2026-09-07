@@ -6,11 +6,11 @@ The starlight on the Western Seas.
 ";
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel/release"; # CachyOS kernel replacement
+    nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel/release";
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     nix-flatpak.url = "github:gmodena/nix-flatpak";
-    # nix-flatpak.inputs.nixpkgs.follows = "nixpkgs"; #
+
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     nixos-hardware.inputs.nixpkgs.follows = "nixpkgs";
     impermanence.url = "github:nix-community/impermanence";
@@ -22,34 +22,18 @@ The starlight on the Western Seas.
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.home-manager.follows = "home-manager";
     };
-    # sddmSugarCandy4Nix = {
-    #   url = "github:MOIS3Y/sddmSugarCandy4Nix";
-    #   inputs.nixpkgs.follows = "nixpkgs";
-    # };
+
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
     foundryvtt = {
       url = "github:reckenrode/nix-foundryvtt";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    # ghostty.url = "github:ghostty-org/ghostty?ref=refs/tags/v1.1.3"; # latest: v1.1.3
+
     ghostty = {
       url = "github:ghostty-org/ghostty?ref=refs/tags/tip";
-      # No `inputs.nixpkgs.follows` — must use ghostty's pinned nixpkgs so
-      # ghostty.cachix.org cache hits land. Cost: small nixpkgs duplicate in closure.
     };
-    # pia = {
-    #   url = "github:Fuwn/pia.nix";
-    #   inputs.nixpkgs.follows = "nixpkgs";
-    # };
-    # rsky.url = "github:Teqed/rsky?rev=3a0f021490f17cd7faf95d1611c8cce7915232bd";
-    # rsky.url = "git+file:///home/teq/_/Repos/rsky";
-    # nixpkgs-wayland = {
-    #   url = "github:nix-community/nixpkgs-wayland";
-    #   inputs.nixpkgs.follows = "nixpkgs";
-    # };
-    # parakeet.url = "git+https://tangled.sh/@quilling.dev/parakeet?rev=3f1dcc059ddc28d94caea58076458c11dfd9e6db";
-    # parakeet.url = "git+file:///home/teq/.local/user-dirs/Repos/parakeet";
+
     llm-agents.url = "github:numtide/llm-agents.nix";
     vpn-confinement.url = "github:Maroka-chan/VPN-Confinement";
     agenix = {
@@ -57,7 +41,7 @@ The starlight on the Western Seas.
       inputs = {
         nixpkgs.follows = "nixpkgs";
         home-manager.follows = "home-manager";
-        darwin.follows = ""; # Save resources on Linux
+        darwin.follows = "";
       };
     };
     tangled-core.url = "git+https://tangled.org/@tangled.org/core";
@@ -79,7 +63,6 @@ The starlight on the Western Seas.
       nix-index-database,
       plasma-manager,
       disko,
-      # rsky,
       vpn-confinement,
       agenix,
       tangled-core,
@@ -89,12 +72,9 @@ The starlight on the Western Seas.
       inherit (self) outputs;
       systems = [
         "aarch64-linux"
-        # "i686-linux"
         "x86_64-linux"
-        # "aarch64-darwin"
-        # "x86_64-darwin"
       ];
-      forAllSystems = nixpkgs.lib.genAttrs systems; # This is a function that generates an attribute by calling a function you pass to it, with each system as an argument
+      forAllSystems = nixpkgs.lib.genAttrs systems;
       pkgsFor = forAllSystems (
         system:
         import nixpkgs {
@@ -116,10 +96,7 @@ The starlight on the Western Seas.
           nix-flatpak
           ;
       };
-      # <system> is something like "x86_64-linux", "aarch64-linux", "i686-linux", "x86_64-darwin"
-      # <name> is an attribute name like "hello".
-      # <flake> is a flake name like "nixpkgs".
-      # <store-path> is a /nix/store.. path
+
     in
     {
       checks = forAllSystems (
@@ -157,54 +134,14 @@ The starlight on the Western Seas.
         }
       );
 
-      # # Executed by `nix build .#<name>`
-      # packages."<system>"."<name>" = derivation;
-      packages = forAllSystems (system: import ./pkgs pkgsFor.${system}); # Custom packages accessible through 'nix build', 'nix shell', etc
+      packages = forAllSystems (system: import ./pkgs pkgsFor.${system});
 
-      # # Executed by `nix build .`
-      # packages."<system>".default = derivation;
-
-      # # Executed by `nix run .#<name>`
-      # apps."<system>"."<name>" = {
-      #   type = "app";
-      #   program = "<store-path>";
-      # };
-
-      # # Executed by `nix run . -- <args?>`
-      # apps."<system>".default = {
-      #   type = "app";
-      #   program = "...";
-      # };
-
-      formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.nixfmt-tree); # Formatter for your nix files, available through 'nix fmt'.
-
-      # # Used for nixpkgs packages, also accessible via `nix build .#<name>`
-      # legacyPackages."<system>"."<name>" = derivation;
-
-      # # Overlay, consumed by other flakes
-      # overlays."<name>" = final: prev: {};
-
-      # # Default overlay
-      # overlays.default = final: prev: {};
+      formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.nixfmt-tree);
 
       overlays = import ./overlays { inherit inputs; };
 
-      # # Nixos module, consumed by other flakes
-      # nixosModules."<name>" = {config, ...}: {
-      #   options = {};
-      #   config = {};
-      # };
+      nixosModules = import ./modules/nixos { flakes = inputs; };
 
-      # # Default module
-      # nixosModules.default = {config, ...}: {
-      #   options = {};
-      #   config = {};
-      # };
-      nixosModules = import ./modules/nixos { flakes = inputs; }; # Reusable nixos modules.
-
-      # # Used with `nixos-rebuild switch --flake .#<hostname>`
-      # # nixosConfigurations."<hostname>".config.system.build.toplevel must be a derivation
-      # nixosConfigurations."<hostname>" = {};
       nixosConfigurations = {
         eris = nixpkgs.lib.nixosSystem {
           specialArgs = inheritSpecialArgs;
@@ -217,7 +154,7 @@ The starlight on the Western Seas.
             disko.nixosModules.disko
           ];
         };
-        # NixOS configuration entrypoint. Available through 'nixos-rebuild --flake .#sedna'
+
         sedna = nixpkgs.lib.nixosSystem {
           specialArgs = inheritSpecialArgs;
           modules = [
@@ -237,12 +174,11 @@ The starlight on the Western Seas.
             home-manager.nixosModules.home-manager
             nix-flatpak.nixosModules.nix-flatpak
             self.homeManagerConfig
-            # inputs.parakeet.nixosModules.default
             vpn-confinement.nixosModules.default
             agenix.nixosModules.default
             tangled-core.nixosModules.spindle
             inputs.washing-machien.nixosModules.default
-            { nixpkgs.overlays = [ nix-cachyos-kernel.overlays.pinned ]; } # CachyOS kernel
+            { nixpkgs.overlays = [ nix-cachyos-kernel.overlays.pinned ]; }
           ];
         };
         bubblegum = nixpkgs.lib.nixosSystem {
@@ -255,7 +191,7 @@ The starlight on the Western Seas.
             nix-flatpak.nixosModules.nix-flatpak
             self.homeManagerConfig
             agenix.nixosModules.default
-            { nixpkgs.overlays = [ nix-cachyos-kernel.overlays.pinned ]; } # CachyOS kernel
+            { nixpkgs.overlays = [ nix-cachyos-kernel.overlays.pinned ]; }
           ];
         };
         jupiter = nixpkgs.lib.nixosSystem {
@@ -269,51 +205,28 @@ The starlight on the Western Seas.
             self.homeManagerConfig
             disko.nixosModules.disko
             inputs.foundryvtt.nixosModules.foundryvtt
-            # inputs.rsky.nixosModules.default
-            # inputs.parakeet.nixosModules.default
           ];
         };
       };
 
-      # # Used by `nix develop .#<name>`
-      # devShells."<system>"."<name>" = derivation;
-
-      # # Used by `nix develop`
-      # devShells."<system>".default = derivation;
-
-      # # Hydra build jobs
-      # hydraJobs."<attr>"."<system>" = derivation;
-
-      # # Used by `nix flake init -t <flake>#<name>`
-      # templates."<name>" = {
-      #   path = "<store-path>";
-      #   description = "template description goes here?";
-      # };
-      # # Used by `nix flake init -t <flake>`
-      # templates.default = {
-      #   path = "<store-path>";
-      #   description = "";
-      # };
-
-      homeManagerModules = import ./modules/home-manager { flakes = inputs; }; # Reusable home-manager modules.
+      homeManagerModules = import ./modules/home-manager { flakes = inputs; };
       homeManagerConfig = _: {
         nixpkgs.hostPlatform = nixpkgs.lib.mkDefault "x86_64-linux";
         home-manager.extraSpecialArgs = inheritSpecialArgs;
         home-manager.sharedModules = [
-          self.homeManagerModules.default # My custom modules
-          nix-index-database.homeModules.nix-index # nix-index-database (renamed from hmModules)
-          plasma-manager.homeModules.plasma-manager # plasma-manager (renamed from homeManagerModules)
+          self.homeManagerModules.default
+          nix-index-database.homeModules.nix-index
+          plasma-manager.homeModules.plasma-manager
         ];
       };
       homeConfigurations = {
-        # home-manager --flake .#teq@somewhere
         "teq@somewhere" = home-manager.lib.homeManagerConfiguration {
-          pkgs = pkgsFor.x86_64-linux; # Home-manager requires 'pkgs' instance
+          pkgs = pkgsFor.x86_64-linux;
           extraSpecialArgs = { inherit inputs outputs; };
           modules = [
-            self.homeManagerModules.default # My custom modules
-            nix-index-database.homeModules.nix-index # nix-index-database (renamed from hmModules)
-            plasma-manager.homeModules.plasma-manager # plasma-manager (renamed from homeManagerModules)
+            self.homeManagerModules.default
+            nix-index-database.homeModules.nix-index
+            plasma-manager.homeModules.plasma-manager
             {
               home.username = "teq";
               home.homeDirectory = "/home/teq";

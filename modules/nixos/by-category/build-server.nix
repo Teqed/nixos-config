@@ -130,7 +130,7 @@ in
         openssh
         coreutils
       ];
-      # NixOS `environment` attr writes a properly-quoted Environment= line in the unit.
+
       environment.GIT_SSH_COMMAND = "ssh -i ${cfg.sshIdentity} -o IdentitiesOnly=yes";
       serviceConfig = {
         Type = "oneshot";
@@ -141,14 +141,11 @@ in
       };
       script = ''
         set -euo pipefail
-
         git fetch origin
         git checkout main
         git pull --ff-only origin main
-
         nix flake update --commit-lock-file
 
-        # --out-link creates GC roots so closures stay alive for nix-serve to hand to clients.
         mkdir -p result-builds
         ${lib.concatMapStringsSep "\n" (h: ''
           echo "::: building ${h}"
@@ -156,7 +153,6 @@ in
             --out-link result-builds/${h} -L
         '') cfg.hosts}
 
-        # First push is required, rest are best-effort (mirrors that may be flaky).
         ${
           let
             first = lib.head cfg.pushRemotes;

@@ -49,7 +49,6 @@ in
       };
       networking.firewall.allowedTCPPorts = [ cfg.server.port ];
     })
-
     (lib.mkIf cfg.failureTemplate.enable {
       systemd.services."notify-fail@" = {
         description = "Notify ntfy on failure of %i";

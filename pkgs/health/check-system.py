@@ -1,4 +1,3 @@
-"""Host-wide systemd, clock and reboot diagnostics."""
 import argparse
 from pathlib import Path
 import subprocess
@@ -23,7 +22,7 @@ def probe(kind, systemctl, timedatectl, root=Path('/')):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description=__doc__)
+    parser = argparse.ArgumentParser(description='Host-wide systemd, clock and reboot diagnostics.')
     parser.add_argument('kind', choices=['failed', 'clock', 'reboot'])
     parser.add_argument('systemctl')
     parser.add_argument('timedatectl')

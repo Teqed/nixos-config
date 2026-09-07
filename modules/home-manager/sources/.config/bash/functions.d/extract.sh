@@ -1,5 +1,4 @@
 #!/usr/bin/env sh
-# Extract archives - use: extract <file>
 extract() {
     if [ -f "$1" ] ; then
         case $1 in

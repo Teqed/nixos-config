@@ -5,7 +5,7 @@
   ...
 }:
 let
-  # electron-bin 43.4.1 drops the Plasma tray icon (electron/electron#52674)
+
   mkElectron = pkgs.callPackage "${pkgs.path}/pkgs/development/tools/electron/binary/generic.nix" { };
   electron_43_trayfix =
     if lib.versionAtLeast pkgs.electron_43.version "43.5.0" then
@@ -34,10 +34,8 @@ in
             --add-flags "--enable-features=WaylandWindowDecorations,AcceleratedVideoEncoder"
         '';
       })
-      # discord-ptb — removed; preferring vesktop (~570 MiB + electron-40)
       betterdiscordctl
-      # discord-krisp # Removed - was provided by chaotic-cx/nyx (discontinued)
-      discover-overlay # 600MB / 15MB (gtk+3, gtk-layer-shell)
+      discover-overlay
     ];
   };
 }

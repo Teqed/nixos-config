@@ -10,14 +10,13 @@
       programs = {
         micro = {
           enable = lib.mkDefault true;
-          # settings = { };
         };
-        vim.enable = lib.mkDefault true; # 570MB / 75MB (vim-full 570MB / 90KB)
+        vim.enable = lib.mkDefault true;
       };
     })
     (lib.mkIf config.teq.home-manager.dev {
       programs.helix = {
-        enable = lib.mkDefault true; # 400MB / 200MB (marksman 200MB / 20MB)
+        enable = lib.mkDefault true;
         extraPackages = [ pkgs.marksman ];
       };
     })

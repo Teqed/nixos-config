@@ -7,24 +7,15 @@
 {
   config = lib.mkIf config.teq.home-manager.gui {
     home.packages = with pkgs; [
-      aseprite # 117MB / 20MB (harfbuzz 70MB / 3MB)
+      aseprite
       zed-editor
-      # zed-editor_git # 230MB / 160MB # Removed - was provided by chaotic-cx/nyx (discontinued)
-      kdePackages.kate # 1.4GB / 40MB (ktexteditor)
+      kdePackages.kate
     ];
     programs = {
       vscodium = {
-        enable = lib.mkDefault true; # 1.44GB / 400MB (mesa 800MB)
+        enable = lib.mkDefault true;
         package = lib.mkDefault pkgs.vscodium-fhs;
-        # enableUpdateCheck = lib.mkDefault false;
-        # enableExtensionUpdateCheck = lib.mkDefault false;
-        # userSettings = {
-        #   "window.dialogStyle" = "custom";
-        #   "window.customTitleBarVisibility" = "auto";
-        #   "window.titleBarStyle" = "custom";
-        #   "nix.enableLanguageServer" = true;
-        #   "nix.serverPath" = "nixd";
-        # };
+
         profiles.default.extensions = with pkgs; [ vscode-extensions.rust-lang.rust-analyzer ];
       };
     };
