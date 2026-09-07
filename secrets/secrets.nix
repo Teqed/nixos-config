@@ -18,6 +18,7 @@ in
   "mail-key-agent-bubblegum.age".publicKeys = allUsers ++ [ systems.bubblegum ];
   "gh-agent.age".publicKeys = allUsers ++ allSystems;
   "tailscale-auth.age".publicKeys = allUsers ++ allSystems;
+  "cloudflare-ro.age".publicKeys = allUsers;
   "claude-agent.age".publicKeys = allUsers ++ allSystems;
   "codex-auth.age".publicKeys = allUsers ++ allSystems;
   "prime-auth.age".publicKeys = allUsers ++ allSystems;
