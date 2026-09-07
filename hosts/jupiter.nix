@@ -163,7 +163,7 @@ in
         device = "nodev";
         efiSupport = true;
         efiInstallAsRemovable = true;
-        configurationLimit = 2;
+        configurationLimit = 1;
       };
       efi.canTouchEfiVariables = false;
     };
