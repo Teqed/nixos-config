@@ -28,6 +28,7 @@ in
           scc
           ast-grep
         ];
+      xdg.configFile."git/ignore".force = true;
       programs = {
         jq.enable = lib.mkDefault true;
         gh.enable = lib.mkDefault true;
@@ -35,6 +36,35 @@ in
           enable = lib.mkDefault true;
 
           signing.format = null;
+          ignores = [
+            "AGENTS.md"
+            "CLAUDE.md"
+            ".agents/"
+            ".claude/"
+            ".codex/"
+            "*.pem"
+            "*.key"
+            "*.p12"
+            "*.pfx"
+            "*.jks"
+            "*.keystore"
+            "id_rsa*"
+            "id_ed25519*"
+            "id_ecdsa*"
+            ".netrc"
+            ".env"
+            ".env.*"
+            "!.env.example"
+            ".direnv/"
+            "result"
+            "result-*"
+            ".tmp/"
+            ".DS_Store"
+            "Thumbs.db"
+            "*~"
+            "*.swp"
+            ".idea/"
+          ];
           settings = {
             init = {
               defaultBranch = lib.mkDefault "main";
