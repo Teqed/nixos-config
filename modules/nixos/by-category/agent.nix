@@ -127,45 +127,64 @@ let
     text = ''
       die() { echo "agent-src-adopt: $*" >&2; exit 1; }
       [ $# -eq 1 ] || die "usage: agent-src-adopt <repo-dir>"
-      src=$(realpath "$1")
-      name=$(basename "$src")
+      id -nG | tr ' ' '\n' | grep -qx agents || die "you are not in group agents in this login; log in again"
+      given=$(realpath -m "$1")
+      real=$(realpath "$given" 2>/dev/null || true)
+      [ -n "$real" ] || die "$given does not exist"
+      name=$(basename "$real")
       dest=${srcTree}/$name
-      [ -d "$src/.git" ] || die "$src is not a git working tree"
-      case "$src" in ${srcTree}/*) die "$src is already in ${srcTree}" ;; esac
-      [ -e "$dest" ] && die "$dest already exists"
-      case "$(realpath "$PWD")" in "$src"|"$src"/*) die "run this from outside $src" ;; esac
-      id -nG | tr ' ' '\n' | grep -qx agents || die "you are not in group agents yet; switch the system first"
-      mv "$src" "$dest"
-      ln -s "$dest" "$src"
-      chgrp -R agents "$dest"
-      chmod -R g+rwX "$dest"
-      find "$dest" -type d -exec chmod g+s {} +
+      old=""
+      case "$real" in
+        ${srcTree}/*) [ "$real" = "$dest" ] || die "$real is nested inside the tree; adopt top-level repos only" ;;
+        *)
+          old=$real
+          [ -d "$old/.git" ] || die "$old is not a git working tree"
+          case "$(realpath "$PWD")" in "$old"|"$old"/*) die "run this from outside $old" ;; esac
+          if [ -e "$dest" ]; then
+            die "$dest already exists; remove or rename one of them, then rerun"
+          fi
+          mv "$old" "$dest"
+          ln -s "$dest" "$old"
+          echo "moved: $old -> $dest"
+          ;;
+      esac
+      [ -d "$dest/.git" ] || die "$dest is not a git working tree"
+      me=$(id -un)
+      find "$dest" -user "$me" ! -group agents -exec chgrp agents {} +
+      find "$dest" -user "$me" ! -perm -g+rw -exec chmod g+rwX {} +
+      find "$dest" -user "$me" -type d ! -perm -g+s -exec chmod g+s {} +
       setfacl -R -m g:agents:rwX -m d:g:agents:rwX "$dest"
       git -C "$dest" config core.sharedRepository group
       key=$(printf '%s' "$dest" | tr '/.' '--')
-      oldkey=$(printf '%s' "$src" | tr '/.' '--')
       mem=${memoryRoot}/$key
       install -d -m 2770 -g agents "$mem"
       setfacl -m g:agents:rwX -m d:g:agents:rwX "$mem"
       link_memory() {
-        local projects=$1 k
-        for k in "$oldkey" "$key"; do
+        local projects=$1 mem=$2 key=$3 k
+        shift 3
+        for k in "$@"; do
           if [ -d "$projects/$k/memory" ] && [ ! -L "$projects/$k/memory" ]; then
             cp -an "$projects/$k/memory/." "$mem/"
             rm -rf "$projects/$k/memory"
           fi
         done
         mkdir -p "$projects/$key"
-        ln -sfn "$mem" "$projects/$key/memory"
+        [ "$(readlink "$projects/$key/memory" 2>/dev/null)" = "$mem" ] || ln -sfn "$mem" "$projects/$key/memory"
       }
-      link_memory "$HOME/.claude/projects"
-      /run/wrappers/bin/sudo -n -u agent -H ${pkgs.bash}/bin/bash -c "$(declare -f link_memory); oldkey=$oldkey; key=$key; mem=$mem; link_memory ${agentHome}/.claude/projects"
-      chgrp -R agents "$mem"
-      chmod -R g+rwX "$mem"
+      oldkeys=""
+      for p in "$old" "$given"; do
+        [ -n "$p" ] && [ "$p" != "$dest" ] && oldkeys="$oldkeys $(printf '%s' "$p" | tr '/.' '--')"
+      done
+      # shellcheck disable=SC2086
+      link_memory "$HOME/.claude/projects" "$mem" "$key" $oldkeys
+      /run/wrappers/bin/sudo -n -u agent -H ${pkgs.bash}/bin/bash -c "$(declare -f link_memory); link_memory ${agentHome}/.claude/projects '$mem' '$key' $oldkeys"
+      find "$mem" -user "$me" ! -group agents -exec chgrp agents {} +
+      find "$mem" -user "$me" ! -perm -g+rw -exec chmod g+rwX {} +
       if [ -f "$dest/.envrc" ]; then
         /run/wrappers/bin/sudo -n -u agent -H ${pkgs.direnv}/bin/direnv allow "$dest"
       fi
-      echo "adopted: $dest  (old path is now a symlink; shared memory at $mem)"
+      /run/wrappers/bin/sudo -n -u agent ${pkgs.coreutils}/bin/test -w "$dest" || die "agent still cannot write $dest"
+      echo "ok: $dest  (memory: $mem)"
     '';
   };
 
