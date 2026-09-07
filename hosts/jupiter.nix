@@ -141,7 +141,7 @@ in
     pkgs.gitMinimal
   ];
   system.stateVersion = currentStateVersion;
-  documentation.man.generateCaches = false;
+  documentation.man.cache.enable = false;
   disko.devices = {
     disk = {
       main = {
