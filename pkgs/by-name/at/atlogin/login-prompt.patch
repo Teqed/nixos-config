@@ -8,6 +8,15 @@
  	"context"
  	"crypto/hmac"
  	"crypto/rand"
+@@ -551,7 +552,7 @@
+ 		"response_types_supported":              []string{"code"},
+ 		"subject_types_supported":               []string{"public"},
+ 		"id_token_signing_alg_values_supported": []string{"RS256"},
+-		"claims_supported":                      []string{"sub", "aud", "exp", "iat", "iss", "name", "email"},
++		"claims_supported":                      []string{"sub", "aud", "exp", "iat", "iss", "name", "email", "preferred_username"},
+ 	})
+ }
+ 
 @@ -594,12 +595,11 @@
  	// Expected format: hello.example.com@any.domain
  	loginHint := q.Get("login_hint")
@@ -23,7 +32,23 @@
  	if err != nil {
  		http.Error(w, fmt.Sprintf("invalid login_hint format: %v", err), http.StatusBadRequest)
  		return
-@@ -1475,3 +1475,27 @@
+@@ -789,6 +789,7 @@
+ 		"iat":   now.Unix(),
+ 		"name":  userName,
+ 		"email": userEmail,
++		"preferred_username": userName,
+ 	}
+ 	if ar.nonce != "" {
+ 		claims["nonce"] = ar.nonce
+@@ -868,6 +869,7 @@
+ 		"sub":   sess.did,
+ 		"name":  sess.handle,
+ 		"email": sess.email,
++		"preferred_username": sess.handle,
+ 	})
+ }
+ 
+@@ -1475,3 +1477,27 @@
  	rand.Read(b)
  	return fmt.Sprintf("%x", b)
  }
