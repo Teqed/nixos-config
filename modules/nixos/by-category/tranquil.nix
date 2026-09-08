@@ -36,7 +36,7 @@ in
       };
       smarthost = lib.mkOption {
         type = lib.types.str;
-        default = "smtp-relay.google.com";
+        default = "smtp-relay.gmail.com";
       };
       port = lib.mkOption {
         type = lib.types.port;
