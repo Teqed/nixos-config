@@ -24,6 +24,7 @@ in
     enable = true;
     hostname = "tran.quilling.dev";
     handleDomains = [ "shatteredsky.net" ];
+    mail.fromAddress = "pds@shatteredsky.net";
   };
   services.tranquil-pds = {
     package = lib.mkForce inputs.tranquil.packages.x86_64-linux.tranquil-pds-aarch64;

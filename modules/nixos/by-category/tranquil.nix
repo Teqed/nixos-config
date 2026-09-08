@@ -29,6 +29,20 @@ in
       type = lib.types.bool;
       default = true;
     };
+    mail = {
+      fromAddress = lib.mkOption {
+        type = lib.types.nullOr lib.types.str;
+        default = null;
+      };
+      smarthost = lib.mkOption {
+        type = lib.types.str;
+        default = "smtp-relay.google.com";
+      };
+      port = lib.mkOption {
+        type = lib.types.port;
+        default = 587;
+      };
+    };
   };
 
   config = lib.mkIf cfg.enable (
@@ -51,6 +65,16 @@ in
             disable_account_verification_gate = cfg.inviteOnly;
             enable_caddy_on_demand_tls = true;
             contact_email = cfg.contactEmail;
+          };
+          settings.email = lib.mkIf (cfg.mail.fromAddress != null) {
+            from_address = cfg.mail.fromAddress;
+            from_name = "Shattered Sky PDS";
+            helo_name = cfg.hostname;
+            smarthost = {
+              host = cfg.mail.smarthost;
+              inherit (cfg.mail) port;
+              tls = "starttls";
+            };
           };
         };
 
