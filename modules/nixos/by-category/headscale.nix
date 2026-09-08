@@ -102,6 +102,7 @@ in
           client_id = cfg.oidc.clientId;
           client_secret_path = cfg.oidc.clientSecretPath;
           allowed_users = cfg.oidc.allowedUsers;
+          email_verified_required = false;
           scope = [
             "openid"
             "profile"
