@@ -1,0 +1,254 @@
+<title>Shattered Sky Tailnet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+:root {
+  --bg: #FBFBF8;
+  --ink: #15171B;
+  --muted: #5F6672;
+  --line: #E2E3DE;
+  --panel: #F2F3EF;
+  --accent: #2A63A8;
+  --accent-ink: #FFFFFF;
+  --ok: #2E7D4F;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #121417;
+    --ink: #E9EAE6;
+    --muted: #9BA1AB;
+    --line: #2A2E35;
+    --panel: #1B1E23;
+    --accent: #8AB6F2;
+    --accent-ink: #0F1522;
+    --ok: #7CCB98;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #121417;
+  --ink: #E9EAE6;
+  --muted: #9BA1AB;
+  --line: #2A2E35;
+  --panel: #1B1E23;
+  --accent: #8AB6F2;
+  --accent-ink: #0F1522;
+  --ok: #7CCB98;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "Familjen Grotesk", "Helvetica Neue", Arial, sans-serif;
+  font-size: 17px;
+  line-height: 1.5;
+}
+main {
+  max-width: 40rem;
+  margin: 0 auto;
+  padding: 3.5rem 1.25rem 5rem;
+  display: grid;
+  gap: 1.5rem;
+}
+header {
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 1rem;
+  font-weight: 600;
+}
+.mono {
+  font-family: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+h1 {
+  font-size: 2rem;
+  font-weight: 600;
+  line-height: 1.15;
+  margin: 0;
+  text-wrap: balance;
+}
+p { margin: 0; }
+.muted { color: var(--muted); }
+a { color: var(--accent); }
+.tabs {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.35rem 0.35rem 0;
+  flex-wrap: wrap;
+}
+.tabs .copy { margin-left: auto; }
+.tabs [role="tab"] {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-size: 0.95rem;
+  padding: 0.35rem 0.85rem;
+  border-radius: 999px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.tabs [role="tab"][aria-selected="true"] {
+  background: var(--ink);
+  color: var(--bg);
+}
+.tabs [role="tab"]:focus-visible, .copy:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.body {
+  min-width: 0;
+  padding: 1rem 1.1rem 1.1rem;
+  display: grid;
+  gap: 0.75rem;
+  align-content: start;
+}
+.cmd {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  justify-content: space-between;
+}
+.cmd code {
+  flex: 1;
+  min-width: 0;
+  font-size: 0.95rem;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  padding: 0.2rem 0;
+}
+.copy {
+  appearance: none;
+  border: 0;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 500;
+  padding: 0.45rem 0.9rem;
+  border-radius: 8px;
+  cursor: pointer;
+  flex: none;
+  min-width: 5.5rem;
+  text-align: center;
+}
+.copy[data-done="1"] { background: var(--ok); }
+ol {
+  margin: 0;
+  padding-left: 1.25rem;
+  display: grid;
+  gap: 0.5rem;
+  color: var(--muted);
+}
+ol li::marker { color: var(--ink); font-weight: 600; }
+ol strong { color: var(--ink); font-weight: 500; }
+@media (prefers-reduced-motion: no-preference) {
+  .copy { transition: background 160ms ease; }
+}
+@media (max-width: 480px) {
+  body { font-size: 16px; }
+  main { padding: 2rem 1rem 3rem; gap: 1.25rem; }
+  h1 { font-size: 1.6rem; }
+  .tabs [role="tab"] { padding: 0.3rem 0.6rem; font-size: 0.9rem; }
+  .body { padding: 0.85rem 0.9rem 0.9rem; }
+}
+</style>
+
+<main>
+  <header>Shattered Sky - Headscale</header>
+
+  <h1>Log in with your ATProto handle.</h1>
+
+  <p class="muted" id="hint">Run the below in a terminal after <a href="https://tailscale.com/download">installing Tailscale</a>.</p>
+
+  <section class="panel">
+    <div class="tabs" role="tablist" aria-label="Platform">
+      <button role="tab" data-os="linux" aria-selected="true">Linux</button>
+      <button role="tab" data-os="mac" aria-selected="false">macOS</button>
+      <button role="tab" data-os="windows" aria-selected="false">Windows</button>
+      <button role="tab" data-os="android" aria-selected="false">Android</button>
+      <button role="tab" data-os="ios" aria-selected="false">iPhone</button>
+      <button class="copy" id="copy" type="button">Copy</button>
+    </div>
+    <div class="body" id="shell">
+      <div class="cmd">
+        <code class="mono" id="command">sudo tailscale up --login-server https://hs.shatteredsky.net</code>
+      </div>
+    </div>
+    <div class="body" id="android" hidden>
+      <ol>
+        <li>Settings, top right, then <strong>Accounts</strong>.</li>
+        <li>Three dots, top right, then <strong>Use an alternate server</strong>.</li>
+        <li>Enter <code class="mono">https://hs.shatteredsky.net</code>.</li>
+      </ol>
+    </div>
+    <div class="body" id="ios" hidden>
+      <ol>
+        <li>Account icon, top right, then <strong>Log in</strong>.</li>
+        <li>Options menu, top right, then <strong>Use custom coordination server</strong>.</li>
+        <li>Enter <code class="mono">https://hs.shatteredsky.net</code>.</li>
+      </ol>
+    </div>
+  </section>
+
+</main>
+
+<script>
+(function () {
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('[role="tab"]'));
+  var shell = document.getElementById('shell');
+  var android = document.getElementById('android');
+  var ios = document.getElementById('ios');
+  var cmd = document.getElementById('command');
+  var hint = document.getElementById('hint');
+  var copy = document.getElementById('copy');
+  var payload = '';
+  var install = '<a href="https://tailscale.com/download">installing Tailscale</a>';
+  var commands = {
+    linux: 'sudo tailscale up --login-server https://hs.shatteredsky.net',
+    mac: 'tailscale login --login-server https://hs.shatteredsky.net',
+    windows: 'tailscale login --login-server https://hs.shatteredsky.net'
+  };
+  function select(os) {
+    tabs.forEach(function (t) { t.setAttribute('aria-selected', String(t.dataset.os === os)); });
+    var isApp = os === 'android' || os === 'ios';
+    shell.hidden = isApp;
+    android.hidden = os !== 'android';
+    ios.hidden = os !== 'ios';
+    hint.innerHTML = (isApp ? 'Follow the steps below after ' : 'Run the below in a terminal after ') + install + '.';
+    payload = isApp ? 'https://hs.shatteredsky.net' : commands[os];
+    if (!isApp) { cmd.textContent = commands[os]; }
+    copy.dataset.done = '0';
+    copy.textContent = 'Copy';
+  }
+  function detect() {
+    var ua = navigator.userAgent || '';
+    var p = (navigator.userAgentData && navigator.userAgentData.platform) || navigator.platform || '';
+    if (/android/i.test(ua)) return 'android';
+    if (/iphone|ipad|ipod/i.test(ua)) return 'ios';
+    if (/mac/i.test(p)) return 'mac';
+    if (/win/i.test(p)) return 'windows';
+    return 'linux';
+  }
+  tabs.forEach(function (t) {
+    t.addEventListener('click', function () { select(t.dataset.os); });
+  });
+  copy.addEventListener('click', function () {
+    var done = function () { copy.dataset.done = '1'; copy.textContent = 'Copied'; };
+    var fail = function () { copy.textContent = 'Select and copy'; };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(payload).then(done, fail);
+    } else {
+      fail();
+    }
+  });
+  select(detect());
+})();
+</script>

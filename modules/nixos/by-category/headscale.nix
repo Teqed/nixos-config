@@ -7,6 +7,7 @@
 let
   cfg = config.teq.nixos.headscale;
   hs = lib.getExe config.services.headscale.package;
+  landing = ../../../pkgs/headscale/landing;
 in
 {
   options.teq.nixos.headscale = {
@@ -72,7 +73,7 @@ in
           type = "sqlite";
           sqlite.write_ahead_log = true;
         };
-        ephemeral_node_inactivity_timeout = "30m";
+        node.ephemeral.inactivity_timeout = "30m";
         disable_check_updates = true;
         log.level = "info";
         policy = {
@@ -108,7 +109,15 @@ in
       enable = true;
       email = cfg.acmeEmail;
       virtualHosts.${cfg.domain}.extraConfig = ''
-        reverse_proxy 127.0.0.1:${toString config.services.headscale.port}
+        @landing path /
+        handle @landing {
+          root * ${landing}
+          try_files /index.html
+          file_server
+        }
+        handle {
+          reverse_proxy 127.0.0.1:${toString config.services.headscale.port}
+        }
       '';
     };
 

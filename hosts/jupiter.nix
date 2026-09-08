@@ -30,7 +30,7 @@ in
   };
   teq.nixos.headscale = {
     enable = true;
-    domain = "headscale-secondary.shatteredsky.net";
+    domain = "hs.shatteredsky.net";
     users = [ "teq" ];
   };
   services = {
