@@ -43,10 +43,7 @@ in
     oidc = {
       issuer = "https://atlogin.shatteredsky.net";
       clientSecretPath = "/var/lib/atlogin/clients/headscale";
-      allowedUsers = [
-        "teq@shatteredsky.net"
-        "teq.shatteredsky.net@shatteredsky.net"
-      ];
+      allowedUsers = [ "teq@shatteredsky.net" ];
       after = [ "atlogin.service" ];
     };
   };

@@ -1,0 +1,53 @@
+--- a/cmd/atlogin/main.go
++++ b/cmd/atlogin/main.go
+@@ -5,6 +5,7 @@
+ package main
+ 
+ import (
++	"html"
+ 	"context"
+ 	"crypto/hmac"
+ 	"crypto/rand"
+@@ -594,12 +595,11 @@
+ 	// Expected format: hello.example.com@any.domain
+ 	loginHint := q.Get("login_hint")
+ 	if loginHint == "" {
+-		http.Error(w, "missing login_hint parameter (expected format: handle@domain)", http.StatusBadRequest)
++		s.serveLoginPrompt(w, q)
+ 		return
+ 	}
+ 
+-	// Parse the login hint to extract the ATProto handle and domain
+-	handle, domain, err := parseLoginHint(loginHint)
++	handle, domain, err := parseLoginHintFor(loginHint, s.getIssuerURL(r))
+ 	if err != nil {
+ 		http.Error(w, fmt.Sprintf("invalid login_hint format: %v", err), http.StatusBadRequest)
+ 		return
+@@ -1475,3 +1475,27 @@
+ 	rand.Read(b)
+ 	return fmt.Sprintf("%x", b)
+ }
++
++func parseLoginHintFor(loginHint, issuerURL string) (string, string, error) {
++	parts := strings.SplitN(loginHint, "@", 2)
++	if len(parts) == 2 && parts[0] != "" {
++		if u, err := url.Parse(issuerURL); err == nil && u.Host != "" && strings.EqualFold(parts[1], u.Host) {
++			return parts[0], parts[1], nil
++		}
++	}
++	return parseLoginHint(loginHint)
++}
++
++func (s *idpServer) serveLoginPrompt(w http.ResponseWriter, q url.Values) {
++	var hidden strings.Builder
++	for k, vs := range q {
++		if k == "login_hint" {
++			continue
++		}
++		for _, v := range vs {
++			fmt.Fprintf(&hidden, `<input type="hidden" name="%s" value="%s">`, html.EscapeString(k), html.EscapeString(v))
++		}
++	}
++	w.Header().Set("Content-Type", "text/html; charset=utf-8")
++	fmt.Fprintf(w, `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>%s</title><style>body{margin:0;background:#121417;color:#e9eae6;font:17px/1.5 system-ui,sans-serif}main{max-width:26rem;margin:0 auto;padding:4rem 1.25rem}h1{font-size:1.6rem;margin:0 0 1rem}input[type=text]{width:100%%;box-sizing:border-box;font:inherit;padding:.6rem .8rem;border:1px solid #2a2e35;border-radius:8px;background:#1b1e23;color:inherit}button{margin-top:.8rem;font:inherit;font-weight:500;padding:.55rem 1rem;border:0;border-radius:8px;background:#8ab6f2;color:#0f1522}p{color:#9ba1ab}</style></head><body><main><h1>Log in with your ATProto handle</h1><form method="get" action="/authorize">%s<input type="text" name="login_hint" placeholder="you@shatteredsky.net" autocomplete="username" autofocus required><button type="submit">Continue</button></form><p>Any handle works as an address: alice.bsky.social becomes alice@alice.bsky.social.</p></main></body></html>`, html.EscapeString(s.clientName), hidden.String())
++}
