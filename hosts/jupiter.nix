@@ -23,6 +23,7 @@ in
   teq.nixos.tranquil = {
     enable = true;
     hostname = "tran.quilling.dev";
+    handleDomains = [ "shatteredsky.net" ];
   };
   services.tranquil-pds = {
     package = lib.mkForce inputs.tranquil.packages.x86_64-linux.tranquil-pds-aarch64;
