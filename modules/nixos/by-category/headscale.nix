@@ -98,7 +98,7 @@ in
           ${hs} users list -o json >/dev/null 2>&1 && break
           sleep 1
         done
-        existing=$(${hs} users list -o json | jq -r '.[].name')
+        existing=$(${hs} users list -o json | jq -r '(. // [])[].name')
         for u in ${lib.escapeShellArgs cfg.users}; do
           grep -qx "$u" <<<"$existing" || ${hs} users create "$u"
         done
