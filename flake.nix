@@ -45,6 +45,10 @@ The starlight on the Western Seas.
       };
     };
     tranquil.url = "git+https://tangled.org/tranquil.farm/tranquil-pds";
+    atlogin = {
+      url = "github:apenwarr/atlogin/0caf00a12459fc29d5aee8239537fa625827734a";
+      flake = false;
+    };
     tangled-core.url = "git+https://tangled.org/@tangled.org/core";
     tangled-core.inputs.nixpkgs.follows = "nixpkgs";
     washing-machien = {

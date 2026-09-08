@@ -28,6 +28,28 @@ in
       type = lib.types.str;
       default = "teqed@shatteredsky.net";
     };
+    oidc = {
+      issuer = lib.mkOption {
+        type = lib.types.nullOr lib.types.str;
+        default = null;
+      };
+      clientId = lib.mkOption {
+        type = lib.types.str;
+        default = "headscale";
+      };
+      clientSecretPath = lib.mkOption {
+        type = lib.types.nullOr lib.types.str;
+        default = null;
+      };
+      allowedUsers = lib.mkOption {
+        type = lib.types.listOf lib.types.str;
+        default = [ ];
+      };
+      after = lib.mkOption {
+        type = lib.types.listOf lib.types.str;
+        default = [ ];
+      };
+    };
     policy = lib.mkOption {
       type = lib.types.attrs;
       default = {
@@ -75,12 +97,28 @@ in
         };
         node.ephemeral.inactivity_timeout = "30m";
         disable_check_updates = true;
+        oidc = lib.mkIf (cfg.oidc.issuer != null) {
+          inherit (cfg.oidc) issuer;
+          client_id = cfg.oidc.clientId;
+          client_secret_path = cfg.oidc.clientSecretPath;
+          allowed_users = cfg.oidc.allowedUsers;
+          scope = [
+            "openid"
+            "profile"
+            "email"
+          ];
+        };
         log.level = "info";
         policy = {
           mode = "file";
           path = pkgs.writeText "headscale-policy.json" (builtins.toJSON cfg.policy);
         };
       };
+    };
+
+    systemd.services.headscale = {
+      after = cfg.oidc.after;
+      requires = cfg.oidc.after;
     };
 
     systemd.services.headscale-users = {

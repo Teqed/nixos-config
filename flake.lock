@@ -41,6 +41,23 @@
         "type": "github"
       }
     },
+    "atlogin": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1775155527,
+        "narHash": "sha256-6+C+8J1KK8/xUC9lPyG2zIZzoMhXTceDp1F+MJcWLNM=",
+        "owner": "apenwarr",
+        "repo": "atlogin",
+        "rev": "0caf00a12459fc29d5aee8239537fa625827734a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "apenwarr",
+        "repo": "atlogin",
+        "rev": "0caf00a12459fc29d5aee8239537fa625827734a",
+        "type": "github"
+      }
+    },
     "bun2nix": {
       "inputs": {
         "flake-parts": [
@@ -741,6 +758,7 @@
     "root": {
       "inputs": {
         "agenix": "agenix",
+        "atlogin": "atlogin",
         "disko": "disko",
         "foundryvtt": "foundryvtt",
         "ghostty": "ghostty",

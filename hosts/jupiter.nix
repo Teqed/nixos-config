@@ -30,10 +30,25 @@ in
     package = lib.mkForce inputs.tranquil.packages.x86_64-linux.tranquil-pds-aarch64;
     settings.frontend.dir = lib.mkForce inputs.tranquil.packages.x86_64-linux.tranquil-frontend;
   };
+  teq.nixos.atlogin = {
+    enable = true;
+    domain = "atlogin.shatteredsky.net";
+    clients = [ "headscale" ];
+    secretGroup = "headscale";
+  };
   teq.nixos.headscale = {
     enable = true;
     domain = "hs.shatteredsky.net";
     users = [ "teq" ];
+    oidc = {
+      issuer = "https://atlogin.shatteredsky.net";
+      clientSecretPath = "/var/lib/atlogin/clients/headscale";
+      allowedUsers = [
+        "teq@shatteredsky.net"
+        "teq.shatteredsky.net@shatteredsky.net"
+      ];
+      after = [ "atlogin.service" ];
+    };
   };
   services = {
     scx.enable = false;

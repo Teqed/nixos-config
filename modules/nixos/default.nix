@@ -21,6 +21,7 @@ let
     tailscale = import ./by-category/tailscale.nix;
     headscale = import ./by-category/headscale.nix;
     tranquil = import ./by-category/tranquil.nix;
+    atlogin = import ./by-category/atlogin.nix;
     notify = import ./by-category/notify.nix;
     boot = import ./boot.nix;
     impermanence = import ./impermanence.nix;
