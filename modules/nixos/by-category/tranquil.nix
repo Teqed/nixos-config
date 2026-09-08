@@ -78,6 +78,10 @@ in
           };
         };
 
+        systemd.services.tranquil-pds.restartTriggers = [
+          config.environment.etc."tranquil-pds/config.toml".source
+        ];
+
         services.caddy = {
           enable = true;
           globalConfig = ''
