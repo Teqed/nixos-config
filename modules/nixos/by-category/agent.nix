@@ -490,6 +490,7 @@ in
             "d ${agentHome}/.config 0750 agent agents -"
             "d ${agentHome}/.config/nix 0750 agent agents -"
             "d ${agentHome}/.ssh 0700 agent agents -"
+            "f+ ${agentHome}/.gitconfig 0640 agent agents - [safe]\\n\\tdirectory = *\\n"
           ]
           ++ lib.optionals cfg.sourceTree.enable [
             "d ${srcTree} 2775 root agents -"

@@ -6,16 +6,6 @@
 }:
 {
   config = lib.mkIf config.teq.nixos.enable {
-    nixpkgs.overlays = [
-      (final: prev: {
-        nixDependencies = prev.nixDependencies.overrideScope (finalDeps: prevDeps: {
-          libgit2 = prev.libgit2.overrideAttrs (old: {
-            patches = (old.patches or [ ]) ++ [ ../../../patches/libgit2-safe-directory-prefix.patch ];
-          });
-        });
-      })
-    ];
-
     services = {
       postgresql = {
         enable = lib.mkDefault false;
