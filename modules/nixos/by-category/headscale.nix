@@ -45,6 +45,10 @@ in
         type = lib.types.listOf lib.types.str;
         default = [ ];
       };
+      allowedGroups = lib.mkOption {
+        type = lib.types.listOf lib.types.str;
+        default = [ ];
+      };
       after = lib.mkOption {
         type = lib.types.listOf lib.types.str;
         default = [ ];
@@ -102,11 +106,13 @@ in
           client_id = cfg.oidc.clientId;
           client_secret_path = cfg.oidc.clientSecretPath;
           allowed_users = cfg.oidc.allowedUsers;
+          allowed_groups = cfg.oidc.allowedGroups;
+          pkce.enabled = true;
           email_verified_required = false;
           scope = [
             "openid"
             "profile"
-            "email"
+            "groups"
           ];
         };
         log.level = "info";

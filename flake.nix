@@ -49,6 +49,10 @@ The starlight on the Western Seas.
       url = "github:apenwarr/atlogin/0caf00a12459fc29d5aee8239537fa625827734a";
       flake = false;
     };
+    ratlogin = {
+      url = "git+file:///usr/local/src/atlogin-rs";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     tangled-core.url = "git+https://tangled.org/@tangled.org/core";
     tangled-core.inputs.nixpkgs.follows = "nixpkgs";
     washing-machien = {
@@ -247,6 +251,7 @@ The starlight on the Western Seas.
             self.nixosModules.default
             agenix.nixosModules.default
             inputs.tranquil.nixosModules.default
+            inputs.ratlogin.nixosModules.default
             home-manager.nixosModules.home-manager
             nix-flatpak.nixosModules.nix-flatpak
             self.homeManagerConfig

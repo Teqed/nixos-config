@@ -30,12 +30,6 @@ in
     package = lib.mkForce inputs.tranquil.packages.x86_64-linux.tranquil-pds-aarch64;
     settings.frontend.dir = lib.mkForce inputs.tranquil.packages.x86_64-linux.tranquil-frontend;
   };
-  teq.nixos.atlogin = {
-    enable = true;
-    domain = "atlogin.shatteredsky.net";
-    clients = [ "headscale" ];
-    secretGroup = "headscale";
-  };
   teq.nixos.headscale = {
     enable = true;
     domain = "hs.shatteredsky.net";
@@ -43,15 +37,31 @@ in
     oidc = {
       issuer = "https://atlogin.shatteredsky.net";
       clientSecretPath = "/var/lib/atlogin/clients/headscale";
-      allowedUsers = [ "teq@shatteredsky.net" ];
-      after = [ "atlogin.service" ];
+      allowedGroups = [ "did:plc:ziw4csqx45stumkyfubudmpl" ];
+      after = [ "ratlogin.service" ];
     };
   };
   services = {
     scx.enable = false;
     smartd.enable = false;
+    ratlogin = {
+      enable = true;
+      issuer = "https://atlogin.shatteredsky.net";
+      clientName = "Shattered Sky";
+      trustProxyHeaders = true;
+      clients = [
+        {
+          id = "headscale";
+          secretFile = "/var/lib/atlogin/clients/headscale";
+          redirectUris = [ "https://hs.shatteredsky.net/oidc/callback" ];
+        }
+      ];
+    };
     caddy = {
       enable = true;
+      virtualHosts."atlogin.shatteredsky.net".extraConfig = ''
+        reverse_proxy 127.0.0.1:9411
+      '';
       virtualHosts."srd.shatteredsky.net".extraConfig = ''
         tls internal
         reverse_proxy http://localhost:3000
