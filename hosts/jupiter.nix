@@ -30,13 +30,18 @@ in
     package = lib.mkForce inputs.tranquil.packages.x86_64-linux.tranquil-pds-aarch64;
     settings.frontend.dir = lib.mkForce inputs.tranquil.packages.x86_64-linux.tranquil-frontend;
   };
+  age.secrets.ratlogin-headscale = {
+    file = ../secrets/ratlogin-headscale.age;
+    group = "headscale";
+    mode = "0440";
+  };
   teq.nixos.headscale = {
     enable = true;
     domain = "hs.shatteredsky.net";
     users = [ "teq" ];
     oidc = {
-      issuer = "https://atlogin.shatteredsky.net";
-      clientSecretPath = "/var/lib/atlogin/clients/headscale";
+      issuer = "https://ratlogin.shatteredsky.net";
+      clientSecretPath = config.age.secrets.ratlogin-headscale.path;
       allowedGroups = [ "did:plc:ziw4csqx45stumkyfubudmpl" ];
       after = [ "ratlogin.service" ];
     };
@@ -46,20 +51,20 @@ in
     smartd.enable = false;
     ratlogin = {
       enable = true;
-      issuer = "https://atlogin.shatteredsky.net";
+      issuer = "https://ratlogin.shatteredsky.net";
       clientName = "Shattered Sky";
       trustProxyHeaders = true;
       clients = [
         {
           id = "headscale";
-          secretFile = "/var/lib/atlogin/clients/headscale";
+          secretFile = config.age.secrets.ratlogin-headscale.path;
           redirectUris = [ "https://hs.shatteredsky.net/oidc/callback" ];
         }
       ];
     };
     caddy = {
       enable = true;
-      virtualHosts."atlogin.shatteredsky.net".extraConfig = ''
+      virtualHosts."ratlogin.shatteredsky.net".extraConfig = ''
         reverse_proxy 127.0.0.1:9411
       '';
       virtualHosts."srd.shatteredsky.net".extraConfig = ''

@@ -25,4 +25,5 @@ in
   "claude-agent.age".publicKeys = allUsers ++ allSystems;
   "codex-auth.age".publicKeys = allUsers ++ allSystems;
   "prime-auth.age".publicKeys = allUsers ++ allSystems;
+  "ratlogin-headscale.age".publicKeys = allUsers ++ [ systems.jupiter ];
 }
