@@ -3,6 +3,7 @@
   options,
   lib,
   pkgs,
+  inputs,
   ...
 }:
 let
@@ -89,7 +90,7 @@ let
         PATH=/etc/profiles/per-user/agent/bin:/run/current-system/sw/bin:/run/wrappers/bin \
         AGENT_LAUNCHED_BY="$(id -un)" \
         ${pkgs.bashInteractive}/bin/bash -c '
-          if [ -r /run/agenix/claude-agent ]; then
+          if [ -r /run/agenix/claude-agent ] && ! { [ -t 0 ] && [ -t 1 ] && [ -s ${agentHome}/.claude/.credentials.json ]; }; then
             CLAUDE_CODE_OAUTH_TOKEN=$(${pkgs.coreutils}/bin/tr -d "[:space:]" < /run/agenix/claude-agent)
             export CLAUDE_CODE_OAUTH_TOKEN
           fi
@@ -174,6 +175,7 @@ let
 
   srcTree = cfg.sourceTree.path;
   memoryRoot = "${srcTree}/.claude/memory";
+  nixDirenv = pkgs.nix-direnv.override { nix = config.nix.package; };
 
   srcAdopt = pkgs.writeShellApplication {
     name = "agent-src-adopt";
@@ -334,14 +336,35 @@ in
     };
     extraPackages = lib.mkOption {
       type = lib.types.listOf lib.types.package;
-      default = with pkgs; [
-        git
-        jq
-        ripgrep
-        python3
-        curl
-        reader
-      ];
+      default =
+        (with pkgs; [
+          git
+          jq
+          ripgrep
+          python3
+          curl
+          reader
+          direnv
+          fd
+          file
+          tree
+          unzip
+          zip
+          lsof
+          openssl
+          dnsutils
+          sqlite
+          shellcheck
+          nvd
+          nix-diff
+          just
+          tokei
+          ast-grep
+        ])
+        ++ (with inputs.nix-index-database.packages.${pkgs.stdenv.hostPlatform.system}; [
+          comma-with-db
+          nix-index-with-db
+        ]);
     };
     launchers = lib.mkOption {
       type = lib.types.listOf lib.types.str;
@@ -491,6 +514,10 @@ in
             "d ${agentHome}/.config/nix 0750 agent agents -"
             "d ${agentHome}/.ssh 0700 agent agents -"
             "f+ ${agentHome}/.gitconfig 0640 agent agents - [safe]\\n\\tdirectory = *\\n"
+            "d ${agentHome}/.config/git 0750 agent agents -"
+            "f+ ${agentHome}/.config/git/ignore 0640 agent agents - AGENTS.md\\nCLAUDE.md\\n.agents/\\n.claude/\\n"
+            "d ${agentHome}/.config/direnv 0750 agent agents -"
+            "L+ ${agentHome}/.config/direnv/direnvrc - - - - ${nixDirenv}/share/nix-direnv/direnvrc"
           ]
           ++ lib.optionals cfg.sourceTree.enable [
             "d ${srcTree} 2775 root agents -"
