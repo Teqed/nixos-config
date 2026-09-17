@@ -576,21 +576,21 @@ in
           ++ map harnessWrapper cfg.harnesses;
           etc."agent-mail/config.json".source = agentMailConfig;
           etc."claude-code/managed-settings.json".source = managedSettings;
-          persistence."/persist".users = lib.mkIf (config.teq.nixos.impermanence.enable && isHub) (
-            lib.genAttrs cfg.mailParticipants (_: {
-              directories = [ "Maildir" ];
-            })
-          );
-          persistence."/persist".directories =
-            lib.mkIf (config.teq.nixos.impermanence.enable && cfg.sourceTree.enable)
-              [
-                {
-                  directory = srcTree;
-                  user = "root";
-                  group = "agents";
-                  mode = "2775";
-                }
-              ];
+          persistence = lib.mkIf config.teq.nixos.impermanence.enable {
+            "/persist".users = lib.mkIf isHub (
+              lib.genAttrs cfg.mailParticipants (_: {
+                directories = [ "Maildir" ];
+              })
+            );
+            "/persist".directories = lib.mkIf cfg.sourceTree.enable [
+              {
+                directory = srcTree;
+                user = "root";
+                group = "agents";
+                mode = "2775";
+              }
+            ];
+          };
         };
 
         services.openssh.settings.AllowUsers = lib.mkIf isHub [ "agent" ];
