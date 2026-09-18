@@ -9,7 +9,7 @@
     programs = {
       chromium = {
         enable = true;
-        package = pkgs.brave;
+        package = pkgs.brave.override { vulkanSupport = true; };
         dictionaries = [ pkgs.hunspellDictsChromium.en_US ];
         extensions = [
           { id = "cjpalhdlnbpafiamejdnhcphjbkeiagm"; }
@@ -34,7 +34,24 @@
           { id = "cimiefiiaegbelhefglklhhakcgmhkai"; }
         ];
         commandLineArgs = [
-          "--disable-features=WebRtcAllowInputVolumeAdjustment"
+          "--use-angle=vulkan"
+          "--enable-features=${
+            lib.concatStringsSep "," [
+              "AcceleratedVideoDecodeLinuxGL"
+              "AcceleratedVideoEncoder"
+              "WaylandWindowDecorations"
+              "Vulkan"
+              "VulkanFromANGLE"
+              "DefaultANGLEVulkan"
+            ]
+          }"
+          "--disable-features=${
+            lib.concatStringsSep "," [
+              "OutdatedBuildDetector"
+              "UseChromeOSDirectVideoDecoder"
+              "WebRtcAllowInputVolumeAdjustment"
+            ]
+          }"
         ];
       };
       firefox = {
@@ -44,6 +61,10 @@
         nativeMessagingHosts = [
           pkgs.fx-cast-bridge
         ];
+        policies.Preferences."dom.webgpu.enabled" = {
+          Value = true;
+          Status = "default";
+        };
       };
     };
 
