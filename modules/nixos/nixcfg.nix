@@ -77,7 +77,6 @@ in
         overlays = [
           outputs.overlays.modifications
           outputs.overlays.llm-agents
-          outputs.overlays.prime-agent-tweaks
         ];
       };
       nix = {

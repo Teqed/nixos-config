@@ -33,9 +33,6 @@ The starlight on the Western Seas.
     ghostty = {
       url = "github:ghostty-org/ghostty?ref=refs/tags/tip";
     };
-    ghostty-pinned = {
-      url = "github:ghostty-org/ghostty/5252b193cfd52b4bcd868135e21e4563f2f326ec";
-    };
 
     llm-agents.url = "github:numtide/llm-agents.nix";
     vpn-confinement.url = "github:Maroka-chan/VPN-Confinement";
@@ -94,7 +91,6 @@ The starlight on the Western Seas.
           config.allowUnfree = true;
           overlays = [
             self.overlays.llm-agents
-            self.overlays.prime-agent-tweaks
           ];
         }
       );

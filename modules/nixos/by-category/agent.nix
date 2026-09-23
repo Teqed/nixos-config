@@ -321,7 +321,6 @@ in
       default = [
         "claude"
         "codex"
-        "prime-agent"
       ];
       description = "Binary names wrapped so they run as `agent`; each must exist in the agent's per-user profile.";
     };
@@ -330,7 +329,6 @@ in
       default = with pkgs.llm-agents; [
         claude-code
         codex
-        prime-agent
       ];
       description = "Packages installed into the agent's profile.";
     };
@@ -451,8 +449,7 @@ in
             agentSecret "gh-agent" (secretsDir + "/gh-agent.age")
           )
           // fleetSecret "claude-agent"
-          // fleetSecret "codex-auth"
-          // fleetSecret "prime-auth";
+          // fleetSecret "codex-auth";
       })
       {
         assertions = [
@@ -542,7 +539,7 @@ in
             };
             script = ''
               set -eu
-              install -d -m 0750 -o agent -g agents ${agentHome}/.codex ${agentHome}/.prime ${agentHome}/.prime/agent
+              install -d -m 0750 -o agent -g agents ${agentHome}/.codex
               seed() {
                 if [ -r "$1" ] && [ ! -e "$2" ]; then
                   ${pkgs.jq}/bin/jq -e . "$1" >/dev/null
@@ -551,7 +548,6 @@ in
                 fi
               }
               seed /run/agenix/codex-auth ${agentHome}/.codex/auth.json
-              seed /run/agenix/prime-auth ${agentHome}/.prime/agent/auth.json
             '';
           };
 

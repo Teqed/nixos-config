@@ -16,7 +16,6 @@ in
         with pkgs;
         lib.optionals (desktop && !agentEnabled) [
           llm-agents.claude-code
-          llm-agents.prime-agent
           llm-agents.codex
         ]
         ++ [
