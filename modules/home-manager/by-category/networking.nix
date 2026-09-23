@@ -13,5 +13,8 @@
       w3m-nox
       reader
     ];
+    home.file.".curlrc".text = ''
+      user-agent = "teq/1.0 (+https://shatteredsky.net; teqed@shatteredsky.net)"
+    '';
   };
 }

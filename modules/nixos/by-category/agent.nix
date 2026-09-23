@@ -146,12 +146,34 @@ let
 
   harnessSkills = ../../../pkgs/harness/skills;
 
+  webfetchGuard = pkgs.writeShellApplication {
+    name = "claude-webfetch-guard";
+    runtimeInputs = [
+      pkgs.coreutils
+      pkgs.jq
+    ];
+    text = builtins.readFile ../../../pkgs/harness/webfetch-guard.sh;
+  };
+
   managedSettings = pkgs.writeText "claude-managed-settings.json" (
     builtins.toJSON {
       permissions.deny = [
         "Bash(git push:*)"
         "Bash(git push :*)"
         "Bash(cargo publish:*)"
+        "WebFetch"
+      ];
+      hooks.PreToolUse = [
+        {
+          matcher = "WebFetch";
+          hooks = [
+            {
+              type = "command";
+              command = "${webfetchGuard}/bin/claude-webfetch-guard";
+              timeout = 10;
+            }
+          ];
+        }
       ];
       env = {
         CLAUDE_BASH_MAINTAIN_PROJECT_WORKING_DIR = "1";
@@ -511,6 +533,7 @@ in
             "d ${agentHome}/.config/nix 0750 agent agents -"
             "d ${agentHome}/.ssh 0700 agent agents -"
             "f+ ${agentHome}/.gitconfig 0640 agent agents - [safe]\\n\\tdirectory = *\\n"
+            "f+ ${agentHome}/.curlrc 0640 agent agents - user-agent = \"teq/1.0 (+https://shatteredsky.net; teqed@shatteredsky.net)\"\\n"
             "d ${agentHome}/.config/git 0750 agent agents -"
             "f+ ${agentHome}/.config/git/ignore 0640 agent agents - AGENTS.md\\nCLAUDE.md\\n.agents/\\n.claude/\\n"
             "d ${agentHome}/.config/direnv 0750 agent agents -"
