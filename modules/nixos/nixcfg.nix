@@ -81,7 +81,6 @@ in
       };
       nix = {
         registry = mapAttrs (_: flake: { inherit flake; }) flakeInputs;
-        nixPath = mkDefault (mapAttrsToList (key: value: "${key}=${value.to.path}") config.nix.registry);
 
         gc = {
           automatic = mkDefault true;
@@ -105,7 +104,9 @@ in
           ''
         );
         settings = {
-          nix-path = mkDefault config.nix.nixPath;
+          nix-path = mkDefault (
+            mapAttrsToList (key: value: "${key}=${value.to.path}") config.nix.registry
+          );
           bash-prompt-prefix = mkDefault "(nix:$name)\040";
           experimental-features = mkDefault [
             "nix-command"
