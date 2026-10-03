@@ -46,6 +46,10 @@ in
       after = [ "ratlogin.service" ];
     };
   };
+  teq.nixos.foundryRelay = {
+    enable = true;
+    allowRegistration = true;
+  };
   services = {
     scx.enable = false;
     smartd.enable = false;
