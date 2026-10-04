@@ -30,6 +30,31 @@ in
     package = lib.mkForce inputs.tranquil.packages.x86_64-linux.tranquil-pds-aarch64;
     settings.frontend.dir = lib.mkForce inputs.tranquil.packages.x86_64-linux.tranquil-frontend;
   };
+  age.secrets.jupiter-builder = {
+    file = ../secrets/jupiter-builder.age;
+    mode = "0400";
+  };
+  nix = {
+    distributedBuilds = true;
+    settings.builders-use-substitutes = true;
+    buildMachines = [
+      {
+        hostName = "100.64.0.3";
+        systems = [ "x86_64-linux" ];
+        protocol = "ssh-ng";
+        sshUser = "nix-ssh";
+        sshKey = config.age.secrets.jupiter-builder.path;
+        publicHostKey = "c3NoLWVkMjU1MTkgQUFBQUMzTnphQzFsWkRJMU5URTVBQUFBSUE5dkVTeDNFUlJjVzV5RkZKQmQrRUVteUdsdVpHRkxHQmRxMVo0bHlMdC8=";
+        maxJobs = 4;
+        speedFactor = 4;
+        supportedFeatures = [
+          "big-parallel"
+          "benchmark"
+          "nixos-test"
+        ];
+      }
+    ];
+  };
   age.secrets.ratlogin-headscale = {
     file = ../secrets/ratlogin-headscale.age;
     group = "headscale";

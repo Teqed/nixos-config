@@ -1,5 +1,6 @@
 {
   config,
+  lib,
   nixos-hardware,
   pkgs,
   inputs,
@@ -240,6 +241,17 @@
       secretKeyFile = "/var/lib/nix-serve/cache-priv-key.pem";
     };
   };
+  nix.sshServe = {
+    enable = true;
+    write = true;
+    trusted = true;
+    protocol = "ssh-ng";
+    keys = [
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIr0MuMtYlQM+PtPLFt3Bjppl7rhzX429iedfrd003QA jupiter-builder"
+    ];
+  };
+  nix.settings.trusted-users = lib.mkForce [ "nix-ssh" ];
+  services.openssh.settings.AllowUsers = [ "nix-ssh" ];
   networking = {
     hostName = "thoughtful";
     hostId = "9936699a";

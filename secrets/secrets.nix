@@ -26,4 +26,5 @@ in
   "codex-auth.age".publicKeys = allUsers ++ allSystems;
   "prime-auth.age".publicKeys = allUsers ++ allSystems;
   "ratlogin-headscale.age".publicKeys = allUsers ++ [ systems.jupiter ];
+  "jupiter-builder.age".publicKeys = allUsers ++ [ systems.jupiter ];
 }
