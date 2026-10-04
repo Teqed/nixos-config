@@ -1,6 +1,7 @@
 {
   lib,
   config,
+  options,
   impermanence,
   ...
 }:
@@ -83,179 +84,184 @@ in
     };
     btrfs = lib.mkEnableOption "Use BTRFS for root, home, and persist filesystems. Otherwise, use ext4.";
   };
-  config = lib.mkIf cfg.impermanence.enable {
-    fileSystems = {
-      "/" = {
-        device = "none";
-        fsType = "tmpfs";
-        options = [
-          "noatime"
-          "mode=755"
-          "uid=0"
-          "gid=0"
-          "size=25%"
-        ];
+  config = lib.mkMerge [
+    (lib.optionalAttrs (options ? age) {
+      age.identityPaths = lib.mkIf cfg.impermanence.enable [ "/persist/etc/ssh/ssh_host_ed25519_key" ];
+    })
+    (lib.mkIf cfg.impermanence.enable {
+      fileSystems = {
+        "/" = {
+          device = "none";
+          fsType = "tmpfs";
+          options = [
+            "noatime"
+            "mode=755"
+            "uid=0"
+            "gid=0"
+            "size=25%"
+          ];
+        };
+        "/boot" = {
+          device = "/dev/disk/by-label/${label_boot}";
+          fsType = "vfat";
+          options = [
+            "fmask=0022"
+            "dmask=0022"
+            "noatime"
+          ];
+        };
+        "/nix" = if cfg.impermanence.btrfs then btrfs_nix else ext4_nix;
+        "/persist" = if cfg.impermanence.btrfs then btrfs_persist else ext4_persist;
+        "/home" = if cfg.impermanence.btrfs then btrfs_home else ext4_home;
       };
-      "/boot" = {
-        device = "/dev/disk/by-label/${label_boot}";
-        fsType = "vfat";
-        options = [
-          "fmask=0022"
-          "dmask=0022"
-          "noatime"
-        ];
-      };
-      "/nix" = if cfg.impermanence.btrfs then btrfs_nix else ext4_nix;
-      "/persist" = if cfg.impermanence.btrfs then btrfs_persist else ext4_persist;
-      "/home" = if cfg.impermanence.btrfs then btrfs_home else ext4_home;
-    };
-    swapDevices = [
-      {
-        label = label_swap;
-        options = [ "nofail" ];
-      }
-    ];
-    environment.variables.NIX_REMOTE = "daemon";
-    systemd = {
-      services.nix-daemon.environment.TMPDIR = "/nix/tmp";
-      tmpfiles.rules = [
-        "d /nix/tmp 0755 root root 1d"
-      ];
-      suppressedSystemUnits = [ "systemd-machine-id-commit.service" ];
-    };
-    users.mutableUsers = false;
-    users.users = lib.mkMerge (
-      [ { root.hashedPasswordFile = "/persist/etc/auth/root"; } ]
-      ++ lib.forEach config.userinfo.users (u: {
-        "${u}".hashedPasswordFile = "/persist/etc/auth/${u}";
-      })
-    );
-    boot.initrd.systemd = {
-      enable = lib.mkForce true;
-      services.rollback = lib.mkIf cfg.impermanence.btrfs {
-        description = "Rollback BTRFS root subvolume to a pristine state";
-        wantedBy = [ "initrd.target" ];
-        requires = [ "dev-disk-by\\x2dlabel-${label_nixos}.device" ];
-        wants = [ "dev-disk-by\\x2dlabel-${label_nixos}.device" ];
-        after = [
-          "dev-disk-by\\x2dlabel-${label_nixos}.device"
-        ];
-        before = [
-          "sysroot.mount"
-        ];
-        unitConfig.DefaultDependencies = "no";
-        serviceConfig.Type = "oneshot";
-        script = ''
-          snapshot_dir="/mnt/nixos/@snapshots"
-          root_dir="/mnt/nixos/root"
-          mkdir -p {/mnt,/mnt/nixos,$root_dir}
-          mount -t btrfs -L ${label_nixos} $root_dir
-          if [[ -e $root_dir/@snapshots ]]; then
-              timestamp=$(date "+%Y-%m-%d--%H-%M-%S")
-              mkdir -p $snapshot_dir
-              mount -t btrfs -o noatime,compress-force=zstd:1,subvol=@snapshots -L ${label_nixos} $snapshot_dir;
-              if [[ -e $root_dir/@home ]]; then
-                  mkdir -p $snapshot_dir/@home
-                  btrfs subvolume snapshot $root_dir/@home "$snapshot_dir/@home/$timestamp"
-                  btrfs subvolume delete $root_dir/@home
-                  btrfs subvolume create $root_dir/@home
-              fi
-              find $snapshot_dir/@home/ -maxdepth 1 -type d | sort | head -n -3 | while IFS= read -r snapshot; do
-                  if [[ "$snapshot" == "$snapshot_dir/@home/" ]]; then continue ; fi
-                  btrfs subvolume delete "$snapshot"
-              done
-              umount {$snapshot_dir,$root_dir}
-          fi'';
-      };
-
-      suppressedUnits = [ "systemd-machine-id-commit.service" ];
-    };
-    environment.persistence."/persist" = {
-      enable = true;
-
-      directories = [
-        "/etc/auth"
-        "/etc/nixos"
-        "/etc/ssh"
-        "/etc/NetworkManager/system-connections"
-        "/var/cache"
-        "/var/db"
+      swapDevices = [
         {
-          directory = "/var/keys";
-          mode = "0700";
+          label = label_swap;
+          options = [ "nofail" ];
         }
-        "/var/lib"
-        "/var/log"
-        "/var/spool"
-        {
-          directory = "/var/tmp";
-          mode = "1777";
-        }
-        "/usr/systemd-placeholder"
       ];
-      files = [
-        "/etc/machine-id"
-        "/etc/adjtime"
-      ];
-      users.media = {
-        directories = [
-          ".cache"
-          ".config"
-          ".local"
-          {
-            directory = ".gnupg";
-            mode = "0700";
-          }
-          {
-            directory = ".nixops";
-            mode = "0700";
-          }
-          {
-            directory = ".ssh";
-            mode = "0700";
-          }
+      environment.variables.NIX_REMOTE = "daemon";
+      systemd = {
+        services.nix-daemon.environment.TMPDIR = "/nix/tmp";
+        tmpfiles.rules = [
+          "d /nix/tmp 0755 root root 1d"
         ];
+        suppressedSystemUnits = [ "systemd-machine-id-commit.service" ];
       };
-      users.teq = {
-        directories = [
-          ".cache"
-          ".claude"
-          ".config"
-          ".factorio"
-          ".local"
-          ".mozilla"
-          ".vscode-oss"
-          ".barony"
-          ".pki"
-          "Zomboid"
-          {
-            directory = ".android";
-            mode = "0700";
-          }
-          {
-            directory = ".gnupg";
-            mode = "0700";
-          }
-          {
-            directory = ".prime";
-            mode = "0700";
-          }
-          {
-            directory = ".nixops";
-            mode = "0700";
-          }
-          {
-            directory = ".ssh";
-            mode = "0700";
-          }
+      users.mutableUsers = false;
+      users.users = lib.mkMerge (
+        [ { root.hashedPasswordFile = "/persist/etc/auth/root"; } ]
+        ++ lib.forEach config.userinfo.users (u: {
+          "${u}".hashedPasswordFile = "/persist/etc/auth/${u}";
+        })
+      );
+      boot.initrd.systemd = {
+        enable = lib.mkForce true;
+        services.rollback = lib.mkIf cfg.impermanence.btrfs {
+          description = "Rollback BTRFS root subvolume to a pristine state";
+          wantedBy = [ "initrd.target" ];
+          requires = [ "dev-disk-by\\x2dlabel-${label_nixos}.device" ];
+          wants = [ "dev-disk-by\\x2dlabel-${label_nixos}.device" ];
+          after = [
+            "dev-disk-by\\x2dlabel-${label_nixos}.device"
+          ];
+          before = [
+            "sysroot.mount"
+          ];
+          unitConfig.DefaultDependencies = "no";
+          serviceConfig.Type = "oneshot";
+          script = ''
+            snapshot_dir="/mnt/nixos/@snapshots"
+            root_dir="/mnt/nixos/root"
+            mkdir -p {/mnt,/mnt/nixos,$root_dir}
+            mount -t btrfs -L ${label_nixos} $root_dir
+            if [[ -e $root_dir/@snapshots ]]; then
+                timestamp=$(date "+%Y-%m-%d--%H-%M-%S")
+                mkdir -p $snapshot_dir
+                mount -t btrfs -o noatime,compress-force=zstd:1,subvol=@snapshots -L ${label_nixos} $snapshot_dir;
+                if [[ -e $root_dir/@home ]]; then
+                    mkdir -p $snapshot_dir/@home
+                    btrfs subvolume snapshot $root_dir/@home "$snapshot_dir/@home/$timestamp"
+                    btrfs subvolume delete $root_dir/@home
+                    btrfs subvolume create $root_dir/@home
+                fi
+                find $snapshot_dir/@home/ -maxdepth 1 -type d | sort | head -n -3 | while IFS= read -r snapshot; do
+                    if [[ "$snapshot" == "$snapshot_dir/@home/" ]]; then continue ; fi
+                    btrfs subvolume delete "$snapshot"
+                done
+                umount {$snapshot_dir,$root_dir}
+            fi'';
+        };
 
-          ".zen"
+        suppressedUnits = [ "systemd-machine-id-commit.service" ];
+      };
+      environment.persistence."/persist" = {
+        enable = true;
+
+        directories = [
+          "/etc/auth"
+          "/etc/nixos"
+          "/etc/ssh"
+          "/etc/NetworkManager/system-connections"
+          "/var/cache"
+          "/var/db"
+          {
+            directory = "/var/keys";
+            mode = "0700";
+          }
+          "/var/lib"
+          "/var/log"
+          "/var/spool"
+          {
+            directory = "/var/tmp";
+            mode = "1777";
+          }
+          "/usr/systemd-placeholder"
         ];
         files = [
-          ".claude.json"
-          ".face.icon"
+          "/etc/machine-id"
+          "/etc/adjtime"
         ];
+        users.media = {
+          directories = [
+            ".cache"
+            ".config"
+            ".local"
+            {
+              directory = ".gnupg";
+              mode = "0700";
+            }
+            {
+              directory = ".nixops";
+              mode = "0700";
+            }
+            {
+              directory = ".ssh";
+              mode = "0700";
+            }
+          ];
+        };
+        users.teq = {
+          directories = [
+            ".cache"
+            ".claude"
+            ".config"
+            ".factorio"
+            ".local"
+            ".mozilla"
+            ".vscode-oss"
+            ".barony"
+            ".pki"
+            "Zomboid"
+            {
+              directory = ".android";
+              mode = "0700";
+            }
+            {
+              directory = ".gnupg";
+              mode = "0700";
+            }
+            {
+              directory = ".prime";
+              mode = "0700";
+            }
+            {
+              directory = ".nixops";
+              mode = "0700";
+            }
+            {
+              directory = ".ssh";
+              mode = "0700";
+            }
+
+            ".zen"
+          ];
+          files = [
+            ".claude.json"
+            ".face.icon"
+          ];
+        };
       };
-    };
-  };
+    })
+  ];
 }
