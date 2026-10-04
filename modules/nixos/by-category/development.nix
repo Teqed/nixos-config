@@ -6,7 +6,11 @@
 }:
 {
   config = lib.mkIf config.teq.nixos.enable {
+    users.groups.adbusers = { };
     services = {
+      udev.extraRules = ''
+        SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ENV{ID_USB_INTERFACES}=="*:ff420[13]:*", GROUP="adbusers", MODE="0660", TAG+="uaccess"
+      '';
       postgresql = {
         enable = lib.mkDefault false;
         identMap = ''

@@ -88,6 +88,8 @@ let
         HOME=${agentHome} USER=agent LOGNAME=agent SHELL=${pkgs.bashInteractive}/bin/bash \
         XDG_RUNTIME_DIR=${runtimeDir} DBUS_SESSION_BUS_ADDRESS=unix:path=${runtimeDir}/bus \
         PATH=/etc/profiles/per-user/agent/bin:/run/current-system/sw/bin:/run/wrappers/bin \
+        ANDROID_ADB_SERVER_PORT=5038 \
+        ${lib.optionalString config.virtualisation.docker.rootless.enable "DOCKER_HOST=unix://${runtimeDir}/docker.sock \\"}
         AGENT_LAUNCHED_BY="$(id -un)" \
         ${pkgs.bashInteractive}/bin/bash -c '
           if [ -r /run/agenix/claude-agent ] && ! { [ -t 0 ] && [ -t 1 ] && [ -s ${agentHome}/.claude/.credentials.json ]; }; then
@@ -386,6 +388,18 @@ in
           nix-index-with-db
         ]);
     };
+    extraGroups = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      default = [
+        "systemd-journal"
+        "render"
+        "video"
+        "kvm"
+        "dialout"
+        "media"
+      ]
+      ++ lib.optional (config.users.groups ? adbusers) "adbusers";
+    };
     launchers = lib.mkOption {
       type = lib.types.listOf lib.types.str;
       default = [ "teq" ];
@@ -506,7 +520,7 @@ in
             {
               agent = {
                 isNormalUser = true;
-                inherit (cfg) uid;
+                inherit (cfg) uid extraGroups;
                 group = "agents";
                 home = agentHome;
                 homeMode = "750";
