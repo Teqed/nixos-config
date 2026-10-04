@@ -30,10 +30,6 @@ The starlight on the Western Seas.
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    ghostty = {
-      url = "github:ghostty-org/ghostty?ref=refs/tags/tip";
-    };
-
     llm-agents.url = "github:numtide/llm-agents.nix";
     vpn-confinement.url = "github:Maroka-chan/VPN-Confinement";
     agenix = {

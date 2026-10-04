@@ -7,7 +7,6 @@
     "https://attic.xuyh0120.win/lantian?priority=40"
     "https://cache.numtide.com?priority=50"
     "https://nixpkgs-unfree.cachix.org?priority=70"
-    "https://ghostty.cachix.org?priority=55"
   ];
 
   trustedPublicKeys = [
@@ -18,6 +17,5 @@
     "lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc="
     "niks3.numtide.com-1:DTx8wZduET09hRmMtKdQDxNNthLQETkc/yaX7M4qK0g="
     "nixpkgs-unfree.cachix.org-1:hqvoInulhbV4nJ9yJOEr+4wxhDV4xq2d1DK7S6Nj6rs="
-    "ghostty.cachix.org-1:QB389yTa6gTyneehvqG58y0WnHjQOqgnA+wBnpWWxns="
   ];
 }

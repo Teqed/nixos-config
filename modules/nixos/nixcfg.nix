@@ -64,7 +64,7 @@ in
         );
       };
       system.stateVersion = lib.mkOverride 1100 "24.05";
-      environment.enableAllTerminfo = mkDefault true;
+      environment.systemPackages = [ pkgs.pkgsBuildBuild.ghostty.terminfo ];
       nixpkgs = {
         config = {
           allowUnfree = true;
