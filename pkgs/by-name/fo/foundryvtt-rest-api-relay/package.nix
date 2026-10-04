@@ -12,6 +12,7 @@ buildGoModule (finalAttrs: {
     tag = finalAttrs.version;
     hash = "sha256-PWawR1iE9Q+EUOTbyC5HbcrcgcvqaPds7aOx8ANfABQ=";
   };
+  patches = [ ./route-prefix.patch ];
   modRoot = "go-relay";
   vendorHash = "sha256-3rKrfpek+VkTV+WAk1gSKYc/mJeBwIxSKXl1FRb/Ikw=";
   subPackages = [ "cmd/server" ];

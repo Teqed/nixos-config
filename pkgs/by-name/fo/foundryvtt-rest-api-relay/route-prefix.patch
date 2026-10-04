@@ -1,0 +1,21 @@
+--- a/go-relay/internal/worker/headless.go	2026-10-04 04:32:30.354217248 -0400
++++ b/go-relay/internal/worker/headless.go	2026-10-04 04:32:30.360885559 -0400
+@@ -1771,7 +1771,8 @@
+ 				if (match) userId = match.value;
+ 			}
+ 			try {
+-				const resp = await fetch('/join', {
++				const route = (p) => (window.foundry?.utils?.getRoute ? window.foundry.utils.getRoute(p) : p);
++				const resp = await fetch(route('join'), {
+ 					method: 'POST',
+ 					headers: { 'Content-Type': 'application/json' },
+ 					body: JSON.stringify({ action: 'join', userid: userId, password: %q })
+@@ -1780,7 +1781,7 @@
+ 					let data = {};
+ 					try { data = await resp.json(); } catch (e) {}
+ 					if (!data || data.status !== 'success') return 'fail:' + ((data && data.message) || 'join was not accepted');
+-					setTimeout(function() { window.location.href = data.redirect || '/game'; }, 0);
++					setTimeout(function() { window.location.href = data.redirect || route('game'); }, 0);
+ 					return 'ok:' + userId;
+ 				}
+ 				const t = (await resp.text()).replace(/\s+/g, ' ').trim().substring(0, 120);
