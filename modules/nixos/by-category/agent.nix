@@ -354,7 +354,14 @@ in
       default = with pkgs.llm-agents; [
         claude-code
         codex
-        inputs.albedo.packages.${pkgs.stdenv.hostPlatform.system}.albedo
+        (inputs.albedo.packages.${pkgs.stdenv.hostPlatform.system}.albedo.override {
+          python311 = pkgs.python3.withPackages (ps: with ps; [
+            dill numpy pandas polars pyarrow duckdb scipy scikit-learn sympy networkx
+            matplotlib seaborn requests httpx beautifulsoup4 lxml pyyaml openpyxl
+            tomli-w xmltodict jsonschema python-dateutil chardet pillow imageio
+            opencv4 pygame rich tqdm pydantic attrs psutil tabulate markdown-it-py
+          ]);
+        })
       ];
       description = "Packages installed into the agent's profile.";
     };
@@ -363,6 +370,8 @@ in
       default =
         (with pkgs; [
           git
+          jujutsu
+          gh
           jq
           ripgrep
           python3
@@ -388,7 +397,11 @@ in
         ++ (with inputs.nix-index-database.packages.${pkgs.stdenv.hostPlatform.system}; [
           comma-with-db
           nix-index-with-db
-        ]);
+        ])
+        ++ [
+          inputs.tg.packages.${pkgs.stdenv.hostPlatform.system}.tg
+          inputs.mr-boxington.packages.${pkgs.stdenv.hostPlatform.system}.mbx
+        ];
     };
     extraGroups = lib.mkOption {
       type = lib.types.listOf lib.types.str;
@@ -547,6 +560,14 @@ in
           tmpfiles.rules = [
             "d ${agentHome}/.config 0750 agent agents -"
             "d ${agentHome}/.config/nix 0750 agent agents -"
+            "d ${agentHome}/.config/jj 0750 agent agents -"
+            "f+ ${agentHome}/.config/jj/config.toml 0640 agent agents - [user]\\nname = \"teq\"\\nemail = \"teqed@shatteredsky.net\"\\n"
+            "d ${agentHome}/.config/mbx 0750 agent agents -"
+            "f+ ${agentHome}/.config/mbx/config.toml 0640 agent agents - [target]\\nviews = false\\n"
+            "d ${agentHome}/.agents 0750 agent agents -"
+            "d ${agentHome}/.agents/skills 0750 agent agents -"
+            "d ${agentHome}/.claude 0750 agent agents -"
+            "d ${agentHome}/.claude/skills 0750 agent agents -"
             "d ${agentHome}/.ssh 0700 agent agents -"
             "f+ ${agentHome}/.gitconfig 0640 agent agents - [safe]\\n\\tdirectory = *\\n"
             "f+ ${agentHome}/.curlrc 0640 agent agents - user-agent = \"teq/1.0 (+https://shatteredsky.net; teqed@shatteredsky.net)\"\\n"
@@ -556,16 +577,22 @@ in
             "d ${agentHome}/.config/direnv 0750 agent agents -"
             "L+ ${agentHome}/.config/direnv/direnvrc - - - - ${nixDirenv}/share/nix-direnv/direnvrc"
           ]
+          ++ lib.concatMap
+            (dir: lib.mapAttrsToList (name: path: "L+ ${agentHome}/${dir}/${name} - - - - ${path}") {
+              reader = "${harnessSkills}/reader";
+              mbx = "${inputs.mr-boxington}/skills/mbx";
+              tg = pkgs.linkFarm "tg-skill" [
+                { name = "SKILL.md"; path = "${inputs.tg}/SKILL.md"; }
+              ];
+            })
+            [ ".claude/skills" ".agents/skills" ]
           ++ lib.optionals cfg.sourceTree.enable [
             "d ${srcTree} 2775 root agents -"
             "a+ ${srcTree} - - - - g:agents:rwx,d:g:agents:rwx"
             "d ${srcTree}/.claude 2770 agent agents -"
             "d ${memoryRoot} 2770 agent agents -"
             "A+ ${srcTree}/.claude - - - - g:agents:rwx,d:g:agents:rwx"
-            "d ${agentHome}/.claude 0750 agent agents -"
             "d ${agentHome}/.claude/projects 0750 agent agents -"
-            "d ${agentHome}/.claude/skills 0750 agent agents -"
-            "L+ ${agentHome}/.claude/skills/reader - - - - ${harnessSkills}/reader"
           ]
           ++ lib.optional (builtins.pathExists ../../../secrets/gh-agent.age) "f+ ${agentHome}/.config/nix/nix.conf 0640 agent agents - !include /run/agenix/gh-agent\\n";
 
@@ -588,6 +615,12 @@ in
                 fi
               }
               seed /run/agenix/codex-auth ${agentHome}/.codex/auth.json
+              if [ -r /run/agenix/gh-agent ]; then
+                install -d -m 0700 -o agent -g agents ${agentHome}/.config/gh
+                token=$(sed -n 's/.*github\.com=\([^ ]*\).*/\1/p' /run/agenix/gh-agent)
+                printf 'github.com:\n    oauth_token: %s\n    git_protocol: https\n' "$token" \
+                  | install -m 0600 -o agent -g agents /dev/stdin ${agentHome}/.config/gh/hosts.yml
+              fi
             '';
           };
 
