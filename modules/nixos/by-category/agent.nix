@@ -345,6 +345,7 @@ in
       default = [
         "claude"
         "codex"
+        "albedo"
       ];
       description = "Binary names wrapped so they run as `agent`; each must exist in the agent's per-user profile.";
     };
@@ -353,6 +354,7 @@ in
       default = with pkgs.llm-agents; [
         claude-code
         codex
+        inputs.albedo.packages.${pkgs.stdenv.hostPlatform.system}.albedo
       ];
       description = "Packages installed into the agent's profile.";
     };
@@ -549,7 +551,8 @@ in
             "f+ ${agentHome}/.gitconfig 0640 agent agents - [safe]\\n\\tdirectory = *\\n"
             "f+ ${agentHome}/.curlrc 0640 agent agents - user-agent = \"teq/1.0 (+https://shatteredsky.net; teqed@shatteredsky.net)\"\\n"
             "d ${agentHome}/.config/git 0750 agent agents -"
-            "f+ ${agentHome}/.config/git/ignore 0640 agent agents - AGENTS.md\\nCLAUDE.md\\n.agents/\\n.claude/\\n"
+            "f+ ${agentHome}/.config/git/ignore 0640 agent agents - AGENTS.md\\nCLAUDE.md\\n.agents/\\n.claude/\\n.albedo/\\n"
+            "d ${agentHome}/.albedo 0700 agent agents -"
             "d ${agentHome}/.config/direnv 0750 agent agents -"
             "L+ ${agentHome}/.config/direnv/direnvrc - - - - ${nixDirenv}/share/nix-direnv/direnvrc"
           ]

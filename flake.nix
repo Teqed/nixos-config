@@ -31,6 +31,10 @@ The starlight on the Western Seas.
     };
 
     llm-agents.url = "github:numtide/llm-agents.nix";
+    albedo = {
+      url = "git+https://tangled.org/okami.mom/albedo";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     vpn-confinement.url = "github:Maroka-chan/VPN-Confinement";
     agenix = {
       url = "github:ryantm/agenix";

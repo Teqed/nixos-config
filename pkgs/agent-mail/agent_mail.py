@@ -44,6 +44,8 @@ def maildir(user=None):
 def detect_harness(env=os.environ):
     if env.get("AGENT_MAIL_HARNESS"):
         return env["AGENT_MAIL_HARNESS"]
+    if env.get("ALBEDO_HOME"):
+        return "albedo"
     if env.get("CLAUDECODE") or env.get("CLAUDE_CODE_ENTRYPOINT"):
         return "claude"
     if any(k.startswith("CODEX_") for k in env):

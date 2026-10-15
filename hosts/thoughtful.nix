@@ -102,11 +102,13 @@
           "teq"
           "agent+claude"
           "agent+codex"
+          "agent+albedo"
         ];
         ops = [
           "teq"
           "agent+claude"
           "agent+codex"
+          "agent+albedo"
         ];
       };
       proxyKeys."teq@bubblegum" =

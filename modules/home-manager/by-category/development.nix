@@ -41,6 +41,7 @@ in
             "CLAUDE.md"
             ".agents/"
             ".claude/"
+            ".albedo/"
             ".codex/"
             "*.pem"
             "*.key"
