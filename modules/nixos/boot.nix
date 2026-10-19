@@ -9,7 +9,15 @@ let
 in
 {
   options.teq.nixos = {
-    cachyos = lib.mkEnableOption "Enable CachyOS kernel.";
+    kernel = lib.mkOption {
+      type = lib.types.enum [
+        "latest"
+        "zen"
+        "cachyos"
+      ];
+      default = "latest";
+      description = "Kernel package set.";
+    };
   };
   config = lib.mkIf config.teq.nixos.enable {
     systemd.services.systemd-udev-settle.enable = mkDefault false;
@@ -36,10 +44,12 @@ in
     };
     nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
     boot.kernelPackages =
-      if config.teq.nixos.cachyos then
-        pkgs.cachyosKernels.linuxPackages-cachyos-latest
-      else
-        pkgs.linuxPackages_latest;
+      {
+        latest = pkgs.linuxPackages_latest;
+        zen = pkgs.linuxPackages_zen;
+        cachyos = pkgs.cachyosKernels.linuxPackages-cachyos-latest;
+      }
+      .${config.teq.nixos.kernel};
     boot.kernel.sysctl = {
       "vm.max_map_count" = 2147483642;
     };

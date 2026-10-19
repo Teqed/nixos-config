@@ -84,7 +84,7 @@
   teq.nixos = {
     samba = true;
     media = false;
-    cachyos = true;
+    kernel = "zen";
     blocklist = false;
     impermanence = {
       enable = true;

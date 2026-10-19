@@ -81,7 +81,6 @@
       steam = true;
     };
     media = false;
-    cachyos = true;
     blocklist = false;
     impermanence = {
       enable = false;
