@@ -205,6 +205,12 @@
         inputs.washing-machien.packages.${pkgs.stdenv.hostPlatform.system}.washing-machien.overrideAttrs
           (old: {
             patches = (old.patches or [ ]) ++ [ ../patches/washing-machien-session-cache.patch ];
+            postPatch = (old.postPatch or "") + ''
+              cp ${../patches/washing-machien.Cargo.lock} Cargo.lock
+            '';
+            cargoDeps = pkgs.rustPlatform.importCargoLock {
+              lockFile = ../patches/washing-machien.Cargo.lock;
+            };
           });
       input = builtins.path { path = ./assets/washing-machien-avatar.jpg; };
       environmentFile = config.age.secrets."washing-machien".path;

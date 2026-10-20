@@ -89,6 +89,7 @@ let
         XDG_RUNTIME_DIR=${runtimeDir} DBUS_SESSION_BUS_ADDRESS=unix:path=${runtimeDir}/bus \
         PATH=/etc/profiles/per-user/agent/bin:/run/current-system/sw/bin:/run/wrappers/bin \
         ANDROID_ADB_SERVER_PORT=5038 \
+        NIX_SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt NODE_OPTIONS=--use-openssl-ca \
         ${lib.optionalString config.virtualisation.docker.rootless.enable "DOCKER_HOST=unix://${runtimeDir}/docker.sock \\"}
         AGENT_LAUNCHED_BY="$(id -un)" \
         ${pkgs.bashInteractive}/bin/bash -c '
