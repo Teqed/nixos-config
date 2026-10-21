@@ -50,6 +50,19 @@
   };
 
   programs.dconf.enable = true;
+  programs.ssh.knownHosts = {
+    jupiter = {
+      hostNames = [
+        "jupiter"
+        "jupiter.shatteredsky.net"
+      ];
+      publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIm15NnzrBTMXTexLwFKEAHR4sAIHTawNaepnMemnkC7";
+    };
+    dreamer = {
+      hostNames = [ "dreamer" ];
+      publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOjYcgZ7c2YuuquGNsYB/Tx2Sih5yqdMKIooODeXe5gf";
+    };
+  };
   users = {
     users.gcis = {
       extraGroups = [ "libvirtd" ];
