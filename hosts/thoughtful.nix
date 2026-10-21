@@ -50,6 +50,22 @@
   };
 
   programs.dconf.enable = true;
+  teq.nixos.workarounds.handbrake = {
+    reason = "HandBrake's A15 pgssubdec patch no longer applies to ffmpeg 8.1.3";
+    fix =
+      handbrake:
+      handbrake.override {
+        ffmpeg_8-full = pkgs.ffmpeg_8-full // {
+          overrideAttrs =
+            f:
+            (pkgs.ffmpeg_8-full.overrideAttrs f).overrideAttrs (old: {
+              patches = lib.filter (
+                p: !lib.hasSuffix "A15-lavc-pgssubdec-Add-graphic-plane-and-cropping.patch" (toString p)
+              ) old.patches;
+            });
+        };
+      };
+  };
   programs.ssh.knownHosts = {
     jupiter = {
       hostNames = [

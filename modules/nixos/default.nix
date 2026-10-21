@@ -24,6 +24,7 @@ let
     atlogin = import ./by-category/atlogin.nix;
     foundry_relay = import ./by-category/foundry-relay.nix;
     notify = import ./by-category/notify.nix;
+    workarounds = import ./by-category/workarounds.nix;
     boot = import ./boot.nix;
     impermanence = import ./impermanence.nix;
     nixcfg = import ./nixcfg.nix;
