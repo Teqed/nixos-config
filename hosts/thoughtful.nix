@@ -284,7 +284,7 @@
     trusted = true;
     protocol = "ssh-ng";
     keys = [
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIr0MuMtYlQM+PtPLFt3Bjppl7rhzX429iedfrd003QA jupiter-builder"
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGAYqdmzF4LVSfB/tp3e71RHOkl6daKPoHnVRTwDiIru jupiter-builder"
     ];
   };
   nix.settings.trusted-users = lib.mkForce [ "nix-ssh" ];
