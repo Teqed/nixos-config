@@ -355,13 +355,16 @@ in
       default = with pkgs.llm-agents; [
         claude-code
         codex
-        (inputs.albedo.packages.${pkgs.stdenv.hostPlatform.system}.albedo.override {
-          python311 = pkgs.python3.withPackages (ps: with ps; [
+        (let
+          albedoPkgs = inputs.albedo.packages.${pkgs.stdenv.hostPlatform.system};
+          pyEnv = pkgs.python3.withPackages (ps: with ps; [
             dill numpy pandas polars pyarrow duckdb scipy scikit-learn sympy networkx
             matplotlib seaborn requests httpx beautifulsoup4 lxml pyyaml openpyxl
             tomli-w xmltodict jsonschema python-dateutil chardet pillow imageio
             opencv4 pygame rich tqdm pydantic attrs psutil tabulate markdown-it-py
           ]);
+        in albedoPkgs.albedo.override {
+          daemon = albedoPkgs.daemon.override { python311 = pyEnv; };
         })
       ];
       description = "Packages installed into the agent's profile.";
