@@ -10,9 +10,6 @@
       NODE_OPTIONS = "--use-openssl-ca";
     };
     security = {
-      pki.caCertificateBlacklist = [
-        "Comodo AAA Services root"
-      ];
       sudo.enable = false;
       sudo-rs = {
         enable = true;
