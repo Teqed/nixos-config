@@ -372,11 +372,15 @@ in
               runHook postBuild
             '';
           });
-        in albedoPkgs.albedo.override {
-          daemon = albedoPkgs.daemon.override {
+          daemon' = albedoPkgs.daemon.override {
             python311 = pyEnv;
             usageCore = usageCore';
           };
+          tui' = albedoPkgs.albedo-client.override { daemon = daemon'; };
+        in albedoPkgs.albedo.override {
+          daemon = daemon';
+          tui = tui';
+          usageCore = usageCore';
         })
       ];
       description = "Packages installed into the agent's profile.";
