@@ -136,7 +136,6 @@ in
         })
       );
       boot.initrd.systemd = {
-        enable = lib.mkForce true;
         services.rollback = lib.mkIf cfg.impermanence.btrfs {
           description = "Rollback BTRFS root subvolume to a pristine state";
           wantedBy = [ "initrd.target" ];

@@ -23,11 +23,6 @@ in
     systemd.services.systemd-udev-settle.enable = mkDefault false;
     systemd.services.NetworkManager-wait-online.enable = mkDefault false;
     boot = {
-      initrd = {
-        systemd = {
-          enable = mkDefault true;
-        };
-      };
       plymouth = {
         enable = mkDefault true;
       };
