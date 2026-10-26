@@ -58,7 +58,7 @@ The starlight on the Western Seas.
       flake = false;
     };
     ratlogin = {
-      url = "git+file:///usr/local/src/atlogin-rs";
+      url = "git+https://tangled.org/quilling.dev/ratlogin";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     tangled-core.url = "git+https://tangled.org/@tangled.org/core";

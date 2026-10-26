@@ -915,17 +915,17 @@
         "tranquil": "tranquil"
       },
       "locked": {
-        "lastModified": 1790523419,
-        "narHash": "sha256-TtvBFJQIuMlxHjNlaKy3pUt4Xg7iD2zqyKo29qYf4JQ=",
+        "lastModified": 1792531571,
+        "narHash": "sha256-lUF0EbuXs7BS5+dCqN9m+p1uCwMg/EKPj5zdbeHMKi4=",
         "ref": "refs/heads/main",
-        "rev": "e4a55fd2f906c92ddd02eab28782bffa45b5f86d",
-        "revCount": 12,
+        "rev": "cb14b5e2494d2b840ced0b2fb73d9f30b1f2a777",
+        "revCount": 13,
         "type": "git",
-        "url": "file:///usr/local/src/atlogin-rs"
+        "url": "https://tangled.org/quilling.dev/ratlogin"
       },
       "original": {
         "type": "git",
-        "url": "file:///usr/local/src/atlogin-rs"
+        "url": "https://tangled.org/quilling.dev/ratlogin"
       }
     },
     "root": {
