@@ -46,11 +46,7 @@ The starlight on the Western Seas.
     vpn-confinement.url = "github:Maroka-chan/VPN-Confinement";
     agenix = {
       url = "github:ryantm/agenix";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        home-manager.follows = "home-manager";
-        darwin.follows = "";
-      };
+      inputs.nixpkgs.follows = "nixpkgs";
     };
     tranquil.url = "git+https://tangled.org/tranquil.farm/tranquil-pds";
     atlogin = {

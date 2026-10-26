@@ -124,7 +124,10 @@ in
 
         settings = pkgs.lib.importTOML ../sources/.config/starship.toml;
       };
-      nushell.enable = lib.mkDefault true;
+      nushell = {
+        enable = lib.mkDefault true;
+        loadSessionVariables = lib.mkDefault true;
+      };
       bash = {
         enable = lib.mkDefault true;
         enableVteIntegration = lib.mkDefault true;

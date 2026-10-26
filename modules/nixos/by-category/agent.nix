@@ -363,8 +363,20 @@ in
             tomli-w xmltodict jsonschema python-dateutil chardet pillow imageio
             opencv4 pygame rich tqdm pydantic attrs psutil tabulate markdown-it-py
           ]);
+          usageCore' = albedoPkgs.usageCore.overrideAttrs (_: {
+            buildPhase = ''
+              runHook preBuild
+              export HOME="$TMPDIR/home"
+              export ZIG_GLOBAL_CACHE_DIR="$TMPDIR/zig-global-cache"
+              zig build --cache-dir "$TMPDIR/zig-cache"
+              runHook postBuild
+            '';
+          });
         in albedoPkgs.albedo.override {
-          daemon = albedoPkgs.daemon.override { python311 = pyEnv; };
+          daemon = albedoPkgs.daemon.override {
+            python311 = pyEnv;
+            usageCore = usageCore';
+          };
         })
       ];
       description = "Packages installed into the agent's profile.";
