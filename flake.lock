@@ -42,15 +42,16 @@
         "nixpkgs": [
           "nixpkgs"
         ],
+        "tg": "tg",
         "treefmt-nix": "treefmt-nix",
         "usage-core": "usage-core"
       },
       "locked": {
-        "lastModified": 1792980093,
-        "narHash": "sha256-O2UWguHtChKqCDwTRmjiUPWW+Jw+NUfxAebAWepFLTI=",
+        "lastModified": 1792998546,
+        "narHash": "sha256-M119lK+mZ44Zq8J2yY5pL5WvzAyqPvSgz5hOYtGKGhM=",
         "ref": "refs/heads/main",
-        "rev": "55a870411d4cec0f3345a468d2124da02fcbf608",
-        "revCount": 1120,
+        "rev": "9bd0921ac9a143f798cb13782a7ccb949037a4fd",
+        "revCount": 1136,
         "type": "git",
         "url": "https://tangled.org/okami.mom/albedo"
       },
@@ -540,11 +541,11 @@
         "treefmt-nix": "treefmt-nix_2"
       },
       "locked": {
-        "lastModified": 1792971270,
-        "narHash": "sha256-pvkekz4R2bbObsKIKQlTkhSw7iEdDXtrfhILxBKLQaQ=",
+        "lastModified": 1792987030,
+        "narHash": "sha256-t//ltF7M58hc9Rqags5IQCLyzMOPgAuyxkzDwcn1bj0=",
         "owner": "numtide",
         "repo": "llm-agents.nix",
-        "rev": "0784674971b3ee4681aea5b5e9641c75faf7e846",
+        "rev": "a5500f41321b0a6b68407500f26dd55dbeb5793f",
         "type": "github"
       },
       "original": {
@@ -619,11 +620,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1792968537,
-        "narHash": "sha256-xUxOWfrV9iChVklYwOVLCPLvTHRA4JZIw0XeR1n6wAA=",
+        "lastModified": 1792992556,
+        "narHash": "sha256-FcpIsFLaki/CoGZXfnXRWwCsom+lfI2T3sGMToWMmNs=",
         "owner": "jdx",
         "repo": "mr-boxington",
-        "rev": "ad13495f1818ab0d60d18d72be94ec1866affdd7",
+        "rev": "5c457567e928d5888b00f65c34b58a6121046748",
         "type": "github"
       },
       "original": {
@@ -930,7 +931,7 @@
         "plasma-manager": "plasma-manager",
         "ratlogin": "ratlogin",
         "tangled-core": "tangled-core",
-        "tg": "tg",
+        "tg": "tg_2",
         "tranquil": "tranquil_2",
         "vpn-confinement": "vpn-confinement",
         "washing-machien": "washing-machien"
@@ -1084,6 +1085,22 @@
       }
     },
     "tg": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1791059989,
+        "narHash": "sha256-Jgq2N/2dIoIJ9kPOyIrjPvqFsBa4dDdBo5oL3nvTKug=",
+        "ref": "refs/heads/master",
+        "rev": "9529b60733486df3da4e3c1100f68948d4c3e1ed",
+        "revCount": 171,
+        "type": "git",
+        "url": "https://tangled.org/okami.mom/tg"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://tangled.org/okami.mom/tg"
+      }
+    },
+    "tg_2": {
       "inputs": {
         "flake-parts": "flake-parts_4",
         "git-hooks-nix": "git-hooks-nix",
