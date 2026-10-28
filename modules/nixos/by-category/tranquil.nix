@@ -8,7 +8,7 @@ let
   cfg = config.teq.nixos.tranquil;
   envSecret = ../../../secrets/tranquil-env.age;
   hasEnv = (options ? age) && builtins.pathExists envSecret;
-  backend = "[::1]:${toString config.services.tranquil-pds.settings.server.port}";
+  backend = "${config.services.tranquil-pds.settings.server.host}:${toString config.services.tranquil-pds.settings.server.port}";
 in
 {
   options.teq.nixos.tranquil = {

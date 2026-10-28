@@ -35,10 +35,6 @@ in
     handleDomains = [ "shatteredsky.net" ];
     mail.fromAddress = "pds@shatteredsky.net";
   };
-  services.tranquil-pds = {
-    package = lib.mkForce inputs.tranquil.packages.x86_64-linux.tranquil-pds-aarch64;
-    settings.frontend.dir = lib.mkForce inputs.tranquil.packages.x86_64-linux.tranquil-frontend;
-  };
   age.secrets.jupiter-builder = {
     file = ../secrets/jupiter-builder.age;
     mode = "0400";
@@ -104,10 +100,30 @@ in
       '';
       virtualHosts."srd.shatteredsky.net".extraConfig = ''
         tls internal
-        reverse_proxy http://localhost:3000
+        reverse_proxy 127.0.0.1:3100
       '';
       virtualHosts."jupiter.shatteredsky.net".extraConfig = ''
         respond "jupiter"
+      '';
+      virtualHosts."foundry.shatteredsky.net".extraConfig = ''
+        handle /jei* {
+          reverse_proxy 127.0.0.1:30002
+        }
+        handle /noct* {
+          reverse_proxy 127.0.0.1:30001
+        }
+        handle /spheres* {
+          reverse_proxy 127.0.0.1:30000
+        }
+        handle /krune* {
+          reverse_proxy 100.64.0.5:30004
+        }
+        handle /bloodlords* {
+          reverse_proxy 100.64.0.5:30003
+        }
+      '';
+      virtualHosts."fvtt-relay.shatteredsky.net".extraConfig = ''
+        reverse_proxy 127.0.0.1:3010
       '';
     };
     postgresql = {
@@ -122,6 +138,8 @@ in
     };
     wiki-js = {
       enable = true;
+      settings.bindIP = "127.0.0.1";
+      settings.port = 3100;
       settings.offline = true;
       settings.db = {
         db = "wiki-js";
@@ -261,6 +279,7 @@ in
     pkgs.curl
     pkgs.gitMinimal
   ];
+  zramSwap.enable = true;
   system.stateVersion = currentStateVersion;
   documentation.man.cache.enable = false;
   system.extraDependencies =
@@ -309,6 +328,7 @@ in
                 extraArgs = [ "-f" ];
                 subvolumes = {
                   "/@" = {
+                    mountOptions = [ "compress=zstd" ];
                     mountpoint = "/";
                   };
                   "/@home" = {
@@ -321,23 +341,6 @@ in
                       "noatime"
                     ];
                     mountpoint = "/nix";
-                  };
-                  "/swap" = {
-                    mountpoint = "/.swapvol";
-                    swap = {
-                      swapfile.size = "20M";
-                      swapfile2.size = "20M";
-                      swapfile2.path = "rel-path";
-                    };
-                  };
-                };
-                mountpoint = "/partition-root";
-                swap = {
-                  swapfile = {
-                    size = "20M";
-                  };
-                  swapfile1 = {
-                    size = "20M";
                   };
                 };
               };

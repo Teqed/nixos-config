@@ -253,7 +253,6 @@ The starlight on the Western Seas.
             ./hosts/jupiter.nix
             self.nixosModules.default
             agenix.nixosModules.default
-            inputs.tranquil.nixosModules.default
             inputs.ratlogin.nixosModules.default
             home-manager.nixosModules.home-manager
             nix-flatpak.nixosModules.nix-flatpak
