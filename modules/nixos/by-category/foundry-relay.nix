@@ -34,9 +34,11 @@ in
       default = { };
     };
     watchdog = {
-      enable = lib.mkEnableOption "a timer that restarts the relay when its client list stops answering" // {
-        default = true;
-      };
+      enable =
+        lib.mkEnableOption "a timer that restarts the relay when its client list stops answering"
+        // {
+          default = true;
+        };
       clientId = lib.mkOption {
         type = lib.types.str;
         default = "foundry-krune";

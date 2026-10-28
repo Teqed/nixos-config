@@ -9,13 +9,8 @@
 let
   currentStateVersion = "24.05";
 
-  agentKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHn+uE4orHeGUUI+n3EackJ82rcimIEcOVR6RejK6ulf agent@thoughtful";
   jeiModules = "/var/lib/nixos-containers/foundryvtt-jeimuzu/var/lib/foundryvtt/Data/modules";
   jeiFoundryUid = 999;
-  agentUnits = [
-    "foundry-relay.service"
-    "container@foundryvtt-jeimuzu.service"
-  ];
 
   mkFoundry =
     pkgs: attrs:
@@ -28,6 +23,12 @@ in
     (modulesPath + "/profiles/qemu-guest.nix")
   ];
 
+  teq.nixos.agent = {
+    manageUnits = [
+      "foundry-relay.service"
+      "container@foundryvtt-jeimuzu.service"
+    ];
+  };
   teq.nixos.tranquil = {
     enable = true;
     hostname = "tran.quilling.dev";
@@ -129,10 +130,7 @@ in
         user = "wiki-js";
       };
     };
-    openssh = {
-      enable = true;
-      settings.AllowUsers = [ "agent" ];
-    };
+    openssh.enable = true;
   };
   networking = {
     hostName = "jupiter";
@@ -154,24 +152,6 @@ in
     "a+ /var/lib/nixos-containers/foundryvtt-jeimuzu/var/lib/foundryvtt/Data - - - - u:agent:--x"
     "A+ ${jeiModules} - - - - u:agent:rwX,u:${toString jeiFoundryUid}:rwX,d:u:agent:rwX,d:u:${toString jeiFoundryUid}:rwX"
   ];
-
-  security.polkit = {
-    enable = true;
-    extraConfig = ''
-      polkit.addRule(function (action, subject) {
-        if (action.id != "org.freedesktop.systemd1.manage-units" || subject.user != "agent") {
-          return polkit.Result.NOT_HANDLED;
-        }
-        var unit = action.lookup("unit");
-        var verb = action.lookup("verb");
-        var restartable = ${builtins.toJSON agentUnits};
-        if (restartable.indexOf(unit) >= 0 && ["start", "stop", "restart"].indexOf(verb) >= 0) {
-          return polkit.Result.YES;
-        }
-        return polkit.Result.NOT_HANDLED;
-      });
-    '';
-  };
 
   systemd.services.wiki-js = {
     requires = [ "postgresql.service" ];
@@ -247,20 +227,9 @@ in
     };
   };
 
-  users.groups.agent = { };
   users.users = lib.mkMerge (
     [
       { root.initialHashedPassword = "$2b$05$2ckfv7WhD4dCuDK9DZi1MuDT6lOLJI9xDVZEAze2/sjw0lODXYCh6"; }
-      {
-        agent = {
-          isNormalUser = true;
-          group = "agent";
-          home = "/var/lib/agent";
-          createHome = true;
-          extraGroups = [ "systemd-journal" ];
-          openssh.authorizedKeys.keys = [ agentKey ];
-        };
-      }
     ]
     ++ lib.forEach config.userinfo.users (u: {
       "${u}".initialHashedPassword = "$2b$05$2ckfv7WhD4dCuDK9DZi1MuDT6lOLJI9xDVZEAze2/sjw0lODXYCh6";

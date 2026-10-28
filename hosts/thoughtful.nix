@@ -108,7 +108,6 @@
       pullKeys.bubblegum = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIL3IZpWJ13UifP6520LBn8+DA28XPBycCaupUxMP54m/ root@bubblegum";
     };
     agent = {
-      enable = true;
       hub.enable = true;
       lists = {
         "nixos-config" = [

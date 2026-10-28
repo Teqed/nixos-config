@@ -91,7 +91,6 @@
       bootGrace = 3600;
       resumeGrace = 3600;
     };
-    agent.enable = true;
   };
   networking = {
     hostName = "bubblegum";

@@ -336,10 +336,36 @@ let
 in
 {
   options.teq.nixos.agent = {
-    enable = lib.mkEnableOption "the shared `agent` user: harness launcher, credentials home, mail channel";
+    enable = lib.mkOption {
+      type = lib.types.bool;
+      default = config.teq.nixos.enable;
+      defaultText = lib.literalExpression "config.teq.nixos.enable";
+      description = "The shared `agent` account: a locked-password user that the fleet's agents can reach over SSH.";
+    };
+    harness = {
+      enable = lib.mkOption {
+        type = lib.types.bool;
+        default = config.teq.nixos.gui.enable;
+        defaultText = lib.literalExpression "config.teq.nixos.gui.enable";
+        description = "Install the coding harnesses for `agent` on this host, with their launcher, credentials, shared source tree and mail channel.";
+      };
+    };
     uid = lib.mkOption {
       type = lib.types.int;
       default = 1500;
+    };
+    authorizedKeys = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      default = [
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHn+uE4orHeGUUI+n3EackJ82rcimIEcOVR6RejK6ulf agent@thoughtful"
+      ];
+      description = "Public keys that may log in as `agent` on every host.";
+    };
+    manageUnits = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      default = [ ];
+      example = [ "foundry-relay.service" ];
+      description = "System units `agent` may start, stop and restart through polkit without a password.";
     };
     harnesses = lib.mkOption {
       type = lib.types.listOf lib.types.str;
@@ -355,25 +381,60 @@ in
       default = with pkgs.llm-agents; [
         claude-code
         codex
-        (let
-          albedoPkgs = inputs.albedo.packages.${pkgs.stdenv.hostPlatform.system};
-          pyEnv = pkgs.python3.withPackages (ps: with ps; [
-            dill numpy pandas polars pyarrow duckdb scipy scikit-learn sympy networkx
-            matplotlib seaborn requests httpx beautifulsoup4 lxml pyyaml openpyxl
-            tomli-w xmltodict jsonschema python-dateutil chardet pillow imageio
-            opencv4 pygame rich tqdm pydantic attrs psutil tabulate markdown-it-py
-          ]);
-          usageCore' = albedoPkgs.usageCore.override { zig = pkgs.zig_0_16; };
-          daemon' = albedoPkgs.daemon.override {
-            python311 = pyEnv;
+        (
+          let
+            albedoPkgs = inputs.albedo.packages.${pkgs.stdenv.hostPlatform.system};
+            pyEnv = pkgs.python3.withPackages (
+              ps: with ps; [
+                dill
+                numpy
+                pandas
+                polars
+                pyarrow
+                duckdb
+                scipy
+                scikit-learn
+                sympy
+                networkx
+                matplotlib
+                seaborn
+                requests
+                httpx
+                beautifulsoup4
+                lxml
+                pyyaml
+                openpyxl
+                tomli-w
+                xmltodict
+                jsonschema
+                python-dateutil
+                chardet
+                pillow
+                imageio
+                opencv4
+                pygame
+                rich
+                tqdm
+                pydantic
+                attrs
+                psutil
+                tabulate
+                markdown-it-py
+              ]
+            );
+            usageCore' = albedoPkgs.usageCore.override { zig = pkgs.zig_0_16; };
+            daemon' = albedoPkgs.daemon.override {
+              python311 = pyEnv;
+              usageCore = usageCore';
+            };
+            tui' = albedoPkgs.albedo-client.override { daemon = daemon'; };
+          in
+          albedoPkgs.albedo.override {
+            daemon = daemon';
+            tui = tui';
             usageCore = usageCore';
-          };
-          tui' = albedoPkgs.albedo-client.override { daemon = daemon'; };
-        in albedoPkgs.albedo.override {
-          daemon = daemon';
-          tui = tui';
-          usageCore = usageCore';
-        })
+          }
+        )
       ];
       description = "Packages installed into the agent's profile.";
     };
@@ -503,226 +564,269 @@ in
     };
   };
 
-  config = lib.mkIf cfg.enable (
-    lib.mkMerge [
-      (lib.optionalAttrs (options ? age) {
-        age.secrets =
-          lib.optionalAttrs (hasMailKey && !isHub) (agentSecret "mail-key-agent" mailKeySecret)
-          // lib.optionalAttrs (builtins.pathExists (secretsDir + "/gh-agent.age")) (
-            agentSecret "gh-agent" (secretsDir + "/gh-agent.age")
-          )
-          // fleetSecret "claude-agent"
-          // fleetSecret "codex-auth";
-      })
-      {
-        assertions = [
-          {
-            assertion = !(lib.any (u: (u.uid or null) == cfg.uid) (lib.attrValues otherUsers));
-            message = "teq.nixos.agent: uid ${toString cfg.uid} is already used by another user";
-          }
-          {
-            assertion = !(lib.any (g: (g.gid or null) == cfg.uid) (lib.attrValues otherGroups));
-            message = "teq.nixos.agent: gid ${toString cfg.uid} is already used by another group";
-          }
-          {
-            assertion = !(builtins.elem "agent" (config.nix.settings.trusted-users or [ ]));
-            message = "teq.nixos.agent: agent must not be a Nix trusted user";
-          }
-          {
-            assertion = isHub || cfg.mailKeyFile != null || cfg.proxyKeys == { };
-            message = "teq.nixos.agent: non-hub hosts need mailKeyFile for the agent to reach the hub";
-          }
-          {
-            assertion = lib.all (n: builtins.match "[a-z0-9-]+" n != null) (builtins.attrNames cfg.lists);
-            message = "teq.nixos.agent: list names must match [a-z0-9-]+";
-          }
-        ];
+  config = lib.mkMerge [
+    (lib.mkIf cfg.enable {
+      assertions = [
+        {
+          assertion = !(lib.any (u: (u.uid or null) == cfg.uid) (lib.attrValues otherUsers));
+          message = "teq.nixos.agent: uid ${toString cfg.uid} is already used by another user";
+        }
+        {
+          assertion = !(lib.any (g: (g.gid or null) == cfg.uid) (lib.attrValues otherGroups));
+          message = "teq.nixos.agent: gid ${toString cfg.uid} is already used by another group";
+        }
+        {
+          assertion = !(builtins.elem "agent" (config.nix.settings.trusted-users or [ ]));
+          message = "teq.nixos.agent: agent must not be a Nix trusted user";
+        }
+        {
+          assertion = !isHub || cfg.harness.enable;
+          message = "teq.nixos.agent: the mail hub needs harness.enable";
+        }
+      ];
 
-        users = {
-          groups = {
-            agents.gid = cfg.uid;
-            mail.members = cfg.mailParticipants ++ [ "agent" ];
-          };
-          users = lib.mkMerge [
-            {
-              agent = {
-                isNormalUser = true;
-                inherit (cfg) uid extraGroups;
-                group = "agents";
-                home = agentHome;
-                homeMode = "750";
-                createHome = true;
-                description = "Shared agent identity for coding harnesses";
-                shell = pkgs.bashInteractive;
-                hashedPassword = "!";
-                linger = true;
-                packages = cfg.harnessPackages ++ cfg.extraPackages ++ [ agentMail ];
-              };
+      users = {
+        groups.agents.gid = cfg.uid;
+        users.agent = {
+          isNormalUser = true;
+          inherit (cfg) uid extraGroups;
+          group = "agents";
+          home = agentHome;
+          homeMode = "750";
+          createHome = true;
+          description = "Shared agent identity";
+          shell = pkgs.bashInteractive;
+          hashedPassword = "!";
+          linger = true;
+          openssh.authorizedKeys.keys = cfg.authorizedKeys;
+        };
+      };
+
+      systemd.tmpfiles.rules = [ "d ${agentHome}/.ssh 0700 agent agents -" ];
+
+      services.openssh.settings.AllowUsers = lib.mkIf config.services.openssh.enable [ "agent" ];
+
+      security.polkit = lib.mkIf (cfg.manageUnits != [ ]) {
+        enable = true;
+        extraConfig = ''
+          polkit.addRule(function (action, subject) {
+            if (action.id != "org.freedesktop.systemd1.manage-units" || subject.user != "agent") {
+              return polkit.Result.NOT_HANDLED;
             }
-            (lib.mkIf isHub (lib.mapAttrs (_: keys: { openssh.authorizedKeys.keys = keys; }) proxyKeyEntries))
-            (lib.mkIf cfg.sourceTree.enable (
-              lib.genAttrs cfg.launchers (_: {
-                extraGroups = [ "agents" ];
-              })
-            ))
+            var unit = action.lookup("unit");
+            var verb = action.lookup("verb");
+            var allowed = ${builtins.toJSON cfg.manageUnits};
+            if (allowed.indexOf(unit) >= 0 && ["start", "stop", "restart"].indexOf(verb) >= 0) {
+              return polkit.Result.YES;
+            }
+            return polkit.Result.NOT_HANDLED;
+          });
+        '';
+      };
+    })
+    (lib.mkIf (cfg.enable && cfg.harness.enable) (
+      lib.mkMerge [
+        (lib.optionalAttrs (options ? age) {
+          age.secrets =
+            lib.optionalAttrs (hasMailKey && !isHub) (agentSecret "mail-key-agent" mailKeySecret)
+            // lib.optionalAttrs (builtins.pathExists (secretsDir + "/gh-agent.age")) (
+              agentSecret "gh-agent" (secretsDir + "/gh-agent.age")
+            )
+            // fleetSecret "claude-agent"
+            // fleetSecret "codex-auth";
+        })
+        {
+          assertions = [
+            {
+              assertion = isHub || cfg.mailKeyFile != null || cfg.proxyKeys == { };
+              message = "teq.nixos.agent: non-hub hosts need mailKeyFile for the agent to reach the hub";
+            }
+            {
+              assertion = lib.all (n: builtins.match "[a-z0-9-]+" n != null) (builtins.attrNames cfg.lists);
+              message = "teq.nixos.agent: list names must match [a-z0-9-]+";
+            }
           ];
-        };
 
-        systemd = {
-          tmpfiles.rules = [
-            "d ${agentHome}/.config 0750 agent agents -"
-            "d ${agentHome}/.config/nix 0750 agent agents -"
-            "d ${agentHome}/.config/jj 0750 agent agents -"
-            "f+ ${agentHome}/.config/jj/config.toml 0640 agent agents - [user]\\nname = \"teq\"\\nemail = \"teqed@shatteredsky.net\"\\n"
-            "d ${agentHome}/.config/mbx 0750 agent agents -"
-            "f+ ${agentHome}/.config/mbx/config.toml 0640 agent agents - [target]\\nviews = false\\n"
-            "d ${agentHome}/.agents 0750 agent agents -"
-            "d ${agentHome}/.agents/skills 0750 agent agents -"
-            "d ${agentHome}/.claude 0750 agent agents -"
-            "d ${agentHome}/.claude/skills 0750 agent agents -"
-            "d ${agentHome}/.ssh 0700 agent agents -"
-            "f+ ${agentHome}/.gitconfig 0640 agent agents - [safe]\\n\\tdirectory = *\\n"
-            "f+ ${agentHome}/.curlrc 0640 agent agents - user-agent = \"teq/1.0 (+https://shatteredsky.net; teqed@shatteredsky.net)\"\\n"
-            "d ${agentHome}/.config/git 0750 agent agents -"
-            "f+ ${agentHome}/.config/git/ignore 0640 agent agents - AGENTS.md\\nCLAUDE.md\\n.agents/\\n.claude/\\n.albedo/\\n"
-            "d ${agentHome}/.albedo 0700 agent agents -"
-            "d ${agentHome}/.config/direnv 0750 agent agents -"
-            "L+ ${agentHome}/.config/direnv/direnvrc - - - - ${nixDirenv}/share/nix-direnv/direnvrc"
-          ]
-          ++ lib.concatMap
-            (dir: lib.mapAttrsToList (name: path: "L+ ${agentHome}/${dir}/${name} - - - - ${path}") {
-              reader = "${harnessSkills}/reader";
-              mbx = "${inputs.mr-boxington}/skills/mbx";
-              tg = pkgs.linkFarm "tg-skill" [
-                { name = "SKILL.md"; path = "${inputs.tg}/SKILL.md"; }
-              ];
-            })
-            [ ".claude/skills" ".agents/skills" ]
-          ++ lib.optionals cfg.sourceTree.enable [
-            "d ${srcTree} 2775 root agents -"
-            "a+ ${srcTree} - - - - g:agents:rwx,d:g:agents:rwx"
-            "d ${srcTree}/.claude 2770 agent agents -"
-            "d ${memoryRoot} 2770 agent agents -"
-            "A+ ${srcTree}/.claude - - - - g:agents:rwx,d:g:agents:rwx"
-            "d ${agentHome}/.claude/projects 0750 agent agents -"
-          ]
-          ++ lib.optional (builtins.pathExists ../../../secrets/gh-agent.age) "f+ ${agentHome}/.config/nix/nix.conf 0640 agent agents - !include /run/agenix/gh-agent\\n";
-
-          services.agent-credentials = {
-            description = "Render harness credential files for the agent user from agenix secrets";
-            wantedBy = [ "multi-user.target" ];
-            after = [ "agenix.service" ];
-            serviceConfig = {
-              Type = "oneshot";
-              RemainAfterExit = true;
-            };
-            script = ''
-              set -eu
-              install -d -m 0750 -o agent -g agents ${agentHome}/.codex
-              seed() {
-                if [ -r "$1" ] && [ ! -e "$2" ]; then
-                  ${pkgs.jq}/bin/jq -e . "$1" >/dev/null
-                  install -m 0600 -o agent -g agents "$1" "$2"
-                  echo "seeded $2"
-                fi
-              }
-              seed /run/agenix/codex-auth ${agentHome}/.codex/auth.json
-              if [ -r /run/agenix/gh-agent ]; then
-                install -d -m 0700 -o agent -g agents ${agentHome}/.config/gh
-                token=$(sed -n 's/.*github\.com=\([^ ]*\).*/\1/p' /run/agenix/gh-agent)
-                printf 'github.com:\n    oauth_token: %s\n    git_protocol: https\n' "$token" \
-                  | install -m 0600 -o agent -g agents /dev/stdin ${agentHome}/.config/gh/hosts.yml
-              fi
-            '';
-          };
-
-          slices."user-${toString cfg.uid}".sliceConfig = {
-            CPUWeight = cfg.slice.cpuWeight;
-            MemoryHigh = cfg.slice.memoryHigh;
-          };
-        };
-
-        security = {
-          sudo.extraRules = lib.mkIf config.security.sudo.enable launcherRules;
-          sudo-rs.extraRules = lib.mkIf config.security.sudo-rs.enable launcherRules;
-        };
-
-        environment = {
-          systemPackages = [
-            agentRun
-            launchTest
-            agentMail
-          ]
-          ++ lib.optional cfg.sourceTree.enable srcAdopt
-          ++ map harnessWrapper cfg.harnesses;
-          etc."agent-mail/config.json".source = agentMailConfig;
-          etc."claude-code/managed-settings.json".source = managedSettings;
-          persistence = lib.mkIf config.teq.nixos.impermanence.enable {
-            "/persist".users = lib.mkIf isHub (
-              lib.genAttrs cfg.mailParticipants (_: {
-                directories = [ "Maildir" ];
-              })
-            );
-            "/persist".directories = lib.mkIf cfg.sourceTree.enable [
+          users = {
+            groups.mail.members = cfg.mailParticipants ++ [ "agent" ];
+            users = lib.mkMerge [
               {
-                directory = srcTree;
-                user = "root";
-                group = "agents";
-                mode = "2775";
+                agent = {
+                  packages = cfg.harnessPackages ++ cfg.extraPackages ++ [ agentMail ];
+                };
               }
+              (lib.mkIf isHub (lib.mapAttrs (_: keys: { openssh.authorizedKeys.keys = keys; }) proxyKeyEntries))
+              (lib.mkIf cfg.sourceTree.enable (
+                lib.genAttrs cfg.launchers (_: {
+                  extraGroups = [ "agents" ];
+                })
+              ))
             ];
           };
-        };
 
-        services.openssh.settings.AllowUsers = lib.mkIf isHub [ "agent" ];
+          systemd = {
+            tmpfiles.rules = [
+              "d ${agentHome}/.config 0750 agent agents -"
+              "d ${agentHome}/.config/nix 0750 agent agents -"
+              "d ${agentHome}/.config/jj 0750 agent agents -"
+              "f+ ${agentHome}/.config/jj/config.toml 0640 agent agents - [user]\\nname = \"teq\"\\nemail = \"teqed@shatteredsky.net\"\\n"
+              "d ${agentHome}/.config/mbx 0750 agent agents -"
+              "f+ ${agentHome}/.config/mbx/config.toml 0640 agent agents - [target]\\nviews = false\\n"
+              "d ${agentHome}/.agents 0750 agent agents -"
+              "d ${agentHome}/.agents/skills 0750 agent agents -"
+              "d ${agentHome}/.claude 0750 agent agents -"
+              "d ${agentHome}/.claude/skills 0750 agent agents -"
+              "f+ ${agentHome}/.gitconfig 0640 agent agents - [safe]\\n\\tdirectory = *\\n"
+              "f+ ${agentHome}/.curlrc 0640 agent agents - user-agent = \"teq/1.0 (+https://shatteredsky.net; teqed@shatteredsky.net)\"\\n"
+              "d ${agentHome}/.config/git 0750 agent agents -"
+              "f+ ${agentHome}/.config/git/ignore 0640 agent agents - AGENTS.md\\nCLAUDE.md\\n.agents/\\n.claude/\\n.albedo/\\n"
+              "d ${agentHome}/.albedo 0700 agent agents -"
+              "d ${agentHome}/.config/direnv 0750 agent agents -"
+              "L+ ${agentHome}/.config/direnv/direnvrc - - - - ${nixDirenv}/share/nix-direnv/direnvrc"
+            ]
+            ++
+              lib.concatMap
+                (
+                  dir:
+                  lib.mapAttrsToList (name: path: "L+ ${agentHome}/${dir}/${name} - - - - ${path}") {
+                    reader = "${harnessSkills}/reader";
+                    mbx = "${inputs.mr-boxington}/skills/mbx";
+                    tg = pkgs.linkFarm "tg-skill" [
+                      {
+                        name = "SKILL.md";
+                        path = "${inputs.tg}/SKILL.md";
+                      }
+                    ];
+                  }
+                )
+                [
+                  ".claude/skills"
+                  ".agents/skills"
+                ]
+            ++ lib.optionals cfg.sourceTree.enable [
+              "d ${srcTree} 2775 root agents -"
+              "a+ ${srcTree} - - - - g:agents:rwx,d:g:agents:rwx"
+              "d ${srcTree}/.claude 2770 agent agents -"
+              "d ${memoryRoot} 2770 agent agents -"
+              "A+ ${srcTree}/.claude - - - - g:agents:rwx,d:g:agents:rwx"
+              "d ${agentHome}/.claude/projects 0750 agent agents -"
+            ]
+            ++ lib.optional (builtins.pathExists ../../../secrets/gh-agent.age) "f+ ${agentHome}/.config/nix/nix.conf 0640 agent agents - !include /run/agenix/gh-agent\\n";
 
-        programs.git = lib.mkIf cfg.sourceTree.enable {
-          enable = true;
-          config = {
-            safe.directory = [ "${srcTree}/*" ];
-            includeIf."gitdir:${srcTree}/".path =
-              pkgs.writeText "gitconfig-shared" "[core]\n\tsharedRepository = group\n";
-          };
-        };
+            services.agent-credentials = {
+              description = "Render harness credential files for the agent user from agenix secrets";
+              wantedBy = [ "multi-user.target" ];
+              after = [ "agenix.service" ];
+              serviceConfig = {
+                Type = "oneshot";
+                RemainAfterExit = true;
+              };
+              script = ''
+                set -eu
+                install -d -m 0750 -o agent -g agents ${agentHome}/.codex
+                seed() {
+                  if [ -r "$1" ] && [ ! -e "$2" ]; then
+                    ${pkgs.jq}/bin/jq -e . "$1" >/dev/null
+                    install -m 0600 -o agent -g agents "$1" "$2"
+                    echo "seeded $2"
+                  fi
+                }
+                seed /run/agenix/codex-auth ${agentHome}/.codex/auth.json
+                if [ -r /run/agenix/gh-agent ]; then
+                  install -d -m 0700 -o agent -g agents ${agentHome}/.config/gh
+                  token=$(sed -n 's/.*github\.com=\([^ ]*\).*/\1/p' /run/agenix/gh-agent)
+                  printf 'github.com:\n    oauth_token: %s\n    git_protocol: https\n' "$token" \
+                    | install -m 0600 -o agent -g agents /dev/stdin ${agentHome}/.config/gh/hosts.yml
+                fi
+              '';
+            };
 
-        services.postfix = lib.mkIf isHub {
-          enable = true;
-          enableSmtp = false;
-          enableSubmission = false;
-          setSendmail = true;
-          settings.main = {
-            myhostname = cfg.hub.host;
-            mydomain = cfg.hub.host;
-            myorigin = cfg.hub.host;
-            mydestination = [
-              cfg.hub.host
-              "localhost"
-              "localhost.localdomain"
-            ];
-            mynetworks = [ "127.0.0.0/8" ];
-            mailbox_command = "${agentMail}/bin/agent-mail-deliver $RECIPIENT";
-            recipient_delimiter = "+";
-            inet_interfaces = "loopback-only";
-            smtp_dns_support_level = "disabled";
-            message_size_limit = 10240000;
-            agentmail_destination_recipient_limit = 1;
+            slices."user-${toString cfg.uid}".sliceConfig = {
+              CPUWeight = cfg.slice.cpuWeight;
+              MemoryHigh = cfg.slice.memoryHigh;
+            };
           };
-          extraAliases = lib.concatStringsSep "\n" aliasLines;
-          transport = "agent@${cfg.hub.host} agentmail:";
-          settings.master.agentmail = {
-            type = "unix";
-            private = true;
-            privileged = true;
-            command = "pipe";
-            args = [
-              "flags=R"
-              "user=agent:agents"
-              "argv=${agentMail}/bin/agent-mail-deliver"
-              "\${mailbox}@\${domain}"
-            ];
+
+          security = {
+            sudo.extraRules = lib.mkIf config.security.sudo.enable launcherRules;
+            sudo-rs.extraRules = lib.mkIf config.security.sudo-rs.enable launcherRules;
           };
-        };
-      }
-    ]
-  );
+
+          environment = {
+            systemPackages = [
+              agentRun
+              launchTest
+              agentMail
+            ]
+            ++ lib.optional cfg.sourceTree.enable srcAdopt
+            ++ map harnessWrapper cfg.harnesses;
+            etc."agent-mail/config.json".source = agentMailConfig;
+            etc."claude-code/managed-settings.json".source = managedSettings;
+            persistence = lib.mkIf config.teq.nixos.impermanence.enable {
+              "/persist".users = lib.mkIf isHub (
+                lib.genAttrs cfg.mailParticipants (_: {
+                  directories = [ "Maildir" ];
+                })
+              );
+              "/persist".directories = lib.mkIf cfg.sourceTree.enable [
+                {
+                  directory = srcTree;
+                  user = "root";
+                  group = "agents";
+                  mode = "2775";
+                }
+              ];
+            };
+          };
+
+          programs.git = lib.mkIf cfg.sourceTree.enable {
+            enable = true;
+            config = {
+              safe.directory = [ "${srcTree}/*" ];
+              includeIf."gitdir:${srcTree}/".path =
+                pkgs.writeText "gitconfig-shared" "[core]\n\tsharedRepository = group\n";
+            };
+          };
+
+          services.postfix = lib.mkIf isHub {
+            enable = true;
+            enableSmtp = false;
+            enableSubmission = false;
+            setSendmail = true;
+            settings.main = {
+              myhostname = cfg.hub.host;
+              mydomain = cfg.hub.host;
+              myorigin = cfg.hub.host;
+              mydestination = [
+                cfg.hub.host
+                "localhost"
+                "localhost.localdomain"
+              ];
+              mynetworks = [ "127.0.0.0/8" ];
+              mailbox_command = "${agentMail}/bin/agent-mail-deliver $RECIPIENT";
+              recipient_delimiter = "+";
+              inet_interfaces = "loopback-only";
+              smtp_dns_support_level = "disabled";
+              message_size_limit = 10240000;
+              agentmail_destination_recipient_limit = 1;
+            };
+            extraAliases = lib.concatStringsSep "\n" aliasLines;
+            transport = "agent@${cfg.hub.host} agentmail:";
+            settings.master.agentmail = {
+              type = "unix";
+              private = true;
+              privileged = true;
+              command = "pipe";
+              args = [
+                "flags=R"
+                "user=agent:agents"
+                "argv=${agentMail}/bin/agent-mail-deliver"
+                "\${mailbox}@\${domain}"
+              ];
+            };
+          };
+        }
+      ]
+    ))
+  ];
 }
