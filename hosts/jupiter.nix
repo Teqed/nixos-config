@@ -286,8 +286,6 @@ in
         "xhci_pci"
         "virtio_scsi"
       ];
-
-      systemd.enable = true;
     };
   };
   environment.systemPackages = map lib.lowPrio [

@@ -47,11 +47,11 @@
         "usage-core": "usage-core"
       },
       "locked": {
-        "lastModified": 1793083858,
-        "narHash": "sha256-H5akTNNrt4jLIjmIBNbkQ+J3oBS3UNtIoM2uBcNHnFk=",
+        "lastModified": 1793145506,
+        "narHash": "sha256-4aC6siS9T6cgS/itV6uDLQvoZQ3ypx66U41rHeOIz00=",
         "ref": "refs/heads/main",
-        "rev": "5d02ccba1012efaabf949311ee019cd00c9ad85c",
-        "revCount": 1150,
+        "rev": "9e7b2c76fb6575d4328dd7e67df9b21cef74efbd",
+        "revCount": 1171,
         "type": "git",
         "url": "https://tangled.org/okami.mom/albedo"
       },
@@ -411,11 +411,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1793033486,
-        "narHash": "sha256-fXVURa0+CSCgaxLt8tmPNJq2U+fGYOwbk5j2YUe7kSc=",
+        "lastModified": 1793124281,
+        "narHash": "sha256-KdGTOgYXgMDA/ymTV10yLMt9tOjz9EmTgnTvaD+bhe4=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "7db163b2aee7e410e396b48aed02f646d742b9b8",
+        "rev": "1e3ebeb683d055d1675d3f64e6d2b186cb2ee504",
         "type": "github"
       },
       "original": {
@@ -541,11 +541,11 @@
         "treefmt-nix": "treefmt-nix_2"
       },
       "locked": {
-        "lastModified": 1793076623,
-        "narHash": "sha256-bfI04e2dsG3H316poDdpTzUS6uFI43aTWNgYYXkn32U=",
+        "lastModified": 1793142375,
+        "narHash": "sha256-PKsO8cr8AfjPCGAFBn5EidUqZxJaxqlbP7lM9VggWNE=",
         "owner": "numtide",
         "repo": "llm-agents.nix",
-        "rev": "eaf48f8e126668eebc3eb13e43b18368a4330d95",
+        "rev": "959a6e37234ae40e3ae6d4c9a564ec1a8803ccf9",
         "type": "github"
       },
       "original": {
@@ -620,11 +620,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1793048022,
-        "narHash": "sha256-2PH39Z3wklQ4/dKXlVw0FaCwBi9LdwYaXi18v7CXuUk=",
+        "lastModified": 1793147696,
+        "narHash": "sha256-Vguc23oruiVPbqCk8hx/iUdxHCWatXRsAI575tzW8LE=",
         "owner": "jdx",
         "repo": "mr-boxington",
-        "rev": "6f8625155599391e1d9a88179cc4e9bcf3afc82e",
+        "rev": "25221b7f096fa0f0563849721f7942c9f111d0eb",
         "type": "github"
       },
       "original": {
@@ -789,11 +789,11 @@
     },
     "nixpkgs_3": {
       "locked": {
-        "lastModified": 1792773339,
-        "narHash": "sha256-rZLrzrC6i+jnTAlvPZHogKDulY7WWDEv9hJeHieO7Zw=",
+        "lastModified": 1793110635,
+        "narHash": "sha256-dhoW6VgFWlaodSY5jrBn+CF2FLmaUvDVgM7+C7T2+NM=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "3ec636362e1816bc2f0888fa0fa2c69f1bc9e504",
+        "rev": "31ecbaca1bdefa45dffc409f0250bd8039ea0010",
         "type": "github"
       },
       "original": {
@@ -1113,11 +1113,11 @@
         "uv2nix": "uv2nix"
       },
       "locked": {
-        "lastModified": 1792530279,
-        "narHash": "sha256-7sodcwopXA/mZ7Kg5V0jSrU2TSlr8t9Bm91Ux1yucs8=",
+        "lastModified": 1793126557,
+        "narHash": "sha256-rSZUy2qMxWgT3TM6EM6/xea8wGok/DMkDRzsKNnXdnE=",
         "ref": "refs/heads/master",
-        "rev": "574886841ecb07f16adc027be7db8496f340737e",
-        "revCount": 173,
+        "rev": "137d1cdf362576436e45b56cd7a46e522aacf251",
+        "revCount": 174,
         "type": "git",
         "url": "https://tangled.org/aly.codes/tg"
       },
