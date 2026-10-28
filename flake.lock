@@ -47,11 +47,11 @@
         "usage-core": "usage-core"
       },
       "locked": {
-        "lastModified": 1793145506,
-        "narHash": "sha256-4aC6siS9T6cgS/itV6uDLQvoZQ3ypx66U41rHeOIz00=",
+        "lastModified": 1793168906,
+        "narHash": "sha256-jzneIWf5Vx1vT6S9DZIOEDIYhNZJPiBers/u0F137cQ=",
         "ref": "refs/heads/main",
-        "rev": "9e7b2c76fb6575d4328dd7e67df9b21cef74efbd",
-        "revCount": 1171,
+        "rev": "2d0fac2cc4ff4bbd28b422dd1dd53e0ad81aa4a6",
+        "revCount": 1180,
         "type": "git",
         "url": "https://tangled.org/okami.mom/albedo"
       },
@@ -541,11 +541,11 @@
         "treefmt-nix": "treefmt-nix_2"
       },
       "locked": {
-        "lastModified": 1793142375,
-        "narHash": "sha256-PKsO8cr8AfjPCGAFBn5EidUqZxJaxqlbP7lM9VggWNE=",
+        "lastModified": 1793167323,
+        "narHash": "sha256-JxeqQKUhBn5kj6xfE4nIrxw/q3jFJyT+TKc8mLsnuhc=",
         "owner": "numtide",
         "repo": "llm-agents.nix",
-        "rev": "959a6e37234ae40e3ae6d4c9a564ec1a8803ccf9",
+        "rev": "91ff550fe42d4dd51dcf8b6bad87a0134fe7f314",
         "type": "github"
       },
       "original": {
