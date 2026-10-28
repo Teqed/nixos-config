@@ -33,6 +33,15 @@ in
       type = lib.types.attrsOf lib.types.str;
       default = { };
     };
+    watchdog = {
+      enable = lib.mkEnableOption "a timer that restarts the relay when its client list stops answering" // {
+        default = true;
+      };
+      clientId = lib.mkOption {
+        type = lib.types.str;
+        default = "foundry-krune";
+      };
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -62,6 +71,8 @@ in
         DISABLE_REGISTRATION = lib.boolToString (!cfg.allowRegistration);
         PER_MINUTE_REQUEST_LIMIT = "0";
         MONTHLY_REQUEST_LIMIT = "0";
+        HEADLESS_SESSION_TIMEOUT = "0";
+        CAPTURE_BROWSER_CONSOLE = "warn";
       }
       // cfg.environment;
       serviceConfig = {
@@ -97,6 +108,52 @@ in
         CapabilityBoundingSet = "";
         AmbientCapabilities = "";
         UMask = "0077";
+      };
+    };
+
+    systemd.services.foundry-relay-watchdog = lib.mkIf cfg.watchdog.enable {
+      description = "Restart the Foundry relay when its client list hangs";
+      after = [ "foundry-relay.service" ];
+      serviceConfig.Type = "oneshot";
+      path = [
+        pkgs.curl
+        pkgs.coreutils
+        config.systemd.package
+      ];
+      script = ''
+        base=http://127.0.0.1:${toString cfg.port}
+        strikes=/run/foundry-relay-watchdog.strikes
+
+        systemctl is-active -q foundry-relay || exit 0
+        started=$(systemctl show foundry-relay -p ActiveEnterTimestampMonotonic --value)
+        up=$(cut -d. -f1 /proc/uptime)
+        [ $(( up - started / 1000000 )) -lt 180 ] && exit 0
+
+        curl -s -o /dev/null -m 5 "$base/api/status" || exit 0
+
+        if curl -s -o /dev/null -m 5 "$base/api/clients/${cfg.watchdog.clientId}/active"; then
+          rm -f "$strikes"
+          exit 0
+        fi
+
+        n=$(( $(cat "$strikes" 2>/dev/null || echo 0) + 1 ))
+        echo "$n" > "$strikes"
+        echo "client-list probe timed out (strike $n)"
+        [ "$n" -lt 2 ] && exit 0
+
+        rm -f "$strikes"
+        echo "relay frozen: sending SIGQUIT for a stack dump, then restarting"
+        systemctl kill -s QUIT foundry-relay || true
+        sleep 10
+        systemctl is-active -q foundry-relay || systemctl restart foundry-relay
+      '';
+    };
+    systemd.timers.foundry-relay-watchdog = lib.mkIf cfg.watchdog.enable {
+      wantedBy = [ "timers.target" ];
+      timerConfig = {
+        OnBootSec = "5min";
+        OnUnitActiveSec = "1min";
+        AccuracySec = "10s";
       };
     };
 
