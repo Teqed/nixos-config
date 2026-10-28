@@ -54,6 +54,7 @@ def record_success(path, now=None):
         json.dump({"version": 1, "success": time.time() if now is None else now}, output)
         output.flush()
         os.fsync(output.fileno())
+    os.chmod(temporary, 0o644)
     os.replace(temporary, path)
 
 

@@ -306,7 +306,9 @@ class ReportDeliveryTests(unittest.TestCase):
     def test_delivery_writes_version_2_after_post(self):
         with tempfile.TemporaryDirectory() as directory:
             state = Path(directory) / 'delivered.json'
-            self.deliver(state, doc([res('disk', 1)]), {'return_value': FakeResponse(b'')})
+            with patch.object(report.urllib.request, 'urlopen', return_value=FakeResponse(b'')) as post:
+                self.deliver(state, doc([res('disk', 1)]), {'new': post})
+            self.assertEqual(post.call_args[0][0].get_header('User-agent'), 'flake-health')
             saved = json.loads(state.read_text())
             self.assertEqual((saved['version'], set(saved['incidents'])), (2, {'disk'}))
 
@@ -604,6 +606,7 @@ class JobFreshnessTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / 'success.json'
             job.record_success(path, 100)
+            self.assertEqual(path.stat().st_mode & 0o777, 0o644)
             job.record_success(path, 200)
             self.assertEqual(json.loads(path.read_text()), {'version': 1, 'success': 200})
 

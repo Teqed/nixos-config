@@ -96,7 +96,8 @@ def deliver(args, state_file):
         return
     request = urllib.request.Request(
         os.environ["NTFY_URL"].rstrip("/") + "/" + os.environ["NTFY_TOPIC"],
-        data=body.encode(), headers={"Title": title, "Priority": "high" if level == 2 else "default"})
+        data=body.encode(), headers={"Title": title, "Priority": "high" if level == 2 else "default",
+                                     "User-Agent": "flake-health"})
     with urllib.request.urlopen(request, timeout=30) as response:
         response.read()
     with tempfile.NamedTemporaryFile(mode="w", dir=state_file.parent, delete=False) as output:
