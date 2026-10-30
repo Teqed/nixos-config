@@ -47,11 +47,11 @@
         "usage-core": "usage-core"
       },
       "locked": {
-        "lastModified": 1793200634,
-        "narHash": "sha256-Jk7Y4aeNIZ9GG5PV5BQ+RcbHebrGEJC4i5MWcEGQC/E=",
+        "lastModified": 1793341669,
+        "narHash": "sha256-pLHWzGjGOYiz8J6kUoy9n3IEueZ0mqgItFXzsfuhRCw=",
         "ref": "refs/heads/main",
-        "rev": "a981333c63b5048dda6c894b2f872263ed138a3a",
-        "revCount": 1193,
+        "rev": "0ccda32b2bb76a255cd69ba6b55daf6df4a9dfc0",
+        "revCount": 1305,
         "type": "git",
         "url": "https://tangled.org/okami.mom/albedo"
       },
@@ -469,6 +469,38 @@
         "url": "https://cdn.jsdelivr.net/npm/htmx-ext-ws@2.0.4"
       }
     },
+    "hydrant": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1792544679,
+        "narHash": "sha256-fm0cuIyHjJTSvleJyLbT4E5KugtanuysL/oMOnGhN3I=",
+        "ref": "refs/heads/main",
+        "rev": "0128352f6b73d26e7ffaa5a79446ef556e452617",
+        "revCount": 811,
+        "type": "git",
+        "url": "https://tangled.org/ptr.pet/hydrant"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://tangled.org/ptr.pet/hydrant"
+      }
+    },
+    "hydrant-dev": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1792544679,
+        "narHash": "sha256-fm0cuIyHjJTSvleJyLbT4E5KugtanuysL/oMOnGhN3I=",
+        "ref": "refs/heads/main",
+        "rev": "0128352f6b73d26e7ffaa5a79446ef556e452617",
+        "revCount": 811,
+        "type": "git",
+        "url": "https://tangled.org/ptr.pet/hydrant"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://tangled.org/ptr.pet/hydrant"
+      }
+    },
     "ibm-plex-mono-src": {
       "flake": false,
       "locked": {
@@ -541,11 +573,11 @@
         "treefmt-nix": "treefmt-nix_2"
       },
       "locked": {
-        "lastModified": 1793253278,
-        "narHash": "sha256-5jSsyYgEatNgAexLkvDUgN7P9vUIayHWyZVy7a50fsg=",
+        "lastModified": 1793337267,
+        "narHash": "sha256-HiJivFTcq8no0L9bac+3MkaPeFy5gP+LLQMZXQNo5O8=",
         "owner": "numtide",
         "repo": "llm-agents.nix",
-        "rev": "9c622ec005a9bb0a3f4b9098b395670484b05ccd",
+        "rev": "467c27cb367fa1059583bcadf28390611f66550b",
         "type": "github"
       },
       "original": {
@@ -620,11 +652,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1793217579,
-        "narHash": "sha256-WMtrf4h9B4H80cGgqO19xSpLUrq3MaPvqsbt5+dC3PI=",
+        "lastModified": 1793308582,
+        "narHash": "sha256-Zkc7P8k5uA34dRNrta4+86ZtKVpOvRWswrx75HKSpzk=",
         "owner": "jdx",
         "repo": "mr-boxington",
-        "rev": "14ce94d8db352d0f39c5d02786e20ba5a394a680",
+        "rev": "7b41d39b00da02623a22fd8572f591957579fb7c",
         "type": "github"
       },
       "original": {
@@ -640,11 +672,11 @@
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1793224526,
-        "narHash": "sha256-xwPUM1oOMNXBa6Zq9XnE0ANLf0ljvbCxxJcYz/2SiY4=",
+        "lastModified": 1793311259,
+        "narHash": "sha256-2Cs9aEZlLlRsm8Kcj/ZGgEmlGLOEnFkk2X+bCVg4PW0=",
         "owner": "xddxdd",
         "repo": "nix-cachyos-kernel",
-        "rev": "2a991e7302d8dcf5a50e8bd4b5cb27f3a6a2dc82",
+        "rev": "baa4163a89b8c008039dc115ca225507d706b769",
         "type": "github"
       },
       "original": {
@@ -771,13 +803,29 @@
         "type": "github"
       }
     },
+    "nixpkgs-pds": {
+      "locked": {
+        "lastModified": 1791734076,
+        "narHash": "sha256-i5qk1kLiit98rRbh1AXmWBNT9QXC/y4l5Wk/u5EdpDQ=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "7fd4004d0511991fff3a0524856a9be09e28c5f0",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "nixpkgs_2": {
       "locked": {
-        "lastModified": 1793204185,
-        "narHash": "sha256-E4e9bM6FFBaaxGVlR7AfX/mHjpaUEL/Zw9vn6Ft1ZSE=",
+        "lastModified": 1793232920,
+        "narHash": "sha256-0EEFdP+1O6Sfxzm7vqn9/i2Jqe2b3rQSvRhm0JHBV+g=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "679429ff581232d6927f59c362bd670c40b2fcdb",
+        "rev": "715d20f576d746adbf5a871ed37e6e3ee4b280e2",
         "type": "github"
       },
       "original": {
@@ -1057,6 +1105,8 @@
         "hls-src": "hls-src",
         "htmx-src": "htmx-src",
         "htmx-ws-src": "htmx-ws-src",
+        "hydrant": "hydrant",
+        "hydrant-dev": "hydrant-dev",
         "ibm-plex-mono-src": "ibm-plex-mono-src",
         "indigo": "indigo",
         "inter-fonts-src": "inter-fonts-src",
@@ -1067,15 +1117,17 @@
         "nixpkgs": [
           "nixpkgs"
         ],
+        "nixpkgs-pds": "nixpkgs-pds",
         "sqlite-lib-src": "sqlite-lib-src",
-        "tailwindcss-animated-src": "tailwindcss-animated-src"
+        "tailwindcss-animated-src": "tailwindcss-animated-src",
+        "timeless-fonts-src": "timeless-fonts-src"
       },
       "locked": {
-        "lastModified": 1792561894,
-        "narHash": "sha256-Pu6e390+jD9olkxZGYDjto6t+juUjfwcxx2zFYyq8f4=",
+        "lastModified": 1793322901,
+        "narHash": "sha256-ls623ueJwU4y9PCarSpvZ4DxkBPcOBelpu1rCulUd9c=",
         "ref": "refs/heads/master",
-        "rev": "12ebb0c96f615a31991c20a144bf08b146bfcabd",
-        "revCount": 3264,
+        "rev": "db269aa5886dbc98c42010fd9d15f5e60a341f65",
+        "revCount": 6019,
         "type": "git",
         "url": "https://tangled.org/@tangled.org/core"
       },
@@ -1113,17 +1165,30 @@
         "uv2nix": "uv2nix"
       },
       "locked": {
-        "lastModified": 1793126557,
-        "narHash": "sha256-rSZUy2qMxWgT3TM6EM6/xea8wGok/DMkDRzsKNnXdnE=",
+        "lastModified": 1793301292,
+        "narHash": "sha256-/CEkvZpDnfS4K/yjBX0w0P/l1Gr2a2WAkU50ttcNs5c=",
         "ref": "refs/heads/master",
-        "rev": "137d1cdf362576436e45b56cd7a46e522aacf251",
-        "revCount": 174,
+        "rev": "1d013b170ade55fcfda8ed73535b67b0c7eff441",
+        "revCount": 182,
         "type": "git",
         "url": "https://tangled.org/aly.codes/tg"
       },
       "original": {
         "type": "git",
         "url": "https://tangled.org/aly.codes/tg"
+      }
+    },
+    "timeless-fonts-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1791052084,
+        "narHash": "sha256-zYpoDkE/YrICzYaHF4/NSuINczFWB41YymTxaL6KqLY=",
+        "type": "tarball",
+        "url": "https://media.timeless.co/type/Timeless-Type-Family-1.094.zip"
+      },
+      "original": {
+        "type": "tarball",
+        "url": "https://media.timeless.co/type/Timeless-Type-Family-1.094.zip"
       }
     },
     "tranquil": {
