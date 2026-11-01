@@ -31,11 +31,11 @@
         "usage-core": "usage-core"
       },
       "locked": {
-        "lastModified": 1793396900,
-        "narHash": "sha256-JpGzgF2HCRqQzWqAmLe0ON2UORsoQs+V+jZcCBaR3Jg=",
+        "lastModified": 1793501124,
+        "narHash": "sha256-8JjOqh5HUt0gDa4ZR6hqBO5cBywPzjdGEjEvAkrxjo8=",
         "ref": "refs/heads/main",
-        "rev": "f086d4b455d0fd7c844de366b67fca9df95201b0",
-        "revCount": 1367,
+        "rev": "71f94bb4052c1d388b736e490d64d33c103ae8fd",
+        "revCount": 1440,
         "type": "git",
         "url": "https://tangled.org/okami.mom/albedo"
       },
@@ -508,11 +508,11 @@
         "treefmt-nix": "treefmt-nix_2"
       },
       "locked": {
-        "lastModified": 1793429632,
-        "narHash": "sha256-as+Ue5OQyPXaA9myksf2YOhTtHONATTFFjbmumxKW2M=",
+        "lastModified": 1793512069,
+        "narHash": "sha256-i4UBJIugcPJxG4xKnlsypbTb8QfPX+kagQYF9oswO/c=",
         "owner": "numtide",
         "repo": "llm-agents.nix",
-        "rev": "c16784396ad0473d85e058caf0f148d6856c4822",
+        "rev": "8efcba308a6b12a92441cb4df624e484bad9e18a",
         "type": "github"
       },
       "original": {
@@ -550,11 +550,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1793405184,
-        "narHash": "sha256-mm672S1+pdhGfkc4l4nIRdk/E6A4sxcNZvD6u4OPbdU=",
+        "lastModified": 1793488352,
+        "narHash": "sha256-BQ/xx8g8uWLw6+e0fkYhsvPGH4vGj+rLNkwcJ1nGZ88=",
         "owner": "jdx",
         "repo": "mr-boxington",
-        "rev": "3004f4f1e90be3abe11b553540054455b767ee45",
+        "rev": "05c7b43ff7c8b8b917bcb2041229b2b82db3caa4",
         "type": "github"
       },
       "original": {
@@ -999,11 +999,11 @@
         "timeless-fonts-src": "timeless-fonts-src"
       },
       "locked": {
-        "lastModified": 1793429833,
-        "narHash": "sha256-Rr55fFmKluRWSBsU10sVQ0vTkxWfyHVbyb+0H07L8HA=",
+        "lastModified": 1793517722,
+        "narHash": "sha256-XLnfgqYs8I1ttvbv3GzU1nshPmBLCwWmJgiV/fOdbGI=",
         "ref": "refs/heads/master",
-        "rev": "d484fa26d9bc55b10a101d84e864f7c9d72b949c",
-        "revCount": 6071,
+        "rev": "7792426d56796a4e48b9878bcd40bb3c5df85f8c",
+        "revCount": 6131,
         "type": "git",
         "url": "https://tangled.org/@tangled.org/core"
       },
