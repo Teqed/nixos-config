@@ -422,17 +422,12 @@ in
                 markdown-it-py
               ]
             );
-            usageCore' = albedoPkgs.usageCore.override { zig = pkgs.zig_0_16; };
-            daemon' = albedoPkgs.daemon.override {
-              python311 = pyEnv;
-              usageCore = usageCore';
-            };
+            daemon' = albedoPkgs.daemon.override { python311 = pyEnv; };
             tui' = albedoPkgs.albedo-client.override { daemon = daemon'; };
           in
           albedoPkgs.albedo.override {
             daemon = daemon';
             tui = tui';
-            usageCore = usageCore';
           }
         )
       ];

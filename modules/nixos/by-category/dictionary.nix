@@ -11,7 +11,7 @@
       "/share/myspell/dicts"
     ];
     environment.systemPackages = with pkgs; [
-      ltex-ls
+      ltex-ls-plus
       nuspell
       aspell
       aspellDicts.en
