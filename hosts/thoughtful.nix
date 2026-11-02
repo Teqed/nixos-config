@@ -158,9 +158,17 @@
       }
     ];
   };
-  systemd.services.qbittorrent.vpnConfinement = {
-    enable = true;
-    vpnNamespace = "wg";
+  systemd.services = {
+    qbittorrent.vpnConfinement = {
+      enable = true;
+      vpnNamespace = "wg";
+    };
+    spindle.preStart = ''
+      if [ ! -s ${config.services.tangled.spindle.keyPath} ]; then
+        umask 077
+        ${lib.getExe pkgs.openssl} ecparam -name prime256v1 -genkey -noout -out ${config.services.tangled.spindle.keyPath}
+      fi
+    '';
   };
 
   services = {
@@ -230,6 +238,8 @@
     tangled.spindle = {
       enable = true;
       package = inputs.tangled-core.packages.${pkgs.stdenv.hostPlatform.system}.spindle;
+      keyPath = "/var/lib/spindle/spindle-key.pem";
+      contact.email = "teqed@shatteredsky.net";
       server = {
         hostname = "spindle.shatteredsky.net";
         owner = "did:plc:jrtgsidnmxaen4offglr5lsh";
