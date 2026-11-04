@@ -77,7 +77,6 @@ in
         at-spi2-atk
         at-spi2-core
         glib
-        gtk2
         gtk3
         libGL
         libappindicator-gtk3
