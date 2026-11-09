@@ -23,6 +23,7 @@
     "albedo": {
       "inputs": {
         "flake-parts": "flake-parts",
+        "home-manager": "home-manager",
         "nixpkgs": [
           "nixpkgs"
         ],
@@ -31,11 +32,11 @@
         "usage-core": "usage-core"
       },
       "locked": {
-        "lastModified": 1794119175,
-        "narHash": "sha256-B6EKho2872kUnUu1EEAhM+mKPrL/kzW/wwFgJ05Er58=",
+        "lastModified": 1794192522,
+        "narHash": "sha256-4BZPm5HeB3nEQfTFlDf4P1Yn2+97fI6i2kKCe6TU0YI=",
         "ref": "refs/heads/main",
-        "rev": "b81e27bdd75b3d649a41c6d1e39cd8fe3aa505cd",
-        "revCount": 1790,
+        "rev": "a7faad3b5e9b2bbb16608715a832c853f3c8fa6b",
+        "revCount": 1805,
         "type": "git",
         "url": "https://tangled.org/okami.mom/albedo"
       },
@@ -319,11 +320,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1787480085,
-        "narHash": "sha256-5+tysEBBKJ4BD37yDdjlMX60MLoE9giHezdLcWSlhpw=",
+        "lastModified": 1794172055,
+        "narHash": "sha256-B3jjBr6nPjyiiQpVjQN0opU9XH8HMEG39obNFlsuFG0=",
         "owner": "reckenrode",
         "repo": "nix-foundryvtt",
-        "rev": "2f1ce6e4dfd2b4379179a118c70ebd6931d22e61",
+        "rev": "f20f57bb17e9b98e54cffa1f63f1dacc018d5eda",
         "type": "github"
       },
       "original": {
@@ -379,6 +380,7 @@
     "home-manager": {
       "inputs": {
         "nixpkgs": [
+          "albedo",
           "nixpkgs"
         ]
       },
@@ -397,6 +399,26 @@
       }
     },
     "home-manager_2": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1793979366,
+        "narHash": "sha256-7OoWDsYO9teiPxl0QdlS5lYE20Pue8/5mpscSL32FUA=",
+        "owner": "nix-community",
+        "repo": "home-manager",
+        "rev": "2c0c1f01521469cf0271180c453c79782d53c2f6",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "home-manager",
+        "type": "github"
+      }
+    },
+    "home-manager_3": {
       "inputs": {
         "nixpkgs": [
           "impermanence",
@@ -464,7 +486,7 @@
     },
     "impermanence": {
       "inputs": {
-        "home-manager": "home-manager_2",
+        "home-manager": "home-manager_3",
         "nixpkgs": [
           "nixpkgs"
         ]
@@ -508,11 +530,11 @@
         "treefmt-nix": "treefmt-nix_2"
       },
       "locked": {
-        "lastModified": 1794116168,
-        "narHash": "sha256-Dsc08opiicQ3fnDfNdobPwp1ciLO24lhj+cioQ7NN1E=",
+        "lastModified": 1794201582,
+        "narHash": "sha256-ejT2Q+iCRP2/oL+58pb5/UGZ53cWVLqU5ob58EucyZk=",
         "owner": "numtide",
         "repo": "llm-agents.nix",
-        "rev": "cc555ccdfc76237727ce7ceccdc40fde61dae577",
+        "rev": "3327b7d82f31f2444533e935f06caf1a1b4da18c",
         "type": "github"
       },
       "original": {
@@ -550,11 +572,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1794054087,
-        "narHash": "sha256-Ny1kMPmEupChFM/2v+VIIbwJiujdYvDULyvAUEV4HrQ=",
+        "lastModified": 1794210170,
+        "narHash": "sha256-dHml9tlA3Uy8n87RuGNH3Do++v124KQYGkOZV2mm/S0=",
         "owner": "jdx",
         "repo": "mr-boxington",
-        "rev": "ffbf5a6969327ab58731f8613af711ba03c6dc2b",
+        "rev": "b6b5f6dd13675bf0a6e3f14cac0ae84673a56177",
         "type": "github"
       },
       "original": {
@@ -606,11 +628,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1793543282,
-        "narHash": "sha256-PHtGxKYM99f8WhGR5YD7iiCiwemKa2wUD4yVI2oALFg=",
+        "lastModified": 1794132860,
+        "narHash": "sha256-iGNtQnUZsi+v6/4NbtYr+dsmASa6GkzXtUcTpE8F3mE=",
         "owner": "nix-community",
         "repo": "nix-index-database",
-        "rev": "cee0f879d338cf08f814210fa6c2b280594ade0a",
+        "rev": "af9249ca33bc2efaae5d071e4c67ddef19dcb681",
         "type": "github"
       },
       "original": {
@@ -735,11 +757,11 @@
     },
     "nixpkgs_3": {
       "locked": {
-        "lastModified": 1793876309,
-        "narHash": "sha256-Wojg9lIH/hDH91iDVH2/EPw8oDSpxjxhXONbU1yf4Zg=",
+        "lastModified": 1794042290,
+        "narHash": "sha256-ziZn2PvCJE5JEEpqTdxXwJpPB+L3YqoCpTAMCzyaP3U=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "f9a75f41be3a74eab55d3a7679d34ad6cc0da977",
+        "rev": "f4a03c008967841f2a0b3cb7c436fc6fc31671f6",
         "type": "github"
       },
       "original": {
@@ -865,7 +887,7 @@
         "atlogin": "atlogin",
         "disko": "disko",
         "foundryvtt": "foundryvtt",
-        "home-manager": "home-manager",
+        "home-manager": "home-manager_2",
         "impermanence": "impermanence",
         "llm-agents": "llm-agents",
         "mr-boxington": "mr-boxington",
@@ -999,11 +1021,11 @@
         "timeless-fonts-src": "timeless-fonts-src"
       },
       "locked": {
-        "lastModified": 1794076291,
-        "narHash": "sha256-jRgXaKHAmtx352F2VCdn9nbAF/mdk2hyDHZEKosaiWs=",
+        "lastModified": 1794211606,
+        "narHash": "sha256-XT4OoFdYU/t9SS4kSpI4OfWeJooXjx2jCpufO3dVs3o=",
         "ref": "refs/heads/master",
-        "rev": "f70c71c7696a1cb0caaf472cca950bbbc74f174f",
-        "revCount": 6430,
+        "rev": "1c773f518e3c37c56f80ac450ede48663b32f020",
+        "revCount": 6433,
         "type": "git",
         "url": "https://tangled.org/@tangled.org/core"
       },
@@ -1041,11 +1063,11 @@
         "uv2nix": "uv2nix"
       },
       "locked": {
-        "lastModified": 1794095104,
-        "narHash": "sha256-d/q1V1LAB0f7eClh66gZ6gMAwT4F0fTiLf3cKfUQbpM=",
+        "lastModified": 1794184905,
+        "narHash": "sha256-LGpaW2I0zMdM5GryaFl+6nC7KJ3P+nWDQa26YTM+24A=",
         "ref": "refs/heads/master",
-        "rev": "55df0aec3fdf74d2809af712171556ea25649fd9",
-        "revCount": 205,
+        "rev": "b30015edbd8394ec38b5f6338c5ad7a6cbbfe6d5",
+        "revCount": 206,
         "type": "git",
         "url": "https://tangled.org/aly.codes/tg"
       },
