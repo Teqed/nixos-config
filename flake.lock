@@ -723,6 +723,23 @@
         "type": "github"
       }
     },
+    "nixpkgs-master": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1794330333,
+        "narHash": "sha256-FC11L5hm2T3ZUYgyzFubObxhgMS6iOdYlvFF6QFJI5k=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "8071ef5504e1fd80ad67b6bf23334499ff506f6b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "master",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "nixpkgs-pds": {
       "locked": {
         "lastModified": 1791734076,
@@ -896,6 +913,7 @@
         "nix-index-database": "nix-index-database",
         "nixos-hardware": "nixos-hardware",
         "nixpkgs": "nixpkgs_3",
+        "nixpkgs-master": "nixpkgs-master",
         "plasma-manager": "plasma-manager",
         "ratlogin": "ratlogin",
         "tangled-core": "tangled-core",

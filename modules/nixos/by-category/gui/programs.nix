@@ -10,6 +10,15 @@ let
 in
 {
   config = lib.mkIf config.teq.nixos.gui.enable {
+    teq.nixos.workarounds.brave = {
+      reason = "dropped from nixpkgs in #582838, back on master in #584534";
+      retire = "evaluates";
+      from = {
+        source = "master";
+        path = "pkgs/applications/networking/browsers/brave";
+        attr = "brave";
+      };
+    };
     programs = {
       appimage = {
         enable = lib.mkDefault true;

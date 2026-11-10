@@ -6,6 +6,10 @@ The starlight on the Western Seas.
 ";
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs-master = {
+      url = "github:NixOS/nixpkgs/master";
+      flake = false;
+    };
     nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel/release";
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
