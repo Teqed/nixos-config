@@ -237,7 +237,13 @@
     };
     tangled.spindle = {
       enable = true;
-      package = inputs.tangled-core.packages.${pkgs.stdenv.hostPlatform.system}.spindle;
+      package =
+        let
+          tangled = inputs.tangled-core.packages.${pkgs.stdenv.hostPlatform.system};
+        in
+        tangled.spindle.override {
+          hydrant-ffi = tangled.hydrant-ffi.overrideAttrs { dontCargoUseSystemLibs = true; };
+        };
       keyPath = "/var/lib/spindle/spindle-key.pem";
       contact.email = "teqed@shatteredsky.net";
       server = {
