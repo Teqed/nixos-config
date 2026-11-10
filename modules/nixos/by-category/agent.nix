@@ -468,7 +468,13 @@ in
         ])
         ++ [
           inputs.tg.packages.${pkgs.stdenv.hostPlatform.system}.tg
-          inputs.mr-boxington.packages.${pkgs.stdenv.hostPlatform.system}.mbx
+          (inputs.mr-boxington.packages.${pkgs.stdenv.hostPlatform.system}.mbx.overrideAttrs (old: {
+            nativeBuildInputs = old.nativeBuildInputs ++ [ pkgs.pkg-config ];
+            buildInputs = (old.buildInputs or [ ]) ++ [
+              pkgs.zstd
+              pkgs.aws-lc
+            ];
+          }))
         ];
     };
     extraGroups = lib.mkOption {
