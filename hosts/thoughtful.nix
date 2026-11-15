@@ -110,7 +110,7 @@
     foundryRelay = {
       enable = true;
       maxHeadlessSessions = 2;
-      sessionTimeout = 7200;
+      sessionTimeout = 1800;
       clientSettings = {
         "core.maxFPS" = 10;
         "core.performanceMode" = 0;

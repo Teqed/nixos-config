@@ -15,6 +15,7 @@ buildGoModule (finalAttrs: {
   patches = [
     ./route-prefix.patch
     ./headless-init-script.patch
+    ./headless-activity.patch
   ];
   modRoot = "go-relay";
   vendorHash = "sha256-3rKrfpek+VkTV+WAk1gSKYc/mJeBwIxSKXl1FRb/Ikw=";

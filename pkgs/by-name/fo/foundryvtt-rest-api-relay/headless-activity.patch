@@ -1,0 +1,58 @@
+diff --git a/go-relay/internal/server/server.go b/go-relay/internal/server/server.go
+index b5bb858..168f74b 100644
+--- a/go-relay/internal/server/server.go
++++ b/go-relay/internal/server/server.go
+@@ -82,6 +82,7 @@ func New(ctx context.Context, cfg *config.Config, db *database.DB, redis *config
+ 		// remote-request handler. Done after construction to avoid an
+ 		// import cycle in the worker package.
+ 		s.Headless.SetDeps(&worker.HeadlessDeps{DB: db, Cfg: cfg})
++		s.PendingReqs.OnStore = s.Headless.Touch
+ 	} else {
+ 		log.Warn().Msg("Headless sessions disabled (ALLOW_HEADLESS=false); auto-start of offline worlds is unavailable")
+ 	}
+diff --git a/go-relay/internal/worker/headless.go b/go-relay/internal/worker/headless.go
+index 6a73b7a..da891e6 100644
+--- a/go-relay/internal/worker/headless.go
++++ b/go-relay/internal/worker/headless.go
+@@ -1531,6 +1531,17 @@ func (m *HeadlessManager) StartCleanupLoop(ctx context.Context) {
+ 	}()
+ }
+ 
++// Touch marks the headless sessions serving clientID as active now.
++func (m *HeadlessManager) Touch(clientID string) {
++	m.mu.Lock()
++	defer m.mu.Unlock()
++	for _, s := range m.sessions {
++		if s.ClientID == clientID {
++			s.LastActivity = time.Now()
++		}
++	}
++}
++
+ func (m *HeadlessManager) cleanupInactive() {
+ 	m.mu.Lock()
+ 	now := time.Now()
+diff --git a/go-relay/internal/ws/pending.go b/go-relay/internal/ws/pending.go
+index 7a846f2..bc58c06 100644
+--- a/go-relay/internal/ws/pending.go
++++ b/go-relay/internal/ws/pending.go
+@@ -83,6 +83,9 @@ type PendingRequest struct {
+ type PendingRequests struct {
+ 	mu       sync.RWMutex
+ 	requests map[string]*PendingRequest
++
++	// OnStore, if set, is called with the target client of every stored request.
++	OnStore func(clientID string)
+ }
+ 
+ // NewPendingRequests creates a new PendingRequests tracker.
+@@ -99,6 +102,9 @@ func (p *PendingRequests) Store(id string, req *PendingRequest) {
+ 	count := len(p.requests)
+ 	p.mu.Unlock()
+ 	metrics.WSPendingRequests.Set(float64(count))
++	if p.OnStore != nil && req.ClientID != "" {
++		p.OnStore(req.ClientID)
++	}
+ }
+ 
+ // Count returns the number of pending requests currently tracked.
