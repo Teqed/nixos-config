@@ -9,8 +9,27 @@
 let
   currentStateVersion = "24.05";
 
-  jeiModules = "/var/lib/nixos-containers/foundryvtt-jeimuzu/var/lib/foundryvtt/Data/modules";
-  jeiFoundryUid = 999;
+  foundryUid = 999;
+  agentFoundries = [
+    "jeimuzu"
+    "noctuae"
+  ];
+  agentFoundryRules =
+    name:
+    let
+      root = "/var/lib/nixos-containers/foundryvtt-${name}";
+      uid = toString foundryUid;
+    in
+    map (p: "a+ ${root}${p} - - - - u:agent:--x") [
+      ""
+      "/var"
+      "/var/lib"
+      "/var/lib/foundryvtt"
+      "/var/lib/foundryvtt/Data"
+    ]
+    ++ [
+      "A+ ${root}/var/lib/foundryvtt/Data/modules - - - - u:agent:rwX,u:${uid}:rwX,d:u:agent:rwX,d:u:${uid}:rwX"
+    ];
 
   mkFoundry =
     pkgs: attrs:
@@ -26,8 +45,8 @@ in
   teq.nixos.agent = {
     manageUnits = [
       "foundry-relay.service"
-      "container@foundryvtt-jeimuzu.service"
-    ];
+    ]
+    ++ map (name: "container@foundryvtt-${name}.service") agentFoundries;
   };
   teq.nixos.tranquil = {
     enable = true;
@@ -163,13 +182,8 @@ in
   };
   systemd.tmpfiles.rules = [
     "a+ /var/lib/nixos-containers - - - - u:agent:--x"
-    "a+ /var/lib/nixos-containers/foundryvtt-jeimuzu - - - - u:agent:--x"
-    "a+ /var/lib/nixos-containers/foundryvtt-jeimuzu/var - - - - u:agent:--x"
-    "a+ /var/lib/nixos-containers/foundryvtt-jeimuzu/var/lib - - - - u:agent:--x"
-    "a+ /var/lib/nixos-containers/foundryvtt-jeimuzu/var/lib/foundryvtt - - - - u:agent:--x"
-    "a+ /var/lib/nixos-containers/foundryvtt-jeimuzu/var/lib/foundryvtt/Data - - - - u:agent:--x"
-    "A+ ${jeiModules} - - - - u:agent:rwX,u:${toString jeiFoundryUid}:rwX,d:u:agent:rwX,d:u:${toString jeiFoundryUid}:rwX"
-  ];
+  ]
+  ++ lib.concatMap agentFoundryRules agentFoundries;
 
   systemd.services.wiki-js = {
     requires = [ "postgresql.service" ];
@@ -215,7 +229,7 @@ in
           proxySSL = true;
           upnp = false;
           package = mkFoundry pkgs {
-            majorVersion = "12";
+            majorVersion = "13";
             releaseType = "stable";
           };
         };
