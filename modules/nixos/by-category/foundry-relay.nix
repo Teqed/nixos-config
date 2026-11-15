@@ -28,6 +28,10 @@ in
       type = lib.types.ints.unsigned;
       default = 1;
     };
+    sessionTimeout = lib.mkOption {
+      type = lib.types.ints.unsigned;
+      default = 0;
+    };
     chromium = lib.mkPackageOption pkgs "chromium" { };
     gpu = lib.mkEnableOption "hardware rendering for headless sessions through the host's DRI render node";
     environment = lib.mkOption {
@@ -74,7 +78,7 @@ in
         DISABLE_REGISTRATION = lib.boolToString (!cfg.allowRegistration);
         PER_MINUTE_REQUEST_LIMIT = "0";
         MONTHLY_REQUEST_LIMIT = "0";
-        HEADLESS_SESSION_TIMEOUT = "0";
+        HEADLESS_SESSION_TIMEOUT = toString cfg.sessionTimeout;
         CAPTURE_BROWSER_CONSOLE = "warn";
       }
       // cfg.environment;

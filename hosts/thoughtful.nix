@@ -110,6 +110,7 @@
     foundryRelay = {
       enable = true;
       maxHeadlessSessions = 2;
+      sessionTimeout = 7200;
       gpu = true;
     };
     agent = {
