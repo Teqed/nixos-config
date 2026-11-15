@@ -97,7 +97,6 @@ in
   };
   teq.nixos.foundryRelay.enable = true;
   services = {
-    scx.enable = false;
     smartd.enable = false;
     ratlogin = {
       enable = true;
