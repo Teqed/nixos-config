@@ -32,11 +32,11 @@
         "usage-core": "usage-core"
       },
       "locked": {
-        "lastModified": 1794713615,
-        "narHash": "sha256-lsHXDr3Ur4RWZek9gc8vgAeQdPE3T+7y1gf6frFnZcU=",
+        "lastModified": 1794729544,
+        "narHash": "sha256-J0sPUWbAea+yZ/3PIyhb/gxb0S7rYucVJO4QEu+CMOA=",
         "ref": "refs/heads/main",
-        "rev": "5016e9802369aa430c182a3cdcae1cb61062aef2",
-        "revCount": 2206,
+        "rev": "ca5a55213ed0687c6698e1250880445b8f690965",
+        "revCount": 2222,
         "type": "git",
         "url": "https://tangled.org/okami.mom/albedo"
       },
@@ -530,11 +530,11 @@
         "treefmt-nix": "treefmt-nix_2"
       },
       "locked": {
-        "lastModified": 1794720594,
-        "narHash": "sha256-Bq6syU+QCzUpHOlzWleAM5+KjqYA7Iryl7FUs3fHclY=",
+        "lastModified": 1794721493,
+        "narHash": "sha256-7extb+ld6xPCzcVuhVdvcvGPLu/qtDRrhFJmH68jXfM=",
         "owner": "numtide",
         "repo": "llm-agents.nix",
-        "rev": "842c5f42b0003da8a3b5fba4ecd0762bb73c7911",
+        "rev": "aeb1afe1529c5dc7dcdc54d644a8aed212d99dd0",
         "type": "github"
       },
       "original": {
@@ -726,11 +726,11 @@
     "nixpkgs-master": {
       "flake": false,
       "locked": {
-        "lastModified": 1794719522,
-        "narHash": "sha256-HHXM4NzgWHGh9QrwI8/LLCX/CnlGTI22XKWBj10L6sM=",
+        "lastModified": 1794729861,
+        "narHash": "sha256-ItjPLAaQ7BdFjzraC37MlBRkZvVsH6ZmLuVsQS66p2U=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "e6dc6579efe73ab4db1c236825804b2ddd1b2c97",
+        "rev": "ae797d5b234de3e028fe48b894a0c2273ed17bde",
         "type": "github"
       },
       "original": {
@@ -774,11 +774,11 @@
     },
     "nixpkgs_3": {
       "locked": {
-        "lastModified": 1794386569,
-        "narHash": "sha256-x9sADJvoVG0L6RejZB+/BB4YiGZFBZrfTlhF4uBq1tQ=",
+        "lastModified": 1794537146,
+        "narHash": "sha256-Wpz/7x/YWnDIBu7yj6ixe8j6fIMsidd9Y+o1PqPF3iM=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "d4f25a3e562008648d45bcf2d70bcc7422cad84e",
+        "rev": "d5cc6833999746cffdfe0598f7bc801a57b887a9",
         "type": "github"
       },
       "original": {
