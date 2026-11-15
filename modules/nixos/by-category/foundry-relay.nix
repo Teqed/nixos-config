@@ -29,6 +29,7 @@ in
       default = 1;
     };
     chromium = lib.mkPackageOption pkgs "chromium" { };
+    gpu = lib.mkEnableOption "hardware rendering for headless sessions through the host's DRI render node";
     environment = lib.mkOption {
       type = lib.types.attrsOf lib.types.str;
       default = { };
@@ -69,7 +70,7 @@ in
         MAX_HEADLESS_SESSIONS = toString cfg.maxHeadlessSessions;
         PUPPETEER_EXECUTABLE_PATH = lib.getExe cfg.chromium;
         CHROME_USER_DATA_DIR = "${stateDir}/chrome";
-        CHROME_GPU_MODE = "swiftshader";
+        CHROME_GPU_MODE = if cfg.gpu then "nvidia" else "swiftshader";
         DISABLE_REGISTRATION = lib.boolToString (!cfg.allowRegistration);
         PER_MINUTE_REQUEST_LIMIT = "0";
         MONTHLY_REQUEST_LIMIT = "0";
@@ -90,7 +91,10 @@ in
         ProtectSystem = "strict";
         ProtectHome = true;
         PrivateTmp = true;
-        PrivateDevices = true;
+        PrivateDevices = !cfg.gpu;
+        DevicePolicy = lib.mkIf cfg.gpu "closed";
+        DeviceAllow = lib.mkIf cfg.gpu [ "char-drm rw" ];
+        SupplementaryGroups = lib.mkIf cfg.gpu [ "render" ];
         ProtectKernelTunables = true;
         ProtectKernelModules = true;
         ProtectKernelLogs = true;

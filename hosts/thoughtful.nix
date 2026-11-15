@@ -110,6 +110,7 @@
     foundryRelay = {
       enable = true;
       maxHeadlessSessions = 2;
+      gpu = true;
     };
     agent = {
       hub.enable = true;
