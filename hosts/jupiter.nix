@@ -43,10 +43,7 @@ in
   ];
 
   teq.nixos.agent = {
-    manageUnits = [
-      "foundry-relay.service"
-    ]
-    ++ map (name: "container@foundryvtt-${name}.service") agentFoundries;
+    manageUnits = map (name: "container@foundryvtt-${name}.service") agentFoundries;
   };
   teq.nixos.tranquil = {
     enable = true;
@@ -95,7 +92,6 @@ in
       after = [ "ratlogin.service" ];
     };
   };
-  teq.nixos.foundryRelay.enable = true;
   services = {
     smartd.enable = false;
     ratlogin = {
@@ -123,12 +119,18 @@ in
       virtualHosts."jupiter.shatteredsky.net".extraConfig = ''
         respond "jupiter"
       '';
+      virtualHosts."foundry-jei.shatteredsky.net".extraConfig = ''
+        reverse_proxy 127.0.0.1:30002
+      '';
+      virtualHosts."foundry-noct.shatteredsky.net".extraConfig = ''
+        reverse_proxy 127.0.0.1:30001
+      '';
       virtualHosts."foundry.shatteredsky.net".extraConfig = ''
-        handle /jei* {
-          reverse_proxy 127.0.0.1:30002
+        handle_path /jei* {
+          redir https://foundry-jei.shatteredsky.net{uri} permanent
         }
-        handle /noct* {
-          reverse_proxy 127.0.0.1:30001
+        handle_path /noct* {
+          redir https://foundry-noct.shatteredsky.net{uri} permanent
         }
         handle /spheres* {
           reverse_proxy 127.0.0.1:30000
@@ -141,7 +143,7 @@ in
         }
       '';
       virtualHosts."fvtt-relay.shatteredsky.net".extraConfig = ''
-        reverse_proxy 127.0.0.1:3010
+        reverse_proxy 100.64.0.3:3010
       '';
     };
     postgresql = {
@@ -174,9 +176,6 @@ in
     firewall.allowedTCPPorts = [
       80
       443
-      30000
-      30001
-      30002
     ];
   };
   systemd.tmpfiles.rules = [
@@ -220,8 +219,7 @@ in
         imports = [ inputs.foundryvtt.nixosModules.foundryvtt ];
         services.foundryvtt = {
           enable = true;
-          hostName = "foundry.shatteredsky.net";
-          routePrefix = "noct";
+          hostName = "foundry-noct.shatteredsky.net";
           minifyStaticFiles = true;
           port = 30001;
           proxyPort = 443;
@@ -242,8 +240,7 @@ in
         imports = [ inputs.foundryvtt.nixosModules.foundryvtt ];
         services.foundryvtt = {
           enable = true;
-          hostName = "foundry.shatteredsky.net";
-          routePrefix = "jei";
+          hostName = "foundry-jei.shatteredsky.net";
           minifyStaticFiles = true;
           port = 30002;
           proxyPort = 443;
