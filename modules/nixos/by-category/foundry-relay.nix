@@ -32,6 +32,14 @@ in
       type = lib.types.ints.unsigned;
       default = 0;
     };
+    clientSettings = lib.mkOption {
+      type = lib.types.attrsOf lib.types.anything;
+      default = { };
+      example = {
+        "core.maxFPS" = 10;
+      };
+      description = "Foundry client settings written to every headless session's localStorage before Foundry loads.";
+    };
     chromium = lib.mkPackageOption pkgs "chromium" { };
     gpu = lib.mkEnableOption "hardware rendering for headless sessions through the host's DRI render node";
     environment = lib.mkOption {
@@ -79,6 +87,11 @@ in
         PER_MINUTE_REQUEST_LIMIT = "0";
         MONTHLY_REQUEST_LIMIT = "0";
         HEADLESS_SESSION_TIMEOUT = toString cfg.sessionTimeout;
+        HEADLESS_INIT_SCRIPT = lib.concatStrings (
+          lib.mapAttrsToList (
+            k: v: "localStorage.setItem(${builtins.toJSON k}, ${builtins.toJSON (builtins.toJSON v)});"
+          ) cfg.clientSettings
+        );
         CAPTURE_BROWSER_CONSOLE = "warn";
       }
       // cfg.environment;
