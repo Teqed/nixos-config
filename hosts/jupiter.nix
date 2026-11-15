@@ -279,7 +279,10 @@ in
         efiInstallAsRemovable = true;
         configurationLimit = 1;
       };
-      efi.canTouchEfiVariables = false;
+      efi = {
+        canTouchEfiVariables = false;
+        efiSysMountPoint = "/boot/efi";
+      };
     };
     initrd = {
       availableKernelModules = [
@@ -330,7 +333,7 @@ in
               content = {
                 type = "filesystem";
                 format = "vfat";
-                mountpoint = "/boot";
+                mountpoint = "/boot/efi";
                 mountOptions = [ "umask=0077" ];
               };
             };
