@@ -14,6 +14,20 @@ switch:
       sudo nixos-rebuild switch --flake ".#{{host}}"
     fi
 
+switch-remote target:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    if [[ ! "{{target}}" =~ ^[A-Za-z0-9][A-Za-z0-9-]*$ ]]; then
+      echo "switch-remote: target must be a plain hostname (letters, digits, hyphens)" >&2
+      exit 1
+    fi
+    args=(--flake ".#{{target}}" --target-host "{{target}}" --build-host "{{target}}" --sudo --ask-elevate-password --no-reexec)
+    if [[ -t 1 ]] && command -v nom >/dev/null 2>&1; then
+      nixos-rebuild switch "${args[@]}" --log-format internal-json -v |& nom --json
+    else
+      nixos-rebuild switch "${args[@]}"
+    fi
+
 build target=host:
     #!/usr/bin/env bash
     set -euo pipefail
