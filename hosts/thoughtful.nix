@@ -278,9 +278,9 @@
       openFirewall = true;
     };
     qdrant.enable = false;
-    nix-serve = {
+    harmonia.cache = {
       enable = true;
-      secretKeyFile = "/var/lib/nix-serve/cache-priv-key.pem";
+      signKeyPaths = [ "/var/lib/nix-serve/cache-priv-key.pem" ];
     };
   };
   nix.sshServe = {
