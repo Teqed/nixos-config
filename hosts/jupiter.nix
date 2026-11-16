@@ -10,6 +10,9 @@ let
   currentStateVersion = "24.05";
 
   foundryUid = 999;
+  glauxUid = 1501;
+  noctuaeKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIL4HVyHlQlGl+BxE/8+SvsTkRxne4BZLaF0WW2Y47WBZ noctuae";
+  glauxKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIK4IuT4eiW64TrVX71q07fV6yuAEIfw868KiikrLOw3E glaux-exe@joshpc";
   agentFoundries = [
     "jeimuzu"
     "noctuae"
@@ -20,15 +23,14 @@ let
       root = "/var/lib/nixos-containers/foundryvtt-${name}";
       uid = toString foundryUid;
     in
-    map (p: "a+ ${root}${p} - - - - u:agent:--x") [
+    map (p: "a+ ${root}${p} - - - - g:agents:--x") [
       ""
       "/var"
       "/var/lib"
       "/var/lib/foundryvtt"
-      "/var/lib/foundryvtt/Data"
     ]
     ++ [
-      "A+ ${root}/var/lib/foundryvtt/Data/modules - - - - u:agent:rwX,u:${uid}:rwX,d:u:agent:rwX,d:u:${uid}:rwX"
+      "A+ ${root}/var/lib/foundryvtt/Data - - - - g:agents:rwX,u:${uid}:rwX,d:g:agents:rwX,d:u:${uid}:rwX"
     ];
 
   mkFoundry =
@@ -168,7 +170,13 @@ in
         user = "wiki-js";
       };
     };
-    openssh.enable = true;
+    openssh = {
+      enable = true;
+      settings.AllowUsers = [
+        "noctuae"
+        "glaux"
+      ];
+    };
   };
   networking = {
     hostName = "jupiter";
@@ -178,14 +186,19 @@ in
       443
     ];
   };
-  systemd.tmpfiles.rules = [
-    "a+ /var/lib/nixos-containers - - - - u:agent:--x"
-  ]
-  ++ lib.concatMap agentFoundryRules agentFoundries;
-
-  systemd.services.wiki-js = {
-    requires = [ "postgresql.service" ];
-    after = [ "postgresql.service" ];
+  systemd = {
+    tmpfiles.rules = [
+      "a+ /var/lib/nixos-containers - - - - g:agents:--x"
+    ]
+    ++ lib.concatMap agentFoundryRules agentFoundries;
+    services.wiki-js = {
+      requires = [ "postgresql.service" ];
+      after = [ "postgresql.service" ];
+    };
+    slices."user-${toString glauxUid}".sliceConfig = {
+      CPUWeight = config.teq.nixos.agent.slice.cpuWeight;
+      MemoryHigh = config.teq.nixos.agent.slice.memoryHigh;
+    };
   };
 
   containers = {
@@ -262,6 +275,33 @@ in
     ++ lib.forEach config.userinfo.users (u: {
       "${u}".initialHashedPassword = "$2b$05$2ckfv7WhD4dCuDK9DZi1MuDT6lOLJI9xDVZEAze2/sjw0lODXYCh6";
     })
+    ++ [
+      {
+        noctuae = {
+          isNormalUser = true;
+          description = "Noctuae";
+          extraGroups = [ "agents" ] ++ config.teq.nixos.agent.extraGroups;
+          openssh.authorizedKeys.keys = [ noctuaeKey ];
+        };
+        glaux = {
+          isNormalUser = true;
+          uid = glauxUid;
+          group = "agents";
+          inherit (config.teq.nixos.agent) extraGroups;
+          home = "/var/lib/glaux";
+          homeMode = "750";
+          createHome = true;
+          description = "Noctuae's agent";
+          shell = pkgs.bashInteractive;
+          hashedPassword = "!";
+          linger = true;
+          openssh.authorizedKeys.keys = [
+            "no-agent-forwarding,no-X11-forwarding ${glauxKey}"
+            noctuaeKey
+          ];
+        };
+      }
+    ]
   );
   nixpkgs = {
     config.allowUnsupportedSystem = true;

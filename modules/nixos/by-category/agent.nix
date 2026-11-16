@@ -365,7 +365,7 @@ in
       type = lib.types.listOf lib.types.str;
       default = [ ];
       example = [ "foundry-relay.service" ];
-      description = "System units `agent` may start, stop and restart through polkit without a password.";
+      description = "System units members of `agents` may start, stop and restart through polkit without a password.";
     };
     harnesses = lib.mkOption {
       type = lib.types.listOf lib.types.str;
@@ -611,7 +611,7 @@ in
         enable = true;
         extraConfig = ''
           polkit.addRule(function (action, subject) {
-            if (action.id != "org.freedesktop.systemd1.manage-units" || subject.user != "agent") {
+            if (action.id != "org.freedesktop.systemd1.manage-units" || !subject.isInGroup("agents")) {
               return polkit.Result.NOT_HANDLED;
             }
             var unit = action.lookup("unit");
