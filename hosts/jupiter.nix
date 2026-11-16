@@ -233,6 +233,7 @@ in
         services.foundryvtt = {
           enable = true;
           hostName = "foundry-noct.shatteredsky.net";
+          world = "test";
           minifyStaticFiles = true;
           port = 30001;
           proxyPort = 443;
@@ -254,6 +255,7 @@ in
         services.foundryvtt = {
           enable = true;
           hostName = "foundry-jei.shatteredsky.net";
+          world = "krune";
           minifyStaticFiles = true;
           port = 30002;
           proxyPort = 443;
