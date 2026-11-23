@@ -36,11 +36,11 @@
         "uv2nix": "uv2nix"
       },
       "locked": {
-        "lastModified": 1795303398,
-        "narHash": "sha256-fzCbjz1L4a0GfNs+4sgxMZt4FmIZIfGs2UroSinHP5E=",
+        "lastModified": 1795420775,
+        "narHash": "sha256-6ZNP4798BqNUQyqnwVJyeb76qdqL28SVo69FNv0epJ4=",
         "ref": "refs/heads/main",
-        "rev": "52028ec98bedfa9148faa0ec0c1b22314bba4ffd",
-        "revCount": 3374,
+        "rev": "541409abeac5ade03e0d6e3b4316e4a44c4ae7a1",
+        "revCount": 3383,
         "type": "git",
         "url": "https://tangled.org/okami.mom/albedo"
       },
@@ -409,11 +409,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1795325944,
-        "narHash": "sha256-dOPB2dprqzQTkfE8dUpFAD93oeOqT/yQzUXs52yGjJk=",
+        "lastModified": 1795366757,
+        "narHash": "sha256-Tp4Kh4R7ID1f2mMCDlb2PiFQ/DZZsnXB2u2juWN+TT4=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "cf726ddc129f140991c2011a02d336933d0c4c4c",
+        "rev": "3b8140d21fa0a70b1b38c2ed29853dfe686234a6",
         "type": "github"
       },
       "original": {
@@ -549,11 +549,11 @@
         "treefmt-nix": "treefmt-nix_2"
       },
       "locked": {
-        "lastModified": 1795326465,
-        "narHash": "sha256-3DXXvRboug7ShQxMvkOrr2CK7hLi5pH4kGJUp+XRrC4=",
+        "lastModified": 1795416666,
+        "narHash": "sha256-b1GmfrMPoZ2ANkR0we9Q9KQN6n1e+vNyDqt1p4CNEAY=",
         "owner": "numtide",
         "repo": "llm-agents.nix",
-        "rev": "1e9d20fbe18f1c10bc2eaa527d6f06cec0833dbc",
+        "rev": "5330ee115c06d2b43f49e902130125eab579b22f",
         "type": "github"
       },
       "original": {
@@ -591,11 +591,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1795291005,
-        "narHash": "sha256-MGpVFXJb5Zr1wJzt5tEvGji2zL+n8/E4G8wI2qazg4U=",
+        "lastModified": 1795391295,
+        "narHash": "sha256-AaDqprJNo3jN/rh7KUvpw2QvoG9b7TR/Eg96qYnd9JY=",
         "owner": "jdx",
         "repo": "mr-boxington",
-        "rev": "256d59446c77e63980fa2f4fee51c61facbbe9c0",
+        "rev": "ee819a488cfc0d962b18c185c8842513421542d5",
         "type": "github"
       },
       "original": {
@@ -611,11 +611,11 @@
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1795299643,
-        "narHash": "sha256-ofoSHbSWiP+muOkvTD/moBIAwYeo2m4rQoAGLaW34IA=",
+        "lastModified": 1795387629,
+        "narHash": "sha256-+bXH64eCZhRm6MaMlB4lwTjUjax2aDy6yWsfTSCZlas=",
         "owner": "xddxdd",
         "repo": "nix-cachyos-kernel",
-        "rev": "3547834022c7faca65918abbd8645c855d20cc35",
+        "rev": "306480b9096055a06503167f975c027e244dd839",
         "type": "github"
       },
       "original": {
@@ -647,11 +647,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1794739050,
-        "narHash": "sha256-PCGNIyAydZcdUXCxEXTjrS1+wWS+k9E+ENqBkUK2Mpg=",
+        "lastModified": 1795345257,
+        "narHash": "sha256-p1dA8lUFQTLJfDI2gaTZQ+CcMKw3nxvyHNbwpVMy2rY=",
         "owner": "nix-community",
         "repo": "nix-index-database",
-        "rev": "9bd074026d6db75b59aae8cd6071b5f2fe27a36c",
+        "rev": "905f3e6f1e78165e79457c0bbe7ec4b885a5fce1",
         "type": "github"
       },
       "original": {
@@ -745,11 +745,11 @@
     "nixpkgs-master": {
       "flake": false,
       "locked": {
-        "lastModified": 1795333467,
-        "narHash": "sha256-ntsy1NSJ0fgWAdaleXflxPqwZanARgDGdh344GIpkFc=",
+        "lastModified": 1795420847,
+        "narHash": "sha256-6UmeJaffpzkClLCr8dr0y5m2NXjeraJatuS9vraH/QY=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "c0d703bf09c8a215d9fc017d1cdb837ea1efadaa",
+        "rev": "49d33026dfb32264fd37e23383bd03b400313caa",
         "type": "github"
       },
       "original": {
@@ -777,11 +777,11 @@
     },
     "nixpkgs_2": {
       "locked": {
-        "lastModified": 1795282342,
-        "narHash": "sha256-OfaSL6VGcyf35UmRPfv4ErH7RFybQiuyLThnDzYOcbs=",
+        "lastModified": 1795374673,
+        "narHash": "sha256-8YP9YTqsO6cGEZag9bDauM7q+wv/ToLTuwjlO9LMEfQ=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "4a5ea0bab25dfaa435429825c9add4c5f730b235",
+        "rev": "616ae05a769a23c143b19746b6a3b06366a9a28f",
         "type": "github"
       },
       "original": {
@@ -1108,11 +1108,11 @@
         "timeless-fonts-src": "timeless-fonts-src"
       },
       "locked": {
-        "lastModified": 1795305252,
-        "narHash": "sha256-vRD89GrJ4td26CulhjEeXf1ZpdCrtTaiWVMEsLWi5OQ=",
+        "lastModified": 1795418981,
+        "narHash": "sha256-8bD/yiVEQ1zRb2x12eCGpPAv5W1fJy+TnUcpim15Ego=",
         "ref": "refs/heads/master",
-        "rev": "859eb1e11c89f69b0f7aaf43af250099fb0c1169",
-        "revCount": 6677,
+        "rev": "886c795c6f5a20564de6da5f07fd2abfabe415a2",
+        "revCount": 6691,
         "type": "git",
         "url": "https://tangled.org/@tangled.org/core"
       },
@@ -1150,11 +1150,11 @@
         "uv2nix": "uv2nix_2"
       },
       "locked": {
-        "lastModified": 1795237931,
-        "narHash": "sha256-XW2oyTzV0h/YdFfTRzHrExz7slCwbyGBqJfsfFFGevM=",
+        "lastModified": 1795383286,
+        "narHash": "sha256-dMIvIOccMCB+T5xNG4DJ4wJOeWsElmGkDKeugXAbunA=",
         "ref": "refs/heads/master",
-        "rev": "789754b4807efb9d9640663cf493f11db651502e",
-        "revCount": 219,
+        "rev": "96fec43d1ad630af77046ca2325b09a729464f4d",
+        "revCount": 220,
         "type": "git",
         "url": "https://tangled.org/aly.codes/tg"
       },
@@ -1203,11 +1203,11 @@
         "nixpkgs": "nixpkgs_4"
       },
       "locked": {
-        "lastModified": 1795260201,
-        "narHash": "sha256-DFNDkGMA7AvwqNWMOMKUnmoXrVwpaCH0vXBiWsQRQxI=",
+        "lastModified": 1795380485,
+        "narHash": "sha256-G+8jFPbBzXLE40sC8oxfSUVU1T8aFlb6GJJ+nGvs1iY=",
         "ref": "refs/heads/main",
-        "rev": "d3e79be12a8e76fe93cc748a6c6ae765bb3ac231",
-        "revCount": 708,
+        "rev": "41b458b5a31127b8ec9481c15156006d39b32d04",
+        "revCount": 721,
         "type": "git",
         "url": "https://tangled.org/tranquil.farm/tranquil-pds"
       },
