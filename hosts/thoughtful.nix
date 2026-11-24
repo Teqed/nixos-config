@@ -152,7 +152,7 @@
   vpnNamespaces.wg = {
     enable = true;
     wireguardConfigFile = config.age.secrets."wg0".path;
-    accessibleFrom = [
+    allowedIngress = [
       "10.0.0.0/24"
       "100.64.0.0/10"
     ];
@@ -162,12 +162,10 @@
         to = 8080;
       }
     ];
-    openVPNPorts = [
-      {
-        port = 6881;
-        protocol = "both";
-      }
-    ];
+    vpn = {
+      allowedTCPPorts = [ 6881 ];
+      allowedUDPPorts = [ 6881 ];
+    };
   };
   systemd.services = {
     qbittorrent.vpnConfinement = {
