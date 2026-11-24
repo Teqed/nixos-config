@@ -118,26 +118,7 @@
       gpu = true;
     };
     agent = {
-      hub.enable = true;
       manageUnits = [ "foundry-relay.service" ];
-      lists = {
-        "nixos-config" = [
-          "teq"
-          "agent+claude"
-          "agent+codex"
-          "agent+albedo"
-        ];
-        ops = [
-          "teq"
-          "agent+claude"
-          "agent+codex"
-          "agent+albedo"
-        ];
-      };
-      proxyKeys."teq@bubblegum" =
-        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJwdjegbT+oV7Wan1BXWbJVgafTDa9nmUS8lUVxHUFm0 mail:teq@bubblegum";
-      proxyKeys."agent@bubblegum" =
-        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILl2Uuhv5q5X1rcncx3k1+z3Rld46HNUBaNR1eNdgzSe mail:agent@bubblegum";
     };
     notify.server.enable = true;
   };

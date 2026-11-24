@@ -77,7 +77,6 @@ let
 
     WINEPREFIX = "${XDG_DATA_HOME}/wine";
     WAKATIME_HOME = "${XDG_DATA_HOME}/wakatime";
-    CODEX_HOME = "${XDG_CONFIG_HOME}/codex";
 
     HISTFILE = "${XDG_STATE_HOME}/history/histfile";
     HISTSIZE = 1000000;

@@ -104,9 +104,7 @@ in
           ''
         );
         settings = {
-          nix-path = mkDefault (
-            mapAttrsToList (key: value: "${key}=${value.to.path}") config.nix.registry
-          );
+          nix-path = mkDefault (mapAttrsToList (key: value: "${key}=${value.to.path}") config.nix.registry);
           bash-prompt-prefix = mkDefault "(nix:$name)\040";
           experimental-features = mkDefault [
             "nix-command"

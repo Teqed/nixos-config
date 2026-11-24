@@ -16,15 +16,11 @@ in
   "wg0.age".publicKeys = allUsers ++ [ systems.thoughtful ];
   "gh.age".publicKeys = allUsers ++ allSystems;
   "washing-machien.age".publicKeys = allUsers ++ [ systems.thoughtful ];
-  "mail-key-agent-bubblegum.age".publicKeys = allUsers ++ [ systems.bubblegum ];
   "gh-agent.age".publicKeys = allUsers ++ allSystems;
   "tailscale-auth.age".publicKeys = allUsers ++ allSystems;
   "cloudflare-ro.age".publicKeys = allUsers;
   "cloudflare-dns.age".publicKeys = allUsers ++ [ systems.jupiter ];
   "tranquil-env.age".publicKeys = allUsers ++ [ systems.jupiter ];
-  "claude-agent.age".publicKeys = allUsers ++ allSystems;
-  "codex-auth.age".publicKeys = allUsers ++ allSystems;
-  "prime-auth.age".publicKeys = allUsers ++ allSystems;
   "ratlogin-headscale.age".publicKeys = allUsers ++ [ systems.jupiter ];
   "jupiter-builder.age".publicKeys = allUsers ++ [ systems.jupiter ];
 }

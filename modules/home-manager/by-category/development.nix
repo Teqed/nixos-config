@@ -16,7 +16,6 @@ in
         with pkgs;
         lib.optionals (desktop && !agentEnabled) [
           llm-agents.claude-code
-          llm-agents.codex
         ]
         ++ [
           lazygit
@@ -42,7 +41,6 @@ in
             ".agents/"
             ".claude/"
             ".albedo/"
-            ".codex/"
             "*.pem"
             "*.key"
             "*.p12"
