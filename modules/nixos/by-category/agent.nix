@@ -28,7 +28,7 @@ let
   otherGroups = lib.filterAttrs (n: _: n != "agents") config.users.groups;
 
   agentEnv = {
-    PATH = "/etc/profiles/per-user/agent/bin:/run/current-system/sw/bin:/run/wrappers/bin";
+    PATH = "/run/wrappers/bin:/etc/profiles/per-user/agent/bin:/run/current-system/sw/bin";
     ANDROID_ADB_SERVER_PORT = "5038";
     NIX_SSL_CERT_FILE = "/etc/ssl/certs/ca-certificates.crt";
     NODE_OPTIONS = "--use-openssl-ca";
@@ -387,30 +387,18 @@ in
       type = lib.types.listOf lib.types.package;
       default =
         (with pkgs; [
-          git
-          jujutsu
           gh
-          jq
-          ripgrep
           python3
-          curl
-          reader
-          direnv
-          fd
           file
           tree
           unzip
           zip
-          lsof
           openssl
           dnsutils
           sqlite
           shellcheck
           nvd
           nix-diff
-          just
-          tokei
-          ast-grep
         ])
         ++ (with inputs.nix-index-database.packages.${pkgs.stdenv.hostPlatform.system}; [
           comma-with-db
@@ -544,10 +532,22 @@ in
           home-manager.users.agent = {
             imports = [ inputs.albedo.homeModules.default ];
             home.stateVersion = "26.05";
+            home.preferXdgDirectories = true;
+            teq.home-manager = {
+              cli = true;
+              shell = true;
+            };
             systemd.user.sessionVariables = agentEnv;
+            home.sessionVariables = removeAttrs agentEnv [ "PATH" ];
+            home.file.".gitconfig".text = "[safe]\n\tdirectory = *\n";
+            xdg.configFile = {
+              "jj/config.toml".text = "[user]\nname = \"teq\"\nemail = \"teqed@shatteredsky.net\"\n";
+              "mbx/config.toml".text = "[target]\nviews = false\n";
+            };
             programs = {
+              direnv.nix-direnv.package = nixDirenv;
               nix-index.enable = false;
-              man.enable = false;
+              nix-index-database.comma.enable = false;
             };
             fonts.fontconfig.enable = false;
             services.albedo = {
@@ -577,21 +577,11 @@ in
             tmpfiles.rules = [
               "d ${agentHome}/.config 0750 agent agents -"
               "d ${agentHome}/.config/nix 0750 agent agents -"
-              "d ${agentHome}/.config/jj 0750 agent agents -"
-              "f+ ${agentHome}/.config/jj/config.toml 0640 agent agents - [user]\\nname = \"teq\"\\nemail = \"teqed@shatteredsky.net\"\\n"
-              "d ${agentHome}/.config/mbx 0750 agent agents -"
-              "f+ ${agentHome}/.config/mbx/config.toml 0640 agent agents - [target]\\nviews = false\\n"
               "d ${agentHome}/.agents 0750 agent agents -"
               "d ${agentHome}/.agents/skills 0750 agent agents -"
               "d ${agentHome}/.claude 0750 agent agents -"
               "d ${agentHome}/.claude/skills 0750 agent agents -"
-              "f+ ${agentHome}/.gitconfig 0640 agent agents - [safe]\\n\\tdirectory = *\\n"
-              "f+ ${agentHome}/.curlrc 0640 agent agents - user-agent = \"teq/1.0 (+https://shatteredsky.net; teqed@shatteredsky.net)\"\\n"
-              "d ${agentHome}/.config/git 0750 agent agents -"
-              "f+ ${agentHome}/.config/git/ignore 0640 agent agents - AGENTS.md\\nCLAUDE.md\\n.agents/\\n.claude/\\n.albedo/\\n"
               "d ${agentHome}/.albedo 0700 agent agents -"
-              "d ${agentHome}/.config/direnv 0750 agent agents -"
-              "L+ ${agentHome}/.config/direnv/direnvrc - - - - ${nixDirenv}/share/nix-direnv/direnvrc"
             ]
             ++
               lib.concatMap

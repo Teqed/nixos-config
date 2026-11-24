@@ -12,25 +12,23 @@ in
 {
   config = lib.mkMerge [
     (lib.mkIf config.teq.home-manager.enable {
-      home.packages =
-        with pkgs;
-        lib.optionals (desktop && !agentEnabled) [
-          llm-agents.claude-code
-        ]
-        ++ [
-          lazygit
-          jujutsu
-          jjui
-          lazyjj
-          just
-          tokei
-          scc
-          ast-grep
-        ];
+      home.packages = lib.optionals (desktop && !agentEnabled) [ pkgs.llm-agents.claude-code ];
+      programs.gh.enable = lib.mkDefault true;
+    })
+    (lib.mkIf config.teq.home-manager.cli {
+      home.packages = with pkgs; [
+        lazygit
+        jujutsu
+        jjui
+        lazyjj
+        just
+        tokei
+        scc
+        ast-grep
+      ];
       xdg.configFile."git/ignore".force = true;
       programs = {
         jq.enable = lib.mkDefault true;
-        gh.enable = lib.mkDefault true;
         git = {
           enable = lib.mkDefault true;
 

@@ -6,7 +6,7 @@
 }:
 {
   config = lib.mkMerge [
-    (lib.mkIf config.teq.home-manager.enable {
+    (lib.mkIf config.teq.home-manager.cli {
       programs = {
         micro = {
           enable = lib.mkDefault true;

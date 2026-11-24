@@ -21,14 +21,6 @@
         ".config/ghostty/config".source = ./sources/.config/ghostty/config;
         ".config/ghostty/ghostty-shaders/my_bloom.glsl".source =
           ./sources/.config/ghostty/ghostty-shaders/my_bloom.glsl;
-        ".config/bash/functions.sh".source = ./sources/.config/bash/functions.sh;
-        ".config/bash/functions.d/cheat.sh".source = ./sources/.config/bash/functions.d/cheat.sh;
-        ".config/bash/functions.d/coloring.bash".source = ./sources/.config/bash/functions.d/coloring.bash;
-        ".config/bash/functions.d/extract.sh".source = ./sources/.config/bash/functions.d/extract.sh;
-        ".config/bash/functions.d/lfcd.sh".source = ./sources/.config/bash/functions.d/lfcd.sh;
-        ".config/bash/functions.d/mkcdr.sh".source = ./sources/.config/bash/functions.d/mkcdr.sh;
-        ".config/bash/functions.d/pecho.bash".source = ./sources/.config/bash/functions.d/pecho.bash;
-        ".config/bash/functions.d/ttitle.bash".source = ./sources/.config/bash/functions.d/ttitle.bash;
         ".config/chromium/policies/managed/defaultExtensions.json".source =
           ./sources/.config/chromium/policies/managed/defaultExtensions.json;
         ".config/brave/policies/managed/DisableBraveRewardsWalletAI.json".source =

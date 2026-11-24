@@ -39,10 +39,7 @@ The starlight on the Western Seas.
       url = "git+https://tangled.org/okami.mom/albedo";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    tg = {
-      url = "git+https://tangled.org/aly.codes/tg";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    tg.url = "git+https://tangled.org/aly.codes/tg";
     mr-boxington = {
       url = "github:jdx/mr-boxington";
       inputs.nixpkgs.follows = "nixpkgs";

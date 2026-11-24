@@ -15,7 +15,7 @@ let
 in
 {
   config = lib.mkMerge [
-    (lib.mkIf config.teq.home-manager.enable {
+    (lib.mkIf config.teq.home-manager.cli {
       programs.eza = {
         enable = lib.mkDefault true;
         extraOptions = [

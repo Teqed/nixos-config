@@ -18,6 +18,18 @@ in
     gui = lib.mkEnableOption "Enable GUI configuration.";
     dev = lib.mkEnableOption "Enable development toolchains and dev-adjacent tools.";
     tts = lib.mkEnableOption "Enable speech synthesis (speech-dispatcher).";
+    cli = lib.mkOption {
+      type = lib.types.bool;
+      default = config.teq.home-manager.enable;
+      defaultText = lib.literalExpression "config.teq.home-manager.enable";
+      description = "Command-line tools and their program configuration.";
+    };
+    shell = lib.mkOption {
+      type = lib.types.bool;
+      default = config.teq.home-manager.enable;
+      defaultText = lib.literalExpression "config.teq.home-manager.enable";
+      description = "Interactive shells, prompt, history and shell functions.";
+    };
   };
   config = lib.mkIf config.teq.home-manager.enable {
     home = {

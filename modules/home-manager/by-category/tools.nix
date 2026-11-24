@@ -5,7 +5,7 @@
   ...
 }:
 {
-  config = lib.mkIf config.teq.home-manager.enable {
+  config = lib.mkIf config.teq.home-manager.cli {
     home.packages =
       with pkgs;
       [

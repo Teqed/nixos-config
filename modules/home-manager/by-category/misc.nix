@@ -5,7 +5,7 @@
   ...
 }:
 {
-  config = lib.mkIf config.teq.home-manager.enable {
+  config = lib.mkIf config.teq.home-manager.cli {
     systemd.user.startServices = lib.mkDefault "sd-switch";
     services = {
     };
