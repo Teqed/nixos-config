@@ -422,12 +422,25 @@ in
                 markdown-it-py
               ]
             );
-            daemon' = albedoPkgs.daemon.override { python311 = pyEnv; };
+            daemon' = albedoPkgs.daemon.override { kernelPython = pyEnv; };
             tui' = albedoPkgs.albedo-client.override { daemon = daemon'; };
+            server' = pkgs.symlinkJoin {
+              name = "albedo-server-${daemon'.version}";
+              paths = [ daemon' ];
+              nativeBuildInputs = [ pkgs.makeBinaryWrapper ];
+              postBuild = ''
+                makeBinaryWrapper ${tui'}/libexec/albedo/albedo-server $out/bin/albedo-server \
+                  --set-default ALBEDO_DAEMON ${daemon'}/bin/albedo-daemon
+              '';
+              meta = daemon'.meta // {
+                mainProgram = "albedo-server";
+              };
+            };
           in
           albedoPkgs.albedo.override {
             daemon = daemon';
             tui = tui';
+            server = server';
           }
         )
       ];
