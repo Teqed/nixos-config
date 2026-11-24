@@ -198,6 +198,9 @@ in
     slices."user-${toString glauxUid}".sliceConfig = {
       CPUWeight = config.teq.nixos.agent.slice.cpuWeight;
       MemoryHigh = config.teq.nixos.agent.slice.memoryHigh;
+      MemoryMax = config.teq.nixos.agent.slice.memoryMax;
+      IOWeight = config.teq.nixos.agent.slice.ioWeight;
+      TasksMax = config.teq.nixos.agent.slice.tasksMax;
     };
   };
 

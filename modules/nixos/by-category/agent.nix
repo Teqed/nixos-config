@@ -27,6 +27,78 @@ let
   otherUsers = lib.filterAttrs (n: _: n != "agent") config.users.users;
   otherGroups = lib.filterAttrs (n: _: n != "agents") config.users.groups;
 
+  agentEnv = {
+    PATH = "/etc/profiles/per-user/agent/bin:/run/current-system/sw/bin:/run/wrappers/bin";
+    ANDROID_ADB_SERVER_PORT = "5038";
+    NIX_SSL_CERT_FILE = "/etc/ssl/certs/ca-certificates.crt";
+    NODE_OPTIONS = "--use-openssl-ca";
+  }
+  // lib.optionalAttrs config.virtualisation.docker.rootless.enable {
+    DOCKER_HOST = "unix://${runtimeDir}/docker.sock";
+  };
+
+  albedoPackage =
+    let
+      albedoPkgs = inputs.albedo.packages.${pkgs.stdenv.hostPlatform.system};
+      pyEnv = pkgs.python3.withPackages (
+        ps: with ps; [
+          dill
+          numpy
+          pandas
+          polars
+          pyarrow
+          duckdb
+          scipy
+          scikit-learn
+          sympy
+          networkx
+          matplotlib
+          seaborn
+          requests
+          httpx
+          beautifulsoup4
+          lxml
+          pyyaml
+          openpyxl
+          tomli-w
+          xmltodict
+          jsonschema
+          python-dateutil
+          chardet
+          pillow
+          imageio
+          opencv4
+          pygame
+          rich
+          tqdm
+          pydantic
+          attrs
+          psutil
+          tabulate
+          markdown-it-py
+        ]
+      );
+      daemon' = albedoPkgs.daemon.override { kernelPython = pyEnv; };
+      tui' = albedoPkgs.albedo-client.override { daemon = daemon'; };
+      server' = pkgs.symlinkJoin {
+        name = "albedo-server-${daemon'.version}";
+        paths = [ daemon' ];
+        nativeBuildInputs = [ pkgs.makeBinaryWrapper ];
+        postBuild = ''
+          makeBinaryWrapper ${tui'}/libexec/albedo/albedo-server $out/bin/albedo-server \
+            --set-default ALBEDO_DAEMON ${daemon'}/bin/albedo-daemon
+        '';
+        meta = daemon'.meta // {
+          mainProgram = "albedo-server";
+        };
+      };
+    in
+    albedoPkgs.albedo.override {
+      daemon = daemon';
+      tui = tui';
+      server = server';
+    };
+
   agentRun = pkgs.writeShellApplication {
     name = "agent-run";
     runtimeInputs = [
@@ -42,11 +114,7 @@ let
         TERM="''${TERM:-xterm}" COLORTERM="''${COLORTERM-}" LANG="''${LANG:-C.UTF-8}" LC_ALL="''${LC_ALL-}" \
         HOME=${agentHome} USER=agent LOGNAME=agent SHELL=${pkgs.bashInteractive}/bin/bash \
         XDG_RUNTIME_DIR=${runtimeDir} DBUS_SESSION_BUS_ADDRESS=unix:path=${runtimeDir}/bus \
-        PATH=/etc/profiles/per-user/agent/bin:/run/current-system/sw/bin:/run/wrappers/bin \
-        ANDROID_ADB_SERVER_PORT=5038 \
-        NIX_SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt NODE_OPTIONS=--use-openssl-ca \
-        ${lib.optionalString config.virtualisation.docker.rootless.enable "DOCKER_HOST=unix://${runtimeDir}/docker.sock \\"}
-        AGENT_LAUNCHED_BY="$(id -un)" \
+        ${lib.concatStringsSep " " (lib.mapAttrsToList (n: v: "${n}=${lib.escapeShellArg v}") agentEnv)} \
         ${pkgs.systemd}/bin/systemd-run --user --scope --quiet --collect --unit="$unit" -- "$@"
     '';
   };
@@ -311,68 +379,7 @@ in
       type = lib.types.listOf lib.types.package;
       default = with pkgs.llm-agents; [
         claude-code
-        (
-          let
-            albedoPkgs = inputs.albedo.packages.${pkgs.stdenv.hostPlatform.system};
-            pyEnv = pkgs.python3.withPackages (
-              ps: with ps; [
-                dill
-                numpy
-                pandas
-                polars
-                pyarrow
-                duckdb
-                scipy
-                scikit-learn
-                sympy
-                networkx
-                matplotlib
-                seaborn
-                requests
-                httpx
-                beautifulsoup4
-                lxml
-                pyyaml
-                openpyxl
-                tomli-w
-                xmltodict
-                jsonschema
-                python-dateutil
-                chardet
-                pillow
-                imageio
-                opencv4
-                pygame
-                rich
-                tqdm
-                pydantic
-                attrs
-                psutil
-                tabulate
-                markdown-it-py
-              ]
-            );
-            daemon' = albedoPkgs.daemon.override { kernelPython = pyEnv; };
-            tui' = albedoPkgs.albedo-client.override { daemon = daemon'; };
-            server' = pkgs.symlinkJoin {
-              name = "albedo-server-${daemon'.version}";
-              paths = [ daemon' ];
-              nativeBuildInputs = [ pkgs.makeBinaryWrapper ];
-              postBuild = ''
-                makeBinaryWrapper ${tui'}/libexec/albedo/albedo-server $out/bin/albedo-server \
-                  --set-default ALBEDO_DAEMON ${daemon'}/bin/albedo-daemon
-              '';
-              meta = daemon'.meta // {
-                mainProgram = "albedo-server";
-              };
-            };
-          in
-          albedoPkgs.albedo.override {
-            daemon = daemon';
-            tui = tui';
-            server = server';
-          }
-        )
+        albedoPackage
       ];
       description = "Packages installed into the agent's profile.";
     };
@@ -457,6 +464,18 @@ in
         type = lib.types.str;
         default = "70%";
       };
+      memoryMax = lib.mkOption {
+        type = lib.types.str;
+        default = "85%";
+      };
+      ioWeight = lib.mkOption {
+        type = lib.types.int;
+        default = 50;
+      };
+      tasksMax = lib.mkOption {
+        type = lib.types.int;
+        default = 8192;
+      };
     };
   };
 
@@ -520,6 +539,23 @@ in
       lib.mkMerge [
         (lib.optionalAttrs (options ? age) {
           age.secrets = fleetSecret "gh-agent";
+        })
+        (lib.optionalAttrs (options ? home-manager) {
+          home-manager.users.agent = {
+            imports = [ inputs.albedo.homeModules.default ];
+            home.stateVersion = "26.05";
+            systemd.user.sessionVariables = agentEnv;
+            programs = {
+              nix-index.enable = false;
+              man.enable = false;
+            };
+            fonts.fontconfig.enable = false;
+            services.albedo = {
+              enable = true;
+              package = albedoPackage;
+              web.enable = true;
+            };
+          };
         })
         {
           users = {
@@ -608,6 +644,9 @@ in
             slices."user-${toString cfg.uid}".sliceConfig = {
               CPUWeight = cfg.slice.cpuWeight;
               MemoryHigh = cfg.slice.memoryHigh;
+              MemoryMax = cfg.slice.memoryMax;
+              IOWeight = cfg.slice.ioWeight;
+              TasksMax = cfg.slice.tasksMax;
             };
           };
 
