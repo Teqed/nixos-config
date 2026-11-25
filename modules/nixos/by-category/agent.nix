@@ -40,9 +40,20 @@ let
   albedoPackage =
     let
       albedoPkgs = inputs.albedo.packages.${pkgs.stdenv.hostPlatform.system};
+      kernelDeps =
+        map
+          (
+            dep:
+            lib.replaceStrings [ "_" "." ] [ "-" "-" ] (
+              lib.toLower (lib.head (builtins.match "[[:space:]]*([A-Za-z0-9_.-]+).*" dep))
+            )
+          )
+          (builtins.fromTOML (builtins.readFile "${inputs.albedo}/python/pyproject.toml"))
+          .project.dependencies;
       pyEnv = pkgs.python3.withPackages (
-        ps: with ps; [
-          dill
+        ps:
+        map (name: ps.${name}) (lib.unique kernelDeps)
+        ++ (with ps; [
           numpy
           pandas
           polars
@@ -71,12 +82,11 @@ let
           pygame
           rich
           tqdm
-          pydantic
           attrs
           psutil
           tabulate
           markdown-it-py
-        ]
+        ])
       );
       daemon' = albedoPkgs.daemon.override { kernelPython = pyEnv; };
       tui' = albedoPkgs.albedo-client.override { daemon = daemon'; };
@@ -164,7 +174,16 @@ let
     text = builtins.readFile ../../../pkgs/harness/statusline.sh;
   };
 
-  harnessSkills = ../../../pkgs/harness/skills;
+  agentSkills = {
+    reader = ../../../pkgs/harness/skills/reader;
+    mbx = "${inputs.mr-boxington}/skills/mbx";
+    tg = pkgs.linkFarm "tg-skill" [
+      {
+        name = "SKILL.md";
+        path = "${inputs.tg}/SKILL.md";
+      }
+    ];
+  };
 
   webfetchGuard = pkgs.writeShellApplication {
     name = "claude-webfetch-guard";
@@ -389,6 +408,7 @@ in
         (with pkgs; [
           gh
           python3
+          ffmpeg-headless
           file
           tree
           unzip
@@ -539,7 +559,13 @@ in
             };
             systemd.user.sessionVariables = agentEnv;
             home.sessionVariables = removeAttrs agentEnv [ "PATH" ];
-            home.file.".gitconfig".text = "[safe]\n\tdirectory = *\n";
+            home.file = {
+              ".gitconfig".text = "[safe]\n\tdirectory = *\n";
+            }
+            // lib.concatMapAttrs (name: source: {
+              ".claude/skills/${name}".source = source;
+              ".agents/skills/${name}".source = source;
+            }) agentSkills;
             xdg.configFile = {
               "jj/config.toml".text = "[user]\nname = \"teq\"\nemail = \"teqed@shatteredsky.net\"\n";
               "mbx/config.toml".text = "[target]\nviews = false\n";
@@ -578,30 +604,9 @@ in
               "d ${agentHome}/.config 0750 agent agents -"
               "d ${agentHome}/.config/nix 0750 agent agents -"
               "d ${agentHome}/.agents 0750 agent agents -"
-              "d ${agentHome}/.agents/skills 0750 agent agents -"
               "d ${agentHome}/.claude 0750 agent agents -"
-              "d ${agentHome}/.claude/skills 0750 agent agents -"
               "d ${agentHome}/.albedo 0700 agent agents -"
             ]
-            ++
-              lib.concatMap
-                (
-                  dir:
-                  lib.mapAttrsToList (name: path: "L+ ${agentHome}/${dir}/${name} - - - - ${path}") {
-                    reader = "${harnessSkills}/reader";
-                    mbx = "${inputs.mr-boxington}/skills/mbx";
-                    tg = pkgs.linkFarm "tg-skill" [
-                      {
-                        name = "SKILL.md";
-                        path = "${inputs.tg}/SKILL.md";
-                      }
-                    ];
-                  }
-                )
-                [
-                  ".claude/skills"
-                  ".agents/skills"
-                ]
             ++ lib.optionals cfg.sourceTree.enable [
               "d ${srcTree} 2775 root agents -"
               "a+ ${srcTree} - - - - g:agents:rwx,d:g:agents:rwx"
